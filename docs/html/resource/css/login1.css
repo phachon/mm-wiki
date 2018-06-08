@@ -1,0 +1,1039 @@
+@charset "utf-8";
+html {
+    color: #333;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td {
+    margin: 0;
+    padding: 0
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+    color: #f2f7f8;
+}
+
+input::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: #fff;
+}
+
+input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #fff;
+}
+
+input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #fff;
+}
+
+input::-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-weight: 100;
+}
+
+address,
+cite,
+dfn,
+em,
+var,
+caption,
+strong,
+th,
+i,
+code,
+kbd,
+pre,
+samp {
+    font-style: normal;
+    font-weight: 400
+}
+
+ul,
+ol {
+    list-style: none
+}
+
+sub,
+sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline
+}
+
+sup {
+    top: -0.5em
+}
+
+sub {
+    bottom: -0.25em
+}
+
+input,
+button,
+textarea,
+fieldset,
+img {
+    border: 0 none
+}
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%;
+    vertical-align: middle;
+    font-family: inherit
+}
+
+textarea {
+    overflow: auto;
+    vertical-align: top
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+th {
+    text-align: inherit
+}
+
+caption,
+th {
+    text-align: center
+}
+
+a {
+    text-decoration: none;
+    color: #666
+}
+
+a:hover {
+    text-decoration: none;
+    color: #d00
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: ''
+}
+
+.clearfix:after {
+    clear: both
+}
+
+.clearfix {
+    *zoom: 1
+}
+
+q:before,
+q:after {
+    content: ""
+}
+
+.clear {
+    clear: both
+}
+
+iframe {
+    display: block
+}
+
+abbr,
+acronym {
+    border: 0 none;
+    font-variant: normal
+}
+
+del {
+    text-decoration: line-through
+}
+
+.fl {
+    float: left
+}
+
+.fr {
+    float: right
+}
+
+.fc {
+    clear: both
+}
+
+.fz {
+    zoom: 1
+}
+
+img {
+    border: none 0
+}
+
+input {
+    _border: none;
+    outline: none
+}
+
+a {
+    color: #666;
+}
+
+a:hover {
+    color: #dd0000;
+}
+
+.btn_tab_login {
+    float: right;
+    margin-top: 48px;
+}
+
+.btn_tab_login li {
+    display: inline-block;
+    margin-left: 30px;
+    font-size: 14px;
+}
+
+.btn_tab_login li.cur a {
+    color: #d00;
+}
+
+
+/*header*/
+
+#header {
+    height: 84px;
+    padding: 0;
+}
+
+html,
+body {
+    /*background-color: #0178bc;*/
+    background-image: url("../images/bkg.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.body-wrap {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.205);
+}
+
+
+/*login*/
+
+.login-wrap {
+    width: 100%;
+    height: 480px;
+    /*background-image: url("../style/5.png");*/
+    /*background-repeat: repeat;*/
+    background-color: rgba(0, 0, 0, 0.521);
+}
+
+.login-wrap .wrap {
+    width: 960px;
+    height: 480px;
+    padding: 0 115px;
+    margin: 0 auto;
+}
+
+
+/*login�Ҳ��¼��*/
+
+.login-wrap .form-box {
+    width: 380px;
+    min-height: 410px;
+    _height: 410px;
+    margin-top: 35px;
+    /* background: #fff; */
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-box .form-tab {
+    width: 380px;
+    height: 52px;
+    /* border-bottom: 1px solid #ddd; */
+    font-family: "Microsoft YaHei";
+}
+
+.form-tab .tab-li {
+    float: left;
+    width: 50%;
+    height: 50px;
+    border-bottom: 2px solid #fff;
+}
+
+.form-tab .tab-li a {
+    position: relative;
+    display: block;
+    text-align: center;
+    height: 50px;
+    line-height: 52px;
+    font-size: 18px;
+    /*color: #f2f7f8;*/
+    color: #e7e7e7;
+    text-decoration: none;
+}
+
+.form-tab .tab-li.cur {
+    border-bottom-color: #11accf;
+}
+
+.form-tab .tab-li.cur a {
+    color: #11accf;
+}
+
+.form-box .form-con {
+    width: 434px;
+    height: 345px;
+    padding: 38px 28px 0;
+}
+
+.form-box .weixin-login {
+    width: 380px;
+    padding-top: 50px;
+}
+
+.login-add .form-con {
+    height: 342px;
+    padding-top: 41px;
+}
+
+.form-box .login-normal,
+.form-box .login-partner {
+    display: none;
+    position: relative;
+    width: 354px;
+    padding: 0 40px;
+}
+
+.form-box .form-error {
+    display: none;
+    position: absolute;
+    top: -32px;
+    max-height: 32px;
+    padding: 4px 6px 4px 12px;
+    border: 1px solid #ffddbc;
+    background: #fffceb;
+}
+
+.form-box .form-error i {
+    position: absolute;
+    top: 4px;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    background: url(../images/member.png) -124px 0 no-repeat;
+}
+
+.form-box .form-error .text {
+    display: block;
+    max-width: 258px;
+    padding-left: 22px;
+    line-height: 16px;
+    font-family: "Microsoft YaHei";
+    color: #666;
+    /*  white-space:nowrap;background:url(../images/member.png) -124px 0 no-repeat; */
+}
+
+.form-box dl {
+    position: relative;
+    width: 350px;
+    height: 20px;
+    line-height: 20px;
+    padding: 16px 0;
+    /* border: 1px solid #ddd; */
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+.login-add dl {
+    padding: 14px 0;
+}
+
+.form-box .error {
+    z-index: 5;
+    border-color: #f66;
+}
+
+.form-box .top1 {
+    top: -1px;
+}
+
+.form-box .top2 {
+    top: -2px;
+}
+
+.form-box .top3 {
+    top: -3px;
+}
+
+.form-box dt {
+    float: left;
+    width: 60px;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 20px;
+}
+
+.form-box dt em {
+    padding: 0 7px;
+}
+
+.form-box dd {
+    position: relative;
+    float: left;
+    width: 270px;
+    height: 20px;
+    line-height: 20px;
+}
+
+.form-box .placeholder {
+    position: absolute;
+    height: 20px;
+    line-height: 20px;
+    left: 10px;
+    z-index: 1;
+    color: #ccc;
+}
+
+.form-box .input-text,
+.form-box .input-yzm,
+.form-box .input-jym {
+    position: absolute;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 10px;
+    left: 0;
+    z-index: 2;
+    background: transparent;
+    outline: 0 none;
+    /*color: #333;*/
+}
+
+.form-box .input-text {
+    width: 250px;
+}
+
+.form-box .input-yzm {
+    width: 83px;
+}
+
+.form-box .input-jym {
+    width: 80px;
+}
+
+.form-box .span-yzm {
+    position: absolute;
+    top: -16px;
+    right: 0;
+    width: 162px;
+    height: 36px;
+    line-height: 36px;
+    padding: 8px 0;
+    border-left: 1px solid #ddd;
+}
+
+.login-add .span-yzm {
+    top: -14px;
+    padding: 6px 0;
+}
+
+.form-box .error .span-yzm {
+    border-left-color: #d00;
+}
+
+.form-box .span-yzm img {
+    height: 36px;
+    width: 88px;
+    margin: 0 13px;
+    vertical-align: top;
+}
+
+.form-box .span-jym {
+    position: absolute;
+    top: -8px;
+    right: 6px;
+    width: 98px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    color: #f33;
+    font-size: 12px;
+    border: 1px solid #d66;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.form-box .disabled {
+    border-color: #ccc;
+    color: #999;
+}
+
+.form-box .tips {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: auto;
+    height: 22px;
+    line-height: 22px;
+    padding: 10px 12px;
+    margin-top: -22px;
+    border: 1px solid #ffddbc;
+    background: #fffceb;
+    white-space: nowrap;
+}
+
+.form-box .tips em {
+    position: absolute;
+    top: -1px;
+    left: -10px;
+    width: 11px;
+    height: 10px;
+    background: url(../images/member.png) 0 0 no-repeat;
+}
+
+.form-box .tips i {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: url(../images/member.png) -11px 0 no-repeat;
+    vertical-align: top;
+}
+
+.form-box .error .tips {
+    display: block;
+}
+
+.form-box .tips span {
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.form-box .form-remember {
+    padding: 18px 0 24px;
+}
+
+.login-add .form-remember {
+    padding: 12px 0 18px;
+}
+
+.form-box .login-partner .form-remember {
+    padding: 12px 0 18px;
+}
+
+.form-remember .rem-box {
+    display: inline-block;
+    height: 13px;
+    line-height: 13px;
+    padding-left: 20px;
+    background: url(../images/rem-check.png) 0 0 no-repeat;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.form-remember .memCheck {
+    background-position: 0 -13px;
+}
+
+.form-remember .rem-check {
+    display: none;
+    height: 13px;
+    width: 13px;
+}
+
+.form-remember .rem-box-r {
+    margin-left: 0px;
+}
+
+.form-box .btn-box {
+    height: 46px;
+}
+
+.login-add .btn-box {
+    height: 40px;
+}
+
+.form-box .login-partner .btn-box {
+    height: 40px;
+}
+
+.btn-settlement {
+    float: left;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #0178bc;
+    outline: 0 none;
+    font-family: "Microsoft YaHei";
+    cursor: pointer;
+}
+
+.btn-settlement:hover {
+    background-color: #007fd0;
+}
+
+.form-box .btn-box .btn-settlement {
+    width: 270px;
+}
+
+.form-box .forget-pass {
+    color: #007fd7;
+}
+
+.form-box .forget-pass:hover {
+    color: #007fd0;
+}
+
+.form-box .btn-box .forget-pass {
+    float: right;
+    width: 72px;
+    margin-left: 10px;
+    line-height: 40px;
+    font-family: "Microsoft YaHei";
+}
+
+.form-box .login-short {
+    margin-top: 18px;
+    border-top: 1px dotted #ddd;
+}
+
+.login-short h3 {
+    font-size: 12px;
+    line-height: 1;
+    padding: 17px 0 13px;
+    color: #666;
+}
+
+.login-short li {
+    float: left;
+    height: 33px;
+    width: 33px;
+    margin-right: 18px;
+    background: url(../images/member.png) -13px -24px no-repeat;
+}
+
+.login-short li a {
+    display: block;
+    height: 33px;
+}
+
+.login-short .qq {
+    background-position: -13px -24px;
+}
+
+.login-short .sina {
+    background-position: -49px -24px;
+}
+
+.login-short .weixin {
+    position: relative;
+    background-position: -85px -24px;
+}
+
+.login-short .renren {
+    background-position: -121px -24px;
+}
+
+.login-short .baidu {
+    background-position: -79px -57px;
+}
+
+.login-short .qr-code {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 104px;
+    height: 104px;
+    padding: 8px;
+    margin: 8px 0 0 -60px;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.login-short .qr-code em,
+.login-short .qr-code i {
+    position: absolute;
+    left: 50%;
+    top: -14px;
+    width: 0;
+    height: 0;
+    margin-left: -6px;
+    border-width: 7px 6px;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #ccc transparent;
+}
+
+.login-short .qr-code i {
+    top: -13px;
+    border-color: transparent transparent #fff transparent;
+}
+
+.login-short .qr-code img {
+    width: 104px;
+    height: 104px;
+}
+
+.login-short .hover .qr-code {
+    display: block;
+}
+
+.form-box .form-foot {
+    width: 482px;
+    height: 52px;
+    padding: 4px;
+}
+
+.form-box .form-foot_p {
+    height: 52px;
+    line-height: 52px;
+    text-align: center;
+    background: url(../images/form-footbg.png);
+    font-family: "Microsoft YaHei";
+}
+
+.form-foot_p .spanb {
+    font-size: 16px;
+}
+
+.form-foot_p label {
+    margin-left: 5px;
+    color: #d00;
+}
+
+.form-foot_p .spans {
+    font-size: 12px;
+}
+
+.form-dl-jym {
+    display: none;
+}
+
+
+/*20150925 modify*/
+
+.loginV2 .form-con {
+    width: 380px;
+    height: auto;
+    padding: 0;
+}
+
+.shortLogin .form-con {
+    position: relative;
+    width: 300px;
+    height: auto;
+    padding: 52px 40px 0;
+}
+
+.loginV2 .login-normal,
+.loginV2 .login-partner {
+    width: 300px;
+    padding: 40px 40px 0;
+}
+
+.loginV2 .form-error {
+    top: 7px;
+}
+
+.shortLogin .form-error {
+    top: 5px;
+}
+
+.loginV2 dl {
+    width: 298px;
+    padding: 12px 0;
+}
+
+.shortLogin dl {
+    width: 298px;
+    padding: 16px 0;
+}
+
+.loginV2 dd,
+.shortLogin dd {
+    width: 218px;
+}
+
+.loginV2 .input-text,
+.shortLogin .input-text {
+    width: 180px;
+}
+
+.loginV2 .input-yzm,
+.shortLogin .input-yzm {
+    width: 50px;
+}
+
+.loginV2 .span-yzm {
+    top: -13px;
+    width: 150px;
+    padding: 5px 0;
+}
+
+.shortLogin .span-yzm {
+    width: 150px;
+}
+
+.loginV2 .span-yzm img,
+.shortLogin .span-yzm img {
+    margin: 0 5px 0 7px;
+}
+
+.loginV2 .form-remember {
+    padding: 11px 0 17px;
+}
+
+.shortLogin .form-remember {
+    padding: 9px 0 13px;
+}
+
+.loginV2 .btn-box,
+.shortLogin .btn-box {
+    height: 40px;
+}
+
+.loginV2 .btn-box .btn-settlement,
+.shortLogin .btn-box .btn-settlement {
+    width: 100%;
+}
+
+.loginV2 .forget-pass,
+.shortLogin .forget-pass {
+    color: #007fd7;
+    font-size: 12px;
+}
+
+.loginV2 .link-box .forget-pass,
+.loginV2 .link-box .register {
+    float: right;
+    width: 72px;
+    line-height: 34px;
+    font-family: "Microsoft YaHei";
+}
+
+.loginV2 .link-box .register {
+    float: left;
+    color: #007fd7;
+}
+
+.loginV2 .link-box .register:hover {
+    color: #d00;
+}
+
+.shortLogin .forgetPass,
+.shortLogin .backLogin {
+    float: left;
+    line-height: 38px;
+    font-family: "Microsoft YaHei";
+    color: #007fd7;
+}
+
+.shortLogin .forgetPass:hover,
+.shortLogin .backLogin:hover {
+    color: #d00;
+}
+
+.shortLogin .backLogin {
+    float: right;
+}
+
+.loginV2 .login-short {
+    padding-top: 18px;
+    padding-bottom: 12px;
+    margin: 0;
+}
+
+.loginV2 .short-left {
+    float: left;
+    width: 150px;
+}
+
+.loginV2 .short-right {
+    float: left;
+    width: 124px;
+    padding-left: 25px;
+    border-left: 1px dotted #ddd;
+}
+
+.loginV2 .login-short h3 {
+    padding: 0 0 12px 0;
+}
+
+.loginV2 .login-short .phone-short {
+    height: 33px;
+}
+
+.loginV2 .login-short .phone-short .txt {
+    float: left;
+    line-height: 33px;
+    font-size: 14px;
+    color: #666;
+}
+
+.loginV2 .login-short .phone-short .txt:hover {
+    color: #d00;
+}
+
+.loginV2 .login-short .phone-short .phone {
+    float: left;
+    height: 33px;
+    width: 33px;
+    margin-right: 7px;
+    background: url(../images/member.png) -115px -57px no-repeat;
+}
+
+.loginV2 .login-short li {
+    margin-right: 16px;
+}
+
+.shortLogin {
+    display: none;
+}
+
+.shortLogin .title {
+    height: 40px;
+    line-height: 40px;
+    padding-top: 18px;
+    font-size: 18px;
+    color: #d00;
+    text-align: center;
+}
+
+.left-box {
+    float: left;
+    margin-top: 140px;
+}
+
+.left-box h1 {
+    color: #f2f7f8;
+    font-family: "Microsoft YaHei", "MicrosoftJhengHei", STHeiti, MingLiu;
+    font-size: 16px;
+    margin-left: 30px;
+}
+
+.left-box button {
+    width: 180px;
+    margin-left: 40px;
+}
+
+.left-box a {
+    color: #e7e7e7;
+}
+
+#captcha-dl {
+    width: 200px;
+    float: left;
+    top: -2px;
+}
+
+#captcha-dl dd {
+    width: 120px;
+}
+
+#captcha-dl input {
+    width: 93px;
+}
+
+.captcha-box {
+    float: left;
+    width: 98px;
+}
+
+.captcha {
+    background-color: #ddd;
+    width: 98px;
+    /* height: 44px; */
+}
+
+.error-box {
+    margin-top: 40px;
+    margin-left: 80px;
+    color: darkred;
+}
+
+.error-box h1 {
+    font-size: 14px;
+    /* font-weight: bold; */
+}
+
+.welcome-text {
+    font-family: "Consolas", "Menlo", "Courier", monospace;
+    font-size: 40px;
+    margin-left: 100px;
+    margin-top: 80px;
+    font-weight: 100;
+    font-style: italic;
+}
+
+input {
+    border-bottom: #007fd0 solid thin;
+}
+
+body,
+html {
+    overflow: hidden;
+}
+
+option {
+    color: gray;
+}

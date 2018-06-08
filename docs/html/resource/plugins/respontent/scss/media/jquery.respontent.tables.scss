@@ -1,0 +1,156 @@
+/*	Stacked table */
+@mixin respontent-table-stack
+{
+    display: block;
+    width: 100% !important;
+    min-width: auto;
+    max-width: auto;
+}
+.respontent-table-stack
+{
+	@include respontent-table-stack;
+	
+	tbody,
+	thead,
+	tfoot,
+	tr,
+	th,
+	td
+	{
+		@include respontent-table-stack;
+	}
+	td
+	{
+	    margin-bottom: 10px;
+	}
+}
+
+
+/*	Scrollable table */
+.respontent-table-scroll
+{
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    position: relative;
+    
+    table
+	{
+	    display: inline-block;
+	    width: auto;
+	    height: auto;
+	    max-width: 100%;
+	    overflow-x: auto;
+	}
+	
+	tr,
+	table > *
+	{
+	    width: auto;
+	}
+	
+	tr > *
+	{
+	    white-space: nowrap;
+	    text-align: left;
+	    vertical-align: top;
+	}
+
+
+	/*	Styling */
+	$respontent_tableBorderColor: rgba( 0, 0, 0, 0.1 ) !default;
+	table
+	{
+		border: 1px solid $respontent_tableBorderColor;
+	}
+	tr > *
+	{
+	    border: none;
+	    padding: 5px 10px;
+	}
+	thead tr > *
+	{
+		background: $respontent_tableBorderColor;
+	    padding-top: 10px;
+	}
+	tfoot tr > *
+	{
+		background: $respontent_tableBorderColor;
+	    padding-bottom: 10px;
+	}
+
+	tr:not( :first-child ) > *
+	{
+	    border-top: 1px solid $respontent_tableBorderColor;
+	}
+
+	tr > *:not( :first-child )
+	{
+	    border-left: 1px solid $respontent_tableBorderColor;
+	}
+}
+
+
+/*	List tables */
+.respontent-table-list
+{
+    border: none;
+    display: block;
+
+	thead
+	{
+		display: none;
+	}
+    tfoot,
+    tbody,
+    tr,
+    th,
+    td
+    {
+	    display: block;
+	    width: 100%;
+	    padding: 0;
+    }
+    tr
+    {
+	    background: transparent;
+		
+		+ tr
+		{
+			margin-top: 30px;
+		}
+    }
+    th,
+    .respontent-table-list-title
+    {
+    	font-weight: bold;
+    }
+    th,
+    td
+    {
+	    border: none;
+	    border-bottom: 1px solid #eee;
+	    white-space: normal;
+	    text-align: left;
+	    line-height: 20px;
+	    padding: 5px 0;
+	    position: relative;
+
+	    &[data-respontent-title]
+	    {
+			width: 50%;
+			padding-left: 50%;
+			
+		    &:before
+			{
+			    content: attr(data-respontent-title);
+			    font-style: italic;
+			    white-space: nowrap;
+			    width: 45%;
+			    margin-top: -10px;
+			    position: absolute;
+			    top: 50%;
+			    left: 0;
+			}
+	    }
+	}
+}

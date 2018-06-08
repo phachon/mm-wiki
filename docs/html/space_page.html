@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>MM Wiki</title>
+  <!-- Bootstrap core CSS -->
+  <link href="resource/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="resource/css/dashboard.css" rel="stylesheet">
+  <link href="resource/css/main.css" rel="stylesheet">
+  <link href="resource/plugins/zTreev3/css/metroStyle/metroStyle.css" rel="stylesheet">
+  <link rel="stylesheet" href="resource/plugins/editor.md/css/editormd.preview.css" />
+  <link href="resource/css/common.css" rel="stylesheet">
+
+  <script type="text/javascript" src="resource/plugins/jquery/jquery1.1.js"></script>
+  <script type="text/javascript" src="resource/plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="resource/js/module/main.js"></script>
+  <script type="text/javascript" src="resource/js/module/index.js"></script>
+</head>
+
+<body>
+
+<div id="sidebar-wrapper">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/" style="width: 238px">&nbsp;&nbsp;Markdown Mini Wiki</a>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;主页</a></li>
+          <li><a href="space.html"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;空间</a></li>
+          <li><a href="user.html"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;用户</a></li>
+          <li><a href="config.html"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;设置</a></li>
+        </ul>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <form class="navbar-form navbar-left">
+          <div class="form-group form-group-sm">
+              <input type="text" placeholder="搜索内容" class="form-control input-sm" style="width: 250px;">
+          </div>
+          <button type="button" class="btn btn-sm btn-success">搜索</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="helpLabel">
+              <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
+              <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a id="userLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;root
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userLabel">
+              <li><a href="/"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人信息</a></li>
+              <li><a href="/"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
+              <li><a href="/"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
+            </ul>
+          </li>
+          &nbsp;&nbsp;
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="container-fluid">
+  <div id="main-content" class="row">
+    <div id="main-left" class="col-md-2 sidebar">
+      <div class="left-search">
+        <form>
+          <div class="input-group">
+            <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
+          <span class="input-group-btn">
+            <button class="btn btn-sm btn-success" type="button"><i class="glyphicon glyphicon-search"></i></button>
+          </span>
+          </div>
+        </form>
+      </div>
+      <div class="left-tree">
+        <h4 class="sub-header">广告事业部</h4>
+        <ul id="dir_tree" class="ztree" style="padding-left: 0">
+        </ul>
+      </div>
+    </div>
+    <div id="main-right" class="col-md-10" style="padding: 8px 0 8px 4px">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+                      <h3 class="view-page-title">这是测试文档这是测试文档</h3>
+                      <p class="text text-info view-page-time"><i class="glyphicon glyphicon-time"></i>
+                        被 <a href="user.html"> Admin </a> 创建，被 <a href="user.html"> phachon </a> 最后更新于 2018/01/24
+                      </p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <a class="btn btn-default" href="edit_page.html"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                      <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
+                      <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
+                    </div>
+                </div>
+                <hr style="margin: 0">
+              </div>
+              <!--<div class="panel-heading"><strong>预览文档</strong></div>-->
+              <div class="panel-body">
+                <div id="test-editormd-view">
+                  <textarea style="display:none;" name="test-editormd-markdown-doc">###Hello world!</textarea>
+                </div>
+              </div>
+              <div class="panel-footer">
+                <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="main-line"></div>
+  </div>
+</div>
+<script src="resource/plugins/editor.md/lib/marked.min.js"></script>
+<script src="resource/plugins/editor.md/lib/prettify.min.js"></script>
+
+<script src="resource/plugins/editor.md/lib/raphael.min.js"></script>
+<script src="resource/plugins/editor.md/lib/underscore.min.js"></script>
+<script src="resource/plugins/editor.md/lib/sequence-diagram.min.js"></script>
+<script src="resource/plugins/editor.md/lib/flowchart.min.js"></script>
+<script src="resource/plugins/editor.md/lib/jquery.flowchart.min.js"></script>
+
+<script src="resource/plugins/editor.md/editormd.js"></script>
+<script type="text/javascript" src="resource/plugins/zTreev3/js/jquery.ztree.all.min.js"></script>
+
+<script type="text/javascript">
+  $(function() {
+    var testEditormdView;
+    $.get("test.md", function(markdown) {
+
+      testEditormdView = editormd.markdownToHTML("test-editormd-view", {
+        markdown        : markdown ,//+ "\r\n" + $("#append-test").text(),
+        //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+        htmlDecode      : "style,script,iframe",  // you can filter tags decode
+        //toc             : false,
+        tocm            : true,    // Using [TOCM]
+        //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+        //gfm             : false,
+        //tocDropdown     : true,
+        // markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+        emoji           : true,
+        taskList        : true,
+        tex             : true,  // 默认不解析
+        flowChart       : true,  // 默认不解析
+        sequenceDiagram : true,  // 默认不解析
+      });
+
+      //console.log("返回一个 jQuery 实例 =>", testEditormdView);
+
+      // 获取Markdown源码
+      //console.log(testEditormdView.getMarkdown());
+
+      //alert(testEditormdView.getMarkdown());
+    });
+  });
+
+  Index.Directory.navListTree("#dir_tree");
+</script>
+
+</body>
+</html>

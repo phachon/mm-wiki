@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="icon" href="/static/style/favicon.ico">
+    <title> CodePub </title>
+    <link rel="stylesheet" type="text/css" href="/resource/css/animate.css" />
+    <link rel="stylesheet" type="text/css" href="/resource/css/login1.css" />
+    <script type="text/javascript" src="/static/style/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="body-wrap">
+        <div id="header">
+        </div>
+        <div class="login-wrap">
+            <div class="wrap clearfix">
+                <div class="left-box">
+                    <img class="animated bounceInLeft" src="/resource/images/brand.png">
+                    <h1>一个开源的 GIT 代码发布系统</h1>
+                    <br>
+                    <button class="btn-settlement" type="button">
+                        <a href="https://github.com/bzppx/bzppx-codepub">
+                            <i class="github fa fa-github fa-lg" aria-hidden="true">
+                            CODE &amp; ISSUES
+                            </i>
+                        </a>
+                    </button>
+                </div>
+                <div class="form-box fr loginV2" style="display:block;">
+                    <ul class="form-tab clearfix">
+                        <li class="tab-li cur"><a href="javascript:;">账号登录</a></li>
+                        <li class="tab-li"><a href="javascript:;">其他登录<i class="icon"></i></a></li>
+                    </ul>
+                    <div class="form-con">
+                        <div class="login-normal" style="display:block;">
+                            <form method="post">
+                                <dl class="clearfix">
+                                    <dt>用户名：</dt>
+                                    <dd>
+                                        <input type="text" name="username" class="input-text" autocomplete="off" placeholder="" />
+                                    </dd>
+                                </dl>
+                                <dl class="top1 clearfix">
+                                    <dt>密<em></em>码：</dt>
+                                    <dd>
+                                        <input type="password" name="password" class="input-text" autocomplete="off" placeholder="" />
+                                    </dd>
+                                </dl>
+                                <dl class="top1 clearfix" id="captcha-dl">
+                                    <dt>验证码：</dt>
+                                    <dd>
+                                        <input type="text" name="captcha" class="input-text" autocomplete="off" placeholder="" />
+                                    </dd>
+                                </dl>
+                                <div class="captcha-box">
+                                    <img src="/login/captcha" class="captcha" title="看不清? 点击换一个">
+                                </div>
+                                <br><br><br><br>
+                                <div class="btn-box clearfix">
+                                    <input class="btn-settlement login-button" type="button" value="登    录">
+                                </div>
+                            </form>
+                        </div>
+                        {{if .apiLoginList }}
+                        <div class="login-normal" style="display:none;">
+                            <form method="post" autocomplete="off">
+                                <dl class="clearfix">
+                                    <dt>类型：</dt>
+                                    <dd>
+                                        <select class="input-text" name="api_auth_id">
+                                            {{range .apiLoginList }}
+                                            <option value="{{.api_auth_id}}">{{.name}}</option>
+                                            {{end}}
+                                        </select>
+                                        <span class="placeholder"></span>
+                                    </dd>
+                                </dl>
+                                <dl class="clearfix">
+                                    <dt>用户名：</dt>
+                                    <dd>
+                                        <input type="text" name="username" class="input-text" autocomplete="off" placeholder="" />
+                                        <span class="placeholder"></span>
+                                    </dd>
+                                </dl>
+                                <dl class="top1 clearfix">
+                                    <dt>密<em></em>码：</dt>
+                                    <dd>
+                                        <input type="password" name="password" id="normalPassword" class="input-text" placeholder="">
+                                    </dd>
+                                </dl>
+                                <dl class="top1 clearfix" id="captcha-dl">
+                                    <dt>验证码：</dt>
+                                    <dd>
+                                        <input type="text" name="captcha" class="input-text" autocomplete="off" placeholder="" />
+                                    </dd>
+                                </dl>
+                                <div class="captcha-box">
+                                    <img src="" class="captcha" title="看不清? 点击换一个">
+                                </div>
+                                <br><br><br><br>
+                                <div class="btn-box clearfix">
+                                    <input class="btn-settlement login-button" type="button" value="登    录" tjjj="passport.button.login">
+                                </div>
+                            </form>
+                        </div>
+                        {{end}}
+                        <h1 class="welcome-text" class="animated" style="display: none">Welcome</h1>
+                    </div>
+                    <div class="error-box" style="display: none">
+                        <h1></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/*<script src="/static/style/login.js"></script>*/}}
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+/* login */
+#login-body {
+    background: rgba(240, 240, 240, 0.8);
+}
+
+.login {
+    margin-top: 150px;
+}
+
+.login-title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+}
+
+.login-remember {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #5d6368;
+    font-size: 13px;
+}
+
+.panel-login {
+    border: #5d6368 1px solid;
+    /*box-shadow:*/
+    /*0 -5px 8px -7px rgba(81, 81,81,0.8),*/
+    /*0 -5px 8px -7px rgba(81, 81,81,0.8),*/
+    /*5px 0 8px -1px  rgba(81, 81,81,0.4),*/
+    /*5px 0 8px -1px  rgba(81, 81,81,0.8);*/
+    box-shadow:0 0 9px #101010;
+}

@@ -1,0 +1,98 @@
+/*	Stacked table */
+.respontent-table-stack {
+  display: block;
+  width: 100% !important;
+  min-width: auto;
+  max-width: auto; }
+  .respontent-table-stack tbody,
+  .respontent-table-stack thead,
+  .respontent-table-stack tfoot,
+  .respontent-table-stack tr,
+  .respontent-table-stack th,
+  .respontent-table-stack td {
+    display: block;
+    width: 100% !important;
+    min-width: auto;
+    max-width: auto; }
+  .respontent-table-stack td {
+    margin-bottom: 10px; }
+
+/*	Scrollable table */
+.respontent-table-scroll {
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  position: relative;
+  /*	Styling */ }
+  .respontent-table-scroll table {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    overflow-x: auto; }
+  .respontent-table-scroll tr,
+  .respontent-table-scroll table > * {
+    width: auto; }
+  .respontent-table-scroll tr > * {
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: top; }
+  .respontent-table-scroll table {
+    border: 1px solid rgba(0, 0, 0, 0.1); }
+  .respontent-table-scroll tr > * {
+    border: none;
+    padding: 5px 10px; }
+  .respontent-table-scroll thead tr > * {
+    background: rgba(0, 0, 0, 0.1);
+    padding-top: 10px; }
+  .respontent-table-scroll tfoot tr > * {
+    background: rgba(0, 0, 0, 0.1);
+    padding-bottom: 10px; }
+  .respontent-table-scroll tr:not(:first-child) > * {
+    border-top: 1px solid rgba(0, 0, 0, 0.1); }
+  .respontent-table-scroll tr > *:not(:first-child) {
+    border-left: 1px solid rgba(0, 0, 0, 0.1); }
+
+/*	List tables */
+.respontent-table-list {
+  border: none;
+  display: block; }
+  .respontent-table-list thead {
+    display: none; }
+  .respontent-table-list tfoot,
+  .respontent-table-list tbody,
+  .respontent-table-list tr,
+  .respontent-table-list th,
+  .respontent-table-list td {
+    display: block;
+    width: 100%;
+    padding: 0; }
+  .respontent-table-list tr {
+    background: transparent; }
+    .respontent-table-list tr + tr {
+      margin-top: 30px; }
+  .respontent-table-list th,
+  .respontent-table-list .respontent-table-list-title {
+    font-weight: bold; }
+  .respontent-table-list th,
+  .respontent-table-list td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    white-space: normal;
+    text-align: left;
+    line-height: 20px;
+    padding: 5px 0;
+    position: relative; }
+    .respontent-table-list th[data-respontent-title],
+    .respontent-table-list td[data-respontent-title] {
+      width: 50%;
+      padding-left: 50%; }
+      .respontent-table-list th[data-respontent-title]:before,
+      .respontent-table-list td[data-respontent-title]:before {
+        content: attr(data-respontent-title);
+        font-style: italic;
+        white-space: nowrap;
+        width: 45%;
+        margin-top: -10px;
+        position: absolute;
+        top: 50%;
+        left: 0; }

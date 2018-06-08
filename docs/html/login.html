@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>MM wiki</title>
+  <!-- Bootstrap core CSS -->
+  <link href="resource/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="resource/css/dashboard.css" rel="stylesheet">
+  <link href="resource/css/common.css" rel="stylesheet">
+  <link href="resource/css/login.css" rel="stylesheet">
+  <script type="text/javascript" src="resource/plugins/jquery/jquery1.1.js"></script>
+  <script type="text/javascript" src="resource/plugins/bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body id="login-body">
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand hidden-sm" href="login.html">MM Wiki</a>
+      <span class="navbar-brand" style="font-size: 16px"> 快速构建自己的团队协作与知识分享平台</span>
+    </div>
+    <div class="navbar-collapse collapse" role="navigation">
+      <ul class="nav navbar-nav navbar-right hidden-sm">
+        <li class="dropdown">
+          <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="helpLabel">
+            <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
+            <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
+          </ul>
+        </li>
+        <li><a href="/"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;关于</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row login">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel panel-default panel-login">
+        <div class="panel-heading">
+          <h4 class="panel-title text-center login-title"> 欢迎登录 </h4>
+        </div>
+        <div class="panel-body" style="padding: 28px 40px">
+          <div id="errorMessage" class="alert alert-danger hidden" role="alert" style="padding: 8px;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only"></span><strong></strong>
+          </div>
+          <form role="form" class="form-horizontal" action="/author/login" method="post" onsubmit="return false">
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">用户名</label>
+                  <div class="col-sm-9">
+                    <input type="text" name="username" class="form-control" placeholder="用户名" required>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-9">
+                  <input type="password" name="password" class="form-control" placeholder="密码" required>
+                </div>
+              </div>
+              <hr>
+              <div class="center" style="padding: 0 20px">
+                  <button type="button" class="btn btn-success btn-block" onclick="Login.ajaxSubmit(this.form)">登录</button>
+                  <button type="button" href="#" class="btn btn-success btn-link">忘记密码？</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 55px;color: #949CAF;line-height: 1.6" >
+    <div class="text-center" style="font-size: 12px;">© 2018 <a style="color: #949CAF;" target="_blank" href="https://github.com/phachon">phachon</a></div>
+    <div class="text-center" style="font-size: 13px;">请使用 Firefox, Chrome, IE9+ 浏览器达到更好效果</div>
+    <div class="text-center" style="font-size: 12px;"><a style="color: #949CAF;" target="_blank" href="https://github.com/phachon/MM-Wiki"><i class="glyphicon glyphicon-hand-right"></i>&nbsp;&nbsp;MM Wiki Version V0.1</a></div>
+  </div>
+</div>
+</body>
+</html>
