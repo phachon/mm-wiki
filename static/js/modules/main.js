@@ -57,6 +57,10 @@ function updateMainLeft(left) {
 	mainRight.style.width = mainContent.clientWidth - iT + "px";
 }
 
+$(function () {
+    $("[data-toggle='web-popover']").webuiPopover();
+});
+
 $(window).resize(function() {
 	// resizeContentHeight();
 });

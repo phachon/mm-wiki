@@ -9,12 +9,19 @@
     <title>MM Wiki</title>
     <!-- Bootstrap core CSS -->
     <link href="/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jquery popover CSS-->
+    <link href="/static/plugins/popover/css/jquery.webui-popover.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/static/css/dashboard.css" rel="stylesheet">
     <link href="/static/css/common.css" rel="stylesheet">
     <link href="/static/css/main.css" rel="stylesheet">
-    <script type="text/javascript" src="/static/plugins/jquery/jquery1.1.js"></script>
+    <!-- jquery js-->
+    <script type="text/javascript" src="/static/plugins/jquery/jquery1.11.js"></script>
+    <!-- Bootstrap js-->
     <script type="text/javascript" src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery popover js-->
+    <script type="text/javascript" src="/static/plugins/popover/js/jquery.webui-popover.min.js"></script>
+    <!-- modules js-->
     <script type="text/javascript" src="/static/js/modules/main.js"></script>
 </head>
 <body>
@@ -39,31 +46,52 @@
                         </span>
                     </div>
                     &nbsp;
-                    <button type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-plus"></i>创建</button>
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="web-popover" data-placement="bottom">
+                        <i class="glyphicon glyphicon-plus"></i>创建
+                    </button>
+                    <div class="webui-popover-content">
+                        <ul class="dropdown-menu webui-popover-menu">
+                            <li><a href="/"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;空间</a></li>
+                            <li><a href="/"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;用户</a></li>
+                            <li><a href="/"><i class="glyphicon glyphicon-file"></i>&nbsp;&nbsp;文档</a></li>
+                        </ul>
+                    </div>
+                    &nbsp;
+                    {{/*<div class="btn-group btn-group-sm" role="group">*/}}
+                        {{/*<button type="button" class="btn btn-default"><i class="glyphicon glyphicon-fullscreen"></i></button>*/}}
+                        {{/*<button type="button" class="btn btn-default"><i class="glyphicon glyphicon-resize-horizontal"></i></button>*/}}
+                    {{/*</div>*/}}
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a type="button" data-toggle="web-popover" data-placement="bottom">
                             <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
                             <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="helpLabel">
-                            <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
-                            <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
-                        </ul>
+                        <div class="webui-popover-content">
+                            <ul class="dropdown-menu webui-popover-menu">
+                                <li><a href="/"><span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;开源地址</a></li>
+                                <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
+                                <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;关于我们</a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="dropdown">
-                        <a id="userLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a type="button" data-toggle="web-popover" data-placement="bottom">
                             <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;root
                             <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="userLabel">
-                            <li><a href="/"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人信息</a></li>
-                            <li><a href="/"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
-                            <li><a href="/"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
-                        </ul>
+                        <div class="webui-popover-content">
+                            <ul class="dropdown-menu webui-popover-menu">
+                                <li><a href="/"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人信息</a></li>
+                                <li><a href="/"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
+                                <li><a href="/"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
+                            </ul>
+                        </div>
                     </li>
-                    &nbsp;&nbsp;
+                    <li class="dropdown">
+                        <a type="button" data-placement="bottom"></a>
+                    </li>
                 </ul>
             </div>
         </div>

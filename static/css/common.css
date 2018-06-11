@@ -77,6 +77,15 @@ ul,li {
     /*border-color: #ccc;*/
     background-color: #fff;
 }
+
+.webui-popover-content {
+    padding: 0!important;
+}
+
+.webui-popover-menu {
+    min-width: 130px!important;
+}
+
 /**
  *  body 滚动条
  */
