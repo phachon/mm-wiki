@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MM Wiki</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+    <link href="/static/css/main.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/plugins/jquery/jquery1.1.js"></script>
+    <script type="text/javascript" src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/modules/main.js"></script>
+</head>
+<body>
+<div id="sidebar-wrapper">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/" style="width: 238px">&nbsp;&nbsp;Markdown Mini Wiki</a>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/"><i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;主页</a></li>
+                    <li><a href="space.html"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;空间</a></li>
+                    <li><a href="user.html"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;用户</a></li>
+                    <li><a href="config.html"><i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;设置</a></li>
+                </ul>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <form class="navbar-form navbar-left">
+                    <div class="input-group">
+                        <input class="form-control input-sm" style="width: 250px" type="text" value="" placeholder="搜索文档...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default btn-search" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                        </span>
+                    </div>
+                    &nbsp;
+                    <button type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-plus"></i>创建</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="helpLabel">
+                            <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
+                            <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a id="userLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;root
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userLabel">
+                            <li><a href="/"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人信息</a></li>
+                            <li><a href="/"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
+                            <li><a href="/"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
+                        </ul>
+                    </li>
+                    &nbsp;&nbsp;
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+{{.LayoutContent}}
+</body>
+</html>

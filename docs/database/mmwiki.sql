@@ -1,5 +1,5 @@
 -- --------------------------------
--- database: mm-wiki
+-- database: mm_wiki
 -- author: phachon
 -- --------------------------------
 
@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `mw_user`;
 CREATE TABLE `mw_user` (
   `user_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户 id',
   `username` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` char(32) NOT NULL DEFAULT '' COMMENT '密码',
   `given_name` varchar(50) NOT NULL DEFAULT '' COMMENT '姓名',
   `mobile` char(13) NOT NULL DEFAULT '' COMMENT '手机号',
   `phone` char(13) NOT NULL DEFAULT '' COMMENT '电话',
@@ -27,6 +28,9 @@ CREATE TABLE `mw_user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
+INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role`, `is_delete`, `create_time`, `update_time`)
+VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '2', '0', '1500825600', '1500825600');
+
 -- --------------------------------
 -- 空间表
 -- --------------------------------
@@ -39,8 +43,7 @@ CREATE TABLE `mw_space` (
   `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否 1 是',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`space_id`),
-  KEY (`category_id`)
+  PRIMARY KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='空间表';
 
 -- --------------------------------
@@ -71,7 +74,7 @@ CREATE TABLE `mw_page` (
   `edit_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '最后修改用户 id',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`page_id`)
+  PRIMARY KEY (`page_id`),
   KEY (`parent_id`),
   KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档表';
@@ -103,7 +106,7 @@ CREATE TABLE `mw_collection` (
   `resource_id` int(10) NOT NULL DEFAULT '0' COMMENT '收藏资源 id ',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`collection_id`)
+  PRIMARY KEY (`collection_id`),
   KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户收藏表';
 

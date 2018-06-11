@@ -72,7 +72,11 @@ ul,li {
     font-size: 14px;
 }
 
-
+.btn-search {
+    border-left: 0px;
+    /*border-color: #ccc;*/
+    background-color: #fff;
+}
 /**
  *  body 滚动条
  */

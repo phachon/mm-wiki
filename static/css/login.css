@@ -8,9 +8,20 @@ body {
     background-size: cover;
 }
 
+a{
+    color:#666;
+    cursor: pointer;
+}
+a:hover{
+    cursor:pointer;
+}
+a:hover, a:focus {
+    text-decoration: none;
+}
+
 .wrap1 {
     position: absolute;
-    top: 150px;
+    top: 130px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -53,7 +64,8 @@ body {
 
 .icon_font {
     position: absolute;
-    bottom: 15px;
+    /*bottom: 15px;*/
+    margin-top: 12px;
     left: 10px;
     font-size: 18px;
     color: #3872f6;
@@ -73,6 +85,18 @@ body {
 
 .mg-t10 {
     margin-top: 20px;
+}
+
+.mg-b20 {
+    margin-bottom: 20px;
+}
+
+.mg-b15 {
+    margin-bottom: 20px;
+}
+
+.mg-b10 {
+    margin-bottom: 20px;
 }
 
 @media (min-width: 200px) {
