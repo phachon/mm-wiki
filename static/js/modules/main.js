@@ -6,10 +6,10 @@
 /**
  * 调整工作区尺寸
  */
-function resizeContentHeight() {
-	var mainHeight = document.body.clientHeight - 115;
-	$('#menuFrame').height(mainHeight);
-}
+// function resizeContentHeight() {
+// 	var mainHeight = document.body.clientHeight - 115;
+// 	$('#menuFrame').height(mainHeight);
+// }
 
 function initMainLine() {
 	var mainContent = document.getElementById("main-content");
@@ -57,9 +57,51 @@ function updateMainLeft(left) {
 	mainRight.style.width = mainContent.clientWidth - iT + "px";
 }
 
-$(function () {
-    $("[data-toggle='web-popover']").webuiPopover();
-});
+function initPopover() {
+    // webui-popover
+    $("[data-toggle='web-popover']").webuiPopover({animation: 'pop',autoHide:3000});
+}
+
+function bindFancyBox() {
+    $('a[name="create_space"]').each(function () {
+        $(this).fancybox({
+            minWidth: 500,
+            minHeight: 370,
+            padding: 12,
+            width: '65%',
+            height: '48%',
+            autoSize: false,
+            type: 'iframe',
+            href: $(this).attr('data-link')
+        });
+    });
+
+    $('a[name="create_user"]').each(function () {
+        $(this).fancybox({
+            minWidth: 500,
+            minHeight: 370,
+            padding: 12,
+            width: '65%',
+            height: '48%',
+            autoSize: false,
+            type: 'iframe',
+            href: $(this).attr('data-link')
+        });
+    });
+
+    $('a[name="create_page"]').each(function () {
+        $(this).fancybox({
+            minWidth: 500,
+            minHeight: 370,
+            padding: 12,
+            width: '65%',
+            height: '48%',
+            autoSize: false,
+            type: 'iframe',
+            href: $(this).attr('data-link')
+        });
+    });
+}
 
 $(window).resize(function() {
 	// resizeContentHeight();
@@ -67,5 +109,7 @@ $(window).resize(function() {
 
 $(window).load(function() {
 	initMainLine();
+    initPopover();
+    bindFancyBox();
 });
 
