@@ -1,12 +1,11 @@
 package controllers
 
-import "mm-wiki/app"
-
-type MainController struct {
+type SpaceController struct {
 	BaseController
 }
 
-func (this *MainController) Index() {
-	this.Data["version"] = app.Version
-	this.viewLayout("main/index", "main")
+func (this *SpaceController) Add() {
+
+
+	this.viewLayout("space/form", "default")
 }

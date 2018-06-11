@@ -19,6 +19,7 @@ func initRouter() {
 	beego.Router("/", &controllers.MainController{}, "*:Index")
 	beego.Router("/author", &controllers.AuthorController{}, "*:Index")
 	beego.AutoRouter(&controllers.AuthorController{})
+	beego.AutoRouter(&controllers.SpaceController{})
 	beego.AutoRouter(&controllers.MainController{})
 	beego.ErrorHandler("404", http_404)
 	beego.ErrorHandler("500", http_500)

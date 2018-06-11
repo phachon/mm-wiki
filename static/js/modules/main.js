@@ -64,16 +64,32 @@ function initPopover() {
 
 function bindFancyBox() {
     $('a[name="create_space"]').each(function () {
-        $(this).fancybox({
-            minWidth: 500,
-            minHeight: 370,
-            padding: 12,
-            width: '65%',
-            height: '48%',
-            autoSize: false,
-            type: 'iframe',
-            href: $(this).attr('data-link')
-        });
+        // $(this).fancybox({
+        //     minWidth: 500,
+        //     minHeight: 370,
+        //     padding: 12,
+        //     width: '65%',
+        //     height: '48%',
+        //     autoSize: false,
+        //     type: 'iframe',
+        //     href: $(this).attr('data-link')
+        // });
+        $(this).bind('click', function () {
+            var content = $(this).attr("data-link");
+            var height = "500px";
+            var width = "1000px";
+            layer.open({
+                type: 2,
+                // skin: Layers.skin,
+                title: "ooooo",
+                shadeClose: true,
+                shade : 0.6,
+                maxmin: true,
+                area: [width, height],
+                content: content,
+                padding:"10px"
+            });
+        })
     });
 
     $('a[name="create_user"]').each(function () {

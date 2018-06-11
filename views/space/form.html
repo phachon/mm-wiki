@@ -1,0 +1,66 @@
+<div class="panel panel-default">
+    <br>
+    <div class="panel-body">
+        <form class="form-horizontal" action="/message/save" method="post" onsubmit="return false">
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>消息名称</label>
+                <div class="col-sm-4">
+                    <input type="text" name="name" class="form-control" value="" placeholder="消息名称" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>消息模式</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="mode">
+                        <option value="topic">topic</option>
+                        <option value="fanout">fanout</option>
+                        <option value="direct">direct</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>持久化</label>
+                <div class="col-sm-4">
+                    <label class="radio-inline">
+                        <input type="radio" name="durable" value="1">
+                        是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="durable" value="0" checked="checked">
+                        否
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>验证Token</label>
+                <div class="col-sm-4">
+                    <label class="radio-inline">
+                        <input type="radio" name="is_need_token" value="1" checked="checked">
+                        是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="is_need_token" value="0">
+                        否
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>Token</label>
+                <div class="col-sm-4">
+                    <input type="text" name="token" class="form-control" value="" placeholder="Token" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span>消息备注</label>
+                <div class="col-sm-4">
+                    <input type="text" name="comment" class="form-control" value="" placeholder="备注">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" name="submit" onclick="Form.ajaxSubmit(this.form, true)" class="btn btn-success">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
