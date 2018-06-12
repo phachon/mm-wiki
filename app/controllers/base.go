@@ -54,6 +54,7 @@ func (this *BaseController) Prepare() {
 		return
 	}
 
+	this.Data["navName"] = this.controllerName
 	this.Layout = "layouts/default.html"
 }
 
@@ -108,7 +109,6 @@ func (this *BaseController) checkUserAccess() bool {
 func (this *BaseController) viewLayoutTitle(title, viewName, layout string) {
 	this.Layout = "layouts/" + layout + ".html"
 	this.TplName = viewName + ".html"
-	this.Data["navName"] = this.controllerName
 	this.Data["title"] = title
 	this.Render()
 }
@@ -118,7 +118,6 @@ func (this *BaseController) viewLayout(viewName, layout string) {
 	this.Layout = "layouts/" + layout + ".html"
 	this.TplName = viewName + ".html"
 	this.Data["title"] = ""
-	this.Data["navName"] = this.controllerName
 	this.Render()
 }
 
@@ -133,7 +132,6 @@ func (this *BaseController) viewError(errorMessage string, layout string, data .
 	if len(data) > 1 {
 		sleep = data[1].(int)
 	}
-	this.Data["navName"] = this.controllerName
 	this.TplName = "error/error.html"
 	this.Data["title"] = "error"
 	this.Data["message"] = errorMessage

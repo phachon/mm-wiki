@@ -1,50 +1,62 @@
 /**
- * 表单提交类
- * Copyright (c) 2017 phachon
+ * Form.js 表单提交类
+ * 依赖 jquery.form.js
  */
+
 var Form = {
 
-	inPopup : false,
+    /**
+     * 提示 div
+     */
+    failedBox: '#failedBox',
 
-	/**
-	 * ajax 提交表单
-	 * @param element
-	 * @param inPopup
-	 * @returns {boolean}
-	 */
-	ajaxSubmit: function (element, inPopup) {
+    /**
+     * 是否在弹框中
+     */
+    inPopup: false,
 
-		var submitButton = $("button[name='submit']");
-		if(inPopup) {
-			Form.inPopup = true;
-		}
+    /**
+     * ajax submit
+     * @param element
+     * @param inPopup
+     * @returns {boolean}
+     */
+    ajaxSubmit: function(element, inPopup) {
 
-		function successNotify(message, data) {
-			var title = '<strong>操作成功：</strong>';
-			submitButton.notify(title + message, {
-				position: "right",
-				className: 'success',
-                autoHideDelay: 2500
-			})
-		}
+        if (inPopup) {
+            Form.inPopup = true;
+        }
 
-		function failedNotify(errorMessage, data) {
-			var title = "<strong>操作失败：</strong>";
-			submitButton.notify(title + errorMessage, {
-				position: "right",
-				className: 'error',
-                autoHideDelay: 2500
-			})
-		}
+        /**
+         * 成功信息条
+         * @param message
+         * @param data
+         */
+        function successBox(message, data) {
+            Common.successBox(Form.failedBox, message)
+        }
 
-		function response(result) {
-			if(result.code == 0) {
-				failedNotify(result.message, result.data);
-			}
-			if(result.code == 1) {
-				successNotify(result.message, result.data);
-			}
+        /**
+         * 失败信息条
+         * @param message
+         * @param data
+         */
+        function failed(message, data) {
+            Common.errorBox(Form.failedBox, message)
+        }
 
+        /**
+         * response
+         * @param result
+         */
+        function response(result) {
+            //console.log(result)
+            if (result.code == 0) {
+                failed(result.message, result.data);
+            }
+            if (result.code == 1) {
+                successBox(result.message, result.data);
+            }
             if (result.redirect.url) {
                 var sleepTime = result.redirect.sleep || 3000;
                 setTimeout(function() {
@@ -55,15 +67,15 @@ var Form = {
                     }
                 }, sleepTime);
             }
-		}
+        }
 
-		var options = {
-			dataType: 'json',
-			success: response
-		};
+        var options = {
+            dataType: 'json',
+            success: response
+        };
 
-		$(element).ajaxSubmit(options);
+        $(element).ajaxSubmit(options);
 
-		return false;
-	}
+        return false;
+    }
 };
