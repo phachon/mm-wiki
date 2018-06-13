@@ -26,5 +26,28 @@ func (this *MainController) Page() {
 	}
 	this.Data["page_content"] = fileInfo
 	this.Data["page_id"] = pageId
-	this.viewLayout("page/info", "page")
+	this.viewLayout("main/page", "main")
+}
+
+// page edit
+func (this *MainController) EditPage() {
+
+	pageId := this.GetString("page_id", "")
+
+	fileInfo, err := utils.File.GetFileContents("test.md")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	this.Data["page_content"] = fileInfo
+	this.Data["page_id"] = pageId
+	this.viewLayout("main/edit_page", "main")
+}
+
+// page edit
+func (this *MainController) SavePage() {
+
+	pageId := this.GetString("page_id", "")
+
+	this.Redirect("/main/page?page_id="+pageId, 302)
 }

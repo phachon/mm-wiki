@@ -30,12 +30,5 @@ func (this *PageController) Edit() {
 
 	pageId := this.GetString("page_id", "")
 
-	fileInfo, err := utils.File.GetFileContents("test.md")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	this.Data["page_content"] = fileInfo
-	this.Data["page_id"] = pageId
-	this.viewLayout("page/edit", "page")
+	this.Redirect("/main/page?page_id="+pageId, 302)
 }

@@ -1,35 +1,7 @@
 <div class="container-fluid">
     <div id="main-content" class="row">
         <div id="main-left" class="col-md-2 sidebar">
-            <div class="left-collection">
-                <div class="collection-search">
-                    <form>
-                        <div class="input-group">
-                            <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
-                            <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default btn-search" type="button"><i class="fa fa-search"></i></button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-                <div class="collection-doc">
-                    <h3 class="text-left"> 收藏文档 <span class="badge">42</span> </h3>
-                    <hr>
-                    <ul>
-                        <li><a name="collection_page" data-link="/page/info?page_id=1"><i class="fa fa-file-word-o"></i> 这是测试文档是测试文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测试文档这文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测文档是测试文档</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试测试</a></li>
-                        <li><a name="collection_page" data-link="/page/info?"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试测试测试测试测试</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="left-tree">
-            </div>
+            {{template "main/left.html" .}}
         </div>
         <div id="main-right" class="col-md-10">
             <div class="container-fluid">
