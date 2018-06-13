@@ -52,6 +52,7 @@ function updateMainLeft(left) {
 // webui-popover
 function initPopover() {
     $("[data-toggle='web-popover']").webuiPopover({animation: 'pop',autoHide:3000});
+    $('[data-toggle="tooltip"]').tooltip()
 }
 
 $(window).load(function() {

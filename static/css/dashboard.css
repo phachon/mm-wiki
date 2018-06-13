@@ -184,10 +184,6 @@ body {
     padding: 8px 10px;
 }
 
-.page-tree > h4 {
-
-}
-
 .page-tree > hr {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -202,24 +198,9 @@ body {
     border-bottom: 0!important;
 }
 
-/*.ul-space-category {*/
-    /*padding-left: 0;*/
-/*}*/
-
-/*.ul-space-category > li {*/
-    /*list-style-type:none;*/
-    /*padding: 6px;*/
-/*}*/
-
-/*.ul-space-category a {*/
-    /*text-decoration: none;*/
-    /*color: #fff;*/
-/*}*/
-
-/*.view-page-title {*/
-    /*margin-top: 0;*/
-/*}*/
-
+/**
+ * page view
+ */
 .view-page-title {
     margin: 0 5px 5px 0;
     font-weight: bold;
@@ -230,6 +211,34 @@ body {
 }
 .view-page-time {
     font-size: 12px;
+}
+
+/**
+ * main-left space
+ */
+.left-space {
+    padding: 8px 10px;
+}
+.left-space >li {
+    list-style-type:none;
+}
+
+/* space sidebar */
+.left-space > .nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.left-space > .nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.left-space > .nav-sidebar > .active > a,
+.left-space > .nav-sidebar > .active > a:hover,
+.left-space > .nav-sidebar > .active > a:focus {
+    /*color: #fff;*/
+    background-color: #e2e2e2;
+    /*background-color: #b0b0b0;*/
 }
 
 /*#test-editormd {*/

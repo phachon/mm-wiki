@@ -5,9 +5,5 @@ type SpaceController struct {
 }
 
 func (this *SpaceController) Index() {
-	this.viewLayout("main/index", "space")
-}
-
-func (this *SpaceController) Add()  {
-	this.viewLayout("space/form", "default")
+	this.viewLayout("space/index", "space")
 }
