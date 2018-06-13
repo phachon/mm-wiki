@@ -177,7 +177,30 @@ body {
 }
 
 
+/**
+ * main-left page
+ */
+.left-page {
+    padding: 8px 10px;
+}
 
+.page-tree > h4 {
+
+}
+
+.page-tree > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(82, 82, 82, 1);
+}
+
+#dir_tree {
+    padding-left: 0
+}
+
+#dir_tree li {
+    border-bottom: 0!important;
+}
 
 /*.ul-space-category {*/
     /*padding-left: 0;*/
@@ -197,15 +220,19 @@ body {
     /*margin-top: 0;*/
 /*}*/
 
-/*.edit-page-title {*/
-    /*margin: 5px;*/
-    /*font-weight: bold;*/
-/*}*/
-/*.view-page-time {*/
-    /*font-size: 12px;*/
-/*}*/
-
-#test-editormd {
-    border-left: 0;
-    border-right: 0;
+.view-page-title {
+    margin: 0 5px 5px 0;
+    font-weight: bold;
 }
+.view-page-path {
+    font-size: 12px;
+    margin-top: 10px;
+}
+.view-page-time {
+    font-size: 12px;
+}
+
+/*#test-editormd {*/
+    /*border-left: 0;*/
+    /*border-right: 0;*/
+/*}*/

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/astaxie/beego"
 	"mm-wiki/app/controllers"
+	systemControllers "mm-wiki/app/modules/system/controllers"
 	"mm-wiki/app/utils"
 	"net/http"
 )
@@ -24,6 +25,12 @@ func initRouter() {
 	beego.AutoRouter(&controllers.UserController{})
 	beego.AutoRouter(&controllers.SystemController{})
 	beego.AutoRouter(&controllers.PageController{})
+
+	systemNamespace := beego.NewNamespace("/system",
+		beego.NSAutoRouter(&systemControllers.MainController{}),
+	)
+	beego.AddNamespace(systemNamespace)
+
 	beego.ErrorHandler("404", http_404)
 	beego.ErrorHandler("500", http_500)
 

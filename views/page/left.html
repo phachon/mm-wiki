@@ -1,0 +1,19 @@
+<div class="left-page">
+    <div class="page-search">
+        <form>
+            <div class="input-group">
+                <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
+                <span class="input-group-btn"><button class="btn btn-sm btn-default btn-search" type="button"><i class="fa fa-search"></i></button></span>
+            </div>
+        </form>
+    </div>
+    <div class="page-tree">
+        <h4 class="text-center">广告事业部</h4>
+        <hr>
+        <ul id="dir_tree" class="ztree"></ul>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/modules/page.js"></script>
+<script type="text/javascript">
+    Page.ListTree("#dir_tree");
+</script>

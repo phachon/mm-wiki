@@ -7,22 +7,53 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>MM-Wiki</title>
+    <!-- bootstrap css -->
+    <link type="text/css" rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- font-awesome css-->
+    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+    <!-- jquery popover css-->
+    <link type="text/css" rel="stylesheet" href="/static/plugins/popover/css/jquery.webui-popover.min.css">
     <!-- editormd CSS-->
-    <link rel="stylesheet" href="/static/plugins/editor.md/css/editormd.preview.css" />
-    <link rel="stylesheet" href="/static/plugins/editor.md/css/editormd.min.css" />
+    <link type="text/css" rel="stylesheet" href="/static/plugins/editor.md/css/editormd.preview.css" />
+    <link type="text/css" rel="stylesheet" href="/static/plugins/editor.md/css/editormd.min.css" />
+    <!-- zTreev3 CSS-->
+    <link type="text/css" rel="stylesheet" href="/static/plugins/zTreev3/css/metroStyle/metroStyle.css" rel="stylesheet">
+
+    <!-- dashboard css -->
+    <link type="text/css" rel="stylesheet" href="/static/css/dashboard.css">
+    <!-- common css -->
+    <link type="text/css" rel="stylesheet" href="/static/css/common.css">
 
     <!-- jquery js-->
+    <!-- jquery js-->
     <script type="text/javascript" src="/static/plugins/jquery/jquery1.11.js"></script>
-    <script type="text/javascript" src="/static/plugins/editor.md/lib/marked.min.js"></script>
+    <!-- bootstrap js-->
+    <script type="text/javascript" src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery popover js-->
+    <script type="text/javascript" src="/static/plugins/popover/js/jquery.webui-popover.min.js"></script>
+    <!-- layer js-->
+    <script type="text/javascript" src="/static/plugins/layui/layer/layer.js"></script>
+    <!-- editor.md js-->
     <script type="text/javascript" src="/static/plugins/editor.md/editormd.js"></script>
+    <script type="text/javascript" src="/static/plugins/editor.md/lib/marked.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/prettify.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/raphael.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/underscore.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/sequence-diagram.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/flowchart.min.js"></script>
     <script type="text/javascript" src="/static/plugins/editor.md/lib/jquery.flowchart.min.js"></script>
+    <!-- zTreev3 js-->
+    <script type="text/javascript" src="/static/plugins/zTreev3/js/jquery.ztree.all.min.js"></script>
+    <!-- common js-->
+    <script type="text/javascript" src="/static/js/common/common.js"></script>
+    <script type="text/javascript" src="/static/js/common/layers.js"></script>
+    <script type="text/javascript" src="/static/js/modules/common.js"></script>
+    <script type="text/javascript" src="/static/js/modules/main.js"></script>
+
+
 </head>
 <body>
+{{template "layouts/header.html" .}}
 {{.LayoutContent}}
 </body>
 </html>
