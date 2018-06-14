@@ -17,7 +17,7 @@
                         <a href="javascript:;"><i class="glyphicon glyphicon-user"></i> 用户管理 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/user/add"><i class="glyphicon glyphicon-list"></i> 添加用户 </a>
+                                <a href="/system/user/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加用户 </a>
                             </li>
                             <li>
                                 <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 用户列表 </a>
@@ -32,6 +32,17 @@
                             </li>
                             <li>
                                 <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 角色列表 </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="fa fa-users"></i> 权限管理 <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/user/add"><i class="glyphicon glyphicon-list"></i> 添加权限 </a>
+                            </li>
+                            <li>
+                                <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 权限列表 </a>
                             </li>
                         </ul>
                     </li>
@@ -79,18 +90,8 @@
                 </ul>
             </div>
         </div>
-        <div id="main-right" class="col-md-10" style="padding: 8px 0 8px 4px">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 10px">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            <h4><i class="glyphicon glyphicon-volume-up"></i> 欢迎来到 XXXX 科技公司 wiki 平台！</h4>
-                            <p>请使用域账号登录，使用中有任何问题请联系管理员 root@xxx.com！</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="main-right" class="col-md-10" style="padding: 5px 5px 5px 8px;overflow-y:hidden">
+            <iframe id="mainFrame" name="mainFrame" src="/system/user/add" scrolling="yes" style="overflow-y:auto;border:none;" frameborder="yes" width="100%"></iframe>
         </div>
         <div id="main-line"></div>
     </div>

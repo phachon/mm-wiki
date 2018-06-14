@@ -4,7 +4,7 @@ type UserController struct {
 	BaseController
 }
 
-func (this *UserController) Index() {
+func (this *UserController) Add() {
 
-	this.viewLayout("user/index", "user")
+	this.viewLayout("user/form", "default")
 }

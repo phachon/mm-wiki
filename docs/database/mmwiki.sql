@@ -21,7 +21,7 @@ CREATE TABLE `mw_user` (
   `im` char(50) NOT NULL DEFAULT '' COMMENT '即时聊天工具',
   `last_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最后登录ip',
   `last_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
-  `role` tinyint(3) NOT NULL DEFAULT '0' COMMENT '1 普通用户 2 管理员;3超级管理员',
+  `role_id` tinyint(3) NOT NULL DEFAULT '0' COMMENT '角色 id',
   `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除，0 否 1 是',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
@@ -30,6 +30,51 @@ CREATE TABLE `mw_user` (
 
 INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role`, `is_delete`, `create_time`, `update_time`)
 VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '2', '0', '1500825600', '1500825600');
+
+-- ---------------------------------------------------------------
+-- 系统角色表
+-- ---------------------------------------------------------------
+DROP TABLE IF EXISTS `mw_role`;
+CREATE TABLE `mw_role` (
+  `role_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色 id',
+  `name` char(10) NOT NULL DEFAULT '' COMMENT '角色名称',
+  `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除，0 否 1 是',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色表';
+
+-- -------------------------------------------------------
+-- 系统权限表
+-- -------------------------------------------------------
+DROP TABLE IF EXISTS `mw_privilege`;
+CREATE TABLE `mw_privilege` (
+  `privilege_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '权限id',
+  `name` char(30) NOT NULL DEFAULT '' COMMENT '权限名',
+  `parent_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上级',
+  `type` enum('controller','menu') DEFAULT 'controller' COMMENT '权限类型：控制器、菜单',
+  `controller` char(100) NOT NULL DEFAULT '' COMMENT '控制器',
+  `action` char(100) NOT NULL DEFAULT '' COMMENT '动作',
+  `icon` char(100) NOT NULL DEFAULT '' COMMENT '图标（用于展示)',
+  `is_display` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示：0不显示 1显示',
+  `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序(越小越靠前)',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `target` char(200) NOT NULL DEFAULT '' COMMENT '目标地址',
+  PRIMARY KEY (`privilege_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统权限表';
+
+-- ------------------------------------------------------------------
+-- 系统角色权限对应关系表
+-- ------------------------------------------------------------------
+DROP TABLE IF EXISTS `mw_role_privilege`;
+CREATE TABLE `mw_role_privilege` (
+  `role_privilege_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色权限关系 id',
+  `role_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '角色id',
+  `privilege_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限id',
+  `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`role_privilege_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色权限对应关系表';
 
 -- --------------------------------
 -- 空间表

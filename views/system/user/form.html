@@ -1,0 +1,53 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <br>
+        <form class="form-horizontal" method="post" action="/user/modify">
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名</label>
+                <div class="col-sm-4">
+                    <input type="text" name="username" class="form-control" placeholder="请输入用户名" value="" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 姓名</label>
+                <div class="col-sm-4">
+                    <input type="text" name="given_name" class="form-control" placeholder="请输入姓名" value="" required>
+                </div>
+            </div>
+            <input type="hidden" name="user_id" class="form-control" value="">
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码</label>
+                <div class="col-sm-4">
+                    <input type="password" name="password" class="form-control" placeholder="请输入密码" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 邮箱</label>
+                <div class="col-sm-4">
+                    <input type="text" name="email" class="form-control" placeholder="请输入邮箱" value="" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 手机</label>
+                <div class="col-sm-4">
+                    <input type="text" name="mobile" class="form-control" placeholder="请输入手机号" value="" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 角色</label>
+                <div class="col-sm-4">
+                    <select name="role" class="form-control">
+                        <option value="1">普通用户</option>
+                        <option value="2">管理员</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="role" value="">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

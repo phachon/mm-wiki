@@ -3,6 +3,11 @@
  * Copyright (c) 2018
  */
 
+function mainRightHeight() {
+    var mainHeight = $(window).height() - $('header').height() - 55;
+    $('#main-right').height(mainHeight);
+}
+
 function initMainLine() {
 	var mainContent = document.getElementById("main-content");
 	var mainLeft = document.getElementById("main-left");
@@ -52,10 +57,15 @@ function updateMainLeft(left) {
 // webui-popover
 function initPopover() {
     $("[data-toggle='web-popover']").webuiPopover({animation: 'pop',autoHide:3000});
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip();
 }
+
+$(window).resize(function () {
+    mainRightHeight();
+});
 
 $(window).load(function() {
 	initMainLine();
     initPopover();
+    mainRightHeight();
 });

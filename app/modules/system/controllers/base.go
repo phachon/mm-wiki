@@ -49,7 +49,7 @@ func (this *BaseController) Prepare() {
 		if this.IsAjax() {
 			this.jsonError("没有操作权限", nil, "/")
 		}else {
-			this.viewError("没有操作权限", "template", "/")
+			//this.viewError("没有操作权限", "template", "/")
 		}
 		return
 	}
@@ -105,46 +105,11 @@ func (this *BaseController) checkUserAccess() bool {
 	return true
 }
 
-// view layout title
-func (this *BaseController) viewLayoutTitle(title, viewName, layout string) {
-	this.Layout = "layouts/" + layout + ".html"
-	this.TplName = viewName + ".html"
-	this.Data["title"] = title
-	this.Render()
-}
-
 // view layout
 func (this *BaseController) viewLayout(viewName, layout string) {
-	this.Layout = "layouts/" + layout + ".html"
-	this.TplName = viewName + ".html"
+	this.Layout = "system/layouts/" + layout + ".html"
+	this.TplName = "system/"+viewName + ".html"
 	this.Data["title"] = ""
-	this.Render()
-}
-
-// error view
-func (this *BaseController) viewError(errorMessage string, layout string, data ...interface{}) {
-	this.Layout = "layouts/" + layout + ".html"
-	redirect := "/"
-	sleep := 2000
-	if len(data) > 0 {
-		redirect = data[0].(string)
-	}
-	if len(data) > 1 {
-		sleep = data[1].(int)
-	}
-	this.TplName = "error/error.html"
-	this.Data["title"] = "error"
-	this.Data["message"] = errorMessage
-	this.Data["redirect"] = redirect
-	this.Data["sleep"] = sleep
-	this.Render()
-}
-
-// view title
-func (this *BaseController) viewTitle(title, layout string, viewName string) {
-	this.Layout = "layouts/" + layout + ".html"
-	this.TplName = viewName + ".html"
-	this.Data["title"] = title
 	this.Render()
 }
 
