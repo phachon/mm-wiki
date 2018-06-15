@@ -157,3 +157,23 @@ ul,li {
 .w600{width:600px;}
 .w700{width:700px;}
 .w800{width:800px;}
+
+/**
+ * mainFrame 滚动条
+ */
+#frame-body {
+    overflow-y: auto!important;
+}
+#frame-body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+#frame-body::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+#frame-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.86, #C7C7C7), color-stop(0.62, #585858), color-stop(0.14, #B1B1B1));
+}
