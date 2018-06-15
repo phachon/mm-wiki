@@ -10,6 +10,11 @@ type PageController struct {
 }
 
 // page info
+func (this *PageController) Index() {
+	this.viewLayout("page/index", "page")
+}
+
+// page info
 func (this *PageController) View() {
 
 	pageId := this.GetString("page_id", "")
@@ -22,7 +27,7 @@ func (this *PageController) View() {
 	}
 	this.Data["page_content"] = fileInfo
 	this.Data["page_id"] = pageId
-	this.viewLayout("page/view", "page")
+	this.viewLayout("page/view", "default_page")
 }
 
 // page edit
@@ -37,11 +42,11 @@ func (this *PageController) Edit() {
 	}
 	this.Data["page_content"] = fileInfo
 	this.Data["page_id"] = pageId
-	this.viewLayout("page/edit", "page")
+	this.viewLayout("page/edit", "default_page")
 }
 
 // page edit
-func (this *MainController) SavePage() {
+func (this *PageController) Save() {
 
 	pageId := this.GetString("page_id", "")
 

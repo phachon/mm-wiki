@@ -1,0 +1,242 @@
+/**
+ * Move down content because we have a fixed navbar that is 50px tall
+ */
+body {
+    padding-top: 50px;
+}
+
+/**
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+    border: 0;
+}
+
+/**
+ * Hide for mobile, show later
+ */
+.sidebar {
+    display: none;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #f5f5f5;
+        /*border-right: 1px solid #eee;*/
+    }
+}
+
+/**
+ * main-content
+ */
+#main-content {
+    overflow: hidden;
+}
+
+/**
+ * main-left
+ */
+#main-left {
+    /*overflow: hidden;*/
+    float: left;
+    padding: 0;
+}
+
+/**
+ * main-right
+ */
+#main-right {
+    overflow-y: auto;
+    float: right;
+    /*height: 625px;*/
+    padding: 8px 0 8px 4px
+}
+
+/**
+ * main-line
+ */
+#main-line {
+    position: absolute;
+    top: 50px;
+    left: 16.67%;
+    height: 100%;
+    width: 4px;
+    overflow: hidden;
+    background: rgb(204,204,204);
+    background-image: url(../images/vgrabber.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: col-resize;
+    user-select: none;
+}
+
+/**
+ * main-right 滚动条
+ */
+#main-right::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+#main-right::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+#main-right::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.86, #C7C7C7), color-stop(0.62, #585858), color-stop(0.14, #B1B1B1));
+}
+
+/**
+ * main-left 滚动条
+ */
+#main-left::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+#main-left::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+#main-left::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.86, #C7C7C7), color-stop(0.62, #585858), color-stop(0.14, #B1B1B1));
+}
+
+/**
+ * main-left sidebar
+ */
+.sidebar .sidebar-nav.navbar-collapse {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .sidebar-search {
+    padding: 15px;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.sidebar .nav-second-level li a {
+    padding-left: 37px;
+}
+.sidebar .nav-second-level li, .sidebar .nav-third-level li {
+    border-bottom: none !important;
+}
+
+/**
+ * main-left collection
+ */
+.left-collection {
+    padding: 8px 10px;
+}
+
+.collection-doc > span {
+    margin-top: 10px;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: normal;
+    font-family: Arial,sans-serif;
+}
+
+.collection-doc > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(82, 82, 82, 1);
+}
+
+.collection-doc > ul {
+    padding-left: 0;
+    line-height: 20px;
+}
+
+.collection-doc > ul > li {
+    padding: 5px 3px;
+    list-style-type:none;
+}
+
+.collection-doc > ul > li > a:hover, a:focus {
+    /*text-decoration: underline;*/
+}
+
+
+/**
+ * main-left page
+ */
+.left-page {
+    padding: 8px 10px;
+}
+
+.page-tree > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(82, 82, 82, 1);
+}
+
+#dir_tree {
+    padding-left: 0
+}
+
+#dir_tree li {
+    border-bottom: 0!important;
+}
+
+/**
+ * page view
+ */
+.view-page-title {
+    margin: 0 5px 5px 0;
+    font-weight: bold;
+}
+.view-page-path {
+    font-size: 12px;
+    margin-top: 10px;
+}
+.view-page-time {
+    font-size: 12px;
+}
+
+/**
+ * main-left space
+ */
+.left-space {
+    padding: 8px 10px;
+}
+.left-space >li {
+    list-style-type:none;
+}
+
+/* space sidebar */
+.left-space > .nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.left-space > .nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.left-space > .nav-sidebar > .active > a,
+.left-space > .nav-sidebar > .active > a:hover,
+.left-space > .nav-sidebar > .active > a:focus {
+    /*color: #fff;*/
+    background-color: #e2e2e2;
+    /*background-color: #b0b0b0;*/
+}
+
+/*#test-editormd {*/
+    /*border-left: 0;*/
+    /*border-right: 0;*/
+/*}*/

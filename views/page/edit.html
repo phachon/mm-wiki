@@ -1,47 +1,28 @@
 <div class="container-fluid">
-    <div id="main-content" class="row">
-        <div id="main-left" class="col-md-2 sidebar">
-        {{template "page/left.html" .}}
-        </div>
-        <div id="main-right" class="col-md-10">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h4 class="edit-page-title">这是测试文档这是测试文档</h4>
-                                    </div>
-                                    <div class="col-md-4 text-right">
-                                        <a class="btn btn-default" href="/main/savePage?page_id=1"><i class="fa fa-save"></i> 保存</a>
-                                        <a class="btn btn-default" onclick="updateMainLeft(0)"><i class="fa fa-columns item"></i> 侧栏</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="editor-header">
-
-                            </div>
-                            <div id="test-editormd"></div>
-                            <div class="panel-footer">
-                                <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
-                            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4 class="edit-page-title">这是测试文档这是测试文档</h4>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a class="btn btn-default" href="/page/save?page_id=1"><i class="fa fa-save"></i> 保存</a>
                         </div>
                     </div>
                 </div>
+                <div class="editor-header">
+
+                </div>
+                <div id="test-editormd"></div>
+                <div class="panel-footer">
+                    <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
+                </div>
             </div>
         </div>
-        <div id="main-line"></div>
     </div>
 </div>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/marked.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/editormd.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/prettify.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/raphael.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/underscore.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/sequence-diagram.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/flowchart.min.js"></script>
-<script type="text/javascript" src="/static/plugins/editor.md/lib/jquery.flowchart.min.js"></script>
 <script type="text/javascript">
     $(function() {
 

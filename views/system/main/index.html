@@ -1,98 +1,89 @@
-<div class="container-fluid">
-    <div id="main-content" class="row">
-        <div id="main-left" class="col-md-2 sidebar">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="搜索...">
-                            <span class="input-group-btn">
+<div id="main-left" class="ui-layout-west" style="padding: 0">
+    <ul class="nav" id="side-menu">
+        <li class="sidebar-search">
+            <div class="input-group custom-search-form">
+                <input type="text" class="form-control" placeholder="搜索...">
+                <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="glyphicon glyphicon-user"></i> 用户管理 <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/system/user/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加用户 </a>
-                            </li>
-                            <li>
-                                <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 用户列表 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="fa fa-users"></i> 角色管理 <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/user/add"><i class="glyphicon glyphicon-list"></i> 添加角色 </a>
-                            </li>
-                            <li>
-                                <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 角色列表 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="fa fa-users"></i> 权限管理 <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/user/add"><i class="glyphicon glyphicon-list"></i> 添加权限 </a>
-                            </li>
-                            <li>
-                                <a href="/user/list"><i class="glyphicon glyphicon-list"></i> 权限列表 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="glyphicon glyphicon-folder-open"></i> 空间管理<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/space/add"><i class="glyphicon glyphicon-list"></i> 添加空间 </a>
-                            </li>
-                            <li>
-                                <a href="/space/list"><i class="glyphicon glyphicon-list"></i> 空间列表 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="fa fa-tasks"></i> 日志管理<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href=""><i class="glyphicon glyphicon-list"></i> 系统日志 </a>
-                            </li>
-                            <li>
-                                <a href=""><i class="glyphicon glyphicon-list"></i> 文档日志 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="fa fa-wrench"></i> 配置管理<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href=""><i class="glyphicon glyphicon-list"></i> 首页配置 </a>
-                            </li>
-                            <li>
-                                <a href=""><i class="glyphicon glyphicon-list"></i> 邮箱配置 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="fa fa-bar-chart"></i> 统计管理<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href=""><i class="glyphicon glyphicon-list"></i> 数据统计 </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
-        </div>
-        <div id="main-right" class="col-md-10" style="padding: 5px 5px 5px 8px;overflow-y:hidden">
-            <iframe id="mainFrame" name="mainFrame" src="/system/user/add" scrolling="yes" style="overflow-y:auto;border:none;" frameborder="yes" width="100%"></iframe>
-        </div>
-        <div id="main-line"></div>
-    </div>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="glyphicon glyphicon-user"></i> 用户管理 <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="/system/user/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加用户 </a>
+                </li>
+                <li>
+                    <a href="/system/user/list" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 用户列表 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="fa fa-users"></i> 角色管理 <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="/user/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加角色 </a>
+                </li>
+                <li>
+                    <a href="/user/list" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 角色列表 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="fa fa-users"></i> 权限管理 <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="/user/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加权限 </a>
+                </li>
+                <li>
+                    <a href="/user/list" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 权限列表 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="glyphicon glyphicon-folder-open"></i> 空间管理<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="/space/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加空间 </a>
+                </li>
+                <li>
+                    <a href="/space/list" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 空间列表 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="fa fa-tasks"></i> 日志管理<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 系统日志 </a>
+                </li>
+                <li>
+                    <a href="" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 文档日志 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="fa fa-wrench"></i> 配置管理<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 首页配置 </a>
+                </li>
+                <li>
+                    <a href="" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 邮箱配置 </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;"><i class="fa fa-bar-chart"></i> 统计管理<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 数据统计 </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </div>
+<iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes" style="overflow-y: auto" src="/system/user/add"></iframe>

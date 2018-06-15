@@ -7,3 +7,7 @@ type MainController struct {
 func (this *MainController) Index() {
 	this.viewLayout("main/index", "main")
 }
+
+func (this *MainController) Default() {
+	this.viewLayout("main/default", "default")
+}

@@ -177,3 +177,18 @@ ul,li {
     border-radius: 10px;
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.86, #C7C7C7), color-stop(0.62, #585858), color-stop(0.14, #B1B1B1));
 }
+
+/**
+ * page view
+ */
+.view-page-title {
+    margin: 0 5px 5px 0;
+    font-weight: bold;
+}
+.view-page-path {
+    font-size: 12px;
+    margin-top: 13px;
+}
+.view-page-time {
+    font-size: 12px;
+}

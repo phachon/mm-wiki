@@ -5,6 +5,5 @@ type UserController struct {
 }
 
 func (this *UserController) Add() {
-
 	this.viewLayout("user/form", "default")
 }

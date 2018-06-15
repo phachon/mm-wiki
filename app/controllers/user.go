@@ -5,6 +5,9 @@ type UserController struct {
 }
 
 func (this *UserController) Index() {
-
 	this.viewLayout("user/index", "user")
+}
+
+func (this *UserController) List() {
+	this.viewLayout("user/list", "default")
 }
