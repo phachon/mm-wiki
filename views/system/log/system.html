@@ -60,7 +60,7 @@
                     {{if eq $log.level "7"}}<span class="label label-debug">DEBUG</span>{{end}}
                     </td>
                     <td class="center">{{$log.username}}</td>
-                    <td><a name="info" data-link="/log/actionInfo?log_id={{$log.log_id}}">{{$log.message}}</a></td>
+                    <td><a name="info" data-link="/system/log/info?log_id={{$log.log_id}}">{{$log.message}}</a></td>
                     <td>{{$log.controller}}/{{$log.action}}</td>
                     <td class="center">{{$log.ip}}</td>
                     <td class="center">
@@ -78,7 +78,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        Layers.bindIframe("[name='info']", "日志详细信息", "400px", "800px")
+        Layers.bindIframe("[name='info']", "日志详细信息", "400px", "800px");
         $("select").val({{.level}})
     });
 </script>

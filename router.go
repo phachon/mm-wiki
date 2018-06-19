@@ -6,6 +6,7 @@ import (
 	systemControllers "mm-wiki/app/modules/system/controllers"
 	"mm-wiki/app/utils"
 	"net/http"
+	"html/template"
 )
 
 func init()  {
@@ -40,10 +41,15 @@ func initRouter() {
 	beego.AddFuncMap("dateFormat", utils.NewDate().Format)
 }
 
-func http_404(rs http.ResponseWriter, req *http.Request) {
-	rs.Write([]byte("404 not found!"))
+func http_404(rw http.ResponseWriter, req *http.Request) {
+	t,_:= template.New("404.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath+"/error/404.html")
+	data := make(map[string]interface{})
+	data["content"] = "page not found"
+	t.Execute(rw, data)
 }
 
-func http_500(rs http.ResponseWriter, req *http.Request) {
-	rs.Write([]byte("500 server error!"))
+func http_500(rw http.ResponseWriter, req *http.Request) {
+	t,_:= template.New("500.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath+"/error/500.html")
+	data := make(map[string]interface{})
+	t.Execute(rw, data)
 }

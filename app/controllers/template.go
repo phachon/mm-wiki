@@ -97,6 +97,27 @@ func (this *TemplateController) ViewLayout(viewName, layout string) {
 	this.Render()
 }
 
+// view layout
+func (this *TemplateController) ViewError(content string, redirect... string) {
+	this.Layout = "error/default.html"
+	this.TplName = "layouts/default.html"
+	var url = ""
+	var sleep = "5"
+	if len(redirect) == 1 {
+		url = redirect[0]
+	}
+	if len(redirect) > 1 {
+		sleep = redirect[1]
+	}
+	if content == "" {
+		content = "操作失败"
+	}
+	this.Data["content"] = content
+	this.Data["url"] = url
+	this.Data["sleep"] = sleep
+	this.Render()
+}
+
 // return json success
 func (this *TemplateController) JsonSuccess(message interface{}, data ...interface{}) {
 	url := ""

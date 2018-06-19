@@ -67,5 +67,8 @@
     </nav>
 </div>
 <script type="text/javascript">
+    if (self != top) {
+        parent.location.href = '/'
+    }
     Layers.bindIframe("a[name='create_space']", "新建空间", "500px");
 </script>
