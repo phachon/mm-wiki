@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <br>{{$user := .user}}
-            <form class="form-horizontal" method="post" action="/system/user/save">
+            <form class="form-horizontal" method="post" action="{{if $user}} /system/user/modify {{else}} /system/user/save {{end}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名</label>
                     <div class="col-sm-4">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" onclick="Form.ajaxSubmit(this.form, false);" class="btn btn-primary">保存</button>
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $user}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
                     </div>
                 </div>
             </form>

@@ -81,7 +81,30 @@ func (this *UserController) List() {
 		this.ViewError("获取用户列表失败", "/system/main/index")
 	}
 
-	this.Data["users"] = users
+	var roleIds = []string{}
+	for _, user := range users {
+		roleIds = append(roleIds, user["role_id"])
+	}
+
+	roles, err := models.RoleModel.GetRoleByRoleIds(roleIds)
+	if err != nil {
+		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ViewError("获取用户列表失败!", "/system/main/index")
+	}
+
+	var roleUsers = []map[string]string{}
+	for _, user := range users {
+		roleUser := user
+		for _, role := range roles {
+			if role["role_id"] == user["role_id"] {
+				roleUser["role_name"] = role["name"]
+				break
+			}
+		}
+		roleUsers = append(roleUsers, roleUser)
+	}
+
+	this.Data["users"] = roleUsers
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
 	this.viewLayout("user/list", "default")
@@ -100,5 +123,5 @@ func (this *UserController) Edit() {
 	}
 
 	this.Data["user"] = user
-	this.ViewLayout("user/form", "default")
+	this.viewLayout("user/form", "default")
 }
