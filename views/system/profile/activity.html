@@ -1,0 +1,72 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-addon"> 日志级别</span>
+                            <select class="form-control" name="level">
+                                <option value="">全部</option>
+                                <option value="7">DEBUG</option>
+                                <option value="6">INFO</option>
+                                <option value="4">WARNING</option>
+                                <option value="3">ERROR</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-addon"> 用户名 </span>
+                            <input class="form-control" name="username" type="text" value="" placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="message" type="text" value="" placeholder="描述">
+                            <span class="input-group-btn">
+                                  <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+                                </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="w7p">ID</th>
+                    <th class="w10p">级别</th>
+                    <th class="w9p">用户</th>
+                    <th>描述</th>
+                    <th class="w20p">动作</th>
+                    <th class="w10p">IP</th>
+                    <th class="w15p">时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="center"></td>
+                    <td class="center">
+
+                    </td>
+                    <td class="center"></td>
+                    <td><a name="info" data-link="/system/log/info?log_id="></a></td>
+                    <td></td>
+                    <td class="center"></td>
+                    <td class="center">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+        </div>
+    </div>
+</div>

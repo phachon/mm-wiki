@@ -1,0 +1,83 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <form action="" method="get">
+                <div class="col-md-9">
+                    <div class="input-group">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="用户名/姓名">
+				            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w8p">ID</th>
+                <th class="w8p">用户名</th>
+                <th class="w8p">姓名</th>
+                <th class="w15p">邮箱</th>
+                <th class="w10p">手机号</th>
+                <th class="w8p">角色</th>
+                <th class="w11p">最后登录时间</th>
+                <th class="w15p">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $user := .users}}
+            <tr>
+                <td class="center">{{$user.user_id}}</td>
+                <td>{{$user.username}}</td>
+                <td>{{$user.given_name}}</td>
+                <td>{{$user.email}}</td>
+                <td class="center">{{$user.mobile}}</td>
+                <td class="center">
+                    {{ if eq $user.role "3" }}
+                    <label class="text-danger">超级管理员</label>
+                    {{else if eq $user.role "2"}}
+                    <label class="text-success">管理员</label>
+                    {{else}}
+                    <label class="text-info">普通用户</label>
+                    {{end}}
+                </td>
+                <td class="center">
+                    {{if eq $user.last_time "0"}}
+                    ----------
+                    {{else}}
+                    {{dateFormat $user.last_time "Y-m-d H:i:s"}}
+                    {{end}}
+                </td>
+                <td class="center">
+                    {{if eq $user.role "3"}}
+                    无
+                    {{else}}
+                    <a name="edit" class="glyphicon glyphicon-edit" data-link="/user/edit?user_id={{ $user.user_id }}">修改</a>
+                    {{if eq $user.role "1"}}
+                    <a name="project" class="glyphicon glyphicon-th-list" data-link="/user/project?user_id={{ $user.user_id }}">授权</a>
+                    {{end}}
+                    <a onclick="Layers.confirm('确定删除吗？', '/user/delete?user_id={{$user.user_id}}');" class="remove glyphicon glyphicon-trash">删除</a>
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='edit']", "修改用户信息", "450px", "900px");
+    Layers.bindIframe("[name='project']", "用户项目授权", "500px");
+</script>

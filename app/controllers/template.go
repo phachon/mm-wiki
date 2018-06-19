@@ -46,7 +46,6 @@ func (this *TemplateController) Prepare() {
 
 	this.User = this.GetSession("author").(map[string]string)
 	this.UserId = this.User["user_id"]
-	this.Data["user"] = this.User
 	this.Data["navName"] = this.controllerName
 }
 

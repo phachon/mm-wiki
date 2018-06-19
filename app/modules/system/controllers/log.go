@@ -12,9 +12,9 @@ type LogController struct {
 func (this *LogController) System() {
 
 	page, _ := this.GetInt("page", 1)
-	level := strings.Trim(this.GetString("level", ""), "")
-	message := strings.Trim(this.GetString("message", ""), "")
-	username := strings.Trim(this.GetString("username", ""), "")
+	level := strings.TrimSpace(this.GetString("level", ""))
+	message := strings.TrimSpace(this.GetString("message", ""))
+	username := strings.TrimSpace(this.GetString("username", ""))
 
 	number := 15
 	limit := (page - 1) * number

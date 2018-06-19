@@ -59,3 +59,48 @@ func (this *ProfileController) Modify() {
 	this.InfoLog("修改我的资料成功")
 	this.jsonSuccess("我的资料修改成功", nil, "/system/profile/info")
 }
+
+func (this *ProfileController) Activity() {
+	this.viewLayout("profile/activity", "default")
+}
+
+func (this *ProfileController) Password()  {
+
+	this.viewLayout("profile/password", "default")
+}
+
+func (this *ProfileController) SavePass()  {
+
+	pwd := strings.TrimSpace(this.GetString("pwd", ""))
+	pwdNew := strings.TrimSpace(this.GetString("pwd_new", ""))
+	pwdConfirm := strings.TrimSpace(this.GetString("pwd_confirm", ""))
+
+	if (pwd == "") || (pwdNew == "") || (pwdConfirm == "") {
+		this.jsonError("密码不能为空！")
+	}
+
+	p := models.UserModel.EncodePassword(pwd)
+	if p != this.User["password"] {
+		this.jsonError("当前密码错误")
+	}
+	if pwdConfirm != pwdNew {
+		this.jsonError("确认密码和新密码不一致")
+	}
+
+	_, err := models.UserModel.Update(this.UserId, map[string]interface{}{
+		"password": models.UserModel.EncodePassword(pwdNew),
+	})
+
+	// 阻止日志记录 password
+	this.Ctx.Request.PostForm.Del("pwd")
+	this.Ctx.Request.PostForm.Del("pwd_new")
+	this.Ctx.Request.PostForm.Del("pwd_confirm")
+
+	if err != nil {
+		this.ErrorLog("修改密码失败：" + err.Error())
+		this.jsonError("修改密码失败")
+	}
+
+	this.InfoLog("修改密码成功")
+	this.jsonSuccess("修改密码成功, 下次登录时生效", nil, "/system/profile/password")
+}

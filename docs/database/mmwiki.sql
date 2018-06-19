@@ -29,8 +29,8 @@ CREATE TABLE `mw_user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
-INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role`, `is_delete`, `create_time`, `update_time`)
-VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '2', '0', '1500825600', '1500825600');
+INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role_id`, `is_delete`, `create_time`, `update_time`)
+VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '1', '0', '1500825600', '1500825600');
 
 -- ---------------------------------------------------------------
 -- 系统角色表
@@ -44,6 +44,15 @@ CREATE TABLE `mw_role` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色表';
+
+INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
+VALUES ('超级管理员', '0', '1500825600', '1500825600');
+
+INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
+VALUES ('管理员', '0', '1500825600', '1500825600');
+
+INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
+VALUES ('普通用户', '0', '1500825600', '1500825600');
 
 -- -------------------------------------------------------
 -- 系统权限表

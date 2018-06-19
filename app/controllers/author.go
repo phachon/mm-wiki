@@ -5,6 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"github.com/astaxie/beego"
 	"mm-wiki/app/utils"
+	"fmt"
 )
 
 type AuthorController struct {
@@ -24,11 +25,14 @@ func (this *AuthorController) Login()  {
 
 	user, err := models.UserModel.GetUserByUsername(username)
 	if err != nil {
-		this.ErrorLog("获取用户失败："+err.Error())
+		this.ErrorLog("查找用户失败："+err.Error())
 		this.jsonError("登录出错")
 	}
 	if len(user) == 0 {
 		this.jsonError("用户名或密码错误!")
+	}
+	if user["is_forbidden"] == fmt.Sprintf("%d", models.User_Forbidden_True) {
+		this.jsonError("用户已被禁用!")
 	}
 
 	password = utils.Encrypt.Md5Encode(password)
