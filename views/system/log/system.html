@@ -44,7 +44,7 @@
                     <th class="w10p">级别</th>
                     <th class="w9p">用户</th>
                     <th>描述</th>
-                    <th class="w15p">动作</th>
+                    <th class="w20p">动作</th>
                     <th class="w10p">IP</th>
                     <th class="w15p">时间</th>
                 </tr>
@@ -61,7 +61,7 @@
                     </td>
                     <td class="center">{{$log.username}}</td>
                     <td><a name="info" data-link="/system/log/info?log_id={{$log.log_id}}">{{$log.message}}</a></td>
-                    <td>{{$log.controller}}/{{$log.action}}</td>
+                    <td>{{$log.path}}</td>
                     <td class="center">{{$log.ip}}</td>
                     <td class="center">
                     {{dateFormat $log.create_time "Y-m-d H:i:s"}}

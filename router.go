@@ -49,7 +49,7 @@ func http_404(rw http.ResponseWriter, req *http.Request) {
 }
 
 func http_500(rw http.ResponseWriter, req *http.Request) {
-	t,_:= template.New("500.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath+"/error/500.html")
+	t, _ := template.New("500.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath + "/error/500.html")
 	data := make(map[string]interface{})
 	t.Execute(rw, data)
 }

@@ -1,8 +1,9 @@
 <div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
     <div class="panel panel-default">
         <div class="panel-body">
             <br>{{$user := .user}}
-            <form class="form-horizontal" method="post" action="/profile/modify">
+            <form class="form-horizontal" method="post" action="/system/profile/modify">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名</label>
                     <div class="col-sm-4">
@@ -60,7 +61,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, false);" class="btn btn-primary">保存</button>
                     </div>
                 </div>
             </form>

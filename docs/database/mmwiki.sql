@@ -191,8 +191,7 @@ DROP TABLE IF EXISTS `mw_log`;
 CREATE TABLE `mw_log` (
   `log_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '系统操作日志 id',
   `level` tinyint(3) NOT NULL DEFAULT '6' COMMENT '日志级别',
-  `controller` char(100) NOT NULL DEFAULT '' COMMENT '控制器',
-  `action` char(100) NOT NULL DEFAULT '' COMMENT '动作',
+  `path` char(100) NOT NULL DEFAULT '' COMMENT '请求路径',
   `get` text NOT NULL COMMENT 'get参数',
   `post` text NOT NULL COMMENT 'post参数',
   `message` varchar(255) NOT NULL DEFAULT '' COMMENT '信息',

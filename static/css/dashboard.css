@@ -22,7 +22,7 @@ body {
 }
 /* main iframe pane */
 .ui-layout-pane-center {
-    padding: 5px 4px 5px 0;
+    padding: 0 4px 5px 0;
     margin: 0;
 }
 /* main-left pane */

@@ -10,11 +10,17 @@ type ProfileController struct {
 }
 
 func (this *ProfileController) Info() {
-	this.Data["user"] = this.User
+
+	user, err := models.UserModel.GetUserByUserId(this.UserId)
+	if err != nil {
+		this.ErrorLog("获取我的资料失败: "+err.Error())
+		this.ViewError("获取资料失败")
+	}
+	this.Data["user"] = user
 	this.viewLayout("profile/form", "default")
 }
 
-func (this *ProfileController) Save() {
+func (this *ProfileController) Modify() {
 
 	givenName := strings.TrimSpace(this.GetString("given_name", ""))
 	email := strings.TrimSpace(this.GetString("email", ""))
@@ -47,9 +53,9 @@ func (this *ProfileController) Save() {
 	})
 
 	if err != nil {
-		this.ErrorLog("修改个人资料失败：" + err.Error())
-		this.jsonError("修改失败")
+		this.ErrorLog("修改我的资料失败：" + err.Error())
+		this.jsonError("修改我的资料失败")
 	}
-	this.InfoLog("修改个人资料成功")
-	this.jsonSuccess("我的资料修改成功", nil, "/profile/info")
+	this.InfoLog("修改我的资料成功")
+	this.jsonSuccess("我的资料修改成功", nil, "/system/profile/info")
 }

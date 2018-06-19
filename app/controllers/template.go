@@ -146,6 +146,7 @@ func (this *TemplateController) JsonSuccess(message interface{}, data ...interfa
 	if err != nil {
 		this.Abort(err.Error())
 	} else {
+		this.Ctx.Output.Header("Content-Type", "application/json; charset=utf-8")
 		this.Abort(string(j))
 	}
 }
@@ -177,6 +178,7 @@ func (this *TemplateController) JsonError(message interface{}, data ...interface
 	if err != nil {
 		this.Abort(err.Error())
 	} else {
+		this.Ctx.Output.Header("Content-Type", "application/json; charset=utf-8")
 		this.Abort(string(j))
 	}
 }
@@ -196,12 +198,10 @@ func (this *TemplateController) SetPaginator(per int, nums int64) *utils.Paginat
 
 // insert action log
 func (this *TemplateController) RecordLog(message string, level int) {
-	controllerName, actionName := this.GetControllerAndAction()
-	controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
-	methodName := strings.ToLower(actionName)
 	userAgent := this.Ctx.Request.UserAgent()
 	referer := this.Ctx.Request.Referer()
 	getParams := this.Ctx.Request.URL.String()
+	path := this.Ctx.Request.URL.Path
 	this.Ctx.Request.ParseForm()
 	postParamsMap := map[string][]string(this.Ctx.Request.PostForm)
 	postParams, _ := json.Marshal(postParamsMap)
@@ -209,8 +209,7 @@ func (this *TemplateController) RecordLog(message string, level int) {
 
 	logValue := map[string]interface{}{
 		"level": level,
-		"controller": controllerName,
-		"action": methodName,
+		"path": path,
 		"get": getParams,
 		"post": string(postParams),
 		"message": message,

@@ -46,7 +46,7 @@ var Form = {
         }
 
         /**
-         * response
+         * request success
          * @param result
          */
         function response(result) {
