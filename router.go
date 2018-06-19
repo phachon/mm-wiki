@@ -30,6 +30,7 @@ func initRouter() {
 		beego.NSAutoRouter(&systemControllers.MainController{}),
 		beego.NSAutoRouter(&systemControllers.ProfileController{}),
 		beego.NSAutoRouter(&systemControllers.UserController{}),
+		beego.NSAutoRouter(&systemControllers.RoleController{}),
 		beego.NSAutoRouter(&systemControllers.LogController{}),
 	)
 	beego.AddNamespace(systemNamespace)

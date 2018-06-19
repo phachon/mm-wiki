@@ -77,8 +77,8 @@ func (this *UserController) List() {
 		users, err = models.UserModel.GetUsersByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("查找用户列表失败: "+err.Error())
-		this.ViewError("查找用户列表失败", "/system/main/index")
+		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ViewError("获取用户列表失败", "/system/main/index")
 	}
 
 	this.Data["users"] = users
