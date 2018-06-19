@@ -11,17 +11,17 @@ import (
 )
 
 const (
-	USER_ROLE_ROOT  = 2
-	USER_ROLE_ADMIN = 1
-	USER_ROLE_USER  = 0
+	User_Delete_True = 1
+	User_Delete_False = 0
 
-	USER_DELETE = 1
-	USER_NORMAL = 0
+	User_Forbidden_True = 1
+	User_Is_Forbidden_False = 0
 )
 
 const Table_User_Name = "user"
 
 type User struct {
+
 }
 
 var UserModel = User{}
@@ -32,7 +32,7 @@ func (u *User) GetUserByUserId(userId string) (user map[string]string, err error
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"user_id":   userId,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -48,7 +48,7 @@ func (u *User) HasSameUsername(userId, username string) (has bool, err error) {
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"user_id <>": userId,
 		"username":   username,
-		"is_delete":  USER_NORMAL,
+		"is_delete":  User_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -65,7 +65,7 @@ func (u *User) HasUsername(username string) (has bool, err error) {
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"username":  username,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -77,12 +77,12 @@ func (u *User) HasUsername(username string) (has bool, err error) {
 }
 
 // get user by username
-func (u *User) GetUserByName(username string) (user map[string]string, err error) {
+func (u *User) GetUserByUsername(username string) (user map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"username":  username,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -95,7 +95,7 @@ func (u *User) GetUserByName(username string) (user map[string]string, err error
 func (u *User) Delete(userId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_User_Name, map[string]interface{}{
-		"is_delete": USER_DELETE,
+		"is_delete": User_Delete_False,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"user_id": userId,
@@ -125,7 +125,7 @@ func (u *User) Update(userId string, userValue map[string]interface{}) (id int64
 	userValue["update_time"] =  time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_User_Name, userValue, map[string]interface{}{
 		"user_id":   userId,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -149,7 +149,7 @@ func (u *User) ChangePassword(userId, newPassword, oldPassword string) (err erro
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"user_id":   userId,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -172,7 +172,7 @@ func (u *User) GetUsersByKeywordAndLimit(keyword string, limit int, number int) 
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"username LIKE": "%" + keyword + "%",
-		"is_delete":     USER_NORMAL,
+		"is_delete":     User_Delete_False,
 	}).Limit(limit, number).OrderBy("user_id", "DESC"))
 	if err != nil {
 		return
@@ -191,7 +191,7 @@ func (u *User) GetUsersByLimit(limit int, number int) (users []map[string]string
 		db.AR().
 			From(Table_User_Name).
 			Where(map[string]interface{}{
-				"is_delete": USER_NORMAL,
+				"is_delete": User_Delete_False,
 			}).
 			Limit(limit, number).
 			OrderBy("user_id", "DESC"))
@@ -213,7 +213,7 @@ func (u *User) CountUsers() (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_User_Name).
 			Where(map[string]interface{}{
-				"is_delete": USER_NORMAL,
+				"is_delete": User_Delete_False,
 			}))
 	if err != nil {
 		return
@@ -232,7 +232,7 @@ func (u *User) CountUsersByKeyword(keyword string) (count int64, err error) {
 		From(Table_User_Name).
 		Where(map[string]interface{}{
 			"username LIKE": "%" + keyword + "%",
-			"is_delete":     USER_NORMAL,
+			"is_delete":     User_Delete_False,
 		}))
 	if err != nil {
 		return
@@ -247,7 +247,7 @@ func (u *User) GetUserByLikeName(username string) (users []map[string]string, er
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"username Like": "%" + username + "%",
-		"is_delete":     USER_NORMAL,
+		"is_delete":     User_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -262,7 +262,7 @@ func (u *User) GetUserByUserIds(userIds []string) (users []map[string]string, er
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"user_id":   userIds,
-		"is_delete": USER_NORMAL,
+		"is_delete": User_Delete_False,
 	}))
 	if err != nil {
 		return

@@ -27,7 +27,9 @@ func initRouter() {
 
 	systemNamespace := beego.NewNamespace("/system",
 		beego.NSAutoRouter(&systemControllers.MainController{}),
+		beego.NSAutoRouter(&systemControllers.ProfileController{}),
 		beego.NSAutoRouter(&systemControllers.UserController{}),
+		beego.NSAutoRouter(&systemControllers.LogController{}),
 	)
 	beego.AddNamespace(systemNamespace)
 

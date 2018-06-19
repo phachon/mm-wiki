@@ -1,0 +1,23 @@
+
+<ul class="pagination pagination-sm">
+    <li><span>共 {{.paginator.Nums}} 条数据 </span></li>
+    {{if .paginator.HasPrev}}
+    <li><a href="{{.paginator.PageLinkFirst}}">首页</a></li>
+    <li><a href="{{.paginator.PageLinkPrev}}"><span><i class="glyphicon glyphicon-backward"></i></span></a></li>
+    {{else}}
+    <li class="disabled"><a>首页</a></li>
+    <li class="disabled"><a><span><i class="glyphicon glyphicon-backward"></i></span></a></li>
+    {{end}}
+    {{range $index, $page := .paginator.Pages}}
+    <li{{if $.paginator.IsActive .}} class="active"{{end}}>
+        <a href="{{$.paginator.PageLink $page}}">{{$page}}</a>
+    </li>
+    {{end}}
+    {{if .paginator.HasNext}}
+    <li><a href="{{.paginator.PageLinkNext}}"><span><i class="glyphicon glyphicon-forward"></i></span></a></li>
+    <li><a href="{{.paginator.PageLinkLast}}">尾页</a></li>
+    {{else}}
+    <li class="disabled"><a><span><i class="glyphicon glyphicon-forward"></i></span></a></li>
+    <li class="disabled"><a>尾页</a></li>
+    {{end}}
+</ul>

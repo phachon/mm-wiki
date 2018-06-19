@@ -1,0 +1,36 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" style="table-layout:fixed">
+                <tbody>{{$log := .log}}
+                <tr>
+                    <th class="w15p">GET</th>
+                    <td>{{$log.get}}</td>
+                </tr>
+                <tr>
+                    <th>POST</th>
+                    <td>
+                    {{$log.post}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>User Agent</th>
+                    <td>{{$log.user_agent}}</td>
+                </tr>
+                <tr>
+                    <th>Referer</th>
+                    <td>{{$log.referer}}</td>
+                </tr>
+                <tr>
+                    <th>IP</th>
+                    <td>{{$log.ip}}</td>
+                </tr>
+                <tr>
+                    <th>CreateTime</th>
+                    <td>{{dateFormat $log.create_time "Y-m-d H:i:s"}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

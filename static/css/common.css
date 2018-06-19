@@ -27,8 +27,11 @@ a:hover, a:focus {
 
 th {
     text-align:center;
-    /*background:#efefef;*/
-    /*background-color: #F5F5F5;*/
+    background:#efefef;
+}
+
+.panel-body {
+    padding-top: 10px;
 }
 
 .panel-heading {
@@ -72,6 +75,21 @@ th {
     table-layout:fixed;
     word-break:break-all;
     word-wrap:break-word;
+}
+
+#paginator {
+    margin-left: 10px;
+}
+
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 0;
+    border-radius: 4px;
+}
+
+.div-center {
+    margin: 0 auto;
 }
 
 ul,li {

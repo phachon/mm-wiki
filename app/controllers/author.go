@@ -22,7 +22,7 @@ func (this *AuthorController) Login()  {
 	username := strings.TrimSpace(this.GetString("username"))
 	password := strings.TrimSpace(this.GetString("password"))
 
-	user, err := models.UserModel.GetUserByName(username)
+	user, err := models.UserModel.GetUserByUsername(username)
 	if err != nil {
 		this.ErrorLog("获取用户失败："+err.Error())
 		this.jsonError("登录出错")
@@ -40,7 +40,7 @@ func (this *AuthorController) Login()  {
 	// save session
 	this.SetSession("author", user)
 	// save cookie
-	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.getClientIp() + password)
+	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + password)
 	passportValue := utils.Encrypt.Base64Encode(username + "@" + identify)
 	passport := beego.AppConfig.String("author.passport")
 	this.Ctx.SetCookie(passport, passportValue, 3600)

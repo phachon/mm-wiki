@@ -22,6 +22,7 @@ CREATE TABLE `mw_user` (
   `last_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最后登录ip',
   `last_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
   `role_id` tinyint(3) NOT NULL DEFAULT '0' COMMENT '角色 id',
+  `is_forbidden` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否屏蔽，0 否 1 是',
   `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除，0 否 1 是',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',

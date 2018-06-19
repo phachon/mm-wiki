@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br>{{$user := .user}}
+            <form class="form-horizontal" method="post" action="/profile/modify">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="username" class="form-control" placeholder="请输入用户名" value="{{$user.username}}" readonly="readonly">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 姓名</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="given_name" class="form-control" placeholder="请输入姓名" value="{{$user.given_name}}" required>
+                    </div>
+                </div>
+                <input type="hidden" name="user_id" class="form-control" value="">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 邮箱</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="email" class="form-control" placeholder="请输入邮箱" value="{{$user.email}}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 手机</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="mobile" class="form-control" placeholder="请输入手机号" value="{{$user.mobile}}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 电话</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="phone" class="form-control" placeholder="请输入电话号码" value="{{$user.phone}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 部门</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="department" class="form-control" placeholder="请输入所在部门（广告事业部.技术部.后端研发组）" value="{{$user.department}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 职位</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="position" class="form-control" placeholder="请输入职位信息（高级PHP开发工程师）" value="{{$user.department}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 位置</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="location" class="form-control" placeholder="请输入工位信息（5层B区B107）" value="{{$user.department}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> IM</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="im" class="form-control" placeholder="请输入即时通讯工具信息（QQ：34512612）" value="{{$user.department}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
