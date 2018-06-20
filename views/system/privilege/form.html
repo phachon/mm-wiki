@@ -1,0 +1,120 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <br>{{$privilege:=.privilege}}
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" action="/system/privilege/save">
+                <input type="hidden" name="privilege_id" value="{{$privilege.privilege_id}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>权限名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" value="{{$privilege.name}}" placeholder="请输入权限名称">
+                    </div>
+                </div>
+                <div class="form-group forx for-menu">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>所属导航</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="module" class="form-control" value="系统" placeholder="" readonly="readonly">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>权限类型</label>
+                    <div class="col-sm-4">
+                        <div class="radio radio-inline radio-primary">
+                            <input type="radio" name="type" id="radio-menu" value="menu">
+                            <label for="radio-menu">菜单</label>
+                        </div>
+                        <div class="radio radio-inline radio-primary">
+                            <input type="radio" name="type" id="radio-controller" value="controller" checked="checked">
+                            <label for="radio-controller">控制器</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group forx for-controller">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>上级菜单</label>
+                    <div class="col-sm-4">
+                        <select name="parent_m" class="form-control" default="{{$privilege.parent_id}}">
+                        {{range .menus}}
+                            <option value="{{.privilege_id}}">{{.name}}</option>
+                        {{end}}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group forx for-controller">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>控制器名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="controller" class="form-control" value="{{$privilege.controller}}">
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group forx for-controller">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>方法名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="action" class="form-control" value="{{$privilege.action}}">
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group forx for-controller">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>目标地址</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="target" class="form-control" value="{{$privilege.target}}">
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group forx for-controller">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>是否显示</label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" name="is_display" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>排序数字</label>
+                    <div class="col-sm-4">
+                        <div class="input-group spinner">
+                            <input type="text" class="form-control" name="sequence" value="{{$privilege.sequence}}" placeholder="数字越小的显示越靠前">
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>选择图标</label>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" role="iconpicker"></button>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="icon" value="" placeholder="选择菜单图标">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" data-icon="glyphicon-home" role="iconpicker"></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $privilege}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("input[name='is_display']").bootstrapSwitch({
+        size: 'small',
+        onText: '是',
+        offText: '否'
+    });
+    $("input[name='icon']").iconpicker();
+
+</script>

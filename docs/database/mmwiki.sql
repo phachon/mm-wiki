@@ -66,11 +66,11 @@ CREATE TABLE `mw_privilege` (
   `controller` char(100) NOT NULL DEFAULT '' COMMENT '控制器',
   `action` char(100) NOT NULL DEFAULT '' COMMENT '动作',
   `icon` char(100) NOT NULL DEFAULT '' COMMENT '图标（用于展示)',
+  `target` char(200) NOT NULL DEFAULT '' COMMENT '目标地址',
   `is_display` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示：0不显示 1显示',
   `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序(越小越靠前)',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  `target` char(200) NOT NULL DEFAULT '' COMMENT '目标地址',
   PRIMARY KEY (`privilege_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统权限表';
 
