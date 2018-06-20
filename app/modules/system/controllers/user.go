@@ -181,7 +181,7 @@ func (this *UserController) Edit() {
 
 	this.Data["user"] = user
 	this.Data["roles"] = roles
-	this.viewLayout("user/form", "default")
+	this.viewLayout("user/edit", "default")
 }
 
 func (this *UserController) Modify() {

@@ -70,6 +70,17 @@
                         <span class="text-danger"></span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>选择图标</label>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="icon" value="" placeholder="选择菜单图标">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="icon" data-icon="glyphicon-home" role="iconpicker"></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group forx for-controller">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>是否显示</label>
                     <div class="col-sm-4">
@@ -89,17 +100,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>选择图标</label>
-                    <div class="col-sm-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="icon" value="" placeholder="选择菜单图标">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" id="icon" data-icon="glyphicon-home" role="iconpicker"></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $privilege}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
                     </div>
@@ -114,6 +114,12 @@
         onText: '是',
         offText: '否'
     });
-    $("#icon").iconpicker();
-
+    $("#icon").iconpicker({
+        searchText: '搜索',
+        cols: 6,
+        rows: 3
+    });
+    $('#icon').on('change', function(e) {
+        $("input[name='icon']").val(e.icon)
+    });
 </script>
