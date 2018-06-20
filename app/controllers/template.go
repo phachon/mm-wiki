@@ -195,6 +195,16 @@ func (this *TemplateController) SetPaginator(per int, nums int64) *utils.Paginat
 	return p
 }
 
+// is Post
+func (this *TemplateController) IsPost() bool {
+	return this.Ctx.Input.Method() == "POST"
+}
+
+// is Get
+func (this *TemplateController) IsGet() bool {
+	return this.Ctx.Input.Method() == "GET"
+}
+
 // insert action log
 func (this *TemplateController) RecordLog(message string, level int) {
 	userAgent := this.Ctx.Request.UserAgent()

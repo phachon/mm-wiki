@@ -10,6 +10,9 @@ const (
 	Role_Delete_True = 1
 	Role_Delete_False = 0
 
+	Role_Root_Id = 1
+	Role_Admin_Id = 2
+	Role_Default_Id = 3
 )
 
 const Table_Role_Name = "role"
@@ -163,6 +166,22 @@ func (u *Role) GetRolesByLimit(limit int, number int) (roles []map[string]string
 	}
 	roles = rs.Rows()
 
+	return
+}
+
+// get all roles
+func (u *Role) GetRoles() (roles []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Role_Name).Where(map[string]interface{}{
+			"is_delete": Role_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	roles = rs.Rows()
 	return
 }
 

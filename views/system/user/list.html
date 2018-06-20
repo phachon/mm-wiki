@@ -3,13 +3,24 @@
     <div class="panel-body">
         <div class="row">
             <form action="" method="get">
-                <div class="col-md-9">
+                <div class="col-md-6">
                     <div class="input-group">
+                    </div>
+                </div>{{$username := .username}}{{$roleId := .roleId}}
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon"> 角色</span>
+                        <select name="role_id" class="form-control">
+                            <option value="">全部</option>
+                        {{range $role := .roles}}
+                            <option value="{{$role.role_id}}" {{if eq $role.role_id $roleId}} selected {{end}}>{{$role.name}}</option>
+                        {{end}}
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="input-group">
-                        <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="用户名/姓名">
+                        <input class="form-control" name="username" type="text" value="{{$username}}" placeholder="用户名">
 				            <span class="input-group-btn">
 				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
 				            </span>
@@ -23,28 +34,42 @@
             <thead>
             <tr>
                 <th class="w8p">ID</th>
-                <th class="w10p">用户名</th>
+                <th class="w15p">用户名</th>
                 <th>姓名</th>
                 <th class="w15p">邮箱</th>
-                <th class="w15p">手机号</th>
+                <th class="w11p">手机号</th>
                 <th class="w15p">角色</th>
-                <th class="w15p">操作</th>
+                <th class="w8p">状态</th>
+                <th class="w10p">操作</th>
             </tr>
             </thead>
             <tbody>
             {{range $user := .users}}
             <tr>
                 <td class="center">{{$user.user_id}}</td>
-                <td>{{$user.username}}</td>
-                <td>{{$user.given_name}}</td>
+                <td><a name="info" data-link="/system/user/info?user_id={{$user.user_id}}">{{$user.username}}</a></td>
+                <td><a name="info" data-link="/system/user/info?user_id={{$user.user_id}}">{{$user.given_name}}</a></td>
                 <td>{{$user.email}}</td>
                 <td class="center">{{$user.mobile}}</td>
                 <td class="center">
-                    <label class="text-success">{{$user.role_name}}</label>
+                    <label class="text-info">{{$user.role_name}}</label>
                 </td>
                 <td class="center">
-                    <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/user/edit?user_id={{$user.user_id}}">修改</a>
-                    <a onclick="Layers.confirm('确定删除吗？', '/system/user/delete?user_id={{$user.user_id}}');" class="remove glyphicon glyphicon-trash">删除</a>
+                    {{if eq $user.is_forbidden "1"}}
+                    <span class="label label-danger">屏蔽</span>
+                    {{else}}
+                    <span class="label label-success">正常</span>
+                    {{end}}
+                </td>
+                <td class="center">
+                    <a name="edit" data-link="/system/user/edit?user_id={{$user.user_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                {{if ne $user.role_id "1"}}
+                {{if eq $user.is_forbidden "1"}}
+                    <a onclick="Layers.confirm('确定恢复该用户吗？', '/system/user/recover?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-ok"></i>恢复</a>
+                {{else}}
+                    <a onclick="Layers.confirm('确定屏蔽该用户吗？', '/system/user/forbidden?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-remove"></i>屏蔽</a>
+                {{end}}
+                {{end}}
                 </td>
             </tr>
             {{end}}
@@ -57,5 +82,6 @@
 </div>
 </div>
 <script type="text/javascript">
-    Layers.bindIframe("[name='edit']", "修改用户信息", "500px", "1000px");
+    Layers.bindIframe("[name='edit']", "修改用户信息", "450px", "1000px");
+    Layers.bindIframe("[name='info']", "用户详情", "500px", "1000px");
 </script>

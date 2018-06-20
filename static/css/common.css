@@ -119,6 +119,15 @@ ul,li {
 .layui-layer-content iframe {
 }
 
+.layui-layer-btn0 {
+    border-color: #337ab7!important;
+    background-color: #337ab7!important;
+}
+.layui-layer-content {
+    font-size: 14px!important;
+    text-align: center!important;
+    font-weight: bold!important;
+}
 .ztree * {
     font-size: 13px;
 }

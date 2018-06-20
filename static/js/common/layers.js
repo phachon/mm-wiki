@@ -32,28 +32,32 @@ var Layers = {
 	},
 	
 	failedMsg: function (info) {
-		var content = '<h4><i class="glyphicon glyphicon-remove"></i> 操作失败 </h4>';
+		var content = '<i class="fa fa-frown-o"></i> ';
 		content += info;
-		layer.msg(content, function(){});
+		layer.msg(content, function () {});
 	},
 
 	successMsg: function (info) {
-		var content = '<h4><i class="glyphicon glyphicon-ok"></i> 操作成功 </h4>';
+		var content = '<i class="fa fa-smile-o"></i> ';
 		content += info;
 		layer.msg(content);
 	},
 
 	/**
-	 * confirm 提示框
+	 * confirm 提示框， post 请求
 	 * @param title
 	 * @param url
+	 * @param data
 	 */
-	confirm: function (title, url) {
+	confirm: function (title, url, data) {
+        title = '<i class="fa fa-volume-up"></i> '+title;
 		layer.confirm(title, {
 			btn: ['是','否'],
-			skin: Layers.skin
+			skin: Layers.skin,
+            btnAlign: 'c',
+			title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
 		}, function() {
-			Common.ajaxSubmit(url)
+			Common.ajaxSubmit(url, data)
 		}, function() {
 
 		});

@@ -1,0 +1,53 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <form action="" method="get">
+                <div class="col-md-6">
+                    <div class="input-group">
+                    </div>
+                </div>{{$roleId := .roleId}}
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w8p">ID</th>
+                <th class="w15p">用户名</th>
+                <th>姓名</th>
+                <th class="w15p">邮箱</th>
+                <th class="w11p">手机号</th>
+                <th class="w15p">角色</th>
+                <th class="w8p">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $user := .users}}
+            <tr>
+                <td class="center">{{$user.user_id}}</td>
+                <td>{{$user.username}}</td>
+                <td>{{$user.given_name}}</td>
+                <td>{{$user.email}}</td>
+                <td class="center">{{$user.mobile}}</td>
+                <td class="center">
+                    <label class="text-info">{{$user.role_name}}</label>
+                </td>
+                <td class="center">
+                    {{if eq $user.is_forbidden "1"}}
+                    <span class="label label-danger">屏蔽</span>
+                    {{else}}
+                    <span class="label label-success">正常</span>
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
+</div>
+</div>

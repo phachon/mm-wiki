@@ -166,14 +166,23 @@ func (u *User) EncodePassword(password string) (passwordHash string) {
 }
 
 // get limit users by search keyword
-func (u *User) GetUsersByKeywordAndLimit(keyword string, limit int, number int) (users []map[string]string, err error) {
+func (u *User) GetUsersByKeywordsAndLimit(keywords map[string]string, limit int, number int) (users []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
-		"username LIKE": "%" + keyword + "%",
+	var whereValue = map[string]interface{}{
 		"is_delete":     User_Delete_False,
-	}).Limit(limit, number).OrderBy("user_id", "DESC"))
+	}
+	username, ok := keywords["username"]
+	if ok && username != "" {
+		whereValue["username LIKE"] = "%" + username + "%"
+	}
+	roleId, ok := keywords["role_id"]
+	if ok && roleId != "" {
+		whereValue["role_id"] = roleId
+	}
+
+	rs, err = db.Query(db.AR().From(Table_User_Name).Where(whereValue).Limit(limit, number).OrderBy("user_id", "DESC"))
 	if err != nil {
 		return
 	}
@@ -223,17 +232,23 @@ func (u *User) CountUsers() (count int64, err error) {
 }
 
 // get user count by keyword
-func (u *User) CountUsersByKeyword(keyword string) (count int64, err error) {
+func (u *User) CountUsersByKeywords(keywords map[string]string) (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().
-		Select("count(*) as total").
-		From(Table_User_Name).
-		Where(map[string]interface{}{
-			"username LIKE": "%" + keyword + "%",
-			"is_delete":     User_Delete_False,
-		}))
+	var whereValue = map[string]interface{}{
+		"is_delete":     User_Delete_False,
+	}
+	username, ok := keywords["username"]
+	if ok && username != "" {
+		whereValue["username LIKE"] = "%" + username + "%"
+	}
+	roleId, ok := keywords["role_id"]
+	if ok && roleId != "" {
+		whereValue["role_id"] = roleId
+	}
+
+	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_User_Name).Where(whereValue))
 	if err != nil {
 		return
 	}

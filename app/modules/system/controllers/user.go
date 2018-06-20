@@ -4,6 +4,7 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	"fmt"
 )
 
 type UserController struct {
@@ -11,20 +12,33 @@ type UserController struct {
 }
 
 func (this *UserController) Add() {
+
+	roles, err := models.RoleModel.GetRoles()
+	if err != nil {
+		this.ErrorLog("获取用户角色失败："+err.Error())
+		this.ViewError("获取用户角色失败！")
+	}
+	this.Data["roles"] = roles
 	this.viewLayout("user/form", "default")
 }
 
 func (this *UserController) Save() {
 
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/user/add")
+	}
 	username := strings.TrimSpace(this.GetString("username", ""))
 	givenName := strings.TrimSpace(this.GetString("given_name", ""))
+	password := strings.TrimSpace(this.GetString("password", ""))
 	email := strings.TrimSpace(this.GetString("email", ""))
 	mobile := strings.TrimSpace(this.GetString("mobile", ""))
+	roleId := strings.TrimSpace(this.GetString("role_id", ""))
 	phone := strings.TrimSpace(this.GetString("phone", ""))
 	department := strings.TrimSpace(this.GetString("department", ""))
 	position := strings.TrimSpace(this.GetString("position", ""))
 	location := strings.TrimSpace(this.GetString("location", ""))
 	im := strings.TrimSpace(this.GetString("im", ""))
+	this.Ctx.Request.PostForm.Del("password")
 
 	if username == "" {
 		this.jsonError("用户名不能为空！")
@@ -32,16 +46,31 @@ func (this *UserController) Save() {
 	if givenName == "" {
 		this.jsonError("姓名不能为空！")
 	}
+	if password == "" {
+		this.jsonError("密码不能为空！")
+	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
+	if roleId == "" {
+		this.jsonError("没有选择角色！")
+	}
 
+	ok , err := models.UserModel.HasUsername(username)
+	if err != nil {
+		this.ErrorLog("添加用户失败："+err.Error())
+		this.jsonError("添加用户失败！")
+	}
+	if ok {
+		this.jsonError("用户名已经存在！")
+	}
 	userId, err := models.UserModel.Insert(map[string]interface{}{
 		"username": username,
 		"given_name": givenName,
+		"password":   models.UserModel.EncodePassword(password),
 		"email":      email,
 		"mobile":     mobile,
 		"phone":      phone,
@@ -49,6 +78,7 @@ func (this *UserController) Save() {
 		"position":   position,
 		"location":   location,
 		"im":         im,
+		"role_id":    roleId,
 	})
 
 	if err != nil {
@@ -56,22 +86,30 @@ func (this *UserController) Save() {
 		this.jsonError("添加用户失败")
 	}
 	this.InfoLog("添加用户 "+utils.Convert.IntToString(userId, 10)+" 成功")
-	this.jsonSuccess("添加用户 "+utils.Convert.IntToString(userId, 10)+" 成功", nil, "/system/user/list")
+	this.jsonSuccess("添加用户成功", nil, "/system/user/list")
 }
 
 func (this *UserController) List() {
 
+	keywords := map[string]string{}
 	page, _ := this.GetInt("page", 1)
-	keyword := strings.TrimSpace(this.GetString("keyword", ""))
+	username := strings.TrimSpace(this.GetString("username", ""))
+	roleId := strings.TrimSpace(this.GetString("role_id", ""))
+	if username != "" {
+		keywords["username"] = username
+	}
+	if roleId != "" {
+		keywords["role_id"] = roleId
+	}
 
 	number := 20
 	limit := (page - 1) * number
 	var err error
 	var count int64
 	var users []map[string]string
-	if keyword != "" {
-		count, err = models.UserModel.CountUsersByKeyword(keyword)
-		users, err = models.UserModel.GetUsersByKeywordAndLimit(keyword, limit, number)
+	if len(keywords) != 0 {
+		count, err = models.UserModel.CountUsersByKeywords(keywords)
+		users, err = models.UserModel.GetUsersByKeywordsAndLimit(keywords, limit, number)
 	} else {
 		count, err = models.UserModel.CountUsers()
 		users, err = models.UserModel.GetUsersByLimit(limit, number)
@@ -82,16 +120,18 @@ func (this *UserController) List() {
 	}
 
 	var roleIds = []string{}
-	for _, user := range users {
-		roleIds = append(roleIds, user["role_id"])
+	if roleId != "" {
+		roleIds = append(roleIds, roleId)
+	}else {
+		for _, user := range users {
+			roleIds = append(roleIds, user["role_id"])
+		}
 	}
-
 	roles, err := models.RoleModel.GetRoleByRoleIds(roleIds)
 	if err != nil {
 		this.ErrorLog("获取用户列表失败: "+err.Error())
 		this.ViewError("获取用户列表失败!", "/system/main/index")
 	}
-
 	var roleUsers = []map[string]string{}
 	for _, user := range users {
 		roleUser := user
@@ -104,8 +144,15 @@ func (this *UserController) List() {
 		roleUsers = append(roleUsers, roleUser)
 	}
 
+	allRoles, err := models.RoleModel.GetRoles()
+	if err != nil {
+		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ViewError("获取用户列表失败！", "/system/main/index")
+	}
 	this.Data["users"] = roleUsers
-	this.Data["keyword"] = keyword
+	this.Data["username"] = username
+	this.Data["roleId"] = roleId
+	this.Data["roles"] = allRoles
 	this.SetPaginator(number, count)
 	this.viewLayout("user/list", "default")
 }
@@ -114,14 +161,180 @@ func (this *UserController) Edit() {
 
 	userId := this.GetString("user_id", "")
 	if userId == "" {
-		this.ViewError("用户不存在", "/system/user/list")
+		this.ViewError("用户不存在！", "/system/user/list")
 	}
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ViewError("用户不存在", "/system/user/list")
+		this.ErrorLog("查找用户出错："+err.Error())
+		this.ViewError("查找用户出错！", "/system/user/list")
+	}
+	if len(user) == 0 {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+
+	roles, err := models.RoleModel.GetRoles()
+	if err != nil {
+		this.ErrorLog("获取用户角色失败："+err.Error())
+		this.ViewError("获取用户角色失败！")
 	}
 
 	this.Data["user"] = user
+	this.Data["roles"] = roles
 	this.viewLayout("user/form", "default")
+}
+
+func (this *UserController) Modify() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/user/list")
+	}
+	userId := strings.TrimSpace(this.GetString("user_id", ""))
+	givenName := strings.TrimSpace(this.GetString("given_name", ""))
+	email := strings.TrimSpace(this.GetString("email", ""))
+	mobile := strings.TrimSpace(this.GetString("mobile", ""))
+	roleId := strings.TrimSpace(this.GetString("role_id", ""))
+	phone := strings.TrimSpace(this.GetString("phone", ""))
+	department := strings.TrimSpace(this.GetString("department", ""))
+	position := strings.TrimSpace(this.GetString("position", ""))
+	location := strings.TrimSpace(this.GetString("location", ""))
+	im := strings.TrimSpace(this.GetString("im", ""))
+
+	if userId == "" {
+		this.jsonError("没有选择用户！")
+	}
+	if givenName == "" {
+		this.jsonError("姓名不能为空！")
+	}
+	if email == "" {
+		this.jsonError("邮箱不能为空！")
+	}
+	if mobile == "" {
+		this.jsonError("手机号不能为空！")
+	}
+	if roleId == "" {
+		this.jsonError("没有选择角色！")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("修改用户 "+userId+" 失败："+err.Error())
+		this.ViewError("修改用户出错！", "/system/user/list")
+	}
+	if len(user) == 0 {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
+		roleId = fmt.Sprintf("%d", models.Role_Root_Id)
+	}
+
+	_, err = models.UserModel.Update(userId, map[string]interface{}{
+		"given_name": givenName,
+		"email":      email,
+		"mobile":     mobile,
+		"role_id":    roleId,
+		"phone":      phone,
+		"department": department,
+		"position":   position,
+		"location":   location,
+		"im":         im,
+	})
+
+	if err != nil {
+		this.ErrorLog("修改用户 "+userId+" 失败：" + err.Error())
+		this.jsonError("修改用户失败")
+	}
+	this.InfoLog("修改用户 "+userId+" 成功")
+	this.jsonSuccess("修改用户成功", nil, "/system/user/list")
+}
+
+func (this *UserController) Forbidden() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/user/list")
+	}
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.jsonError("用户不存在")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("屏蔽用户失败")
+	}
+	if len(user) == 0 {
+		this.jsonError("用户不存在")
+	}
+	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("不能操作超级管理员")
+	}
+	_, err = models.UserModel.Update(userId, map[string]interface{}{
+		"is_forbidden": models.User_Forbidden_True,
+	})
+	if err != nil {
+		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("屏蔽用户失败")
+	}
+
+	this.InfoLog("屏蔽用户 "+userId+" 成功")
+	this.jsonSuccess("屏蔽用户成功", nil, "system/user/list")
+}
+
+func (this *UserController) Recover() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/user/list")
+	}
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.jsonError("用户不存在")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("屏蔽用户失败")
+	}
+	if len(user) == 0 {
+		this.jsonError("用户不存在")
+	}
+	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("不能操作超级管理员")
+	}
+	_, err = models.UserModel.Update(userId, map[string]interface{}{
+		"is_forbidden": models.User_Is_Forbidden_False,
+	})
+	if err != nil {
+		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("屏蔽用户失败")
+	}
+
+	this.InfoLog("恢复用户 "+userId+" 成功")
+	this.jsonSuccess("恢复用户成功", nil, "system/user/list")
+}
+
+func (this *UserController) Info() {
+
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("查找用户出错："+err.Error())
+		this.ViewError("查找用户出错！", "/system/user/list")
+	}
+	if len(user) == 0 {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+	role, err := models.RoleModel.GetRoleByRoleId(user["role_id"])
+	if err != nil {
+		this.ErrorLog("查找用户角色出错："+err.Error())
+		this.ViewError("查找用户出错！", "/system/user/list")
+	}
+	this.Data["user"] = user
+	this.Data["role"] = role
+	this.viewLayout("user/info", "default")
 }

@@ -1,0 +1,94 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tbody>{{$user := .user}}{{$role := .role}}
+                <tr>
+                    <th class="w15p">用户名</th>
+                    <td>{{$user.username}}</td>
+                </tr>
+                <tr>
+                    <th class="w15p">姓名</th>
+                    <td>{{$user.given_name}}</td>
+                </tr>
+                <tr>
+                    <th class="w15p">角色</th>
+                    <td>
+                    <label class="text text-info">{{$role.name}}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="w15p">邮箱</th>
+                    <td>{{$user.email}}</td>
+                </tr>
+                <tr>
+                    <th class="w15p">手机</th>
+                    <td>{{$user.mobile}}</td>
+                </tr>
+                <tr>
+                    <th>电话</th>
+                    <td>
+                        <strong>{{$user.phone}}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <th>部门</th>
+                    <td>{{$user.department}}</td>
+                </tr>
+                <tr>
+                    <th>职位</th>
+                    <td>{{$user.postion}}</td>
+                </tr>
+                <tr>
+                    <th>位置</th>
+                    <td>{{$user.location}}</td>
+                </tr>
+                <tr>
+                    <th>IM</th>
+                    <td>{{$user.im}}</td>
+                </tr>
+                <tr>
+                    <th>状态</th>
+                    <td>
+                    {{if eq $user.is_forbidden "1"}}
+                        <span class="label label-danger">屏蔽</span>
+                    {{else}}
+                        <span class="label label-success">正常</span>
+                    {{end}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>最后登录时间</th>
+                    <td>
+                    {{if eq $user.last_time "0"}}
+                        0
+                    {{else}}
+                     {{dateFormat $user.last_publish_time "Y-m-d H:i:s"}}
+                    {{end}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>最后登录ip</th>
+                    <td>
+                    {{$user.last_ip}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>创建时间</th>
+                    <td>
+                    {{dateFormat $user.create_time "Y-m-d H:i:s"}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>修改时间</th>
+                    <td>
+                    {{dateFormat $user.update_time "Y-m-d H:i:s"}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
