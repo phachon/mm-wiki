@@ -91,11 +91,10 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>选择图标</label>
                     <div class="col-sm-4">
-                        <button class="btn btn-default" role="iconpicker"></button>
                         <div class="input-group">
                             <input type="text" class="form-control" name="icon" value="" placeholder="选择菜单图标">
                             <span class="input-group-btn">
-                                <button class="btn btn-default" data-icon="glyphicon-home" role="iconpicker"></button>
+                                <button class="btn btn-default" id="icon" data-icon="glyphicon-home" role="iconpicker"></button>
                             </span>
                         </div>
                     </div>
@@ -115,6 +114,6 @@
         onText: '是',
         offText: '否'
     });
-    $("input[name='icon']").iconpicker();
+    $("#icon").iconpicker();
 
 </script>
