@@ -1,0 +1,18 @@
+<div class="container-fluid">
+    <div class="panel panel-default" style="margin-bottom:80px;">
+        <div class="panel-body">
+            <h4><span class="label label-default">系统权限</span><input type="checkbox" name="privilege_id" value=""></h4>
+            <br>
+            {{range $menu := $.menus}}
+                <ul class="list-group w240 inline-group">
+                    <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><input type="checkbox" name="privilege_id" value=""></span></li>
+                    {{range $controller := $.controllers}}
+                        {{if eq $controller.parent_id $menu.privilege_id}}
+                            <li class="list-group-item">{{$controller.name}}<span class="pull-right"><input type="checkbox" name="privilege_id" value=""></span></li>
+                        {{end}}
+                    {{end}}
+                </ul>
+            {{end}}
+        </div>
+    </div>
+</div>

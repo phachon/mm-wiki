@@ -174,3 +174,16 @@ func (this *RoleController) User() {
 	this.SetPaginator(number, count)
 	this.viewLayout("role/user", "default")
 }
+
+func (this *RoleController) Privilege() {
+
+	menus, controllers, err := models.PrivilegeModel.GetTypePrivileges()
+	if err != nil {
+		this.ViewError("查找权限失败！")
+	}
+
+	this.Data["menus"] = menus
+	this.Data["controllers"] = controllers
+
+	this.viewLayout("role/privilege", "default")
+}
