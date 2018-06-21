@@ -8,65 +8,58 @@ type Privilege struct {
 
 const Table_Privilege_Name = "privilege"
 
+const (
+	Privilege_Type_Menu = "menu"
+	Privilege_Type_Controller = "controller"
+
+	Privilege_DisPlay_True = "1"
+	Privilege_DisPlay_False = "0"
+)
+
 var PrivilegeModel = Privilege{}
 
-func (p *Privilege) GetTypedPrivileges(userId string, isDisplay string) (navigators, menus, controllers []map[string]string, err error) {
+func (p *Privilege) GetTypePrivileges() (menus, controllers []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	if userId != "1" {
-		roldIds := []string{}
-		rs, err = db.Query(db.AR().Select("role_id").From("user_role").Where(map[string]interface{}{
-			"user_id":   userId,
-			"is_delete": 0,
-		}))
-		if err != nil {
-			return
-		}
-		roldIds = rs.Values("role_id")
-
-		privilegeIds := []string{}
-		rs, err = db.Query(db.AR().Select("privilege_id").From("role_privilege").Where(map[string]interface{}{
-			"role_id":   roldIds,
-			"is_delete": 0,
-		}))
-		if err != nil {
-			return
-		}
-		privilegeIds = rs.Values("privilege_id")
-
-		rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
-			"privilege_id": privilegeIds,
-		}).OrderBy("sequence", "ASC"))
-
-		if err != nil {
-			return
-		}
-	} else {
-		rs, err = db.Query(db.AR().From(Table_Privilege_Name).OrderBy("sequence", "ASC"))
-		if err != nil {
-			return
-		}
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name).OrderBy("sequence", "ASC"))
+	if err != nil {
+		return
 	}
-	navigators = []map[string]string{}
 	menus = []map[string]string{}
 	controllers = []map[string]string{}
 	for _, row := range rs.Rows() {
-		if isDisplay != "-1" {
-			if row["is_display"] != isDisplay {
-				continue
-			}
-		}
 		switch row["type"] {
-		case "navigator":
-			navigators = append(navigators, row)
-		case "menu":
+		case Privilege_Type_Menu:
 			menus = append(menus, row)
-		case "controller":
+		case Privilege_Type_Controller:
 			controllers = append(controllers, row)
 		}
 	}
 	return
 }
+
+func (p *Privilege) GetTypePrivilegesByDisplay(display string) (menus, controllers []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
+		"is_display": display,
+	}).OrderBy("sequence", "ASC"))
+	if err != nil {
+		return
+	}
+	menus = []map[string]string{}
+	controllers = []map[string]string{}
+	for _, row := range rs.Rows() {
+		switch row["type"] {
+		case Privilege_Type_Menu:
+			menus = append(menus, row)
+		case Privilege_Type_Controller:
+			controllers = append(controllers, row)
+		}
+	}
+	return
+}
+
 func (p *Privilege) GetPrivilegeByPrivilegeId(privilegeId string) (privilege map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet

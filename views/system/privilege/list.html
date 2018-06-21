@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <div class="panel panel-default" style="margin-bottom:80px;">
+        <div class="panel-body">
+            <h4><span class="label label-default">系统权限</span></h4>
+            <br>
+            {{range $menu := $.menus}}
+                <ul class="list-group w240 inline-group">
+                    <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$menu.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$menu.privilege_id}}')">删</a></span></li>
+                    {{range $controller := $.controllers}}
+                        {{if eq $controller.parent_id $menu.privilege_id}}
+                            <li class="list-group-item">{{$controller.name}}<span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$controller.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$controller.privilege_id}}')">删</a></span></li>
+                        {{end}}
+                    {{end}}
+                </ul>
+            {{end}}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='edit']", "修改权限信息", "500px", "1000px");
+</script>
