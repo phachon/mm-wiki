@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 	"mm-wiki/app/models"
+	"mm-wiki/app"
 )
 
 type TemplateController struct {
@@ -30,6 +31,8 @@ func (this *TemplateController) Prepare() {
 	controllerName, action := this.GetControllerAndAction()
 	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
 	this.actionName = strings.ToLower(action)
+	this.Data["navName"] = this.controllerName
+	this.Data["version"] = app.Version
 
 	if this.controllerName == "author" {
 		return
@@ -48,14 +51,10 @@ func (this *TemplateController) Prepare() {
 		if this.IsPost() {
 			this.JsonError("抱歉，您没有权限操作！", nil, "/system/main/index")
 		}else {
-			this.ViewError("您没有权限操作！", "/system/main/index")
+			this.ViewError("您没有权限访问该页面！", "/system/main/index")
 		}
 		this.StopRun()
 	}
-
-	this.User = this.GetSession("author").(map[string]string)
-	this.UserId = this.User["user_id"]
-	this.Data["navName"] = this.controllerName
 }
 
 // check is login
@@ -97,6 +96,8 @@ func (this *TemplateController) isLogin() bool {
 	}
 	// flush session
 	this.SetSession("author", newUser)
+	this.User = this.GetSession("author").(map[string]string)
+	this.UserId = this.User["user_id"]
 	// success
 	return true
 }
@@ -107,7 +108,7 @@ func (this *TemplateController) checkAccess() bool {
 	mca := strings.Split(strings.Trim(path, "/"), "/")
 
 	// must /system/controller/action
-	if (len(mca) == 3) && (mca[0] == "system") {
+	if (len(mca) >= 3) && (strings.ToLower(mca[0]) == "system") {
 		// no check '/system/main/index' '/system/main/default'
 		if (this.controllerName == "main" && this.actionName == "index") || this.controllerName == "main" && this.actionName == "default" {
 			return true
@@ -115,6 +116,7 @@ func (this *TemplateController) checkAccess() bool {
 		if this.IsRoot() {
 			return true
 		}
+		fmt.Println(this.UserId)
 		_, controllers, err := models.PrivilegeModel.GetTypePrivilegesByUserId(this.UserId)
 		if err != nil {
 			this.ErrorLog("获取用户 "+this.UserId+" 权限失败："+err.Error())
@@ -122,10 +124,12 @@ func (this *TemplateController) checkAccess() bool {
 		}
 		for _, controller := range controllers {
 			action := strings.ToLower(controller["action"])
-			if this.controllerName == strings.ToLower(controller["controller"]) && this.actionName == action {
+			controller := strings.ToLower(controller["controller"])
+			if this.controllerName == controller && this.actionName == action {
 				return true
 			}
 		}
+		return false
 	}
 	return true
 }

@@ -77,6 +77,10 @@ th {
     word-wrap:break-word;
 }
 
+.label-xs {
+    width: 10px;
+    height: 5px;
+}
 #paginator {
     margin-left: 10px;
 }
