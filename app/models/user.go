@@ -286,6 +286,35 @@ func (u *User) GetUserByUserIds(userIds []string) (users []map[string]string, er
 	return
 }
 
+// get user by not in user_ids
+func (u *User) GetUserByNotUserIds(userIds []string) (users []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
+		"user_id NOT":   userIds,
+		"is_delete": User_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	users = rs.Rows()
+	return
+}
+
+// get all users
+func (u *User) GetUsers(userIds []string) (users []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
+		"is_delete": User_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	users = rs.Rows()
+	return
+}
+
 // update user by username
 func (u *User) UpdateUserByUsername(user map[string]interface{}) (affect int64, err error) {
 	db := G.DB()

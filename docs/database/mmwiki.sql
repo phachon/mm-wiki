@@ -94,6 +94,7 @@ CREATE TABLE `mw_space` (
   `space_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '空间 id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
   `description` varchar(100) NOT NULL DEFAULT '' COMMENT '描述',
+  `tags` varchar(255) NOT NULL DEFAULT '' COMMENT '标签',
   `visit_level` enum('private','internal','public') NOT NULL DEFAULT 'internal' COMMENT '访问级别：private,internal,public',
   `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否 1 是',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
@@ -102,17 +103,21 @@ CREATE TABLE `mw_space` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='空间表';
 
 -- --------------------------------
--- 空间标签表
+-- 空间成员表
 -- --------------------------------
-DROP TABLE IF EXISTS `mw_space_tag`;
-CREATE TABLE `mw_space_tag` (
-  `space_tag_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '空间标签关系 id',
-  `space_id` int(11) unsigned NOT NULL  COMMENT '空间 id',
-  `tag` char(10) NOT NULL DEFAULT '' COMMENT '标签名称',
-  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`space_tag_id`),
+DROP TABLE IF EXISTS `mw_space_user`;
+CREATE TABLE `mw_space_user` (
+  `space_user_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户空间关系 id',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户 id',
+  `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间 id',
+  `privilege` tinyint(3) NOT NULL DEFAULT '0' COMMENT '空间成员操作权限 0 浏览者 1 编辑者 2 管理员',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`space_user_id`),
+  UNIQUE KEY (`user_id`, `space_id`),
+  KEY (`user_id`),
   KEY (`space_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='空间标签表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='空间成员表';
 
 -- --------------------------------
 -- 文档表
@@ -133,22 +138,6 @@ CREATE TABLE `mw_page` (
   KEY (`parent_id`),
   KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档表';
-
--- --------------------------------
--- 用户空间关系表
--- --------------------------------
-DROP TABLE IF EXISTS `mw_user_space`;
-CREATE TABLE `mw_user_space` (
-  `user_space_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户空间关系 id',
-  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户 id',
-  `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '项目 id',
-  `privilege` tinyint(3) NOT NULL DEFAULT '0' COMMENT '用户空间访问权限 0 浏览者 1 编辑者 2 管理员',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`user_space_id`),
-  UNIQUE KEY (`user_id`, `space_id`),
-  KEY (`user_id`),
-  KEY (`space_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户空间关系表';
 
 -- --------------------------------
 -- 用户收藏表

@@ -1,0 +1,72 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <br>{{$space := .space}}
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" action="{{if $space}} /system/space/modify {{else}}/system/space/save {{end}}">
+                <input type="hidden" name="space_id" value="{{$space.space_id}}">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>空间名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" value="{{$space.name}}" placeholder="请输入空间名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span>空间描述</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="description" class="form-control" value="{{$space.description}}" placeholder="请输入空间描述">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span>空间标签</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="tags" class="form-control" value="{{$space.tags}}" placeholder="请输入空间标签     ">
+                    </div>
+                    <div class="col-sm-2 form-comment">
+                        <span class="text-danger"> * 最多三个标签</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>访问级别</label>
+                    <div class="col-sm-5">
+                        <div class="radio radio-primary">
+                            <input type="radio" name="visit_level" id="radio-private" value="private">
+                            <label for="radio-private"><i class="fa fa-lock fa-fw"></i>&nbsp;Private</label>
+                            <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 只能是该空间下的用户才可以访问</span>
+                        </div>
+                        <div class="radio radio-primary">
+                            <input type="radio" name="visit_level" id="radio-internal" value="internal" checked="checked">
+                            <label for="radio-internal"><i class="fa fa-shield fa-fw"></i>&nbsp;Internal</label>
+                            <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 可以由任何登录用户访问</span>
+                        </div>
+                        <div class="radio radio-primary">
+                            <input type="radio" name="visit_level" id="radio-public" value="public">
+                            <label for="radio-public"><i class="fa fa-globe fa-fw"></i>&nbsp;Public</label>
+                            <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 没有任何身份验证的情况下也可以访问该空间</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $space}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        // is_display
+        $("input[name='is_display']").bootstrapSwitch({
+            size: 'small',
+            onText: '是',
+            offText: '否'
+        });
+        $("input[name='tags']").tagsinput({
+            tagClass: 'label label-primary',
+            maxTags:3
+        });
+    });
+</script>

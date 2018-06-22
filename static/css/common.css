@@ -81,6 +81,9 @@ th {
     width: 10px;
     height: 5px;
 }
+.form-comment {
+    margin-top: 8px!important;
+}
 #paginator {
     margin-left: 10px;
 }

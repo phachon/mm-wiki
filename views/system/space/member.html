@@ -1,0 +1,64 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">{{$spaceId := .space_id}}
+            <form action="" method="get">
+                <form action="/system/space_user/add" method="post">
+                    <div class="col-md-4">{{$otherUsers := .otherUsers}}
+                        <div class="input-group">
+                            <select name="node_id" class="selectpicker show-menu-arrow form-control"
+                                    multiple data-live-search="true"
+                                    data-max-options="4"
+                                    title="选择要添加的成员">
+                            {{range $otherUser := $otherUsers}}
+                                <option title="<span class='label label-success'>{{$otherUser.username}}</span>" value="{{$otherUser.user_id}}">{{$otherUser.username}}({{$otherUser.given_name}})</option>
+                            {{end}}
+                            </select>
+                            <input type="hidden" name="nodes_id" value="{{$spaceId}}">
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary" onclick="Form.ajaxSubmit(this.form, false);"><i class="glyphicon glyphicon-import"></i> 添加 </button>
+			            </span>
+                        </div>
+                    </div>
+                </form>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w8p">ID</th>
+                <th class="w15p">用户名</th>
+                <th>姓名</th>
+                <th class="w20p">邮箱</th>
+                <th class="w15p">空间权限</th>
+                <th class="w13p">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $user := .users}}
+            <tr>
+                <td class="center">{{$user.user_id}}</td>
+                <td>{{$user.username}}</td>
+                <td>{{$user.given_name}}</td>
+                <td>{{$user.email}}</td>
+                <td class="center">
+                    <label class="text-info">
+                    {{$user.space_privilege}}
+                    </label>
+                </td>
+                <td class="center">
+                    <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/space/edit?space_id=">修改</a>
+                    <a onclick="Layers.confirm('确定删除吗？', '/system/space/delete?space_id=');" class="glyphicon glyphicon-trash">删除</a>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
+</div>
+</div>

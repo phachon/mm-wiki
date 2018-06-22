@@ -1,0 +1,75 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <form action="" method="get">
+                <div class="col-md-9">
+                    <div class="input-group">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="空间名称">
+				            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w8p">ID</th>
+                <th class="w15p">名称</th>
+                <th>描述</th>
+                <th class="w15p">标签</th>
+                <th class="w15p">创建时间</th>
+                <th class="w20p">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $space := .spaces}}
+            <tr>
+                <td class="center">{{$space.space_id}}</td>
+                <td>{{$space.name}}</td>
+                <td>{{$space.description}}</td>
+                <td class="tags-show center">{{$space.tags}}</td>
+                <td class="center">
+                {{dateFormat $space.create_time "Y-m-d H:i:s"}}
+                </td>
+                <td class="center">
+                    <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/space/edit?space_id={{$space.space_id}}">修改</a>
+                    <a name="user" class="fa fa-group" data-link="/system/space/member?space_id={{$space.space_id}}">成员</a>
+                    <a onclick="Layers.confirm('确定删除吗？', '/system/space/delete?space_id={{$space.space_id}}');" class="glyphicon glyphicon-trash">删除</a>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    $(function () {
+       $(".tags-show").each(function () {
+           var tags = $(this).text();
+           if (tags !== "") {
+               var html = "";
+               var tagList = tags.split(",");
+               for (var i = 0; i < tagList.length; i++) {
+                   html += "<span class='label label-default'>"+tagList[i]+"</span> ";
+               }
+               $(this).html(html);
+           }
+       });
+    });
+    Layers.bindIframe("[name='edit']", "修改空间信息", "450px", "950px");
+    Layers.bindIframe("[name='privilege']", "空间授权", "500px", "1050px");
+    Layers.bindIframe("[name='user']", "空间用户", "500px", "1000px");
+</script>
