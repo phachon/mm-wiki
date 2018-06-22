@@ -1,6 +1,9 @@
 package models
 
-import "github.com/snail007/go-activerecord/mysql"
+import (
+	"github.com/snail007/go-activerecord/mysql"
+	"fmt"
+)
 
 type Privilege struct {
 
@@ -38,11 +41,82 @@ func (p *Privilege) GetTypePrivileges() (menus, controllers []map[string]string,
 	return
 }
 
+func (p *Privilege) GetTypePrivilegesByUserId(userId string) (menus, controllers []map[string]string, err error) {
+
+	user, err := UserModel.GetUserByUserId(userId)
+	if err != nil {
+		return
+	}
+	if len(user) == 0 {
+		return
+	}
+	roleId := user["role_id"]
+
+	if roleId == fmt.Sprintf("%d", Role_Root_Id) {
+		return PrivilegeModel.GetTypePrivileges()
+	}
+	rolePrivileges := []map[string]string{}
+	rolePrivileges, err = RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+	if err != nil {
+		return
+	}
+	var privilegeIds = []string{}
+	for _, rolePrivilege := range rolePrivileges {
+		privilegeIds = append(privilegeIds, rolePrivilege["privilege_id"])
+	}
+	return PrivilegeModel.GetTypePrivilegesByPrivilegeIds(privilegeIds)
+}
+
 func (p *Privilege) GetTypePrivilegesByDisplay(display string) (menus, controllers []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
 		"is_display": display,
+	}).OrderBy("sequence", "ASC"))
+	if err != nil {
+		return
+	}
+	menus = []map[string]string{}
+	controllers = []map[string]string{}
+	for _, row := range rs.Rows() {
+		switch row["type"] {
+		case Privilege_Type_Menu:
+			menus = append(menus, row)
+		case Privilege_Type_Controller:
+			controllers = append(controllers, row)
+		}
+	}
+	return
+}
+
+func (p *Privilege) GetTypePrivilegesByDisplayPrivilegeIds(display string, privilegeIds []string) (menus, controllers []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
+		"is_display": display,
+		"privilege_id": privilegeIds,
+	}).OrderBy("sequence", "ASC"))
+	if err != nil {
+		return
+	}
+	menus = []map[string]string{}
+	controllers = []map[string]string{}
+	for _, row := range rs.Rows() {
+		switch row["type"] {
+		case Privilege_Type_Menu:
+			menus = append(menus, row)
+		case Privilege_Type_Controller:
+			controllers = append(controllers, row)
+		}
+	}
+	return
+}
+
+func (p *Privilege) GetTypePrivilegesByPrivilegeIds(privilegeIds []string) (menus, controllers []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
+		"privilege_id": privilegeIds,
 	}).OrderBy("sequence", "ASC"))
 	if err != nil {
 		return

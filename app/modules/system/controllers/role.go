@@ -177,13 +177,71 @@ func (this *RoleController) User() {
 
 func (this *RoleController) Privilege() {
 
-	menus, controllers, err := models.PrivilegeModel.GetTypePrivileges()
-	if err != nil {
-		this.ViewError("查找权限失败！")
+	roleId := this.GetString("role_id", "")
+	if roleId == "" {
+		this.ViewError("角色不存在", "/system/role/list")
 	}
 
+	role, err := models.RoleModel.GetRoleByRoleId(roleId)
+	if err != nil {
+		this.ErrorLog("查找角色权限失败："+err.Error())
+		this.ViewError("查看角色权限失败！", "/system/role/list")
+	}
+	if len(role) == 0 {
+		this.ViewError("角色不存在", "/system/role/list")
+	}
+
+	menus, controllers, err := models.PrivilegeModel.GetTypePrivileges()
+	if err != nil {
+		this.ViewError("查找角色权限失败！")
+	}
+
+	rolePrivileges, err := models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+	if err != nil {
+		this.ViewError("查找用户权限出错")
+	}
+
+	this.Data["role"] = role
 	this.Data["menus"] = menus
 	this.Data["controllers"] = controllers
+	this.Data["rolePrivileges"] = rolePrivileges
 
 	this.viewLayout("role/privilege", "default")
+}
+
+func (this *RoleController) GrantPrivilege() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/role/list")
+	}
+	privilegeIds := this.GetStrings("privilege_id", []string{})
+	roleId := this.GetString("role_id", "")
+
+	if roleId == "" {
+		this.jsonError("没有选择角色!")
+	}
+	if len(privilegeIds) == 0 {
+		this.jsonError("没有选择权限!")
+	}
+
+	role, err := models.RoleModel.GetRoleByRoleId(roleId)
+	if err != nil {
+		this.ErrorLog("角色 "+roleId+" 授权失败："+err.Error())
+		this.jsonError("角色不存在")
+	}
+	if len(role) == 0 {
+		this.jsonError("角色不存在")
+	}
+
+	res, err := models.RolePrivilegeModel.GrantRolePrivileges(roleId, privilegeIds)
+	if err != nil {
+		this.ErrorLog("角色 "+roleId+" 授权失败："+err.Error())
+		this.jsonError("角色授权失败！")
+	}
+	if !res {
+		this.jsonError("角色授权失败")
+	}
+
+	this.InfoLog("角色 "+roleId+" 授权成功")
+	this.jsonSuccess("角色授权成功", nil, "/system/role/list")
 }

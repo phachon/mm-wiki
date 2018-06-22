@@ -1,18 +1,50 @@
 <div class="container-fluid">
-    <div class="panel panel-default" style="margin-bottom:80px;">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
         <div class="panel-body">
-            <h4><span class="label label-default">系统权限</span><input type="checkbox" name="privilege_id" value=""></h4>
-            <br>
-            {{range $menu := $.menus}}
-                <ul class="list-group w240 inline-group">
-                    <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><input type="checkbox" name="privilege_id" value=""></span></li>
-                    {{range $controller := $.controllers}}
-                        {{if eq $controller.parent_id $menu.privilege_id}}
-                            <li class="list-group-item">{{$controller.name}}<span class="pull-right"><input type="checkbox" name="privilege_id" value=""></span></li>
+            <form class="form-horizontal" method="post" action="/system/role/grantPrivilege">
+                <input type="hidden" name="role_id" value="{{.role.role_id}}" />
+                <h4><span class="label label-default">{{$.role.name}}权限</span> </h4>
+                <hr>
+                {{range $menu := $.menus}}
+                    <ul class="list-group w240 inline-group">
+                        <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><input name="privilege_id" type="checkbox" data-type="menu" value="{{$menu.privilege_id}}" onclick="Role.privilege(this)" /></span></li>
+                        {{range $controller := $.controllers}}
+                            {{if eq $controller.parent_id $menu.privilege_id}}
+                                <li class="list-group-item">{{$controller.name}}<span class="pull-right"><input name="privilege_id" type="checkbox" data-type="controller" value="{{$controller.privilege_id}}" onclick="Role.privilege(this)" /></li>
+                            {{end}}
                         {{end}}
-                    {{end}}
-                </ul>
-            {{end}}
+                    </ul>
+                {{end}}
+                <div class="form-group">
+                    <div class="col-md-8" style="margin-left:10px;">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, true)" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/static/js/modules/system/role.js"></script>
+<script type="text/javascript">
+    <!--
+    var navigators = [];
+    var menus = [];
+    var controllers = [];
+    var defaultPrivileges = [];
+
+    {{range $menu := .menus }}
+    menus.push({'privilegeId':'{{$menu.privilege_id}}', 'name':'{{$menu.name}}', 'parentId':'{{$menu.parent_id}}', 'type':'{{$menu.type}}'});
+    {{end}}
+
+    {{range $controller := .controllers }}
+    controllers.push({'privilegeId':'{{$controller.privilege_id}}', 'name':'{{$controller.name}}', 'parentId':'{{$controller.parent_id}}', 'type':'{{$controller.type}}'});
+    {{end}}
+
+    {{range $rolePrivilege := .rolePrivileges}}
+    defaultPrivileges.push(parseInt({{$rolePrivilege.privilege_id}}));
+    {{end}}
+
+    Role.defaults(defaultPrivileges);
+    //-->
+</script>

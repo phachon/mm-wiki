@@ -46,8 +46,9 @@ func (this *AuthorController) Login()  {
 	// save cookie
 	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + password)
 	passportValue := utils.Encrypt.Base64Encode(username + "@" + identify)
-	passport := beego.AppConfig.String("author.passport")
-	this.Ctx.SetCookie(passport, passportValue, 3600)
+	passport := beego.AppConfig.String("author::passport")
+	cookieExpired, _ := beego.AppConfig.Int64("author::cookie_expired")
+	this.Ctx.SetCookie(passport, passportValue, cookieExpired)
 
 	this.Ctx.Request.PostForm.Del("password")
 
@@ -58,9 +59,10 @@ func (this *AuthorController) Login()  {
 //logout
 func (this *AuthorController) Logout(){
 	this.InfoLog("退出成功")
-	passport := beego.AppConfig.String("author.passport")
+	passport := beego.AppConfig.String("author::passport")
 	this.Ctx.SetCookie(passport, "")
-	this.SetSession("author", "")
+	this.SetSession("author", nil)
+	this.DelSession("author")
 
 	this.Redirect("/", 302)
 }

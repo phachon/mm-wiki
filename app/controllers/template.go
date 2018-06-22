@@ -15,6 +15,7 @@ type TemplateController struct {
 	UserId string
 	User   map[string]string
 	controllerName string
+	actionName string
 }
 
 type JsonResponse struct {
@@ -26,8 +27,9 @@ type JsonResponse struct {
 
 // prepare
 func (this *TemplateController) Prepare() {
-	controllerName, _ := this.GetControllerAndAction()
+	controllerName, action := this.GetControllerAndAction()
 	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
+	this.actionName = strings.ToLower(action)
 
 	if this.controllerName == "author" {
 		return
@@ -35,14 +37,21 @@ func (this *TemplateController) Prepare() {
 
 	if !this.isLogin() {
 		if this.IsAjax() {
-			this.JsonError("no login", nil, "/author/index")
+			this.JsonError("未登录或登录已失效！", nil, "/author/index")
 		}else {
 			this.Redirect("/author/index", 302)
 		}
 		this.StopRun()
 	}
 
-	this.checkAccess()
+	if !this.checkAccess() {
+		if this.IsPost() {
+			this.JsonError("抱歉，您没有权限操作！", nil, "/system/main/index")
+		}else {
+			this.ViewError("您没有权限操作！", "/system/main/index")
+		}
+		this.StopRun()
+	}
 
 	this.User = this.GetSession("author").(map[string]string)
 	this.UserId = this.User["user_id"]
@@ -51,7 +60,7 @@ func (this *TemplateController) Prepare() {
 
 // check is login
 func (this *TemplateController) isLogin() bool {
-	passport := beego.AppConfig.String("author.passport")
+	passport := beego.AppConfig.String("author::passport")
 	cookie := this.Ctx.GetCookie(passport)
 	// cookie is empty
 	if cookie == "" {
@@ -80,12 +89,45 @@ func (this *TemplateController) isLogin() bool {
 	if identify != utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent()+this.GetClientIp()+userValue["password"]) {
 		return false
 	}
+	// flush session
+	newUser, err := models.UserModel.GetUserByUserId(userValue["user_id"])
+	if err != nil {
+		this.ErrorLog("登录成功 flush session 失败："+err.Error())
+		return false
+	}
+	// flush session
+	this.SetSession("author", newUser)
 	// success
 	return true
 }
 
-func (this *TemplateController) checkAccess() {
+// check access
+func (this *TemplateController) checkAccess() bool {
+	path := this.Ctx.Request.URL.Path
+	mca := strings.Split(strings.Trim(path, "/"), "/")
 
+	// must /system/controller/action
+	if (len(mca) == 3) && (mca[0] == "system") {
+		// no check '/system/main/index' '/system/main/default'
+		if (this.controllerName == "main" && this.actionName == "index") || this.controllerName == "main" && this.actionName == "default" {
+			return true
+		}
+		if this.IsRoot() {
+			return true
+		}
+		_, controllers, err := models.PrivilegeModel.GetTypePrivilegesByUserId(this.UserId)
+		if err != nil {
+			this.ErrorLog("获取用户 "+this.UserId+" 权限失败："+err.Error())
+			return false
+		}
+		for _, controller := range controllers {
+			action := strings.ToLower(controller["action"])
+			if this.controllerName == strings.ToLower(controller["controller"]) && this.actionName == action {
+				return true
+			}
+		}
+	}
+	return true
 }
 
 // view layout
@@ -203,6 +245,10 @@ func (this *TemplateController) IsPost() bool {
 // is Get
 func (this *TemplateController) IsGet() bool {
 	return this.Ctx.Input.Method() == "GET"
+}
+
+func (this *TemplateController) IsRoot() bool {
+	return this.User["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id)
 }
 
 // insert action log
