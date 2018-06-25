@@ -14,13 +14,22 @@ function initPopover() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
+function iniMenu() {
+    $('.menu-nav > li > a').click(function() {
+        $(".menu-nav > li").each(function () {
+            $(this).removeClass('active');
+        });
+        $(this).parent('li').addClass('active');
+    });
+}
 $(window).resize(function () {
     mainRightHeight();
 });
 
 $(window).load(function() {
-    initPopover();
     mainRightHeight();
+    initPopover();
+    iniMenu();
 });
 
 $(document).ready(function () {

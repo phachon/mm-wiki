@@ -151,6 +151,17 @@ select.input-xs {
     line-height: 1.5;
     border-radius: 3px;
 }
+
+.nav>li>a:focus, .nav>li>a:hover {
+    text-decoration: none;
+    background-color: #e8e8e8;
+}
+
+.space-list > td {
+    line-height: 2.2!important;
+    /*padding-top: 15px!important;*/
+}
+
 /*width 按百分比*/
 .w5p{width:5%;}
 .w6p{width:6%;}

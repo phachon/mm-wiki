@@ -23,6 +23,7 @@ func initRouter() {
 	beego.AutoRouter(&controllers.AuthorController{})
 	beego.AutoRouter(&controllers.MainController{})
 	beego.AutoRouter(&controllers.SpaceController{})
+	beego.AutoRouter(&controllers.CollectionController{})
 	beego.AutoRouter(&controllers.UserController{})
 	beego.AutoRouter(&controllers.PageController{})
 

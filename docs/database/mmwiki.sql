@@ -149,7 +149,6 @@ CREATE TABLE `mw_collection` (
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 文档 2 空间',
   `resource_id` int(10) NOT NULL DEFAULT '0' COMMENT '收藏资源 id ',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`collection_id`),
   KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户收藏表';

@@ -1,115 +1,86 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel-body" style="padding: 0 0;">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="/space/index">空间列表</a></li>
-                </ul>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <form>
-                        <div class="col-md-3 col-lg-offset-9">
-                            <div class="input-group">
-                                <input class="form-control" type="text" value="" placeholder="名称/描述" name="keyword">
-                                <span class="input-group-btn">
-                          <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
-                        </span>
-                            </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-9">
+                        <div class="input-group">
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="空间名称/描述">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="panel">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th class="w15p text-left">名称</th>
-                            <th class="text-left">描述</th>
-                            <th class="w20p">标签</th>
-                            <th class="w11p">创建时间</th>
-                            <th class="w10p">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><a href="/page/index?page_id=1" target="_parent"><strong>广告事业部</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
-                            <td>广告产品研发运营</td>
-                            <td class="center"><label class="label label-info">运维</label></td>
-                            <td class="center">2017-07-16</td>
-                            <td class="center">
-                                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                                    <a type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
-                                    <a type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/page/index?page_id=1" target="_parent"><strong>广告事业部</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
-                            <td>广告产品研发运营</td>
-                            <td class="center">
-                                <label class="label label-danger">研发</label>
-                                <label class="label label-danger">研发</label>
-                                <label class="label label-danger">研发</label>
-                            </td>
-                            <td class="center">2017-07-16</td>
-                            <td class="center">
-                                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                                    <a type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
-                                    <a type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/page/index?page_id=1" target="_parent"><strong>广告事业部</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
-                            <td>广告产品研发运营</td>
-                            <td class="center">
-                                <label class="label label-warning">产品</label>
-                                <label class="label label-warning">产品</label>
-                            </td>
-                            <td class="center">2017-07-16</td>
-                            <td class="center">
-                                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                                    <a type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
-                                    <a type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/page/index?page_id=1" target="_parent"><strong>广告事业部</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
-                            <td>广告产品研发运营</td>
-                            <td class="center">
-                                <label class="label label-default">运营</label>
-                                <label class="label label-default">运营</label>
-                                <label class="label label-default">运营</label>
-                            </td>
-                            <td class="center">2017-07-16</td>
-                            <td class="center">
-                                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                                    <a type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
-                                    <a type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/page/index?page_id=1" target="_parent"><strong>广告事业部</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
-                            <td>广告产品研发运营</td>
-                            <td class="center"><label class="label label-primary">设计</label></td>
-                            <td class="center">2017-07-16</td>
-                            <td class="center">
-                                <div class="btn-group btn-group-xs" role="group" aria-label="...">
-                                    <a type="button" class="btn btn-warning"><i class="glyphicon glyphicon-star-empty"> </i></a>
-                                    <a type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">
-                </div>
-            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="w15p text-left">空间名称</th>
+                    <th class="text-left">空间描述</th>
+                    <th class="w15p text-left">标签</th>
+                    <th class="w15p">访问级别</th>
+                    <th class="w13p center">创建时间</th>
+                    <th class="w13p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $space := .spaces}}
+                <tr class="space-list">
+                    <td><a href="/page/index?page_id=1" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
+                    <td>{{$space.description}}</td>
+                    <td class="tags-show">{{$space.tags}}</td>
+                    <td class="center">
+                    {{if eq $space.visit_level "private"}}
+                        <label class="text text-danger">Private</label>
+                    {{else if eq $space.visit_level "internal"}}
+                        <label class="text text-warning">Internal</label>
+                    {{else}}
+                        <label class="text text-primary">Public</label>
+                    {{end}}
+                    </td>
+                    <td class="center">
+                        {{dateFormat $space.create_time "Y-m-d"}}
+                    </td>
+                    <td class="center">
+                        <div class="btn-group btn-group-sm" role="group">
+                            {{if eq $space.collection "1"}}
+                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
+                            {{else}}
+                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/space?space_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
+                            {{end}}
+                            <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        {{template "paginator/default.html" .}}
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $(".tags-show").each(function () {
+            var tags = $(this).text();
+            if (tags !== "") {
+                var html = "";
+                var tagList = tags.split(",");
+                for (var i = 0; i < tagList.length; i++) {
+                    html += "<span class='label label-default'>"+tagList[i]+"</span> ";
+                }
+                $(this).html(html);
+            }
+        });
+    });
+    Layers.bindIframe("[name='user']", "空间成员列表", "500px", "1000px");
+</script>

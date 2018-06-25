@@ -8,6 +8,12 @@ import (
 
 const Table_SpaceUser_Name = "space_user"
 
+const (
+	SpaceUser_Privilege_Visitor = 0
+	SpaceUser_Privilege_Editor = 1
+	SpaceUser_Privilege_Manager = 2
+)
+
 type SpaceUser struct {
 
 }

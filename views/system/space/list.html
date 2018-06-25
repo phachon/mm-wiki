@@ -34,7 +34,7 @@
             {{range $space := .spaces}}
             <tr>
                 <td class="center">{{$space.space_id}}</td>
-                <td>{{$space.name}}</td>
+                <td><a href="/page/index?page_id=1" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
                 <td>{{$space.description}}</td>
                 <td class="tags-show center">{{$space.tags}}</td>
                 <td class="center">
