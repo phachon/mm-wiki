@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="w15p text-left">空间名称</th>
+                    <th class="text-left">空间描述</th>
+                    <th class="w15p text-left">标签</th>
+                    <th class="w15p">访问级别</th>
+                    <th class="w13p center">创建时间</th>
+                    <th class="w13p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $space := .spaces}}
+                <tr class="space-list">
+                    <td><a href="/page/index?page_id=1" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
+                    <td>{{$space.description}}</td>
+                    <td class="tags-show">{{$space.tags}}</td>
+                    <td class="center">
+                    {{if eq $space.visit_level "private"}}
+                        <label class="text text-danger">Private</label>
+                    {{else if eq $space.visit_level "internal"}}
+                        <label class="text text-warning">Internal</label>
+                    {{else}}
+                        <label class="text text-primary">Public</label>
+                    {{end}}
+                    </td>
+                    <td class="center">
+                        {{dateFormat $space.create_time "Y-m-d"}}
+                    </td>
+                    <td class="center">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
+                            <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".tags-show").each(function () {
+            var tags = $(this).text();
+            if (tags !== "") {
+                var html = "";
+                var tagList = tags.split(",");
+                for (var i = 0; i < tagList.length; i++) {
+                    html += "<span class='label label-default'>"+tagList[i]+"</span> ";
+                }
+                $(this).html(html);
+            }
+        });
+    });
+    Layers.bindIframe("[name='user']", "空间成员列表", "500px", "1000px");
+</script>

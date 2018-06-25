@@ -1,90 +1,61 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel-body" style="padding: 0 0;">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href=":;">用户列表</a></li>
-                </ul>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <form>
-                        <div class="col-md-3 col-lg-offset-9">
-                            <div class="input-group">
-                                <input class="form-control" type="text" value="" placeholder="用户名" name="keyword">
-                                <span class="input-group-btn">
-                          <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
-                        </span>
-                            </div>
-                        </div>
-                    </form>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <form action="" method="get">
+                <div class="col-md-9">
+                    <div class="input-group">
+                    </div>
+                </div>{{$username := .username}}{{$roleId := .roleId}}
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control" name="username" type="text" value="{{$username}}" placeholder="用户名">
+				            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                    </div>
                 </div>
-            </div>
-            <div class="panel ">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th class="w10p text-left">全名</th>
-                            <th class="text-left">职位</th>
-                            <th class="w17p">邮箱</th>
-                            <th class="w11p">座机</th>
-                            <th class="w10p">手机</th>
-                            <th class="w15p center">IM</th>
-                            <th class="w10p">操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td> <strong><a href="">李白 <i class="glyphicon glyphicon-new-window"></i></a> </strong></td>
-                            <td>高级JAVA开发工程师架构师</td>
-                            <td class="center">libailibai@phachon.com.cn</td>
-                            <td class="center">010-00000000</td>
-                            <td class="center">15201203612</td>
-                            <td class="center">QQ: 503748759</td>
-                            <td class="center">
-                                <a name="edit" data-link=""><i class="glyphicon glyphicon-heart"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>李白李白</td>
-                            <td>高级JAVA开发工程师架构师</td>
-                            <td class="center">libailibai@phachon.com.cn</td>
-                            <td class="center">010-00000000</td>
-                            <td class="center">15201203612</td>
-                            <td class="center">QQ: 503748759</td>
-                            <td class="center">
-                                <a name="edit" data-link=""><span class="text text-danger"><i class="glyphicon glyphicon-heart-empty"></i></span></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>李白李</td>
-                            <td>高级JAVA开发工程师架构师</td>
-                            <td class="center">libailibai@phachon.com.cn</td>
-                            <td class="center">010-00000000</td>
-                            <td class="center">15201203612</td>
-                            <td class="center">QQ: 503748759</td>
-                            <td class="center">
-                                <a name="edit" data-link=""><span class="text text-danger"><i class="glyphicon glyphicon-heart"></i></span></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>李白白</td>
-                            <td>高级JAVA开发工程师架构师</td>
-                            <td class="center">libailibai@phachon.com.cn</td>
-                            <td class="center">010-00000000</td>
-                            <td class="center">15201203612</td>
-                            <td class="center">QQ: 503748759</td>
-                            <td class="center">
-                                <a name="edit" data-link=""><i class="glyphicon glyphicon-heart-empty"></i></a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">
-                </div>
-            </div>
+            </form>
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="w15p text-left">用户名</th>
+                <th class="text-left">姓名</th>
+                <th class="text-left">职位</th>
+                <th class="w17p text-left">邮箱</th>
+                <th class="w11p text-left">座机</th>
+                <th class="w11p text-left">手机</th>
+                <th class="w11p text-left">IM</th>
+                <th class="w8p">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $user := .users}}
+            <tr>
+                <td>{{$user.username}}</td>
+                <td>{{$user.given_name}}</td>
+                <td>{{$user.position}}</td>
+                <td>{{$user.email}}</td>
+                <td>{{$user.phone}}</td>
+                <td>{{$user.mobile}}</td>
+                <td>{{$user.im}}</td>
+                <td class="center">
+                    <a onclick="Common.ajaxSubmit('/system/user/edit?user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
 </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='edit']", "修改用户信息", "450px", "1000px");
+    Layers.bindIframe("[name='info']", "用户详情", "500px", "1000px");
+</script>

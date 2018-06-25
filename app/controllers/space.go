@@ -249,3 +249,36 @@ func (this *SpaceController) ModifyMember() {
 	this.InfoLog("更新空间 "+spaceId+" 下成员 "+userId+" 权限成功")
 	this.jsonSuccess("更新权限成功！", nil)
 }
+
+func (this *SpaceController) Collection() {
+
+	collectionSpaces, err := models.CollectionModel.GetCollectionsByUserIdAndType(this.UserId, models.Collection_Type_Space)
+	if err != nil {
+		this.ErrorLog("获取收藏空间列表失败: "+err.Error())
+		this.ViewError("获取收藏空间列表失败", "/space/list")
+	}
+
+	spaceIds := []string{}
+	for _, collectionSpace := range collectionSpaces {
+		spaceIds = append(spaceIds, collectionSpace["resource_id"])
+	}
+
+	spaces, err := models.SpaceModel.GetSpaceBySpaceIds(spaceIds)
+	if err != nil {
+		this.ErrorLog("获取收藏空间列表失败: "+err.Error())
+		this.ViewError("获取收藏空间列表失败", "/space/list")
+	}
+
+	for _, space := range spaces {
+		space["collection_id"] = "0"
+		for _, collectionSpace := range collectionSpaces {
+			if collectionSpace["resource_id"] == space["space_id"] {
+				space["collection_id"] = collectionSpace["collection_id"]
+				break
+			}
+		}
+	}
+
+	this.Data["spaces"] = spaces
+	this.viewLayout("space/collection", "default")
+}
