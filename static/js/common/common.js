@@ -8,7 +8,6 @@ var Common = {
 	ajaxSubmit : function (url, data) {
 		var jsonData = {};
 		if (data !== "" && data !== undefined)  {
-			console.log(data);
 			var values = data.split("&");
             for (var i = 0; i < values.length; i ++) {
                 jsonData[values[i].split("=")[0]] = unescape(values[i].split("=")[1]);

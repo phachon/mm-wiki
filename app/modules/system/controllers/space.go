@@ -172,7 +172,7 @@ func (this *SpaceController) Member() {
 	for _, spaceUser := range spaceUsers {
 		userIds = append(userIds, spaceUser["user_id"])
 	}
-	users, err := models.UserModel.GetUserByUserIds(userIds)
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
 		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/main/index")
@@ -181,23 +181,25 @@ func (this *SpaceController) Member() {
 		for _, spaceUser := range spaceUsers {
 			if spaceUser["user_id"] == user["user_id"] {
 				user["space_privilege"] = spaceUser["privilege"]
+				user["space_user_id"] = spaceUser["space_user_id"]
 			}
 		}
 	}
 
-	otherUsers, err := models.UserModel.GetUserByNotUserIds(userIds)
+	var otherUsers = []map[string]string{}
+	if len(userIds) > 0 {
+		otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)
+	}else {
+		otherUsers, err = models.UserModel.GetUsers()
+	}
 	if err != nil {
 		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/main/index")
 	}
+
 	this.Data["users"] = users
 	this.Data["space_id"] = spaceId
 	this.Data["otherUsers"] = otherUsers
 	this.SetPaginator(number, count)
 	this.viewLayout("space/member", "default")
-}
-
-func (this *SpaceController) GrantPrivilege() {
-
-	this.jsonSuccess("空间授权成功", nil, "/system/space/list")
 }

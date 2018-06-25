@@ -272,13 +272,13 @@ func (u *User) GetUserByLikeName(username string) (users []map[string]string, er
 }
 
 // get user by many user_id
-func (u *User) GetUserByUserIds(userIds []string) (users []map[string]string, err error) {
+func (u *User) GetUsersByUserIds(userIds []string) (users []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
 		"user_id":   userIds,
 		"is_delete": User_Delete_False,
-	}))
+	}).OrderBy("user_id", "DESC"))
 	if err != nil {
 		return
 	}
@@ -302,7 +302,7 @@ func (u *User) GetUserByNotUserIds(userIds []string) (users []map[string]string,
 }
 
 // get all users
-func (u *User) GetUsers(userIds []string) (users []map[string]string, err error) {
+func (u *User) GetUsers() (users []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{

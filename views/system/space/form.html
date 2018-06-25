@@ -31,17 +31,17 @@
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>访问级别</label>
                     <div class="col-sm-5">
                         <div class="radio radio-primary">
-                            <input type="radio" name="visit_level" id="radio-private" value="private">
+                            <input type="radio" name="visit_level" id="radio-private" value="private" {{if $space}} {{if eq $space.visit_level "private"}} checked="checked" {{end}}{{end}}>
                             <label for="radio-private"><i class="fa fa-lock fa-fw"></i>&nbsp;Private</label>
                             <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 只能是该空间下的用户才可以访问</span>
                         </div>
                         <div class="radio radio-primary">
-                            <input type="radio" name="visit_level" id="radio-internal" value="internal" checked="checked">
+                            <input type="radio" name="visit_level" id="radio-internal" value="internal" {{if $space}} {{if eq $space.visit_level "internal"}} checked="checked" {{end}}{{else}} checked="checked" {{end}}>
                             <label for="radio-internal"><i class="fa fa-shield fa-fw"></i>&nbsp;Internal</label>
                             <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 可以由任何登录用户访问</span>
                         </div>
                         <div class="radio radio-primary">
-                            <input type="radio" name="visit_level" id="radio-public" value="public">
+                            <input type="radio" name="visit_level" id="radio-public" value="public" {{if $space}} {{if eq $space.visit_level "public"}} checked="checked" {{end}}{{end}}>
                             <label for="radio-public"><i class="fa fa-globe fa-fw"></i>&nbsp;Public</label>
                             <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 没有任何身份验证的情况下也可以访问该空间</span>
                         </div>
@@ -65,7 +65,7 @@
             offText: '否'
         });
         $("input[name='tags']").tagsinput({
-            tagClass: 'label label-primary',
+            tagClass: 'label label-default',
             maxTags:3
         });
     });

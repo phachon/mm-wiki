@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="input-group">
-                        <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="空间名称">
+                        <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="空间名称/描述">
 				            <span class="input-group-btn">
 				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
 				            </span>
@@ -26,7 +26,7 @@
                 <th class="w15p">名称</th>
                 <th>描述</th>
                 <th class="w15p">标签</th>
-                <th class="w15p">创建时间</th>
+                <th class="w15p">访问级别</th>
                 <th class="w20p">操作</th>
             </tr>
             </thead>
@@ -38,12 +38,18 @@
                 <td>{{$space.description}}</td>
                 <td class="tags-show center">{{$space.tags}}</td>
                 <td class="center">
-                {{dateFormat $space.create_time "Y-m-d H:i:s"}}
+                 {{if eq $space.visit_level "private"}}
+                 <label class="text text-danger">Private</label>
+                 {{else if eq $space.visit_level "internal"}}
+                     <label class="text text-warning">Internal</label>
+                 {{else}}
+                     <label class="text text-primary">Public</label>
+                 {{end}}
                 </td>
                 <td class="center">
                     <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/space/edit?space_id={{$space.space_id}}">修改</a>
                     <a name="user" class="fa fa-group" data-link="/system/space/member?space_id={{$space.space_id}}">成员</a>
-                    <a onclick="Layers.confirm('确定删除吗？', '/system/space/delete?space_id={{$space.space_id}}');" class="glyphicon glyphicon-trash">删除</a>
+                    <a onclick="Layers.confirm('确定要删除空间吗？', '/system/space/delete?space_id={{$space.space_id}}');" class="glyphicon glyphicon-trash">删除</a>
                 </td>
             </tr>
             {{end}}
@@ -70,6 +76,5 @@
        });
     });
     Layers.bindIframe("[name='edit']", "修改空间信息", "450px", "950px");
-    Layers.bindIframe("[name='privilege']", "空间授权", "500px", "1050px");
-    Layers.bindIframe("[name='user']", "空间用户", "500px", "1000px");
+    Layers.bindIframe("[name='user']", "空间成员列表", "500px", "1000px");
 </script>

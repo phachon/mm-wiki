@@ -14,7 +14,7 @@ type SpaceUser struct {
 
 var SpaceUserModel = SpaceUser{}
 
-// get spaceUser by space_user_id
+// get space_user by space_user_id
 func (s *SpaceUser) GetSpaceUserBySpaceUserId(spaceUserId string) (spaceUser map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -28,7 +28,7 @@ func (s *SpaceUser) GetSpaceUserBySpaceUserId(spaceUserId string) (spaceUser map
 	return
 }
 
-// get spaceUser by name
+// get space_user by name
 func (s *SpaceUser) GetSpaceUsersByUserId(userId string) (spaceUsers []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -42,7 +42,7 @@ func (s *SpaceUser) GetSpaceUsersByUserId(userId string) (spaceUsers []map[strin
 	return
 }
 
-// get spaceUser by name
+// get space_user by name
 func (s *SpaceUser) GetSpaceUsersBySpaceId(spaceId string) (spaceUsers []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -56,7 +56,23 @@ func (s *SpaceUser) GetSpaceUsersBySpaceId(spaceId string) (spaceUsers []map[str
 	return
 }
 
-// delete spaceUser by space_user_id
+// get space_user count by keyword
+func (s *SpaceUser) GetSpaceUserBySpaceIdAndUserId(spaceId string, userId string) (spaceUser map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
+		"space_id": spaceId,
+		"user_id": userId,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	spaceUser = rs.Row()
+	return
+}
+
+// delete space_user by space_user_id
 func (s *SpaceUser) Delete(spaceUserId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_SpaceUser_Name, map[string]interface{}{
@@ -68,7 +84,7 @@ func (s *SpaceUser) Delete(spaceUserId string) (err error) {
 	return
 }
 
-// delete spaceUser by space_user_id
+// delete space_user by space_user_id
 func (s *SpaceUser) DeleteBySpaceId(spaceId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_SpaceUser_Name, map[string]interface{}{
@@ -80,7 +96,7 @@ func (s *SpaceUser) DeleteBySpaceId(spaceId string) (err error) {
 	return
 }
 
-// delete spaceUser by space_user_id
+// delete space_user by space_user_id
 func (s *SpaceUser) DeleteByUserId(userId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_SpaceUser_Name, map[string]interface{}{
@@ -92,7 +108,20 @@ func (s *SpaceUser) DeleteByUserId(userId string) (err error) {
 	return
 }
 
-// insert spaceUser
+// delete space_user by space_id and user_id
+func (s *SpaceUser) DeleteBySpaceIdAndUserId(spaceId string, userId string) (err error) {
+	db := G.DB()
+	_, err = db.Exec(db.AR().Delete(Table_SpaceUser_Name, map[string]interface{}{
+		"space_id": spaceId,
+		"user_id": userId,
+	}))
+	if err != nil {
+		return
+	}
+	return
+}
+
+// insert space_user
 func (s *SpaceUser) Insert(spaceUserValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -104,7 +133,7 @@ func (s *SpaceUser) Insert(spaceUserValue map[string]interface{}) (id int64, err
 	return
 }
 
-// update spaceUser by spaceUser_id
+// update space_user by space_user_id
 func (s *SpaceUser) Update(spaceUserId string, spaceUserValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -119,7 +148,7 @@ func (s *SpaceUser) Update(spaceUserId string, spaceUserValue map[string]interfa
 	return
 }
 
-// get limit spaceUsers by spaceId
+// get limit space_users by spaceId
 func (s *SpaceUser) GetSpaceUsersBySpaceIdAndLimit(spaceId string, limit int, number int) (spaceUsers []map[string]string, err error) {
 
 	db := G.DB()
@@ -135,7 +164,7 @@ func (s *SpaceUser) GetSpaceUsersBySpaceIdAndLimit(spaceId string, limit int, nu
 	return
 }
 
-// get all spaceUsers
+// get all space_users
 func (s *SpaceUser) GetSpaceUsers() (spaceUsers []map[string]string, err error) {
 
 	db := G.DB()
@@ -149,7 +178,7 @@ func (s *SpaceUser) GetSpaceUsers() (spaceUsers []map[string]string, err error) 
 	return
 }
 
-// get spaceUser count by keyword
+// get space_user count by keyword
 func (s *SpaceUser) CountSpaceUsersBySpaceId(spaceId string) (count int64, err error) {
 
 	db := G.DB()
@@ -163,11 +192,11 @@ func (s *SpaceUser) CountSpaceUsersBySpaceId(spaceId string) (count int64, err e
 	if err != nil {
 		return
 	}
-	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	count = utils.Convert.StringToInt64(rs.Value("total"))
 	return
 }
 
-// get spaceUser by many space_user_id
+// get space_user by many space_user_id
 func (s *SpaceUser) GetSpaceUsersBySpaceUserIds(spaceUserIds []string) (spaceUsers []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet

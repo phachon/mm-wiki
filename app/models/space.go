@@ -136,10 +136,15 @@ func (s *Space) GetSpacesByKeywordAndLimit(keyword string, limit int, number int
 
 	db := G.DB()
 	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
+	sql := db.AR().From(Table_Space_Name).Where(map[string]interface{}{
+		"is_delete":  Space_Delete_False,
+	}).WhereWrap(map[string]interface{}{
 		"name LIKE": "%" + keyword + "%",
-		"is_delete":     Space_Delete_False,
-	}).Limit(limit, number).OrderBy("space_id", "DESC"))
+	}, "AND (", "").WhereWrap(map[string]interface{}{
+		"description LIKE": "%" + keyword + "%",
+	}, "OR", ")").Limit(limit, number).OrderBy("space_id", "DESC")
+	rs, err = db.Query(sql)
+
 	if err != nil {
 		return
 	}
@@ -209,17 +214,15 @@ func (s *Space) CountSpacesByKeyword(keyword string) (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().
-		Select("count(*) as total").
-		From(Table_Space_Name).
-		Where(map[string]interface{}{
-			"name LIKE": "%" + keyword + "%",
-			"is_delete":     Space_Delete_False,
-		}))
+	sql := db.AR().Select("count(*) as total").From(Table_Space_Name).
+		Where(map[string]interface{}{"is_delete":  Space_Delete_False}).
+		WhereWrap(map[string]interface{}{"name LIKE": "%" + keyword + "%"}, "AND (", "").
+		WhereWrap(map[string]interface{}{"description LIKE": "%" + keyword + "%"}, "OR", ")")
+	rs, err = db.Query(sql)
 	if err != nil {
 		return
 	}
-	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	count = utils.Convert.StringToInt64(rs.Value("total"))
 	return
 }
 
