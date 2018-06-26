@@ -56,6 +56,7 @@ func (this *SpaceController) List() {
 
 	this.Data["spaces"] = spaces
 	this.Data["keyword"] = keyword
+	this.Data["count"] = count
 	this.SetPaginator(number, count)
 	this.viewLayout("space/list", "default")
 }
@@ -278,7 +279,7 @@ func (this *SpaceController) Collection() {
 			}
 		}
 	}
-
 	this.Data["spaces"] = spaces
+	this.Data["count"] = len(spaces)
 	this.viewLayout("space/collection", "default")
 }

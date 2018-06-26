@@ -3,6 +3,7 @@ package controllers
 import (
 	"strings"
 	"mm-wiki/app/models"
+	"time"
 )
 
 type UserController struct {
@@ -18,12 +19,8 @@ func (this *UserController) List() {
 	keywords := map[string]string{}
 	page, _ := this.GetInt("page", 1)
 	username := strings.TrimSpace(this.GetString("username", ""))
-	roleId := strings.TrimSpace(this.GetString("role_id", ""))
 	if username != "" {
 		keywords["username"] = username
-	}
-	if roleId != "" {
-		keywords["role_id"] = roleId
 	}
 
 	number := 20
@@ -39,44 +36,137 @@ func (this *UserController) List() {
 		users, err = models.UserModel.GetUsersByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
-		this.ViewError("获取用户列表失败", "/system/main/index")
+		this.ErrorLog("获取全部用户列表失败: "+err.Error())
+		this.ViewError("获取全部用户列表失败", "/main/index")
 	}
 
-	var roleIds = []string{}
-	if roleId != "" {
-		roleIds = append(roleIds, roleId)
-	}else {
-		for _, user := range users {
-			roleIds = append(roleIds, user["role_id"])
-		}
-	}
-	roles, err := models.RoleModel.GetRoleByRoleIds(roleIds)
+	followUsers, err := models.FollowModel.GetFollowsByUserId(this.UserId)
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
-		this.ViewError("获取用户列表失败!", "/system/main/index")
+		this.ErrorLog("获取全部用户列表失败: "+err.Error())
+		this.ViewError("获取全部用户列表失败", "/main/index")
 	}
-	var roleUsers = []map[string]string{}
+
 	for _, user := range users {
-		roleUser := user
-		for _, role := range roles {
-			if role["role_id"] == user["role_id"] {
-				roleUser["role_name"] = role["name"]
+		user["follow"] = "0"
+		user["follow_id"] = "0"
+		for _, followUser := range followUsers {
+			if followUser["follow_user_id"] == user["user_id"] {
+				user["follow_id"] = followUser["follow_id"]
+				user["follow"] = "1"
 				break
 			}
 		}
-		roleUsers = append(roleUsers, roleUser)
 	}
 
-	allRoles, err := models.RoleModel.GetRoles()
-	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
-		this.ViewError("获取用户列表失败！", "/system/main/index")
-	}
-	this.Data["users"] = roleUsers
-	this.Data["username"] = username
-	this.Data["roleId"] = roleId
-	this.Data["roles"] = allRoles
+	this.Data["users"] = users
+	this.Data["count"] = count
 	this.SetPaginator(number, count)
 	this.viewLayout("user/list", "default")
+}
+
+func (this *UserController) Follow() {
+
+	followUsers, err := models.FollowModel.GetFollowsByUserId(this.UserId)
+	if err != nil {
+		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ViewError("获取关注用户列表失败", "/user/list")
+	}
+
+	userIds := []string{}
+	for _, followUser := range followUsers {
+		userIds = append(userIds, followUser["follow_user_id"])
+	}
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
+	if err != nil {
+		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ViewError("获取关注用户列表失败", "/user/list")
+	}
+	for _, user := range users {
+		user["follow_id"] = "0"
+		for _, followUser := range followUsers {
+			if followUser["follow_user_id"] == user["user_id"] {
+				user["follow_id"] = followUser["follow_id"]
+				break
+			}
+		}
+	}
+
+	this.Data["users"] = users
+	this.Data["count"] = len(users)
+	this.viewLayout("user/follow", "default")
+}
+
+func (this *UserController) AddFollow() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/user/index")
+	}
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.jsonError("没有选择用户！")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("关注用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("关注用户失败！")
+	}
+	if len(user) == 0 {
+		this.jsonError("用户不存在！")
+	}
+
+	insertFollow := map[string]interface{}{
+		"user_id": this.UserId,
+		"follow_user_id": userId,
+		"create_time": time.Now().Unix(),
+	}
+	_, err = models.FollowModel.Insert(insertFollow)
+	if err != nil {
+		this.ErrorLog("关注用户 "+userId+" 失败：" + err.Error())
+		this.jsonError("关注用户失败！")
+	}
+
+	this.InfoLog("关注用户 "+userId+" 成功")
+	this.jsonSuccess("关注用户成功！", nil, "/user/index")
+}
+
+func (this *UserController) CancelFollow() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/user/index")
+	}
+	followId := this.GetString("follow_id", "")
+	userId := this.GetString("user_id", "")
+	if followId == "" {
+		this.jsonError("参数错误！")
+	}
+
+	err := models.FollowModel.Delete(followId)
+	if err != nil {
+		this.ErrorLog("取消关注用户 "+userId+" 失败：" + err.Error())
+		this.jsonError("取消关注用户失败！")
+	}
+
+	this.InfoLog("取消关注用户 "+userId+" 成功")
+	this.jsonSuccess("已取消关注！", nil, "/user/index")
+}
+
+func (this *UserController) Info() {
+
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("查找用户出错："+err.Error())
+		this.ViewError("查找用户出错！", "/system/user/list")
+	}
+	if len(user) == 0 {
+		this.ViewError("用户不存在！", "/system/user/list")
+	}
+
+	this.Data["user"] = user
+	this.viewLayout("user/info", "default")
 }

@@ -1,7 +1,8 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="row">
+            <div class="page-header">
+                <h2>收藏空间 <small><span class="badge">{{.count}}</span></small></h2>
             </div>
         </div>
         <div class="table-responsive">
@@ -46,7 +47,6 @@
             </table>
         </div>
         <div class="panel-footer">
-        {{template "paginator/default.html" .}}
         </div>
     </div>
 </div>

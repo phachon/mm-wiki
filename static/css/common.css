@@ -13,7 +13,8 @@ body {
 }
 
 a{
-    color:#666;
+    color: rgba(34, 85, 115, 0.9);
+    /*color: #666;*/
     cursor: pointer;
 }
 
@@ -162,6 +163,38 @@ select.input-xs {
     /*padding-top: 15px!important;*/
 }
 
+.page-header {
+    margin-top: 10px;
+}
+
+
+/* user-activity */
+.user-activity > ul {
+    padding-left: 8px;
+    line-height: 20px;
+}
+
+.user-activity > ul > li {
+    padding: 5px 3px;
+    list-style-type:none;
+}
+.activity-time {
+    margin-left: 16px;
+    color: #8e8e8e;
+}
+.user-info {
+    padding-left: 10px;
+    line-height: 2.0;
+}
+.user-group > label {
+    width: 60px;
+    color: #8e8e8e;
+}
+.user-group > span {
+    margin-left: 15px;
+    font-size: 14px;
+}
+
 /*width 按百分比*/
 .w5p{width:5%;}
 .w6p{width:6%;}
@@ -218,6 +251,20 @@ select.input-xs {
 .w600{width:600px;}
 .w700{width:700px;}
 .w800{width:800px;}
+
+.text-font-10 {font-size: 10px}
+.text-font-11 {font-size: 11px}
+.text-font-12 {font-size: 12px}
+.text-font-13 {font-size: 13px}
+.text-font-14 {font-size: 14px}
+.text-font-15 {font-size: 15px}
+.text-font-16 {font-size: 16px}
+.text-font-17 {font-size: 17px}
+.text-font-18 {font-size: 18px}
+.text-font-19 {font-size: 19px}
+.text-font-20 {font-size: 20px}
+.text-font-21 {font-size: 21px}
+
 
 /**
  * mainFrame 滚动条

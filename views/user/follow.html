@@ -2,23 +2,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="page-header">
-            <h2>全部用户 <small><span class="badge">{{.count}}</span></small></h2>
-        </div>
-        <div class="row">
-            <form action="" method="get">
-                <div class="col-md-9">
-                    <div class="input-group">
-                    </div>
-                </div>{{$username := .username}}
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <input class="form-control" name="username" type="text" value="{{$username}}" placeholder="用户名">
-				            <span class="input-group-btn">
-				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
-				            </span>
-                    </div>
-                </div>
-            </form>
+            <h2>关注用户 <small><span class="badge">{{.count}}</span></small></h2>
         </div>
     </div>
     <div class="table-responsive">
@@ -48,11 +32,7 @@
                 <td>{{$user.mobile}}</td>
                 <td>{{$user.im}}</td>
                 <td class="center">
-                    {{if eq $user.follow "1"}}
-                        <a onclick="Common.ajaxSubmit('/user/cancelFollow?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
-                    {{else}}
-                        <a onclick="Common.ajaxSubmit('/user/addFollow?user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart-empty"></i></a>
-                    {{end}}
+                    <a onclick="Common.ajaxSubmit('/user/cancelFollow?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
                 </td>
             </tr>
             {{end}}
@@ -60,7 +40,6 @@
         </table>
     </div>
     <div class="panel-footer">
-        {{template "paginator/default.html" .}}
     </div>
 </div>
 </div>

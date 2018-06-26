@@ -1,0 +1,123 @@
+<div class="container-fluid">{{$user := .user}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li  class="active"><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
+                <li><a href="/user/collection">收藏空间</a></li>
+                <li><a href="/user/collection">收藏文档</a></li>
+                <li><a href="/user/follow">关注文档</a></li>
+                <li><a href="/user/follow">关注用户</a></li>
+            </ul>
+            <br>
+            <div class="row">
+                <div class="col-md-7">
+                    <h3>最近活动</h3>
+                    <div class="user-activity">
+                        <ul>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试这是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">创建于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档是这是测试这是测试测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档是测试文档</a>
+                                </div>
+                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <h3>个人资料</h3>
+                    <div class="user-info">
+                        <div class="user-group">
+                            <label class="text-right text-font-15">用户名</label>
+                            <span>{{$user.username}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">姓名</label>
+                            <span>{{$user.given_name}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">邮箱</label>
+                            <span>{{$user.email}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">手机</label>
+                            <span>{{$user.mobile}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">状态</label>
+                            <span>
+                            {{if eq $user.is_forbidden "1"}}
+                                <span class="label label-success">屏蔽</span>
+                            {{else}}
+                                <span class="label label-success">正常</span>
+                            {{end}}
+                            </span>
+                        </div>
+                        <hr>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">电话</label>
+                            <span>{{$user.phone}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">部门</label>
+                            <span>{{$user.department}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">职位</label>
+                            <span>{{$user.position}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">位置</label>
+                            <span>{{$user.location}}</span>
+                        </div>
+                        <div class="user-group">
+                            <label class="text-right text-font-15">IM</label>
+                            <span>{{$user.im}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
