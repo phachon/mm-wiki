@@ -4,24 +4,28 @@
         <div class="page-header">
             <h2>关注用户 <small><span class="badge">{{.count}}</span></small></h2>
         </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover">
+        {{if eq .count 0}}
+            <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                <p><i class="glyphicon glyphicon-volume-up"></i> 没有关注任何用户！</p>
+            </div>
+        {{else}}
+        <br>
+        <table class="table">
             <thead>
             <tr>
-                <th class="w15p text-left">用户名</th>
-                <th class="text-left">姓名</th>
-                <th class="text-left">职位</th>
-                <th class="w17p text-left">邮箱</th>
-                <th class="w11p text-left">座机</th>
-                <th class="w11p text-left">手机</th>
-                <th class="w11p text-left">IM</th>
-                <th class="w8p">操作</th>
+                <td class="w15p text-left"><strong>用户名</strong></td>
+                <td class="text-left"><strong>姓名</strong></td>
+                <td class="text-left"><strong>职位</strong></td>
+                <td class="w17p text-left"><strong>邮箱</strong></td>
+                <td class="w11p text-left"><strong>座机</strong></td>
+                <td class="w11p text-left"><strong>手机</strong></td>
+                <td class="w11p text-left"><strong>IM</strong></td>
+                <td class="w8p center"><strong>操作</strong></td>
             </tr>
             </thead>
             <tbody>
             {{range $user := .users}}
-            <tr>
+            <tr class="space-list">
                 <td>
                     <strong><a href="/user/info?user_id={{$user.user_id}}">{{$user.username}} </strong><span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a>
                 </td>
@@ -38,6 +42,7 @@
             {{end}}
             </tbody>
         </table>
+        {{end}}
     </div>
     <div class="panel-footer">
     </div>

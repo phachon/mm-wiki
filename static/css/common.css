@@ -76,6 +76,7 @@ th {
     table-layout:fixed;
     word-break:break-all;
     word-wrap:break-word;
+    margin-bottom: 0;
 }
 
 .label-xs {

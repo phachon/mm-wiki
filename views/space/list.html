@@ -20,17 +20,16 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover">
+            <br>
+            <table class="table" style="margin-bottom: 0">
                 <thead>
                 <tr>
-                    <th class="w15p text-left">空间名称</th>
-                    <th class="text-left">空间描述</th>
-                    <th class="w15p text-left">标签</th>
-                    <th class="w15p">访问级别</th>
-                    <th class="w13p center">创建时间</th>
-                    <th class="w13p">操作</th>
+                    <td class="w15p text-left"><strong>名称</strong></td>
+                    <td class="text-left"><strong>描述</strong></td>
+                    <td class="w15p text-left"><strong>标签</strong></td>
+                    <td class="w15p center"><strong>访问级别</strong></td>
+                    <td class="w13p center"><strong>创建时间</strong></td>
+                    <td class="w13p center"><strong>操作</strong></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,15 +48,15 @@
                     {{end}}
                     </td>
                     <td class="center">
-                        {{dateFormat $space.create_time "Y-m-d"}}
+                    {{dateFormat $space.create_time "Y-m-d"}}
                     </td>
                     <td class="center">
                         <div class="btn-group btn-group-sm" role="group">
-                            {{if eq $space.collection "1"}}
-                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
-                            {{else}}
-                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/space?space_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
-                            {{end}}
+                        {{if eq $space.collection "1"}}
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
+                        {{else}}
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/space?space_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
+                        {{end}}
                             <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
                         </div>
                     </td>

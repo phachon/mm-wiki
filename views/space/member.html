@@ -3,18 +3,16 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row">{{$spaceId := .space_id}}
-
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover">
+            <br>
+            <table class="table">
                 <thead>
                 <tr>
-                    <th class="w20p text-left">用户名</th>
-                    <th class="text-left">姓名</th>
-                    <th class="w20p text-left">邮箱</th>
-                    <th class="w20p text-left">手机</th>
-                    <th class="w13p">空间权限</th>
+                    <td class="w20p text-left"><strong>用户名</strong></td>
+                    <td class="text-left"><strong>姓名</strong></td>
+                    <td class="w20p text-left"><strong>邮箱</strong></td>
+                    <td class="w20p text-left"><strong>手机</strong></td>
+                    <td class="w13p center"><strong>空间权限</strong></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -25,13 +23,13 @@
                     <td>{{$user.email}}</td>
                     <td>{{$user.mobile}}</td>
                     <td class="center">
-                        {{if eq $user.space_privilege "1" }}
-                            <span class="label label-info">编辑者</span>
-                        {{else if eq $user.space_privilege "2"}}
-                            <span class="label label-success">管理员</span>
-                        {{else}}
-                            <span class="label label-default">浏览者</span>
-                        {{end}}
+                    {{if eq $user.space_privilege "1" }}
+                        <span class="label label-info">编辑者</span>
+                    {{else if eq $user.space_privilege "2"}}
+                        <span class="label label-success">管理员</span>
+                    {{else}}
+                        <span class="label label-default">浏览者</span>
+                    {{end}}
                     </td>
                 </tr>
                 {{end}}

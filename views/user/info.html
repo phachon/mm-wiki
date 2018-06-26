@@ -1,6 +1,9 @@
 <div class="container-fluid">{{$user := .user}}
     <div class="panel panel-default">
         <div class="panel-body">
+            <div class="page-header">
+                <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
+            </div>
             <ul class="nav nav-tabs">
                 <li  class="active"><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
                 <li><a href="/user/collection">收藏空间</a></li>
@@ -10,7 +13,7 @@
             </ul>
             <br>
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-7" style="padding-left: 30px">
                     <h3>最近活动</h3>
                     <div class="user-activity">
                         <ul>

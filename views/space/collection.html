@@ -4,17 +4,21 @@
             <div class="page-header">
                 <h2>收藏空间 <small><span class="badge">{{.count}}</span></small></h2>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover">
+            {{if eq .count 0}}
+                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                    <p><i class="glyphicon glyphicon-volume-up"></i> 没有收藏的空间！</p>
+                </div>
+            {{else}}
+            <br>
+            <table class="table" style="margin-bottom: 0">
                 <thead>
                 <tr>
-                    <th class="w15p text-left">空间名称</th>
-                    <th class="text-left">空间描述</th>
-                    <th class="w15p text-left">标签</th>
-                    <th class="w15p">访问级别</th>
-                    <th class="w13p center">创建时间</th>
-                    <th class="w13p">操作</th>
+                    <td class="w15p text-left"><strong>名称</strong></td>
+                    <td class="text-left"><strong>描述</strong></td>
+                    <td class="w15p text-left"><strong>标签</strong></td>
+                    <td class="w15p center"><strong>访问级别</strong></td>
+                    <td class="w13p center"><strong>创建时间</strong></td>
+                    <td class="w13p center"><strong>操作</strong></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,7 +37,7 @@
                     {{end}}
                     </td>
                     <td class="center">
-                        {{dateFormat $space.create_time "Y-m-d"}}
+                    {{dateFormat $space.create_time "Y-m-d"}}
                     </td>
                     <td class="center">
                         <div class="btn-group btn-group-sm" role="group">
@@ -45,6 +49,7 @@
                 {{end}}
                 </tbody>
             </table>
+            {{end}}
         </div>
         <div class="panel-footer">
         </div>
