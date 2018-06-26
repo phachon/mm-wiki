@@ -48,9 +48,9 @@
                 <td>{{$user.im}}</td>
                 <td class="center">
                 {{if eq $user.follow "1"}}
-                    <a onclick="Common.ajaxSubmit('/user/cancelFollow?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                    <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
                 {{else}}
-                    <a onclick="Common.ajaxSubmit('/user/addFollow?user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                    <a onclick="Common.ajaxSubmit('/follow/user?user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart-empty"></i></a>
                 {{end}}
                 </td>
             </tr>

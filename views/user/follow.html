@@ -36,7 +36,7 @@
                 <td>{{$user.mobile}}</td>
                 <td>{{$user.im}}</td>
                 <td class="center">
-                    <a onclick="Common.ajaxSubmit('/user/cancelFollow?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                    <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
                 </td>
             </tr>
             {{end}}
