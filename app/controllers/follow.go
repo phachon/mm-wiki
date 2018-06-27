@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"mm-wiki/app/models"
-	"time"
 )
 
 type FollowController struct {
@@ -28,12 +27,7 @@ func (this *FollowController) User() {
 		this.jsonError("用户不存在！")
 	}
 
-	insertFollow := map[string]interface{}{
-		"user_id": this.UserId,
-		"follow_user_id": userId,
-		"create_time": time.Now().Unix(),
-	}
-	_, err = models.FollowModel.Insert(insertFollow)
+	_, err = models.FollowModel.InsertFollowUser(this.UserId, userId)
 	if err != nil {
 		this.ErrorLog("关注用户 "+userId+" 失败：" + err.Error())
 		this.jsonError("关注用户失败！")

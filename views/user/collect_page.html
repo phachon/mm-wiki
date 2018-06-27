@@ -1,0 +1,45 @@
+<div class="container-fluid">{{$user := .user}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="page-header">
+                <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
+            </div>
+            <ul class="nav nav-tabs">
+                <li><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
+                <li><a href="/user/followUser?user_id={{$user.user_id}}">关注用户</a></li>
+                <li class="active"><a href="/user/followPage?user_id={{$user.user_id}}">关注页面</a></li>
+            </ul>
+            <br>
+            <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                <p><i class="glyphicon glyphicon-volume-up"></i> 你创建、编辑过的页面，会被自动设置成关注！</p>
+            </div>
+            {{if eq .count 0}}
+            {{else}}
+            <table class="table">
+                <thead>
+                {{/*<tr>*/}}
+                    {{/*<td class="w25p text-left"><strong>用户名</strong></td>*/}}
+                    {{/*<td class="text-left"><strong>姓名</strong></td>*/}}
+                    {{/*<td class="text-left"><strong>邮箱</strong></td>*/}}
+                    {{/*<td class="w12p center"><strong>取消</strong></td>*/}}
+                {{/*</tr>*/}}
+                </thead>
+                <tbody>
+                {{range $page := .pages}}
+                <tr>
+                    <td>
+                        <strong><a href="/user/info?document_id={{$page.document_id}}">{{$page.title}} </strong><span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a>
+                    </td>
+                    {{/*<td>{{$page.given_name}}</td>*/}}
+                    {{/*<td>{{$page.email}}</td>*/}}
+                <td class="center">
+                    <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$page.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        {{end}}
+        </div>
+    </div>
+</div>

@@ -3,6 +3,12 @@ package models
 import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"time"
+)
+
+const (
+	Follow_Type_User = 1
+	Follow_Type_Page = 2
 )
 
 const Table_Follow_Name = "follow"
@@ -14,7 +20,7 @@ type Follow struct {
 var FollowModel = Follow{}
 
 // get follow by follow_id
-func (c *Follow) GetFollowByFollowId(followId string) (follow map[string]string, err error) {
+func (f *Follow) GetFollowByFollowId(followId string) (follow map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
@@ -28,11 +34,27 @@ func (c *Follow) GetFollowByFollowId(followId string) (follow map[string]string,
 }
 
 // get follows by user_id
-func (c *Follow) GetFollowsByUserId(userId string) (follows []map[string]string, err error) {
+func (f *Follow) GetFollowsByUserIdAndType(userId string, followType int) (follows []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
 		"user_id":  userId,
+		"type":  followType,
+	}))
+	if err != nil {
+		return
+	}
+	follows = rs.Rows()
+	return
+}
+
+// get followed follows
+func (f *Follow) GetFollowsByObjectIdAndType(objectId string, followType int) (follows []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
+		"object_id":  objectId,
+		"type":  followType,
 	}))
 	if err != nil {
 		return
@@ -42,7 +64,7 @@ func (c *Follow) GetFollowsByUserId(userId string) (follows []map[string]string,
 }
 
 // delete follow by follow_id
-func (c *Follow) Delete(followId string) (err error) {
+func (f *Follow) Delete(followId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_Follow_Name, map[string]interface{}{
 		"follow_id": followId,
@@ -53,8 +75,32 @@ func (c *Follow) Delete(followId string) (err error) {
 	return
 }
 
-// insert follow
-func (c *Follow) Insert(followValue map[string]interface{}) (id int64, err error) {
+// insert follow user
+func (f *Follow) InsertFollowUser(userId string, followUserId string) (id int64, err error) {
+	followValue := map[string]interface{}{
+		"user_id": userId,
+		"type": Follow_Type_User,
+		"object_id": followUserId,
+		"create_time": time.Now().Unix(),
+	}
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Exec(db.AR().Insert(Table_Follow_Name, followValue))
+	if err != nil {
+		return
+	}
+	id = rs.LastInsertId
+	return
+}
+
+// insert follow page
+func (f *Follow) InsertFollowPage(userId string, pageId string) (id int64, err error) {
+	followValue := map[string]interface{}{
+		"user_id": userId,
+		"type": Follow_Type_Page,
+		"object_id": pageId,
+		"create_time": time.Now().Unix(),
+	}
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Follow_Name, followValue))
@@ -66,7 +112,7 @@ func (c *Follow) Insert(followValue map[string]interface{}) (id int64, err error
 }
 
 // get all follows
-func (c *Follow) GetFollows() (follows []map[string]string, err error) {
+func (f *Follow) GetFollows() (follows []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -80,7 +126,7 @@ func (c *Follow) GetFollows() (follows []map[string]string, err error) {
 }
 
 // get follow count
-func (c *Follow) CountFollows() (count int64, err error) {
+func (f *Follow) CountFollows() (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -96,7 +142,7 @@ func (c *Follow) CountFollows() (count int64, err error) {
 }
 
 // get follows by many follow_id
-func (c *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string]string, err error) {
+func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{

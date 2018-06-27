@@ -122,19 +122,20 @@ CREATE TABLE `mw_space_user` (
 -- --------------------------------
 -- 文档表
 -- --------------------------------
-DROP TABLE IF EXISTS `mw_page`;
-CREATE TABLE `mw_page` (
-  `page_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档 id',
+DROP TABLE IF EXISTS `mw_document`;
+CREATE TABLE `mw_document` (
+  `document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档 id',
   `parent_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档父 id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
   `title` varchar(150) NOT NULL DEFAULT '' COMMENT '文档标题',
-  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '文档类型 1 页面 2 目录',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '文档类型 1 page 2 dir',
   `path` varchar(100) NOT NULL DEFAULT '' COMMENT 'markdown 文件路径',
   `create_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户 id',
   `edit_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '最后修改用户 id',
+  `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否 1 是',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`page_id`),
+  PRIMARY KEY (`document_id`),
   KEY (`parent_id`),
   KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档表';
@@ -146,7 +147,7 @@ DROP TABLE IF EXISTS `mw_collection`;
 CREATE TABLE `mw_collection` (
   `collection_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户收藏关系 id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 文档 2 空间',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 页面 2 空间',
   `resource_id` int(10) NOT NULL DEFAULT '0' COMMENT '收藏资源 id ',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`collection_id`),
@@ -160,25 +161,26 @@ DROP TABLE IF EXISTS `mw_follow`;
 CREATE TABLE `mw_follow` (
   `follow_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '关注 id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `follow_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '被关注用户 id',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '关注类型 1 用户 2 页面',
+  `object_id` int(10) NOT NULL DEFAULT '0' COMMENT '关注对象 id',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`follow_id`),
   KEY (`user_id`),
-  KEY (`follow_user_id`)
+  KEY (`object_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户关注表';
 
 -- --------------------------------
 -- 文档日志表
 -- --------------------------------
-DROP TABLE IF EXISTS `mw_log_page`;
-CREATE TABLE `mw_log_page` (
-  `log_page_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档日志 id',
-  `page_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档id',
+DROP TABLE IF EXISTS `mw_log_document`;
+CREATE TABLE `mw_log_document` (
+  `log_document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档日志 id',
+  `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
   `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 增加 2 修改 3 删除',
   `comment` varchar(255) NOT NULL DEFAULT '' COMMENT '备注信息',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`log_page_id`)
+  PRIMARY KEY (`log_document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档日志表';
 
 -- --------------------------------
