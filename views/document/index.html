@@ -1,0 +1,22 @@
+<div id="main-left" class="ui-layout-west">
+    <div class="left-page">{{$documents := .documents}}{{$defaultDocumentId := .default_document_id}}{{$space := .space}}
+        <div class="page-search">
+            <form>
+                <div class="input-group">
+                    <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
+                    <span class="input-group-btn"><button class="btn btn-sm btn-default btn-search" type="button"><i class="fa fa-search"></i></button></span>
+                </div>
+            </form>
+        </div>
+        <div class="page-tree">
+            <h4 class="text-center">{{$space.name}}</h4>
+            <hr>
+            <ul id="dir_tree" class="ztree"></ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/modules/page.js"></script>
+<script type="text/javascript">
+    Page.ListTree("#dir_tree");
+</script>
+<iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes" style="overflow-y: auto" src="/document/view?document_id={{$defaultDocumentId}}"></iframe>

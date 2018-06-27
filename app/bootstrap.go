@@ -23,6 +23,7 @@ var (
 func init() {
 	poster()
 	initConfig()
+	initCheck()
 	initDB()
 }
 
@@ -86,6 +87,16 @@ func initConfig()  {
 		beego.SetLogger(adapter, config)
 	}
 	beego.SetLogFuncCall(true)
+}
+
+func initCheck() {
+	docRootDir := beego.AppConfig.String("document::root_dir")
+	ok, _ := utils.File.PathIsExists(docRootDir)
+	if !ok {
+		log.Println("document root dir "+docRootDir+" is not exists!")
+		os.Exit(1)
+	}
+	//docRootDir = filepath.Dir(docRootDir)
 }
 
 //init db

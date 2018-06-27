@@ -5,6 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"fmt"
 	"time"
+	"github.com/astaxie/beego"
 )
 
 type SpaceController struct {
@@ -282,4 +283,31 @@ func (this *SpaceController) Collection() {
 	this.Data["spaces"] = spaces
 	this.Data["count"] = len(spaces)
 	this.viewLayout("space/collection", "default")
+}
+
+func (this *SpaceController) Page() {
+
+	spaceId := this.GetString("space_id", "")
+	if spaceId == "" {
+		this.ViewError("空间不存在")
+	}
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找空间 "+spaceId+" 失败："+err.Error())
+		this.ViewError("空间不存在！")
+	}
+	if len(space) == 0 {
+		this.ViewError("空间不存在！")
+	}
+	// home page id
+	homeName := beego.AppConfig.String("document::space_home_name")
+	document, err := models.DocumentModel.GetDocumentByTitleAndSpaceId(homeName, spaceId)
+	if err != nil {
+		this.ErrorLog("查找空间 "+spaceId+" 失败："+err.Error())
+		this.ViewError("查找空间页面失败！")
+	}
+
+	documentId := document["document_id"]
+
+	this.Redirect("/document/index?document_id="+documentId, 302)
 }

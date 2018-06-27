@@ -1,0 +1,63 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="view-page-title">这是测试文档这是测试文档</h3>
+                            <p class="view-page-path">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                                <a class="text text-info" href="/page/view?page_id=1">广告事业部</a> /
+                                <a class="text text-info" href="/page/view?page_id=1">技术部</a> /
+                                <a class="text text-info" href="/page/view?page_id=1">系统研发组</a>
+                            </p>
+                            <p class="view-page-time">
+                                <i class="glyphicon glyphicon-time"></i>
+                                被 <a class="text text-info" href="/user/info?user_id=1"> Admin </a> 创建于 2018/01/24 ，
+                                被 <a class="text text-info" href="/user/info?user_id=1"> phachon </a> 最后更新于 2018/01/24
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a class="btn btn-default" href="/page/edit?page_id=1"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                                <a class="btn btn-default" href="/page/collection?page_id=1"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                                <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
+                                <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr style="margin: 0">
+                </div>
+                <div class="panel-body">
+                    <div id="test-editormd-view">
+                        <textarea style="display:none;">{{.document_content}}</textarea>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        editormd.markdownToHTML("test-editormd-view", {
+            //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            //toc             : false,
+            tocm            : true,    // Using [TOCM]
+            //tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+            //gfm             : false,
+            //tocDropdown     : true,
+            //markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+            emoji           : false,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : true,  // 默认不解析
+            sequenceDiagram : true,  // 默认不解析
+        });
+    });
+</script>

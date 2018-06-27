@@ -5,6 +5,8 @@ import (
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
 	"time"
+	"github.com/astaxie/beego"
+	"os"
 )
 
 type SpaceController struct {
@@ -37,6 +39,16 @@ func (this *SpaceController) Save() {
 		this.jsonError("空间名已经存在！")
 	}
 
+	docDir := beego.AppConfig.String("document::root_dir")
+	spaceDir := docDir+"/"+name
+	// create space dir
+	err = os.Mkdir(spaceDir, 0777)
+	if err != nil {
+		this.ErrorLog("添加空间目录失败："+err.Error())
+		this.jsonError("添加空间失败！")
+	}
+
+	// insert space info to database
 	spaceId, err := models.SpaceModel.Insert(map[string]interface{}{
 		"name": name,
 		"description": description,
@@ -45,11 +57,37 @@ func (this *SpaceController) Save() {
 		"create_time": time.Now().Unix(),
 		"update_time": time.Now().Unix(),
 	})
-
 	if err != nil {
 		this.ErrorLog("添加空间失败：" + err.Error())
+		os.Remove(spaceDir)
 		this.jsonError("添加空间失败")
 	}
+
+	// create space home page
+	homeName := beego.AppConfig.String("document::space_home_name")
+	homePagePath := spaceDir+"/"+homeName+".md"
+	err = utils.File.CreateFile(homePagePath)
+	if err != nil {
+		this.ErrorLog("添加空间 Home 文件失败："+err.Error())
+		os.Remove(spaceDir)
+		this.jsonError("添加空间失败！")
+	}
+	homePage := map[string]interface{}{
+		"space_id": spaceId,
+		"parent_id": 0,
+		"title": "Home",
+		"type": models.Document_Type_Page,
+		"path": homePagePath,
+		"create_user_id": this.UserId,
+		"edit_user_id": this.UserId,
+	}
+	_, err = models.DocumentModel.Insert(homePage)
+	if err != nil {
+		this.ErrorLog("添加空间 Home.md 文件失败："+err.Error())
+		os.Remove(spaceDir)
+		this.jsonError("添加空间失败！")
+	}
+
 	this.InfoLog("添加空间 "+utils.Convert.IntToString(spaceId, 10)+" 成功")
 	this.jsonSuccess("添加空间成功", nil, "/system/space/list")
 }

@@ -26,6 +26,7 @@ func initRouter() {
 	beego.AutoRouter(&controllers.CollectionController{})
 	beego.AutoRouter(&controllers.FollowController{})
 	beego.AutoRouter(&controllers.UserController{})
+	beego.AutoRouter(&controllers.DocumentController{})
 	beego.AutoRouter(&controllers.PageController{})
 
 	systemNamespace := beego.NewNamespace("/system",

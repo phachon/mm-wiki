@@ -4,6 +4,9 @@ import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
+	"github.com/astaxie/beego"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -23,7 +26,7 @@ type Document struct {
 var DocumentModel = Document{}
 
 // get document by document_id
-func (s *Document) GetDocumentByDocumentId(documentId string) (document map[string]string, err error) {
+func (d *Document) GetDocumentByDocumentId(documentId string) (document map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
@@ -38,7 +41,7 @@ func (s *Document) GetDocumentByDocumentId(documentId string) (document map[stri
 }
 
 // get document by name
-func (s *Document) GetDocumentByTitle(title string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentsByTitle(title string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
@@ -52,8 +55,24 @@ func (s *Document) GetDocumentByTitle(title string) (documents []map[string]stri
 	return
 }
 
+// get document by title and spaceId
+func (d *Document) GetDocumentByTitleAndSpaceId(title string, spaceId string) (document map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"title": title,
+		"space_id": spaceId,
+		"is_delete": Document_Delete_False,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	document = rs.Row()
+	return
+}
+
 // delete document by document_id
-func (s *Document) Delete(documentId string) (err error) {
+func (d *Document) Delete(documentId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Document_Name, map[string]interface{}{
 		"is_delete": Document_Delete_False,
@@ -68,7 +87,9 @@ func (s *Document) Delete(documentId string) (err error) {
 }
 
 // insert document
-func (s *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
+func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
+	documentValue["create_time"] = time.Now().Unix()
+	documentValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Document_Name, documentValue))
@@ -80,7 +101,7 @@ func (s *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 }
 
 // update document by document_id
-func (s *Document) Update(documentId string, documentValue map[string]interface{}) (id int64, err error) {
+func (d *Document) Update(documentId string, documentValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	documentValue["update_time"] =  time.Now().Unix()
@@ -96,7 +117,7 @@ func (s *Document) Update(documentId string, documentValue map[string]interface{
 }
 
 // get all documents
-func (s *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -113,7 +134,7 @@ func (s *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string
 }
 
 // get document count
-func (s *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err error) {
+func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -133,7 +154,7 @@ func (s *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err err
 }
 
 // get document by name
-func (s *Document) GetDocumentsByLikeTitle(name string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentsByLikeTitle(name string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
@@ -148,7 +169,7 @@ func (s *Document) GetDocumentsByLikeTitle(name string) (documents []map[string]
 }
 
 // get document by many document_id
-func (s *Document) GetDocumentByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
@@ -160,4 +181,11 @@ func (s *Document) GetDocumentByDocumentIds(documentIds []string) (documents []m
 	}
 	documents = rs.Rows()
 	return
+}
+
+func (d *Document) GetContentByPath(path string) (content string , err error){
+	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
+	absDir, _ := filepath.Abs(docRootDir)
+	realPath := absDir + "/"+path
+	return utils.File.GetFileContents(realPath)
 }

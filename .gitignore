@@ -7,3 +7,4 @@ mm-wiki
 .session/
 conf/mm-wiki.conf
 release-*
+data/
