@@ -77,7 +77,7 @@ func (this *SpaceController) Save() {
 		"parent_id": 0,
 		"title": "Home",
 		"type": models.Document_Type_Page,
-		"path": homePagePath,
+		"path": name+"/"+homeName+".md",
 		"create_user_id": this.UserId,
 		"edit_user_id": this.UserId,
 	}

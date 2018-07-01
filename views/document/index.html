@@ -9,7 +9,15 @@
             </form>
         </div>
         <div class="page-tree">
-            <h4 class="text-center">{{$space.name}}</h4>
+            <h4 class="text-center">{{$space.name}}
+                <a data-toggle="web-popover" data-placement="bottom"><span class="fa fa-plus-square-o"></span></a>
+                <div class="webui-popover-content">
+                    <ul class="dropdown-menu webui-popover-menu" style="min-width: 50px">
+                        <li><a name="create_space" data-link="/space/add"><i class="fa fa-file fa-fw"></i>页面</a></li>
+                        <li><a name="create_space" data-link="/space/add"><i class="fa fa-folder-open fa-fw"></i>目录</a></li>
+                    </ul>
+                </div>
+            </h4>
             <hr>
             <ul id="dir_tree" class="ztree"></ul>
         </div>

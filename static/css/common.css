@@ -122,7 +122,7 @@ ul,li {
 }
 
 .webui-popover-menu {
-    min-width: 130px!important;
+    min-width: 100px!important;
 }
 
 .layui-layer-content iframe {
@@ -237,6 +237,7 @@ select.input-xs {
 .w40{width:40px;}
 .w50{width:50px;}
 .w100{width:100px;}
+.w130{width:130px;}
 .w150{width:150px;}
 .w160{width:160px;}
 .w170{width:170px;}
