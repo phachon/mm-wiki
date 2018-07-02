@@ -4,6 +4,10 @@ import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
+	"os"
+	"github.com/astaxie/beego"
+	"strings"
+	"path/filepath"
 )
 
 const (
@@ -105,14 +109,25 @@ func (s *Space) Delete(spaceId string) (err error) {
 
 // insert space
 func (s *Space) Insert(spaceValue map[string]interface{}) (id int64, err error) {
+	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
+	absDir, _ := filepath.Abs(docRootDir)
+	spaceDir := absDir+"/"+spaceValue["name"].(string)
+	// 1. create space dir
+	err = os.Mkdir(spaceDir, 0777)
+	if err != nil {
+		return 0, err
+	}
+
+	// 3. insert space database
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Space_Name, spaceValue))
 	if err != nil {
+		os.Remove(spaceDir)
 		return
 	}
 	id = rs.LastInsertId
-	return
+	return id, nil
 }
 
 // update space by space_id
@@ -269,4 +284,8 @@ func (s *Space) UpdateSpaceByName(space map[string]interface{}) (affect int64, e
 	}
 	affect = rs.RowsAffected
 	return
+}
+
+func (s *Space) GetSpaceHomeName() string {
+	return beego.AppConfig.String("document::space_home_name")
 }

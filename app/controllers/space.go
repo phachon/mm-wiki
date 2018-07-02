@@ -301,7 +301,7 @@ func (this *SpaceController) Page() {
 	}
 	// home page id
 	homeName := beego.AppConfig.String("document::space_home_name")
-	document, err := models.DocumentModel.GetDocumentByTitleAndSpaceId(homeName, spaceId)
+	document, err := models.DocumentModel.GetDocumentByNameAndSpaceId(homeName, spaceId)
 	if err != nil {
 		this.ErrorLog("查找空间 "+spaceId+" 失败："+err.Error())
 		this.ViewError("查找空间页面失败！")

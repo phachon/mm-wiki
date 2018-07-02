@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego"
 	"path/filepath"
 	"strings"
+	"os"
 )
 
 const (
@@ -41,11 +42,11 @@ func (d *Document) GetDocumentByDocumentId(documentId string) (document map[stri
 }
 
 // get document by name
-func (d *Document) GetDocumentsByTitle(title string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentsByName(name string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"title": title,
+		"name": name,
 		"is_delete": Document_Delete_False,
 	}))
 	if err != nil {
@@ -55,13 +56,30 @@ func (d *Document) GetDocumentsByTitle(title string) (documents []map[string]str
 	return
 }
 
-// get document by title and spaceId
-func (d *Document) GetDocumentByTitleAndSpaceId(title string, spaceId string) (document map[string]string, err error) {
+// get document by name and spaceId
+func (d *Document) GetDocumentByNameAndSpaceId(name string, spaceId string) (document map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"title": title,
+		"name": name,
 		"space_id": spaceId,
+		"is_delete": Document_Delete_False,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	document = rs.Row()
+	return
+}
+
+// get document by name and spaceId
+func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId string, spaceId string) (document map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"name": name,
+		"space_id": spaceId,
+		"parent_id": parentId,
 		"is_delete": Document_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -88,6 +106,16 @@ func (d *Document) Delete(documentId string) (err error) {
 
 // insert document
 func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
+
+	if documentValue["type"].(int) == Document_Type_Page {
+		err = d.CreatePage(documentValue["path"].(string))
+	}else {
+		err = d.CreateDir(documentValue["path"].(string))
+	}
+	if err != nil {
+		return 0, err
+	}
+
 	documentValue["create_time"] = time.Now().Unix()
 	documentValue["update_time"] = time.Now().Unix()
 	db := G.DB()
@@ -133,6 +161,24 @@ func (d *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string
 	return
 }
 
+// get document by spaceId and parentId
+func (d *Document) GetDocumentBySpaceIdAndParentId(spaceId string, parentId string) (document map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+			"space_id": spaceId,
+			"parent_id": parentId,
+			"is_delete": Document_Delete_False,
+		}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	document = rs.Row()
+	return
+}
+
 // get document count
 func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err error) {
 
@@ -154,7 +200,7 @@ func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err err
 }
 
 // get document by name
-func (d *Document) GetDocumentsByLikeTitle(name string) (documents []map[string]string, err error) {
+func (d *Document) GetDocumentsByLikeName(name string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
@@ -188,4 +234,20 @@ func (d *Document) GetContentByPath(path string) (content string , err error){
 	absDir, _ := filepath.Abs(docRootDir)
 	realPath := absDir + "/"+path
 	return utils.File.GetFileContents(realPath)
+}
+
+// create document page
+func (d *Document) CreatePage(path string) error {
+	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
+	absDir, _ := filepath.Abs(docRootDir)
+	realPagePath := absDir + "/"+path
+	return utils.File.CreateFile(realPagePath)
+}
+
+// create document dir
+func (d *Document) CreateDir(path string) error {
+	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
+	absDir, _ := filepath.Abs(docRootDir)
+	realPath := absDir + "/"+path
+	return os.Mkdir(realPath, 0777)
 }
