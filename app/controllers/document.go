@@ -99,7 +99,7 @@ func (this *DocumentController) Add() {
 	parentDocument := map[string]string{}
 	if parentId != "0" {
 		// get space by spaceId and parentId
-		parentDocument, err = models.DocumentModel.GetDocumentBySpaceIdAndParentId(spaceId, parentId)
+		parentDocument, err = models.DocumentModel.GetDocumentByDocumentId(parentId)
 		if err != nil {
 			this.ErrorLog("查找父文档失败："+err.Error())
 			this.ViewError("查找父文档失败！")
@@ -159,7 +159,7 @@ func (this *DocumentController) Save() {
 			this.ErrorLog("创建保存文档失败："+err.Error())
 			this.jsonError("创建文档失败！")
 		}
-		if len(parentDocument) != 0 {
+		if len(parentDocument) == 0 {
 			this.jsonError("父文档不存在！")
 		}
 		parentPath = parentDocument["path"]
@@ -201,16 +201,38 @@ func (this *DocumentController) Save() {
 // edit document
 func (this *DocumentController) Edit() {
 
-	documentId := this.GetString("document_id", "")
+	documentId := this.GetString("document_id", "0")
+	spaceId := strings.TrimSpace(this.GetString("space_id", "0"))
 
-	fileInfo, err := utils.File.GetFileContents("test.md")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	if spaceId == "0" {
+		this.ViewError("没有选择空间！")
 	}
-	this.Data["document_content"] = fileInfo
-	this.Data["document_id"] = documentId
-	this.viewLayout("document/edit", "default_document")
+	if documentId == "0" {
+		this.ViewError("没有选择文档目录！")
+	}
+
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("修改文档目录失败："+err.Error())
+		this.ViewError("修改文档目录失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("空间不存在！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("修改文档目录失败："+err.Error())
+		this.jsonError("修改文档目录失败！")
+	}
+	if len(document) == 0 {
+		this.jsonError("文档目录不存在！")
+	}
+
+
+
+	this.Data["document"] = document
+	this.viewLayout("document/edit", "default")
 }
 
 // modify document
