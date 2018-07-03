@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-	"mm-wiki/app/utils"
 	"mm-wiki/app/models"
 )
 
@@ -84,16 +82,34 @@ func (this *PageController) View() {
 // page edit
 func (this *PageController) Edit() {
 
-	pageId := this.GetString("page_id", "")
-
-	fileInfo, err := utils.File.GetFileContents("test.md")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	documentId := this.GetString("document_id", "")
+	if documentId == "" {
+		this.ViewError("文档未找到！")
 	}
-	this.Data["page_content"] = fileInfo
-	this.Data["page_id"] = pageId
-	this.viewLayout("page/edit", "default_page")
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("修改文档失败！")
+	}
+	if len(document) == 0 {
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+
+
+	// get document content
+	path := document["path"]
+	documentContent, err := models.DocumentModel.GetContentByPath(path)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+
+
+	this.Data["page_content"] = documentContent
+	this.Data["document"] = document
+	this.viewLayout("page/edit", "document_page")
 }
 
 // page edit

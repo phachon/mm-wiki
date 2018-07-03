@@ -2,7 +2,7 @@
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}{{$parentDocuments := .parent_documents}}
         <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}
             <div class="panel panel-default">
-                <div class="panel-body" style="min-height: 498px">
+                <div class="panel-body">
                     <div class="row">
                         <div class="col-md-8">
                             <h3 class="view-page-title">{{$document.name}}</h3>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <div class="btn-group" role="group" aria-label="...">
-                                <a class="btn btn-default" href="/page/edit?page_id=1"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                                <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
                                 <a class="btn btn-default" href="/page/collection?page_id=1"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
@@ -35,12 +35,12 @@
                     <hr style="margin: 0">
                 </div>
                 <div class="panel-body">
-                    <div id="test-editormd-view">
+                    <div id="document_page_view">
                         <textarea style="display:none;">{{$pageContent}}</textarea>
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
+                    <div class="text-right"><span class="text-info">最后修改时间：{{dateFormat $document.update_time "Y-m-d H:i:s"}}</span></div>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
 </div>
 <script type="text/javascript">
     $(function() {
-        editormd.markdownToHTML("test-editormd-view", {
+        editormd.markdownToHTML("document_page_view", {
             //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
             htmlDecode      : "style,script,iframe",  // you can filter tags decode
             //toc             : false,

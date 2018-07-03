@@ -28,7 +28,7 @@ var Document = {
     /**
      * list nav
      */
-    ListTree: function (element, treeData) {
+    ListTree: function (element, treeData, defaultId) {
 
         //配置信息
         var setting = {
@@ -77,8 +77,8 @@ var Document = {
 
         function beforeClick(treeId, treeNode) {
             console.log("点击节点前....");
-            $("#mainFrame").attr("src", "/page/view?document_id="+treeNode.id);
-            // location.href = "/document/index?document_id="+treeNode.id
+            // $("#mainFrame").attr("src", "/page/view?document_id="+treeNode.id);
+            location.href = "/document/index?document_id="+treeNode.id
         }
 
         function onClick() {
@@ -194,8 +194,12 @@ var Document = {
             $("#editBtn_"+treeNode.tId).unbind().remove();
         }
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             $.fn.zTree.init($(element), setting, treeData);
+            var zTreeMenu = $.fn.zTree.getZTreeObj("dir_tree");
+            var node = zTreeMenu.getNodeByParam("id", defaultId);
+            zTreeMenu.selectNode(node, true);
+            zTreeMenu.expandNode(node, true, false);
         });
     }
 };

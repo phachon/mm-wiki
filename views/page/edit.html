@@ -1,23 +1,24 @@
 <div class="container-fluid">
-    <div class="row">
+    <div class="row">{{$pageContent := .page_content}}{{$document := .document}}
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="panel-body" style="padding: 10px">
+                    <form>
                     <div class="row">
-                        <div class="col-md-8">
-                            <h4 class="edit-page-title">这是测试文档这是测试文档</h4>
+                        <div class="col-md-11">
+                            <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}">
+                            {{/*<h4 class="edit-page-title">{{$document.name}}</h4>*/}}
                         </div>
-                        <div class="col-md-4 text-right">
+                        <div class="col-md-1 text-right">
                             <a class="btn btn-default" href="/page/save?page_id=1"><i class="fa fa-save"></i> 保存</a>
                         </div>
                     </div>
+                    </form>
                 </div>
-                <div class="editor-header">
-
-                </div>
-                <div id="test-editormd"></div>
+                {{/*<div class="editor-header">adasdasdadadasd</div>*/}}
+                <div id="document_page_editormd"></div>
                 <div class="panel-footer">
-                    <div class="text-right"><span class="text-info">最后修改时间：2018-06-18 18:27:09</span></div>
+                    <div class="text-right"><span class="text-info">最后修改时间：{{dateFormat $document.update_time "Y-m-d H:i:s"}}</span></div>
                 </div>
             </div>
         </div>
@@ -31,7 +32,7 @@
         var testEditor;
 
         // $.get('test.md', function(md){
-        testEditor = editormd("test-editormd", {
+        testEditor = editormd("document_page_editormd", {
             width: "100%",
             height: 500,
             path : '/static/plugins/editor.md/lib/',
@@ -55,7 +56,7 @@
             theme : "default",
             previewTheme : "default",
             editorTheme : "default",
-            markdown : {{.page_content}},
+            markdown : {{$pageContent}},
             codeFold : true,
             //syncScrolling : false,
             saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
