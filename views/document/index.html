@@ -26,13 +26,11 @@
             'id': parseInt({{$document.document_id}}),
             'pId': parseInt({{$document.parent_id}}),
             'name': {{$document.name}},
-            'url': "/document/view?document_id="+{{$document.document_id}},
-            'target': "mainFrame",
             'open': false,
             'isParent': false
         };
         {{if eq $document.document_id $defaultDocumentId}}
-            documentsData.open = false;
+            documentData.open = true;
         {{end}}
         {{if eq $document.type "2"}}
             documentData.isParent = true;

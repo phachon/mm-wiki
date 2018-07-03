@@ -7,14 +7,14 @@
                 <input type="hidden" name="parent_id" value="{{$parentId}}">
                 <input type="hidden" name="space_id" value="{{$spaceId}}">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 上级</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 父文档</label>
                     <div class="col-sm-6 form-comment">
                         <span class="control-label">
                             {{range $parentDocument := $parentDocuments}}
                                 {{if eq $parentDocument.parent_id "0"}}
-                                    <strong><a href="/main/index">{{$parentDocument.name}}</a></strong>
+                                    <strong><a href="/document/index?document_id={{$parentDocument.document_id}}" target="_parent">{{$parentDocument.name}}</a></strong>
                                 {{else}}
-                                    <strong> / <a href="/main/index">{{$parentDocument.name}}</a></strong>
+                                    <strong> / <a href="/document/index?document_id={{$parentDocument.document_id}}" target="_parent">{{$parentDocument.name}}</a></strong>
                                 {{end}}
                             {{end}}
                         </span>

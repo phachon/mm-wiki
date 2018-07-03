@@ -11,7 +11,7 @@ type DocumentController struct {
 	BaseController
 }
 
-// document info
+// document index
 func (this *DocumentController) Index() {
 
 	documentId := this.GetString("document_id", "")
@@ -25,7 +25,6 @@ func (this *DocumentController) Index() {
 		this.ViewError("查找文档失败！")
 	}
 	if len(document) == 0 {
-		this.ErrorLog("查找空间文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
 	}
 	spaceId := document["space_id"]
@@ -174,7 +173,7 @@ func (this *DocumentController) Save() {
 		this.jsonError("创建文档失败")
 	}
 	this.InfoLog("创建文档 "+utils.Convert.IntToString(documentId, 10)+" 成功")
-	this.jsonSuccess("创建文档成功", nil, "/space/page?space_id="+spaceId)
+	this.jsonSuccess("创建文档成功", nil, "/document/index?document_id="+utils.Convert.IntToString(documentId, 10))
 }
 
 // edit document
