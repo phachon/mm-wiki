@@ -2,14 +2,22 @@
     <div id="failedBox" class="hide"></div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <br>{{$parentDocument := .parentDocument}}{{$spaceId := .spaceId}}
+            <br>{{$parentDocuments := .parent_documents}}{{$spaceId := .space_id}}{{$parentId := .parent_id}}
             <form class="form-horizontal" method="post" action="/document/save">
-                <input type="hidden" name="parent_id" value="{{$parentDocument.document_id}}">
+                <input type="hidden" name="parent_id" value="{{$parentId}}">
                 <input type="hidden" name="space_id" value="{{$spaceId}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 上级</label>
                     <div class="col-sm-6 form-comment">
-                        <span class="control-label"><strong>{{$parentDocument.path}}</strong></span>
+                        <span class="control-label">
+                            {{range $parentDocument := $parentDocuments}}
+                                {{if eq $parentDocument.parent_id "0"}}
+                                    <strong><a href="/main/index">{{$parentDocument.name}}</a></strong>
+                                {{else}}
+                                    <strong> / <a href="/main/index">{{$parentDocument.name}}</a></strong>
+                                {{end}}
+                            {{end}}
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">

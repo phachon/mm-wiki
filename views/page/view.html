@@ -1,21 +1,25 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row">{{$pageContent := .page_content}}{{$document := .document}}{{$parentDocuments := .parent_documents}}
+        <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <h3 class="view-page-title">这是测试文档这是测试文档</h3>
+                            <h3 class="view-page-title">{{$document.name}}</h3>
                             <p class="view-page-path">
-                                <i class="glyphicon glyphicon-folder-open"></i>
-                                <a class="text text-info" href="/page/view?page_id=1">广告事业部</a> /
-                                <a class="text text-info" href="/page/view?page_id=1">技术部</a> /
-                                <a class="text text-info" href="/page/view?page_id=1">系统研发组</a>
+                                <i class="fa fa-folder fa-fw"></i>
+                                {{range $parentDocument := $parentDocuments}}
+                                {{if eq $parentDocument.parent_id "0"}}
+                                    <strong><a class="text text-info" target="_parent" href="/document/index?document_id={{$parentDocument.document_id}}">{{$parentDocument.name}}</a></strong>
+                                {{else}}
+                                    <strong> / <a target="_parent" href="/document/index?document_id={{$parentDocument.document_id}}">{{$parentDocument.name}}</a></strong>
+                                {{end}}
+                                {{end}}
                             </p>
                             <p class="view-page-time">
-                                <i class="glyphicon glyphicon-time"></i>
-                                被 <a class="text text-info" href="/user/info?user_id=1"> Admin </a> 创建于 2018/01/24 ，
-                                被 <a class="text text-info" href="/user/info?user_id=1"> phachon </a> 最后更新于 2018/01/24
+                                <i class="glyphicon glyphicon-time fa-fw"></i>
+                                被 <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}} </a> 创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ，
+                                被 <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}"> {{$editUser.username}} </a> 最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
                             </p>
                         </div>
                         <div class="col-md-4 text-right">
@@ -32,7 +36,7 @@
                 </div>
                 <div class="panel-body">
                     <div id="test-editormd-view">
-                        <textarea style="display:none;">{{.page_content}}</textarea>
+                        <textarea style="display:none;">{{$pageContent}}</textarea>
                     </div>
                 </div>
                 <div class="panel-footer">

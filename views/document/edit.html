@@ -2,33 +2,27 @@
     <div id="failedBox" class="hide"></div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <br>{{$parentDocument := .parentDocument}}{{$spaceId := .spaceId}}
-            <form class="form-horizontal" method="post" action="/document/save">
-                <input type="hidden" name="parent_id" value="{{$parentDocument.document_id}}">
-                <input type="hidden" name="space_id" value="{{$spaceId}}">
+            <br>{{$parentDocuments := .parent_documents}}{{$document := .document}}
+            <form class="form-horizontal" method="post" action="/document/modify">
+                <input type="hidden" name="document_id" value="{{$document.document_id}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 上级</label>
                     <div class="col-sm-6 form-comment">
-                        <span class="control-label"><strong>{{$parentDocument.path}}</strong></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>类型</label>
-                    <div class="col-sm-5">
-                        <div class="radio radio-inline radio-primary">
-                            <input type="radio" name="type" id="radio-menu" value="1" checked="checked">
-                            <label for="radio-menu"><i class="fa fa-file fa-fw"></i>页面</label>
-                        </div>
-                        <div class="radio radio-inline radio-primary">
-                            <input type="radio" name="type" id="radio-controller" value="2">
-                            <label for="radio-controller"><i class="fa fa-folder fa-fw"></i>目录</label>
-                        </div>
+                        <span class="control-label">
+                        {{range $parentDocument := $parentDocuments}}
+                        {{if eq $parentDocument.parent_id "0"}}
+                            <strong><a href="/main/index">{{$parentDocument.name}}</a></strong>
+                        {{else}}
+                            <strong><a href="/main/index">{{$parentDocument.name}}</a> / </strong>
+                        {{end}}
+                        {{end}}
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 名称</label>
                     <div class="col-sm-5">
-                        <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="">
+                        <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}">
                     </div>
                 </div>
                 <div class="form-group">

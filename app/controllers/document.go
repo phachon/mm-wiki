@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"fmt"
 	"mm-wiki/app/utils"
 	"mm-wiki/app/models"
 	"strings"
+	"fmt"
 )
 
 type DocumentController struct {
@@ -21,64 +21,45 @@ func (this *DocumentController) Index() {
 
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
 	if err != nil {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ErrorLog("查找空间文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("查找文档失败！")
 	}
 	if len(document) == 0 {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ErrorLog("查找空间文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
 	}
 	spaceId := document["space_id"]
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("查找文档 "+documentId+" 所在空间失败："+err.Error())
-		this.ViewError("查找文档所在空间失败！")
+		this.ViewError("查找文档失败！")
 	}
 	if len(space) == 0 {
 		this.ViewError("文档所在空间不存在！")
 	}
-	// get space all document
-	documents, err := models.DocumentModel.GetDocumentsBySpaceId(spaceId)
+
+	// get default space document
+	spaceDocument, err := models.DocumentModel.GetSpaceDefaultDocument(spaceId)
 	if err != nil {
-		this.ErrorLog("查找文档失败："+err.Error())
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(spaceDocument) == 0 {
+		this.ViewError(" 空间首页文档不存在！")
+	}
+
+	// get space all document
+	documents, err := models.DocumentModel.GetAllSpaceDocuments(spaceId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 所在空间失败："+err.Error())
 		this.ViewError("查找文档失败！")
 	}
 
 	this.Data["documents"] = documents
 	this.Data["default_document_id"] = documentId
 	this.Data["space"] = space
+	this.Data["space_document"] = spaceDocument
 	this.viewLayout("document/index", "document")
-}
-
-// document info
-func (this *DocumentController) View() {
-
-	documentId := this.GetString("document_id", "")
-	if documentId == "" {
-		this.ViewError("文档未找到！")
-	}
-	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
-	if err != nil {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
-		this.ViewError("查找文档失败！")
-	}
-	if len(document) == 0 {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
-		this.ViewError("文档不存在！")
-	}
-	if document["type"] != fmt.Sprintf("%d", models.Document_Type_Page) {
-		this.ViewError("该文档类型不是页面！")
-	}
-
-	path := document["path"]
-	documentContent, err := models.DocumentModel.GetContentByPath(path)
-	if err != nil {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
-		this.ViewError("文档不存在！")
-	}
-	this.Data["document_content"] = documentContent
-	this.Data["document_id"] = documentId
-	this.viewLayout("document/view", "default_document")
 }
 
 // add document
@@ -87,6 +68,12 @@ func (this *DocumentController) Add() {
 	spaceId := this.GetString("space_id", "0")
 	parentId := this.GetString("parent_id", "0")
 
+	if spaceId == "0" {
+		this.ViewError("没有选择空间！")
+	}
+	if parentId == "0" {
+		this.ViewError("没有选择上级！")
+	}
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("添加文档失败："+err.Error())
@@ -96,27 +83,19 @@ func (this *DocumentController) Add() {
 		this.ViewError("空间不存在！")
 	}
 
-	parentDocument := map[string]string{}
-	if parentId != "0" {
-		// get space by spaceId and parentId
-		parentDocument, err = models.DocumentModel.GetDocumentByDocumentId(parentId)
-		if err != nil {
-			this.ErrorLog("查找父文档失败："+err.Error())
-			this.ViewError("查找父文档失败！")
-		}
-		if len(parentDocument) == 0 {
-			this.ViewError("父文档不存在！")
-		}
-	}else {
-		parentDocument = map[string]string{
-			"document_id": "0",
-			"title": space["name"],
-			"path": space["name"],
-		}
+	// get parent documents by parentId
+	parentDocuments, err := models.DocumentModel.GetParentDocumentsByParentId(parentId)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
+	}
+	if len(parentDocuments) == 0 {
+		this.ViewError("父文档不存在！")
 	}
 
-	this.Data["parentDocument"] = parentDocument
-	this.Data["spaceId"] = spaceId
+	this.Data["parent_documents"] = parentDocuments
+	this.Data["parent_id"] = parentId
+	this.Data["space_id"] = spaceId
 	this.viewLayout("document/form", "default")
 
 }
@@ -135,8 +114,14 @@ func (this *DocumentController) Save() {
 	if spaceId == "0" {
 		this.jsonError("没有选择空间！")
 	}
+	if parentId == "0" {
+		this.jsonError("没有选择父文档！")
+	}
 	if name == "" {
 		this.jsonError("文档名称不能为空！")
+	}
+	if name == models.Document_Default_FileName {
+		this.jsonError("文档名称不能为 "+ models.Document_Default_FileName+" ！")
 	}
 	if docType != models.Document_Type_Page &&
 		docType != models.Document_Type_Dir {
@@ -152,19 +137,16 @@ func (this *DocumentController) Save() {
 		this.jsonError("空间不存在！")
 	}
 
-	parentPath := ""
-	if parentId != "0" {
-		parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
-		if err != nil {
-			this.ErrorLog("创建保存文档失败："+err.Error())
-			this.jsonError("创建文档失败！")
-		}
-		if len(parentDocument) == 0 {
-			this.jsonError("父文档不存在！")
-		}
-		parentPath = parentDocument["path"]
-	}else {
-		parentPath = space["name"]
+	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
+	if err != nil {
+		this.ErrorLog("创建保存文档失败："+err.Error())
+		this.jsonError("创建文档失败！")
+	}
+	if len(parentDocument) == 0 {
+		this.jsonError("父文档不存在！")
+	}
+	if parentDocument["type"] != fmt.Sprintf("%d", models.Document_Type_Dir) {
+		this.jsonError("父文档不是目录！")
 	}
 
 	document, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(name, parentId, spaceId)
@@ -176,10 +158,7 @@ func (this *DocumentController) Save() {
 		this.jsonError("目录下文档名称已经存在！")
 	}
 
-	path := parentPath+"/"+name
-	if docType == models.Document_Type_Page {
-		path = path+".md"
-	}
+	path := models.DocumentModel.GetPathByParentPath(name, docType, parentDocument["path"])
 	insertDocument := map[string]interface{}{
 		"parent_id" : parentId,
 		"space_id" : spaceId,
@@ -228,10 +207,20 @@ func (this *DocumentController) Edit() {
 	if len(document) == 0 {
 		this.jsonError("文档目录不存在！")
 	}
+	parentId := document["parent_id"]
 
-
+	// get parent documents by parentId
+	parentDocuments, err := models.DocumentModel.GetParentDocumentsByParentId(parentId)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
+	}
+	if len(parentDocuments) == 0 {
+		this.ViewError("父文档不存在！")
+	}
 
 	this.Data["document"] = document
+	this.Data["parent_documents"] = parentDocuments
 	this.viewLayout("document/edit", "default")
 }
 

@@ -36,7 +36,7 @@ func (this *SpaceController) Save() {
 		this.jsonError("空间名已经存在！")
 	}
 
-	// insert space
+	// create space database
 	spaceId, err := models.SpaceModel.Insert(map[string]interface{}{
 		"name": name,
 		"description": description,
@@ -50,20 +50,19 @@ func (this *SpaceController) Save() {
 		this.jsonError("添加空间失败")
 	}
 
-	// insert space Home page
-	homeName := models.SpaceModel.GetSpaceHomeName()
-	homePage := map[string]interface{}{
+	// create space document
+	spaceDocument := map[string]interface{}{
 		"space_id": spaceId,
 		"parent_id": 0,
-		"name": homeName,
-		"type": models.Document_Type_Page,
-		"path": name+"/"+homeName+".md",
+		"name": name,
+		"type": models.Document_Type_Dir,
+		"path": name+"/"+models.Document_Default_FileName+".md",
 		"create_user_id": this.UserId,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.Insert(homePage)
+	_, err = models.DocumentModel.Insert(spaceDocument)
 	if err != nil {
-		this.ErrorLog("添加空间 Home.md 文件失败："+err.Error())
+		this.ErrorLog("添加空间文档失败："+err.Error())
 		this.jsonError("添加空间失败！")
 	}
 

@@ -3,31 +3,82 @@ package controllers
 import (
 	"fmt"
 	"mm-wiki/app/utils"
+	"mm-wiki/app/models"
 )
 
 type PageController struct {
 	BaseController
 }
 
-// page info
-func (this *PageController) Index() {
-	this.viewLayout("page/index", "page")
-}
-
-// page info
+// document page view
 func (this *PageController) View() {
 
-	pageId := this.GetString("page_id", "")
-
-
-	fileInfo, err := utils.File.GetFileContents("test.md")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	documentId := this.GetString("document_id", "")
+	if documentId == "" {
+		this.ViewError("文档未找到！")
 	}
-	this.Data["page_content"] = fileInfo
-	this.Data["page_id"] = pageId
-	this.viewLayout("page/view", "default_page")
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(document) == 0 {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+
+	// get parent documents
+	var parentDocuments = []map[string]string{}
+	if document["parent_id"] != "0" {
+		// get parent documents by parentId
+		parentDocuments, err = models.DocumentModel.GetParentDocumentsByParentId(document["parent_id"])
+		if err != nil {
+			this.ErrorLog("查找父文档失败："+err.Error())
+			this.ViewError("查找父文档失败！")
+		}
+	}else {
+		parentDocuments = append(parentDocuments, document)
+	}
+	if len(parentDocuments) == 0 {
+		this.ViewError("父文档不存在！")
+	}
+
+	// get document content
+	path := document["path"]
+	documentContent, err := models.DocumentModel.GetContentByPath(path)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+
+	// get edit user and create user
+	users, err := models.UserModel.GetUsersByUserIds([]string{document["create_user_id"], document["edit_user_id"]})
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(users) == 0 {
+		this.ViewError("文档创建用户不存在！")
+	}
+
+	var createUser = map[string]string{}
+	var editUser = map[string]string{}
+	for _, user := range users {
+		if user["user_id"] == document["create_user_id"] {
+			createUser = user
+		}
+		if user["user_id"] == document["edit_user_id"] {
+			editUser = user
+		}
+	}
+
+	this.Data["create_user"] = createUser
+	this.Data["edit_user"] = editUser
+	this.Data["document"] = document
+	this.Data["page_content"] = documentContent
+	this.Data["parent_documents"] = parentDocuments
+	this.viewLayout("page/view", "document_page")
 }
 
 // page edit

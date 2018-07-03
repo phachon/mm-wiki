@@ -16,6 +16,8 @@ const (
 
 	Document_Type_Page = 1
 	Document_Type_Dir = 2
+
+	Document_Default_FileName = "README"
 )
 
 const Table_Document_Name = "document"
@@ -162,7 +164,7 @@ func (d *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string
 }
 
 // get document by spaceId and parentId
-func (d *Document) GetDocumentBySpaceIdAndParentId(spaceId string, parentId string) (document map[string]string, err error) {
+func (d *Document) GetDocumentsBySpaceIdAndParentId(spaceId string, parentId string) (documents []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -171,12 +173,73 @@ func (d *Document) GetDocumentBySpaceIdAndParentId(spaceId string, parentId stri
 			"space_id": spaceId,
 			"parent_id": parentId,
 			"is_delete": Document_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+// get document by spaceId
+func (d *Document) GetSpaceDefaultDocument(spaceId string) (document map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+			"space_id": spaceId,
+			"parent_id": "0",
+			"is_delete": Document_Delete_False,
 		}).Limit(0, 1))
 	if err != nil {
 		return
 	}
 	document = rs.Row()
 	return
+}
+
+// get document by spaceId
+func (d *Document) GetAllSpaceDocuments(spaceId string) (documents []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+			"space_id": spaceId,
+			"parent_id >": "0",
+			"is_delete": Document_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+// get all parent documents by document
+func (d *Document) GetParentDocumentsByParentId(parentId string) (documents []map[string]string, err error) {
+
+	for {
+		document, err := d.GetDocumentByDocumentId(parentId)
+		if err != nil {
+			return documents, err
+		}
+		if len(document) == 0 {
+			return documents, err
+		}
+		documents = append(documents, document)
+		parentId = document["parent_id"]
+		if parentId == "0" {
+			break
+		}
+	}
+	newDocuments := []map[string]string{}
+	for i, _ := range documents {
+		newDocuments = append(newDocuments, documents[len(documents) - i - 1])
+	}
+
+	return newDocuments, nil
 }
 
 // get document count
@@ -229,6 +292,16 @@ func (d *Document) GetDocumentByDocumentIds(documentIds []string) (documents []m
 	return
 }
 
+func (d *Document) GetPathByParentPath(name string, docType int, parentPath string) (path string){
+	parentPath = filepath.Dir(parentPath)
+	if docType == Document_Type_Page {
+		path = parentPath+"/"+name+".md"
+	}else {
+		path = parentPath+"/"+name+"/"+Document_Default_FileName+".md"
+	}
+	return
+}
+
 func (d *Document) GetContentByPath(path string) (content string , err error){
 	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
 	absDir, _ := filepath.Abs(docRootDir)
@@ -239,7 +312,10 @@ func (d *Document) GetContentByPath(path string) (content string , err error){
 // create document page
 func (d *Document) CreatePage(path string) error {
 	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
-	absDir, _ := filepath.Abs(docRootDir)
+	absDir, err := filepath.Abs(docRootDir)
+	if err != nil {
+		return err
+	}
 	realPagePath := absDir + "/"+path
 	return utils.File.CreateFile(realPagePath)
 }
@@ -247,7 +323,15 @@ func (d *Document) CreatePage(path string) error {
 // create document dir
 func (d *Document) CreateDir(path string) error {
 	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
-	absDir, _ := filepath.Abs(docRootDir)
+	absDir, err := filepath.Abs(docRootDir)
+	if err != nil {
+		return err
+	}
 	realPath := absDir + "/"+path
-	return os.Mkdir(realPath, 0777)
+	dir := filepath.Dir(realPath)
+	err = os.Mkdir(dir, 0777)
+	if err != nil {
+		return err
+	}
+	return utils.File.CreateFile(realPath)
 }

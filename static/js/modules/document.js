@@ -50,6 +50,9 @@ var Document = {
                 }
             },
             callback: {
+                beforeClick: beforeClick,
+                onClick: onClick,
+
                 beforeEditName: beforeEditName,
 
                 beforeRemove: beforeRemove,
@@ -71,6 +74,15 @@ var Document = {
                 next: true
             }
         };
+
+        function beforeClick(treeId, treeNode) {
+            console.log("点击节点前....");
+            $("#mainFrame").attr("src", "/page/view?document_id="+treeNode.id);
+        }
+
+        function onClick() {
+            console.log("点击节点后....");
+        }
 
         function beforeEditName(treeId, treeNode) {
             console.log("开始修改节点...");
