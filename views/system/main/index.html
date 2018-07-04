@@ -21,29 +21,6 @@
         </ul>
         </li>
         {{end}}
-
-        {{/*<li>*/}}
-            {{/*<a href="javascript:;"><i class="glyphicon glyphicon-folder-open"></i> 空间管理<span class="fa arrow"></span></a>*/}}
-            {{/*<ul class="nav nav-second-level">*/}}
-                {{/*<li>*/}}
-                    {{/*<a href="/space/add" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 添加空间 </a>*/}}
-                {{/*</li>*/}}
-                {{/*<li>*/}}
-                    {{/*<a href="/space/list" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 空间列表 </a>*/}}
-                {{/*</li>*/}}
-            {{/*</ul>*/}}
-        {{/*</li>*/}}
-        {{/*<li>*/}}
-            {{/*<a href="javascript:;"><i class="fa fa-tasks"></i> 日志管理<span class="fa arrow"></span></a>*/}}
-            {{/*<ul class="nav nav-second-level">*/}}
-                {{/*<li>*/}}
-                    {{/*<a href="/system/log/system" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 系统日志 </a>*/}}
-                {{/*</li>*/}}
-                {{/*<li>*/}}
-                    {{/*<a href="/system/log/page" target="mainFrame"><i class="glyphicon glyphicon-list"></i> 文档日志 </a>*/}}
-                {{/*</li>*/}}
-            {{/*</ul>*/}}
-        {{/*</li>*/}}
         {{/*<li>*/}}
             {{/*<a href="javascript:;"><i class="fa fa-wrench"></i> 配置管理<span class="fa arrow"></span></a>*/}}
             {{/*<ul class="nav nav-second-level">*/}}
@@ -65,4 +42,7 @@
         {{/*</li>*/}}
     </ul>
 </div>
+<script type="text/javascript">
+    $('#side-menu').metisMenu();
+</script>
 <iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes" style="overflow-y: auto" src="/system/profile/info"></iframe>

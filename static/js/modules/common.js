@@ -3,6 +3,8 @@
  * Copyright (c) 2018
  */
 
+var sliderLayout = null;
+
 function mainRightHeight() {
     var mainHeight = $(window).height() - $('header').height() - 55;
     $('#mainFrame').height(mainHeight);
@@ -33,7 +35,7 @@ $(window).load(function() {
 });
 
 $(document).ready(function () {
-    $('body').layout({
+    sliderLayout = $('body').layout({
         west__size:                 230,
         west__spacing_open:		    4,
         west__spacing_closed:		4,
@@ -47,4 +49,16 @@ $(document).ready(function () {
         center__maskContents:		 true
     });
 });
+
+function layoutOpen() {
+    sliderLayout.open("west");
+}
+
+function layoutClose() {
+    sliderLayout.close("west");
+}
+
+function layoutToggle() {
+    sliderLayout.toggle("west");
+}
 

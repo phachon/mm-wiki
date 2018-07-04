@@ -109,6 +109,7 @@ func (this *TemplateController) checkAccess() bool {
 
 	// must /system/controller/action
 	if (len(mca) >= 3) && (strings.ToLower(mca[0]) == "system") {
+		this.Data["navName"] = "system"
 		// no check '/system/main/index' '/system/main/default'
 		if (this.controllerName == "main" && this.actionName == "index") || this.controllerName == "main" && this.actionName == "default" {
 			return true

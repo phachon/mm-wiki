@@ -48,7 +48,12 @@
 </div>
 <script type="text/javascript">
     $(function() {
+        editormd.katexURL = {
+            js  : "/static/plugins/editor.md/lib/katex/katex.min",
+            css : "/static/plugins/editor.md/lib/katex/katex.min"
+        };
         editormd.markdownToHTML("document_page_view", {
+            path : '/static/plugins/editor.md/lib/',
             //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
             htmlDecode      : "style,script,iframe",  // you can filter tags decode
             //toc             : false,

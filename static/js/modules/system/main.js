@@ -4,5 +4,5 @@
  */
 
 $(window).load(function() {
-    $('#side-menu').metisMenu();
+    // $('#side-menu').metisMenu();
 });

@@ -148,13 +148,14 @@ func (this *DocumentController) Save() {
 		this.jsonError("父文档不是目录！")
 	}
 
-	document, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(name, parentId, spaceId)
+	// check document name
+	document, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(name, parentId, spaceId, docType)
 	if err != nil {
 		this.ErrorLog("创建保存文档失败："+err.Error())
 		this.jsonError("创建文档失败！")
 	}
 	if len(document) != 0 {
-		this.jsonError("目录下文档名称已经存在！")
+		this.jsonError("该文档名称已经存在！")
 	}
 
 	path := models.DocumentModel.GetPathByParentPath(name, docType, parentDocument["path"])

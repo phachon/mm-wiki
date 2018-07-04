@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"mm-wiki/app/models"
+	"strings"
+	"mm-wiki/app/utils"
 )
 
 type PageController struct {
@@ -113,9 +115,49 @@ func (this *PageController) Edit() {
 }
 
 // page edit
-func (this *PageController) Save() {
+func (this *PageController) Modify() {
 
-	pageId := this.GetString("page_id", "")
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/space/index")
+	}
+	documentId := this.GetString("document_id", "")
+	newName := strings.TrimSpace(this.GetString("name", ""))
+	documentContent := this.GetString("document_page_editor-markdown-doc", "")
 
-	this.Redirect("/page/view?page_id="+pageId, 302)
+	if documentId == "" {
+		this.jsonError("您没有选择文档！")
+	}
+	if newName == "" {
+		this.jsonError("文档名称不能为空！")
+	}
+	if newName == models.Document_Default_FileName {
+		this.jsonError("文档名称不能为 "+ models.Document_Default_FileName+" ！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("保存文档失败！")
+	}
+	if len(document) == 0 {
+		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+	name := document["name"]
+	if newName == name {
+		//todo name update
+	}else {
+		// check document name
+		document, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
+			document["parent_id"], document["space_id"], utils.Convert.StringToInt(document["type"]))
+		if err != nil {
+			this.ErrorLog("保存保存文档失败："+err.Error())
+			this.jsonError("保存文档失败！")
+		}
+		if len(document) != 0 {
+			this.jsonError("该文档名称已经存在！")
+		}
+	}
+
+	this.Redirect("/page/view?page_id="+documentId, 302)
 }

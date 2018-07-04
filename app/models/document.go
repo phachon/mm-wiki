@@ -75,13 +75,14 @@ func (d *Document) GetDocumentByNameAndSpaceId(name string, spaceId string) (doc
 }
 
 // get document by name and spaceId
-func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId string, spaceId string) (document map[string]string, err error) {
+func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId string, spaceId string, docType int) (document map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
 		"name": name,
 		"space_id": spaceId,
 		"parent_id": parentId,
+		"type": docType,
 		"is_delete": Document_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -132,6 +133,33 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 
 // update document by document_id
 func (d *Document) Update(documentId string, documentValue map[string]interface{}) (id int64, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	documentValue["update_time"] =  time.Now().Unix()
+	rs, err = db.Exec(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
+		"document_id":   documentId,
+		"is_delete": Document_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	id = rs.LastInsertId
+	return
+}
+
+// update document by document_id and content
+func (d *Document) UpdateByTypeAndContent(documentId string, docType int, content string, documentValue map[string]interface{}) (id int64, err error) {
+
+	// create new tmp md file
+
+
+	if docType == Document_Type_Page {
+
+	} else {
+
+	}
+
+
 	db := G.DB()
 	var rs *mysql.ResultSet
 	documentValue["update_time"] =  time.Now().Unix()
