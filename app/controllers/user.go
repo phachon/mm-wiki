@@ -208,7 +208,7 @@ func (this *UserController) FollowPage() {
 		documentIds = append(documentIds, followPage["object_id"])
 	}
 
-	pages, err := models.DocumentModel.GetDocumentByDocumentIds(documentIds)
+	pages, err := models.DocumentModel.GetDocumentsByDocumentIds(documentIds)
 	if err != nil {
 		this.ErrorLog("获取用户关注页面列表失败: "+err.Error())
 		this.ViewError("获取用户关注页面列表失败", "/user/list")

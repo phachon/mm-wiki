@@ -9,7 +9,8 @@
             </form>
         </div>
         <div class="page-tree">
-            <h4 class="text-center">{{$spaceDocument.name}}
+            <h4 class="text-center">
+                <a href="/document/index?document_id={{$spaceDocument.document_id}}">{{$spaceDocument.name}}</a>
                 <a name="create_document" data-link="/document/add?space_id={{$spaceDocument.space_id}}&parent_id={{$spaceDocument.document_id}}"><span class="fa fa-plus-square-o"></span></a>
             </h4>
             <hr>
@@ -29,9 +30,6 @@
             'open': false,
             'isParent': false
         };
-        {{/*{{if eq $document.document_id $defaultDocumentId}}*/}}
-            {{/*documentData.open = true;*/}}
-        {{/*{{end}}*/}}
         {{if eq $document.type "2"}}
             documentData.isParent = true;
         {{end}}

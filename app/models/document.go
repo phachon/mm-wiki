@@ -4,6 +4,8 @@ import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
+	"strings"
+	"fmt"
 )
 
 const (
@@ -104,7 +106,15 @@ func (d *Document) Delete(documentId string) (err error) {
 // insert document
 func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
 
-	err = utils.Document.Create(documentValue["path"].(string))
+	document := map[string]string{
+		"space_id": documentValue["space_id"].(string),
+		"parent_id": documentValue["parent_id"].(string),
+		"name": documentValue["name"].(string),
+		"type": fmt.Sprintf("%d", documentValue["type"].(int)),
+		"path": documentValue["path"].(string),
+	}
+	_, pageFile, err := d.GetParentDocumentsByDocument(document)
+	err = utils.Document.Create(pageFile)
 	if err != nil {
 		return
 	}
@@ -122,33 +132,6 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 
 // update document by document_id
 func (d *Document) Update(documentId string, documentValue map[string]interface{}) (id int64, err error) {
-	db := G.DB()
-	var rs *mysql.ResultSet
-	documentValue["update_time"] =  time.Now().Unix()
-	rs, err = db.Exec(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
-		"document_id":   documentId,
-		"is_delete": Document_Delete_False,
-	}))
-	if err != nil {
-		return
-	}
-	id = rs.LastInsertId
-	return
-}
-
-// update document by document_id and content
-func (d *Document) UpdateByTypeAndContent(documentId string, docType int, content string, documentValue map[string]interface{}) (id int64, err error) {
-
-	// create new tmp md file
-
-
-	if docType == Document_Type_Page {
-
-	} else {
-
-	}
-
-
 	db := G.DB()
 	var rs *mysql.ResultSet
 	documentValue["update_time"] =  time.Now().Unix()
@@ -234,31 +217,6 @@ func (d *Document) GetAllSpaceDocuments(spaceId string) (documents []map[string]
 	return
 }
 
-// get all parent documents by document
-func (d *Document) GetParentDocumentsByParentId(parentId string) (documents []map[string]string, err error) {
-
-	for {
-		document, err := d.GetDocumentByDocumentId(parentId)
-		if err != nil {
-			return documents, err
-		}
-		if len(document) == 0 {
-			return documents, err
-		}
-		documents = append(documents, document)
-		parentId = document["parent_id"]
-		if parentId == "0" {
-			break
-		}
-	}
-	newDocuments := []map[string]string{}
-	for i, _ := range documents {
-		newDocuments = append(newDocuments, documents[len(documents) - i - 1])
-	}
-
-	return newDocuments, nil
-}
-
 // get document count
 func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err error) {
 
@@ -294,17 +252,47 @@ func (d *Document) GetDocumentsByLikeName(name string) (documents []map[string]s
 	return
 }
 
-// get document by many document_id
-func (d *Document) GetDocumentByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
+// get document by spaceId and document_ids
+func (d *Document) GetDocumentsByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"document_id":   documentIds,
+		"document_id": documentIds,
 		"is_delete": Document_Delete_False,
 	}))
 	if err != nil {
 		return
 	}
 	documents = rs.Rows()
+	return
+}
+
+func (d *Document) GetParentDocumentsByDocument(document map[string]string) (parentDocuments []map[string]string, pageFile string, err error) {
+
+	if document["parent_id"] == "0" {
+		parentDocuments = append(parentDocuments, document)
+		pageFile = utils.Document.GetDefaultPageFileBySpaceName(document["name"])
+	}else {
+		documentsIds := strings.Split(document["path"], ",")
+		parentDocuments, err = d.GetDocumentsByDocumentIds(documentsIds)
+		if err != nil {
+			return
+		}
+		var parentPath = ""
+		for _, parentDocument := range parentDocuments {
+			parentPath += parentDocument["name"]+"/"
+		}
+		parentPath = strings.TrimRight(parentPath, "/")
+		pageFile = utils.Document.GetPageFileByParentPath(document["name"], utils.Convert.StringToInt(document["type"]), parentPath)
+	}
+	return
+}
+
+func (d *Document) GetParentDocumentsByPath(path string) (parentDocuments []map[string]string, err error) {
+	documentsIds := strings.Split(path, ",")
+	parentDocuments, err = d.GetDocumentsByDocumentIds(documentsIds)
+	if err != nil {
+		return
+	}
 	return
 }

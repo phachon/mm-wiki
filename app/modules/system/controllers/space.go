@@ -5,6 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
 	"time"
+	"fmt"
 )
 
 type SpaceController struct {
@@ -50,14 +51,13 @@ func (this *SpaceController) Save() {
 		this.jsonError("添加空间失败")
 	}
 
-	path := utils.Document.GetPathBySpaceName(name)
 	// create space document
 	spaceDocument := map[string]interface{}{
-		"space_id": spaceId,
-		"parent_id": 0,
+		"space_id": fmt.Sprintf("%d", spaceId),
+		"parent_id": "0",
 		"name": name,
 		"type": models.Document_Type_Dir,
-		"path": path,
+		"path": "0",
 		"create_user_id": this.UserId,
 		"edit_user_id": this.UserId,
 	}

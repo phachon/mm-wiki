@@ -81,9 +81,17 @@ func (this *DocumentController) Add() {
 	if len(space) == 0 {
 		this.ViewError("空间不存在！")
 	}
-
-	// get parent documents by parentId
-	parentDocuments, err := models.DocumentModel.GetParentDocumentsByParentId(parentId)
+	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
+	if err != nil {
+		this.ErrorLog("添加文档 "+parentId+" 失败："+err.Error())
+		this.jsonError("添加文档失败！")
+	}
+	if len(parentDocument) == 0 {
+		this.jsonError("父文档不存在！")
+	}
+	path := parentDocument["path"] + ","+parentId
+	// get parent documents by path
+	parentDocuments, err := models.DocumentModel.GetParentDocumentsByPath(path)
 	if err != nil {
 		this.ErrorLog("查找父文档失败："+err.Error())
 		this.ViewError("查找父文档失败！")
@@ -158,14 +166,12 @@ func (this *DocumentController) Save() {
 		this.jsonError("该文档名称已经存在！")
 	}
 
-	path := utils.Document.GetPathByParentPath(name, docType, parentDocument["path"])
-	fmt.Println("path:"+path)
 	insertDocument := map[string]interface{}{
 		"parent_id" : parentId,
 		"space_id" : spaceId,
 		"name" : name,
 		"type" : docType,
-		"path" : path,
+		"path" : parentDocument["path"]+","+parentId,
 		"create_user_id" : this.UserId,
 		"edit_user_id" : this.UserId,
 	}
@@ -208,10 +214,10 @@ func (this *DocumentController) Edit() {
 	if len(document) == 0 {
 		this.jsonError("文档目录不存在！")
 	}
-	parentId := document["parent_id"]
 
-	// get parent documents by parentId
-	parentDocuments, err := models.DocumentModel.GetParentDocumentsByParentId(parentId)
+	path := document["path"]
+	// get parent documents by path
+	parentDocuments, err := models.DocumentModel.GetParentDocumentsByPath(path)
 	if err != nil {
 		this.ErrorLog("查找父文档失败："+err.Error())
 		this.ViewError("查找父文档失败！")

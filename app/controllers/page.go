@@ -4,6 +4,7 @@ import (
 	"mm-wiki/app/models"
 	"strings"
 	"mm-wiki/app/utils"
+	"fmt"
 )
 
 type PageController struct {
@@ -27,24 +28,18 @@ func (this *PageController) View() {
 		this.ViewError("文档不存在！")
 	}
 
-	// get parent documents
-	var parentDocuments = []map[string]string{}
-	if document["parent_id"] != "0" {
-		// get parent documents by parentId
-		parentDocuments, err = models.DocumentModel.GetParentDocumentsByParentId(document["parent_id"])
-		if err != nil {
-			this.ErrorLog("查找父文档失败："+err.Error())
-			this.ViewError("查找父文档失败！")
-		}
-	}else {
-		parentDocuments = append(parentDocuments, document)
+	// get parent documents by document
+	parentDocuments, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
 	}
 	if len(parentDocuments) == 0 {
 		this.ViewError("父文档不存在！")
 	}
 
 	// get document content
-	documentContent, err := utils.Document.GetContentByPath(document["path"])
+	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
 	if err != nil {
 		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
@@ -96,8 +91,15 @@ func (this *PageController) Edit() {
 		this.ViewError("文档不存在！")
 	}
 
+	// get parent documents by document
+	_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
+	}
+
 	// get document content
-	documentContent, err := utils.Document.GetContentByPath(document["path"])
+	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
 	if err != nil {
 		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
@@ -136,8 +138,13 @@ func (this *PageController) Modify() {
 	if len(document) == 0 {
 		this.jsonError("文档不存在！")
 	}
+	// not allow update space document home page name
+	if document["parent_id"] == "0" {
+		newName = document["name"]
+	}
+
+	// check document name
 	if newName != document["name"] {
-		// check document name
 		newDocument, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
 			document["parent_id"], document["space_id"], utils.Convert.StringToInt(document["type"]))
 		if err != nil {
@@ -149,31 +156,22 @@ func (this *PageController) Modify() {
 		}
 	}
 
-	// get parent document and update document content
-	newPath := document["path"]
-	if document["parent_id"] != "0" {
-		parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
-		if err != nil {
-			this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-			this.jsonError("保存文档失败！")
-		}
-		if len(parentDocument) == 0 {
-			this.jsonError("父文档不存在！")
-		}
-		newPath = utils.Document.GetPathByParentPath(newName, utils.Convert.StringToInt(document["type"]), parentDocument["path"])
-	}
-	err = utils.Document.Update(document["path"], newPath, documentContent)
+	_, oldPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
 	if err != nil {
 		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("保存文档失败！")
 	}
+	fmt.Println(oldPageFile)
+	//err = utils.Document.Update(oldPageFile, newPath, documentContent)
+	//if err != nil {
+	//	this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+	//	this.jsonError("保存文档失败！")
+	//}
 
 	updateValue := map[string]interface{}{
 		"name": newName,
-		"path": newPath,
 		"edit_user_id": this.UserId,
 	}
-
 	_, err = models.DocumentModel.Update(documentId, updateValue)
 	if err != nil {
 		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())

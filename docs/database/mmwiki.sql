@@ -129,7 +129,7 @@ CREATE TABLE `mw_document` (
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
   `name` varchar(150) NOT NULL DEFAULT '' COMMENT '文档名称',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '文档类型 1 page 2 dir',
-  `path` varchar(100) NOT NULL DEFAULT '' COMMENT 'markdown 文件路径',
+  `path` char(30) NOT NULL DEFAULT '0' COMMENT '存储根文档到父文档的 document_id 值, 格式 0,1,2,...',
   `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序号(越小越靠前)',
   `create_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户 id',
   `edit_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '最后修改用户 id',
