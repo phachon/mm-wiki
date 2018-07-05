@@ -6,11 +6,12 @@
                 <div class="panel-body" style="padding: 10px">
                         <input type="hidden" name="document_id" value="{{$document.document_id}}">
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-10">
                             <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}">
                         </div>
-                        <div class="col-md-1 text-center">
-                            <button type="button" class="btn btn-default" onclick="Form.ajaxSubmit(this.form, false)"><i class="fa fa-save"></i> 保存</button>
+                        <div class="col-md-2 text-center" >
+                            <a type="button" class="btn btn-default" href="/document/index?document_id={{$document.document_id}}" target="_parent"><i class="fa fa-mail-reply"></i> 返回</a>
+                            <button type="button" class="btn btn-primary" onclick="Form.ajaxSubmit(this.form, false)"><i class="fa fa-save"></i> 保存</button>
                         </div>
                     </div>
                 </div>

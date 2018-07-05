@@ -34,6 +34,7 @@ type document struct {
 // get document path by parentPath
 func (d *document) GetPathByParentPath(name string, docType int, parentPath string) (path string){
 	parentDir := filepath.Dir(parentPath)
+	fmt.Println("parent dir:"+parentDir)
 	if docType == Document_Type_Page {
 		path = fmt.Sprintf("%s/%s%s", parentDir, name, Document_Page_Suffix)
 	}else {
@@ -88,7 +89,7 @@ func (d *document) CreateAndWrite(path string, content string) error {
 		return err
 	}
 	d.lock.Unlock()
-	return File.WriteFile(path, content)
+	return File.WriteFile(absPath, content)
 }
 
 // replace document content
@@ -105,11 +106,15 @@ func (d *document) Replace(path string, content string) error {
 		return err
 	}
 	d.lock.Unlock()
-	return ioutil.WriteFile(path, []byte(content), os.ModePerm)
+	return ioutil.WriteFile(absPath, []byte(content), os.ModePerm)
 }
 
 // update document
 func (d *document) Update(oldPath string, newPath string, content string) (err error) {
+
+	// todo
+
+
 	if oldPath == newPath {
 		err = d.Replace(oldPath, content)
 		if err != nil {

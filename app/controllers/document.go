@@ -159,6 +159,7 @@ func (this *DocumentController) Save() {
 	}
 
 	path := utils.Document.GetPathByParentPath(name, docType, parentDocument["path"])
+	fmt.Println("path:"+path)
 	insertDocument := map[string]interface{}{
 		"parent_id" : parentId,
 		"space_id" : spaceId,

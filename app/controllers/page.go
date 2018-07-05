@@ -24,7 +24,6 @@ func (this *PageController) View() {
 		this.ViewError("查找文档失败！")
 	}
 	if len(document) == 0 {
-		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
 	}
 
@@ -94,7 +93,6 @@ func (this *PageController) Edit() {
 		this.ViewError("修改文档失败！")
 	}
 	if len(document) == 0 {
-		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
 	}
 
@@ -118,7 +116,7 @@ func (this *PageController) Modify() {
 	}
 	documentId := this.GetString("document_id", "")
 	newName := strings.TrimSpace(this.GetString("name", ""))
-	//documentContent := this.GetString("document_page_editor-markdown-doc", "")
+	documentContent := this.GetString("document_page_editor-markdown-doc", "")
 
 	if documentId == "" {
 		this.jsonError("您没有选择文档！")
@@ -133,27 +131,55 @@ func (this *PageController) Modify() {
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
 	if err != nil {
 		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-		this.ViewError("保存文档失败！")
+		this.jsonError("保存文档失败！")
 	}
 	if len(document) == 0 {
-		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-		this.ViewError("文档不存在！")
+		this.jsonError("文档不存在！")
 	}
-	name := document["name"]
-	if newName == name {
-		//todo name update
-	}else {
+	if newName != document["name"] {
 		// check document name
-		document, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
+		newDocument, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
 			document["parent_id"], document["space_id"], utils.Convert.StringToInt(document["type"]))
 		if err != nil {
-			this.ErrorLog("保存保存文档失败："+err.Error())
+			this.ErrorLog("保存文档失败："+err.Error())
 			this.jsonError("保存文档失败！")
 		}
-		if len(document) != 0 {
+		if len(newDocument) != 0 {
 			this.jsonError("该文档名称已经存在！")
 		}
 	}
 
-	this.Redirect("/page/view?page_id="+documentId, 302)
+	// get parent document and update document content
+	newPath := document["path"]
+	if document["parent_id"] != "0" {
+		parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+		if err != nil {
+			this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+			this.jsonError("保存文档失败！")
+		}
+		if len(parentDocument) == 0 {
+			this.jsonError("父文档不存在！")
+		}
+		newPath = utils.Document.GetPathByParentPath(newName, utils.Convert.StringToInt(document["type"]), parentDocument["path"])
+	}
+	err = utils.Document.Update(document["path"], newPath, documentContent)
+	if err != nil {
+		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("保存文档失败！")
+	}
+
+	updateValue := map[string]interface{}{
+		"name": newName,
+		"path": newPath,
+		"edit_user_id": this.UserId,
+	}
+
+	_, err = models.DocumentModel.Update(documentId, updateValue)
+	if err != nil {
+		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("保存文档失败！")
+	}
+
+	this.InfoLog("修改保存文档 "+documentId+" 成功")
+	this.jsonSuccess("保存文档成功！", nil, "/page/view?document_id="+documentId)
 }
