@@ -4,10 +4,6 @@ import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
-	"github.com/astaxie/beego"
-	"path/filepath"
-	"strings"
-	"os"
 )
 
 const (
@@ -16,8 +12,6 @@ const (
 
 	Document_Type_Page = 1
 	Document_Type_Dir = 2
-
-	Document_Default_FileName = "README"
 )
 
 const Table_Document_Name = "document"
@@ -110,15 +104,10 @@ func (d *Document) Delete(documentId string) (err error) {
 // insert document
 func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
 
-	if documentValue["type"].(int) == Document_Type_Page {
-		err = d.CreatePage(documentValue["path"].(string))
-	}else {
-		err = d.CreateDir(documentValue["path"].(string))
-	}
+	err = utils.Document.Create(documentValue["path"].(string))
 	if err != nil {
-		return 0, err
+		return
 	}
-
 	documentValue["create_time"] = time.Now().Unix()
 	documentValue["update_time"] = time.Now().Unix()
 	db := G.DB()
@@ -318,48 +307,4 @@ func (d *Document) GetDocumentByDocumentIds(documentIds []string) (documents []m
 	}
 	documents = rs.Rows()
 	return
-}
-
-func (d *Document) GetPathByParentPath(name string, docType int, parentPath string) (path string){
-	parentPath = filepath.Dir(parentPath)
-	if docType == Document_Type_Page {
-		path = parentPath+"/"+name+".md"
-	}else {
-		path = parentPath+"/"+name+"/"+Document_Default_FileName+".md"
-	}
-	return
-}
-
-func (d *Document) GetContentByPath(path string) (content string , err error){
-	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
-	absDir, _ := filepath.Abs(docRootDir)
-	realPath := absDir + "/"+path
-	return utils.File.GetFileContents(realPath)
-}
-
-// create document page
-func (d *Document) CreatePage(path string) error {
-	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
-	absDir, err := filepath.Abs(docRootDir)
-	if err != nil {
-		return err
-	}
-	realPagePath := absDir + "/"+path
-	return utils.File.CreateFile(realPagePath)
-}
-
-// create document dir
-func (d *Document) CreateDir(path string) error {
-	docRootDir := strings.TrimRight(beego.AppConfig.String("document::root_dir"), "/")
-	absDir, err := filepath.Abs(docRootDir)
-	if err != nil {
-		return err
-	}
-	realPath := absDir + "/"+path
-	dir := filepath.Dir(realPath)
-	err = os.Mkdir(dir, 0777)
-	if err != nil {
-		return err
-	}
-	return utils.File.CreateFile(realPath)
 }

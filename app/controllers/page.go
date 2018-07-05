@@ -45,8 +45,7 @@ func (this *PageController) View() {
 	}
 
 	// get document content
-	path := document["path"]
-	documentContent, err := models.DocumentModel.GetContentByPath(path)
+	documentContent, err := utils.Document.GetContentByPath(document["path"])
 	if err != nil {
 		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
@@ -99,15 +98,12 @@ func (this *PageController) Edit() {
 		this.ViewError("文档不存在！")
 	}
 
-
 	// get document content
-	path := document["path"]
-	documentContent, err := models.DocumentModel.GetContentByPath(path)
+	documentContent, err := utils.Document.GetContentByPath(document["path"])
 	if err != nil {
 		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
 		this.ViewError("文档不存在！")
 	}
-
 
 	this.Data["page_content"] = documentContent
 	this.Data["document"] = document
@@ -122,7 +118,7 @@ func (this *PageController) Modify() {
 	}
 	documentId := this.GetString("document_id", "")
 	newName := strings.TrimSpace(this.GetString("name", ""))
-	documentContent := this.GetString("document_page_editor-markdown-doc", "")
+	//documentContent := this.GetString("document_page_editor-markdown-doc", "")
 
 	if documentId == "" {
 		this.jsonError("您没有选择文档！")
@@ -130,8 +126,8 @@ func (this *PageController) Modify() {
 	if newName == "" {
 		this.jsonError("文档名称不能为空！")
 	}
-	if newName == models.Document_Default_FileName {
-		this.jsonError("文档名称不能为 "+ models.Document_Default_FileName+" ！")
+	if newName == utils.Document_Default_FileName {
+		this.jsonError("文档名称不能为 "+ utils.Document_Default_FileName+" ！")
 	}
 
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)

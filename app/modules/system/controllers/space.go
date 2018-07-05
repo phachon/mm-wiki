@@ -50,13 +50,14 @@ func (this *SpaceController) Save() {
 		this.jsonError("添加空间失败")
 	}
 
+	path := utils.Document.GetPathBySpaceName(name)
 	// create space document
 	spaceDocument := map[string]interface{}{
 		"space_id": spaceId,
 		"parent_id": 0,
 		"name": name,
 		"type": models.Document_Type_Dir,
-		"path": name+"/"+models.Document_Default_FileName+".md",
+		"path": path,
 		"create_user_id": this.UserId,
 		"edit_user_id": this.UserId,
 	}

@@ -119,8 +119,8 @@ func (this *DocumentController) Save() {
 	if name == "" {
 		this.jsonError("文档名称不能为空！")
 	}
-	if name == models.Document_Default_FileName {
-		this.jsonError("文档名称不能为 "+ models.Document_Default_FileName+" ！")
+	if name == utils.Document_Default_FileName {
+		this.jsonError("文档名称不能为 "+ utils.Document_Default_FileName+" ！")
 	}
 	if docType != models.Document_Type_Page &&
 		docType != models.Document_Type_Dir {
@@ -158,7 +158,7 @@ func (this *DocumentController) Save() {
 		this.jsonError("该文档名称已经存在！")
 	}
 
-	path := models.DocumentModel.GetPathByParentPath(name, docType, parentDocument["path"])
+	path := utils.Document.GetPathByParentPath(name, docType, parentDocument["path"])
 	insertDocument := map[string]interface{}{
 		"parent_id" : parentId,
 		"space_id" : spaceId,

@@ -10,6 +10,7 @@ import (
 	"github.com/snail007/go-activerecord/mysql"
 	"github.com/fatih/color"
 	"mm-wiki/app/models"
+	"path/filepath"
 )
 
 var (
@@ -23,8 +24,8 @@ var (
 func init() {
 	poster()
 	initConfig()
-	initCheck()
 	initDB()
+	initDocumentDir()
 }
 
 // poster logo
@@ -89,16 +90,6 @@ func initConfig()  {
 	beego.SetLogFuncCall(true)
 }
 
-func initCheck() {
-	docRootDir := beego.AppConfig.String("document::root_dir")
-	ok, _ := utils.File.PathIsExists(docRootDir)
-	if !ok {
-		log.Println("document root dir "+docRootDir+" is not exists!")
-		os.Exit(1)
-	}
-	//docRootDir = filepath.Dir(docRootDir)
-}
-
 //init db
 func initDB()  {
 	host := beego.AppConfig.String("db::host")
@@ -120,4 +111,23 @@ func initDB()  {
 		beego.Error(fmt.Errorf("database error:%s,with config : %v", err, cfg))
 		os.Exit(1)
 	}
+}
+
+func initDocumentDir() {
+	docRootDir := beego.AppConfig.String("document::root_dir")
+	if docRootDir == "" {
+		beego.Error("document root dir "+docRootDir+" is not empty!")
+		os.Exit(1)
+	}
+	ok, _ := utils.File.PathIsExists(docRootDir)
+	if !ok {
+		beego.Error("document root dir "+docRootDir+" is not exists!")
+		os.Exit(1)
+	}
+	rootAbsDir, err := filepath.Abs(docRootDir)
+	if err != nil {
+		beego.Error("document root dir "+docRootDir+" is error!")
+		os.Exit(1)
+	}
+	utils.Document.RootAbsDir = rootAbsDir
 }
