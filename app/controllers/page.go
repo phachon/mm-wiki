@@ -4,7 +4,6 @@ import (
 	"mm-wiki/app/models"
 	"strings"
 	"mm-wiki/app/utils"
-	"fmt"
 )
 
 type PageController struct {
@@ -142,9 +141,11 @@ func (this *PageController) Modify() {
 	if document["parent_id"] == "0" {
 		newName = document["name"]
 	}
+	nameIsChange := false
 
 	// check document name
 	if newName != document["name"] {
+		nameIsChange = true
 		newDocument, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
 			document["parent_id"], document["space_id"], utils.Convert.StringToInt(document["type"]))
 		if err != nil {
@@ -161,12 +162,12 @@ func (this *PageController) Modify() {
 		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("保存文档失败！")
 	}
-	fmt.Println(oldPageFile)
-	//err = utils.Document.Update(oldPageFile, newPath, documentContent)
-	//if err != nil {
-	//	this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-	//	this.jsonError("保存文档失败！")
-	//}
+	docType := utils.Convert.StringToInt(document["type"])
+	err = utils.Document.Update(oldPageFile, newName, documentContent, docType, nameIsChange)
+	if err != nil {
+		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("保存文档失败！")
+	}
 
 	updateValue := map[string]interface{}{
 		"name": newName,

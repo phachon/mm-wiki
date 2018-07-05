@@ -108,42 +108,29 @@ func (d *document) Replace(pageFile string, content string) error {
 }
 
 // update document
-func (d *document) Update(oldPageFile string, name string, content string, docType int) (err error) {
+func (d *document) Update(oldPageFile string, name string, content string, docType int, nameIsChange bool) (err error) {
 
-	filePath := filepath.Dir(oldPageFile)
+	d.lock.Lock()
+	defer d.lock.Unlock()
 
-	if docType == Document_Type_Page {
-		newPageFile := filePath + "/" + name + Document_Page_Suffix
-		if oldPageFile == newPageFile {
-			err = d.Replace(oldPageFile, content)
-			if err != nil {
-				return err
-			}
-			return nil
+	absOldPageFile := d.GetAbsPageFileByPageFile(oldPageFile)
+
+	err = ioutil.WriteFile(absOldPageFile, []byte(content), os.ModePerm)
+	if err != nil {
+		return
+	}
+	if nameIsChange {
+		filePath := filepath.Dir(absOldPageFile)
+		if docType == Document_Type_Page {
+			err = os.Rename(absOldPageFile, filePath +"/"+name+Document_Page_Suffix)
 		} else {
-			err = d.CreateAndWrite(newPageFile, content)
-			if err != nil {
-				return err
-			}
-			return os.Remove(oldPageFile)
+			err = os.Rename(filePath, filepath.Dir(filePath)+"/"+name)
 		}
-	}else {
-		newPageFile := filePath + "/" + name +"/"+ Document_Page_Suffix
-		if oldPageFile == oldPageFile {
-			err = d.Replace(oldPageFile, content)
-			if err != nil {
-				return err
-			}
-			return nil
-		} else {
-			err = d.CreateAndWrite(newPageFile, content)
-			if err != nil {
-				return err
-			}
-			return os.Remove(oldPageFile)
+		if err != nil {
+			return
 		}
 	}
-
+	return nil
 }
 
 // delete document
