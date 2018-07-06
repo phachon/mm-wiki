@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="page-header">
+                <h2>关注用户 <small><span class="badge">{{.count}}</span></small></h2>
+            </div>
+            {{if eq .count 0}}
+            <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                <p><i class="glyphicon glyphicon-volume-up"></i> 没有关注任何用户！</p>
+            </div>
+            {{else}}
+            <br>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td class="w15p text-left"><strong>用户名</strong></td>
+                    <td class="text-left"><strong>姓名</strong></td>
+                    <td class="text-left"><strong>职位</strong></td>
+                    <td class="w17p text-left"><strong>邮箱</strong></td>
+                    <td class="w11p text-left"><strong>座机</strong></td>
+                    <td class="w11p text-left"><strong>手机</strong></td>
+                    <td class="w11p text-left"><strong>IM</strong></td>
+                    <td class="w8p center"><strong>操作</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $user := .users}}
+                <tr class="space-list">
+                    <td>
+                        <strong><a href="/user/info?user_id={{$user.user_id}}">{{$user.username}} </strong><span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a>
+                    </td>
+                    <td>{{$user.given_name}}</td>
+                    <td>{{$user.position}}</td>
+                    <td>{{$user.email}}</td>
+                    <td>{{$user.phone}}</td>
+                    <td>{{$user.mobile}}</td>
+                    <td>{{$user.im}}</td>
+                    <td class="center">
+                        <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        {{end}}
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>

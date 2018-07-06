@@ -65,9 +65,20 @@ func (this *PageController) View() {
 		}
 	}
 
+	collectionId := "0"
+	collection, err := models.CollectionModel.GetCollectionByUserIdTypeAndResourceId(this.UserId, models.Collection_Type_Doc, documentId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档查找失败！")
+	}
+	if len(collection) > 0 {
+		collectionId = collection["collection_id"]
+	}
+
 	this.Data["create_user"] = createUser
 	this.Data["edit_user"] = editUser
 	this.Data["document"] = document
+	this.Data["collection_id"] = collectionId
 	this.Data["page_content"] = documentContent
 	this.Data["parent_documents"] = parentDocuments
 	this.viewLayout("page/view", "document_page")

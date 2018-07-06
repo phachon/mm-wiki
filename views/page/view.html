@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}{{$parentDocuments := .parent_documents}}
-        <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}
+        <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}{{$collectionId := .collection_id}}
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
@@ -25,7 +25,11 @@
                         <div class="col-md-4 text-right">
                             <div class="btn-group" role="group" aria-label="...">
                                 <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
-                                <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                                {{if eq $collectionId "0"}}
+                                    <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                                {{else}}
+                                    <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
+                                {{end}}
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
                             </div>
