@@ -1,10 +1,10 @@
 <div id="main-left" class="ui-layout-west">
     <div class="left-page">{{$documents := .documents}}{{$spaceDocument := .space_document}}{{$defaultDocumentId := .default_document_id}}{{$space := .space}}
         <div class="page-search">
-            <form>
-                <div class="input-group">
-                    <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
-                    <span class="input-group-btn"><button class="btn btn-sm btn-default btn-search" type="button"><i class="fa fa-search"></i></button></span>
+            <form onsubmit="return false">
+                <div class="form-group has-feedback">
+                    <i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>
+                    <input class="form-control input-sm" id="document_search" type="text" value="" placeholder="输入文档名搜索..." style="padding-right: 28px;">
                 </div>
             </form>
         </div>

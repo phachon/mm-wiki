@@ -131,7 +131,7 @@ func (this *PageController) Modify() {
 
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
 	if err != nil {
-		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("保存文档失败！")
 	}
 	if len(document) == 0 {
@@ -149,7 +149,7 @@ func (this *PageController) Modify() {
 		newDocument, err := models.DocumentModel.GetDocumentByNameParentIdAndSpaceId(newName,
 			document["parent_id"], document["space_id"], utils.Convert.StringToInt(document["type"]))
 		if err != nil {
-			this.ErrorLog("保存文档失败："+err.Error())
+			this.ErrorLog("修改文档失败："+err.Error())
 			this.jsonError("保存文档失败！")
 		}
 		if len(newDocument) != 0 {
@@ -159,14 +159,14 @@ func (this *PageController) Modify() {
 
 	_, oldPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
 	if err != nil {
-		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-		this.jsonError("保存文档失败！")
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("修改文档失败！")
 	}
 	docType := utils.Convert.StringToInt(document["type"])
 	err = utils.Document.Update(oldPageFile, newName, documentContent, docType, nameIsChange)
 	if err != nil {
-		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-		this.jsonError("保存文档失败！")
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("修改文档失败！")
 	}
 
 	updateValue := map[string]interface{}{
@@ -175,10 +175,10 @@ func (this *PageController) Modify() {
 	}
 	_, err = models.DocumentModel.Update(documentId, updateValue)
 	if err != nil {
-		this.ErrorLog("保存文档 "+documentId+" 失败："+err.Error())
-		this.jsonError("保存文档失败！")
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("修改文档失败！")
 	}
 
 	this.InfoLog("修改保存文档 "+documentId+" 成功")
-	this.jsonSuccess("保存文档成功！", nil, "/page/view?document_id="+documentId)
+	this.jsonSuccess("修改文档成功！", nil, "/document/index?document_id="+documentId)
 }

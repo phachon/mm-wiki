@@ -2,7 +2,7 @@
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}
         <div class="col-md-12">
             <div class="panel panel-default">
-                <form action="/page/modify" method="post">
+                <form id="page_form" action="/page/modify" method="post">
                 <div class="panel-body" style="padding: 10px">
                         <input type="hidden" name="document_id" value="{{$document.document_id}}">
                     <div class="row">
@@ -10,8 +10,8 @@
                             <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}" {{if eq $document.parent_id "0"}} readonly="readonly" {{end}}>
                         </div>
                         <div class="col-md-2 text-center" >
+                            <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form)"><i class="fa fa-save"></i> 保存</button>
                             <a type="button" class="btn btn-default" href="/document/index?document_id={{$document.document_id}}" target="_parent"><i class="fa fa-mail-reply"></i> 返回</a>
-                            <button type="button" class="btn btn-primary" onclick="Form.ajaxSubmit(this.form, false)"><i class="fa fa-save"></i> 保存</button>
                         </div>
                     </div>
                 </div>
@@ -25,9 +25,7 @@
     </div>
 </div>
 <script type="text/javascript">
-
     parent.layoutClose();
-
     $(function() {
         editormd.katexURL = {
             js  : "/static/plugins/editor.md/lib/katex/katex.min",
@@ -52,7 +50,7 @@
             // 增加自定义工具栏
             toolbarCustomIcons : {
                 sidebar   : '<a onclick="parent.layoutToggle()" title="展开关闭侧边栏"><i class="fa fa-columns item"></i></a>',
-                save : '<a href="" title="保存文档"><i class="fa fa-save"></i></a>'
+                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>"
             },
             theme : "default",
             previewTheme : "default",
@@ -87,8 +85,8 @@
                 //this.watch().fullscreen();
                 //this.setMarkdown("#PHP");
                 // todo resize height
-                this.width("100%");
-                this.height(600);
+                // this.width("100%");
+                // this.height(600);
                 //this.resize("100%", 640);
             }
         });

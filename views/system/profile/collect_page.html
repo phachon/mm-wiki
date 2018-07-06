@@ -5,9 +5,9 @@
                 <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
             </div>
             <ul class="nav nav-tabs">
-                <li><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
-                <li><a href="/user/followUser?user_id={{$user.user_id}}">关注用户</a></li>
-                <li class="active"><a href="/user/followPage?user_id={{$user.user_id}}">关注页面</a></li>
+                <li><a href="/system/profile/info">用户信息</a></li>
+                <li><a href="/system/profile/followUser">关注用户</a></li>
+                <li class="active"><a href="/system/user/followPage">关注页面</a></li>
             </ul>
             <br>
             <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">

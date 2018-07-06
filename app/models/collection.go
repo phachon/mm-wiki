@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	Collection_Type_Page = 1
+	Collection_Type_Doc = 1
 	Collection_Type_Space = 2
 )
 
@@ -58,6 +58,22 @@ func (c *Collection) GetCollectionsByUserIdAndType(userId string, typeS int) (co
 		return
 	}
 	collections = rs.Rows()
+	return
+}
+
+// get collections by user_id type and resource_id
+func (c *Collection) GetCollectionByUserIdTypeAndResourceId(userId string, typeS int, resId string) (collection map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
+		"user_id": userId,
+		"type": typeS,
+		"resource_id": resId,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	collection = rs.Row()
 	return
 }
 

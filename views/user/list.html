@@ -3,7 +3,7 @@
     <div class="panel-body">
         <div class="page-header">
             <h2>全部用户 <small><span class="badge">{{.count}}</span></small></h2>
-        </div>
+        </div>{{$loginUserId := .login_user_id}}
         <div class="row">
             <form action="" method="get">
                 <div class="col-md-9">
@@ -38,7 +38,11 @@
             {{range $user := .users}}
             <tr class="space-list">
                 <td>
-                    <strong><a href="/user/info?user_id={{$user.user_id}}">{{$user.username}} </strong><span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a>
+                    {{if eq $user.user_id $loginUserId}}
+                        <strong><a href="/system/main/index" target="_parent">{{$user.username}} <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a></strong>
+                    {{else}}
+                        <strong><a href="/user/info?user_id={{$user.user_id}}">{{$user.username}} <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a></strong>
+                    {{end}}
                 </td>
                 <td>{{$user.given_name}}</td>
                 <td>{{$user.position}}</td>
@@ -47,11 +51,14 @@
                 <td>{{$user.mobile}}</td>
                 <td>{{$user.im}}</td>
                 <td class="center">
-                {{if eq $user.follow "1"}}
-                    <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
-                {{else}}
-                    <a onclick="Common.ajaxSubmit('/follow/user?user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart-empty"></i></a>
-                {{end}}
+                    {{if eq $user.user_id $loginUserId}}
+                    {{else}}
+                    {{if eq $user.follow "1"}}
+                        <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                    {{else}}
+                        <a onclick="Common.ajaxSubmit('/follow/add?type=2&object_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart-empty"></i></a>
+                    {{end}}
+                    {{end}}
                 </td>
             </tr>
             {{end}}

@@ -10,3 +10,7 @@ func (this *MainController) Index() {
 func (this *MainController) Default() {
 	this.viewLayout("main/default", "default")
 }
+
+func (this *MainController) About() {
+	this.viewLayout("main/about", "default")
+}

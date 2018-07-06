@@ -3,66 +3,57 @@ package controllers
 import (
 	"mm-wiki/app/models"
 	"time"
+	"mm-wiki/app/utils"
 )
 
 type CollectionController struct {
 	BaseController
 }
 
-func (this *CollectionController) Space() {
+func (this *CollectionController) Add() {
 
 	redirect := this.Ctx.Request.Referer()
 
 	if !this.IsPost() {
-		this.ViewError("请求方式有误！", redirect)
+		this.ViewError("请求方式有误！", "/main/index")
 	}
-	spaceId := this.GetString("space_id", "")
-	if spaceId == "" {
-		this.jsonError("没有选择空间！")
+	resourceId := this.GetString("resource_id", "")
+	colType, _ := this.GetInt("type", 1)
+
+	if resourceId == "" {
+		this.jsonError("没有选项收藏资源！")
+	}
+	if colType != models.Collection_Type_Doc && colType != models.Collection_Type_Space {
+		this.jsonError("收藏类型错误！")
 	}
 
-	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	collect, err := models.CollectionModel.GetCollectionByUserIdTypeAndResourceId(this.UserId, colType, resourceId)
 	if err != nil {
-		this.ErrorLog("收藏空间 "+spaceId+"失败: "+err.Error())
-		this.jsonError("收藏空间失败！")
+		this.ErrorLog("添加收藏失败：" + err.Error())
+		this.jsonError("添加收藏失败！")
 	}
-	if len(space) == 0 {
-		this.jsonError("空间不存在！")
+	if len(collect) > 0 {
+		this.jsonError("您已收藏过，不能重复收藏！")
 	}
-
 	insertCollection := map[string]interface{}{
 		"user_id": this.UserId,
-		"resource_id": spaceId,
-		"type": models.Collection_Type_Space,
+		"resource_id": resourceId,
+		"type": colType,
 		"create_time": time.Now().Unix(),
 	}
-	_, err = models.CollectionModel.Insert(insertCollection)
+	collectId, err := models.CollectionModel.Insert(insertCollection)
 	if err != nil {
-		this.ErrorLog("收藏空间 "+spaceId+" 失败：" + err.Error())
-		this.jsonError("收藏空间失败！")
+		this.ErrorLog("添加收藏失败：" + err.Error())
+		this.jsonError("添加收藏失败！")
 	}
 
-	this.InfoLog("收藏空间 "+spaceId+" 成功")
-	this.jsonSuccess("收藏空间成功！", nil, "/space/index")
-}
-
-func (this *CollectionController) Page() {
-
-	redirect := this.Ctx.Request.Referer()
-
-	if !this.IsPost() {
-		this.ViewError("请求方式有误！", redirect)
-	}
-	pageId := this.GetString("page_id", "")
-	if pageId == "" {
-		this.jsonError("没有选择页面！")
-	}
-
-	this.jsonSuccess("收藏空间成功！", nil, "/space/index")
+	this.InfoLog("添加收藏 "+utils.Convert.IntToString(collectId, 10)+" 成功")
+	this.jsonSuccess("收藏成功！", nil, redirect)
 }
 
 func (this *CollectionController) Cancel() {
 
+	redirect := this.Ctx.Request.Referer()
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/space/list")
 	}
@@ -72,12 +63,24 @@ func (this *CollectionController) Cancel() {
 		this.jsonError("没有选择收藏资源！")
 	}
 
-	err := models.CollectionModel.Delete(collectionId)
+	collection, err := models.CollectionModel.GetCollectionByCollectionId(collectionId)
+	if err != nil {
+		this.ErrorLog("取消收藏 "+collectionId+" 失败：" + err.Error())
+		this.jsonError("取消收藏失败！")
+	}
+	if len(collection) == 0 {
+		this.jsonError("收藏资源不存在！")
+	}
+	if collection["user_id"] != this.UserId {
+		this.jsonError("您只能取消自己的收藏！")
+	}
+
+	err = models.CollectionModel.Delete(collectionId)
 	if err != nil {
 		this.ErrorLog("取消收藏 "+collectionId+" 失败：" + err.Error())
 		this.jsonError("取消收藏失败！")
 	}
 
 	this.InfoLog("取消收藏 "+collectionId+" 成功")
-	this.jsonSuccess("已取消收藏！", nil, "/space/index")
+	this.jsonSuccess("已取消收藏！", nil, redirect)
 }

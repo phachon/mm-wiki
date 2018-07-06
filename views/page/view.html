@@ -25,7 +25,7 @@
                         <div class="col-md-4 text-right">
                             <div class="btn-group" role="group" aria-label="...">
                                 <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
-                                <a class="btn btn-default" href="/page/collection?page_id=1"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                                <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
                             </div>

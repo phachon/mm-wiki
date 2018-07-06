@@ -148,11 +148,12 @@ DROP TABLE IF EXISTS `mw_collection`;
 CREATE TABLE `mw_collection` (
   `collection_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户收藏关系 id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 页面 2 空间',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 文档 2 空间',
   `resource_id` int(10) NOT NULL DEFAULT '0' COMMENT '收藏资源 id ',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`collection_id`),
-  KEY (`user_id`)
+  KEY (`user_id`),
+  UNIQUE key (`user_id`, `resource_id`, `type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户收藏表';
 
 -- --------------------------------
@@ -162,12 +163,13 @@ DROP TABLE IF EXISTS `mw_follow`;
 CREATE TABLE `mw_follow` (
   `follow_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '关注 id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '关注类型 1 用户 2 页面',
+  `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '关注类型 1 文档 2 用户',
   `object_id` int(10) NOT NULL DEFAULT '0' COMMENT '关注对象 id',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`follow_id`),
   KEY (`user_id`),
-  KEY (`object_id`)
+  KEY (`object_id`),
+  UNIQUE key (`user_id`, `object_id`, `type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户关注表';
 
 -- --------------------------------

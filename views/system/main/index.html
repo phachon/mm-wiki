@@ -1,15 +1,6 @@
 <div id="main-left" class="ui-layout-west" style="padding: 0">
     <ul class="nav" id="side-menu">
-        <li class="sidebar-search">
-            <div class="input-group custom-search-form">
-                <input type="text" class="form-control" placeholder="搜索...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
-            </div>
-        </li>
+        <li class="sidebar-search"></li>
         {{range $menu := $.menus}}
         <li><a href="javascript:;"><i class="glyphicon {{$menu.icon}}"></i> {{$menu.name}} <span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">

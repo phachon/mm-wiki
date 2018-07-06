@@ -1,0 +1,88 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br>{{$user := .user}}
+            <div class="row">
+            <form class="form-horizontal" method="post" action="/system/profile/modify">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"><span class="text-danger"> * </span> 姓名</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="given_name" class="form-control" placeholder="请输入姓名" value="{{$user.given_name}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"><span class="text-danger"> * </span> 邮箱</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="email" class="form-control" placeholder="请输入邮箱" value="{{$user.email}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"><span class="text-danger"> * </span> 手机</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="mobile" class="form-control" placeholder="请输入手机号" value="{{$user.mobile}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-3 control-label"><span class="text-danger"></span> 电话</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="phone" class="form-control" placeholder="请输入电话号码" value="{{$user.phone}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-offset-3">
+                                &nbsp;&nbsp;<button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-2 control-label"><span class="text-danger"></span> 部门</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="department" class="form-control" placeholder="请输入所在部门（广告事业部.技术部.后端研发组）" value="{{$user.department}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-2 control-label"><span class="text-danger"></span> 职位</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="position" class="form-control" placeholder="请输入职位信息（高级PHP开发工程师）" value="{{$user.position}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-2 control-label"><span class="text-danger"></span> 位置</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="location" class="form-control" placeholder="请输入工位信息（5层B区B107）" value="{{$user.location}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-sm-2 control-label"><span class="text-danger"></span> IM</label>
+                            <div class="col-sm-7">
+                                <input type="text" name="im" class="form-control" placeholder="请输入即时通讯工具信息（QQ：34512612）" value="{{$user.im}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	Follow_Type_User = 1
-	Follow_Type_Page = 2
+	Follow_Type_Doc = 1
+	Follow_Type_User = 2
 )
 
 const Table_Follow_Name = "follow"
@@ -63,6 +63,22 @@ func (f *Follow) GetFollowsByObjectIdAndType(objectId string, followType int) (f
 	return
 }
 
+// get followed follow
+func (f *Follow) GetFollowsByUserIdAndTypeAndObjectId(userId string, followType int, objectId string) (follow map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
+		"user_id": userId,
+		"type":  followType,
+		"object_id":  objectId,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	follow = rs.Row()
+	return
+}
+
 // delete follow by follow_id
 func (f *Follow) Delete(followId string) (err error) {
 	db := G.DB()
@@ -76,29 +92,11 @@ func (f *Follow) Delete(followId string) (err error) {
 }
 
 // insert follow user
-func (f *Follow) InsertFollowUser(userId string, followUserId string) (id int64, err error) {
+func (f *Follow) Insert(userId string, fType int, objectId string) (id int64, err error) {
 	followValue := map[string]interface{}{
 		"user_id": userId,
-		"type": Follow_Type_User,
-		"object_id": followUserId,
-		"create_time": time.Now().Unix(),
-	}
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Exec(db.AR().Insert(Table_Follow_Name, followValue))
-	if err != nil {
-		return
-	}
-	id = rs.LastInsertId
-	return
-}
-
-// insert follow page
-func (f *Follow) InsertFollowPage(userId string, pageId string) (id int64, err error) {
-	followValue := map[string]interface{}{
-		"user_id": userId,
-		"type": Follow_Type_Page,
-		"object_id": pageId,
+		"type": fType,
+		"object_id": objectId,
 		"create_time": time.Now().Unix(),
 	}
 	db := G.DB()

@@ -55,7 +55,7 @@
                         {{if eq $space.collection "1"}}
                             <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
                         {{else}}
-                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/space?space_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/add?type=2&resource_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
                         {{end}}
                             <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
                         </div>

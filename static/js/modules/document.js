@@ -200,6 +200,8 @@ var Document = {
             var node = zTreeMenu.getNodeByParam("id", defaultId);
             zTreeMenu.selectNode(node, true);
             zTreeMenu.expandNode(node, true, false);
+            //initialize fuzzysearch function
+            fuzzySearch("dir_tree",'#document_search',null,true);
         });
     }
 };

@@ -1,18 +1,19 @@
-<div class="container-fluid">{{$user := .user}}{{$loginUserId := .login_user_id}}
+<div class="container-fluid">{{$user := .user}}
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="page-header">
                 <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
             </div>
             <ul class="nav nav-tabs">
-                <li><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
-                <li class="active"><a href="/user/followUser?user_id={{$user.user_id}}">关注用户</a></li>
+                <li><a href="/system/profile/info">用户信息</a></li>
+                <li class="active"><a href="/system/profile/followUser">关注用户</a></li>
+                <li><a href="/system/profile/followPage">关注页面</a></li>
             </ul>
             <br>
             <div class="row">
                 <div class="col-md-6">
                     <div style="margin: 10px 0 15px 0">
-                        <span class="label label-default">他的关注</span>
+                        <span class="label label-default">我的关注</span>
                     </div>
                     {{if eq .followCount 0}}
                     <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
@@ -37,7 +38,7 @@
                             <td>{{$user.given_name}}</td>
                             <td>{{$user.email}}</td>
                             <td class="center">
-                                <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
+                                <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$user.follow_id}}&user_id={{$user.user_id}}')"><i class="glyphicon glyphicon-heart"></i></a>
                             </td>
                         </tr>
                         {{end}}
@@ -47,7 +48,7 @@
                 </div>
                 <div class="col-md-6">
                     <div style="margin: 10px 0 15px 0">
-                        <span class="label label-default">他的粉丝</span>
+                        <span class="label label-default">我的粉丝</span>
                     </div>
                     {{if eq .fansCount 0}}
                     <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
@@ -66,12 +67,8 @@
                         {{range $fansUser := .fansUsers}}
                         <tr>
                             <td>
-                                {{if eq $fansUser.user_id $loginUserId}}
-                                <strong><a href="/system/main/index" target="_parent">{{$fansUser.username}} <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a></strong>
-                                {{else}}
-                                <a href="/user/info?user_id={{$fansUser.user_id}}">{{$fansUser.username}} <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a></strong>
-                                {{end}}
-                                </td>
+                                <strong><a href="/user/info?user_id={{$fansUser.user_id}}">{{$fansUser.username}} </strong><span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span> </a>
+                            </td>
                             <td>{{$fansUser.given_name}}</td>
                             <td>{{$fansUser.email}}</td>
                         </tr>

@@ -59,6 +59,7 @@ func (this *UserController) List() {
 
 	this.Data["users"] = users
 	this.Data["count"] = count
+	this.Data["login_user_id"] = this.UserId
 	this.SetPaginator(number, count)
 	this.viewLayout("user/list", "default")
 }
@@ -102,6 +103,10 @@ func (this *UserController) Info() {
 		this.ViewError("用户不存在！", "/user/list")
 	}
 
+	if this.UserId == userId {
+		this.Redirect("/system/main/index", 302)
+	}
+
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
 		this.ErrorLog("查找用户出错："+err.Error())
@@ -114,7 +119,6 @@ func (this *UserController) Info() {
 	this.Data["user"] = user
 	this.viewLayout("user/info", "default")
 }
-
 
 func (this *UserController) FollowUser() {
 
@@ -178,6 +182,7 @@ func (this *UserController) FollowUser() {
 	this.Data["followCount"] = len(users)
 	this.Data["fansCount"] = len(fansUsers)
 	this.Data["user"] = user
+	this.Data["login_user_id"] = this.UserId
 	this.viewLayout("user/follow_user", "default")
 }
 
@@ -197,7 +202,7 @@ func (this *UserController) FollowPage() {
 		this.ViewError("用户不存在！", "/user/list")
 	}
 
-	followPages, err := models.FollowModel.GetFollowsByUserIdAndType(userId, models.Follow_Type_Page)
+	followPages, err := models.FollowModel.GetFollowsByUserIdAndType(userId, models.Follow_Type_Doc)
 	if err != nil {
 		this.ErrorLog("获取用户关注页面列表失败: "+err.Error())
 		this.ViewError("获取用户关注页面列表失败", "/user/list")

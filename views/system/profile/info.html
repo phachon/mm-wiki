@@ -5,8 +5,9 @@
                 <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
             </div>
             <ul class="nav nav-tabs">
-                <li  class="active"><a href="/user/info?user_id={{$user.user_id}}">用户信息</a></li>
-                <li><a href="/user/followUser?user_id={{$user.user_id}}">关注用户</a></li>
+                <li  class="active"><a href="/system/profile/info">用户信息</a></li>
+                <li><a href="/system/profile/followUser">关注用户</a></li>
+                <li><a href="/system/profile/followPage">关注页面</a></li>
             </ul>
             <br>
             <div class="row">
@@ -66,7 +67,7 @@
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <h3>个人资料</h3>
+                    <h3>个人资料 <a class="fa fa-edit" name="edit" data-link="/system/profile/edit"></a></h3>
                     <div class="user-info">
                         <div class="user-group">
                             <label class="text-right text-font-15">用户名</label>
@@ -83,16 +84,6 @@
                         <div class="user-group">
                             <label class="text-right text-font-15">手机</label>
                             <span>{{$user.mobile}}</span>
-                        </div>
-                        <div class="user-group">
-                            <label class="text-right text-font-15">状态</label>
-                            <span>
-                            {{if eq $user.is_forbidden "1"}}
-                                <span class="label label-success">屏蔽</span>
-                            {{else}}
-                                <span class="label label-success">正常</span>
-                            {{end}}
-                            </span>
                         </div>
                         <hr>
                         <div class="user-group">
@@ -121,3 +112,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='edit']", "修改个人资料", "390px", "1000px");
+</script>
