@@ -129,7 +129,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	id = rs.LastInsertId
 
 	// create document log
-	_, err = LogDocumentModel.CreateAction(document["create_user_id"], fmt.Sprintf("%d", id))
+	_, err = LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
 	if err != nil {
 		return
 	}
