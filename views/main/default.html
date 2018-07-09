@@ -6,76 +6,38 @@
                 <h4><i class="glyphicon glyphicon-volume-up"></i> {{.panel_title}} </h4>
                 <p>{{.panel_description}}</p>
             </div>
-        </div>
+        </div>{{$logDocuments := .logDocuments}}
         <div class="col-md-7">
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>文档更新</strong></div>
-                <div class="panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>文档</th>
-                            <th class="w18p">用户</th>
-                            <th class="w24p">更新时间</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>这是测试文档这是测试文档这是测试文档这是测试文档</td>
-                            <td class="center">wangxiaoer</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档</td>
-                            <td class="center">admin(adadasda)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档这是测试文档这是测试文档</td>
-                            <td class="center">wangxiaoer(王小二.信息技术中心JAVA技术部.产品经理)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档</td>
-                            <td class="center">admin(adadasda)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档这是测试文档这是测试文档</td>
-                            <td class="center">wangxiaoer(王小二.信息技术中心JAVA技术部.产品经理)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档</td>
-                            <td class="center">admin(adadasda)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档这是测试文档这是测试文档</td>
-                            <td class="center">wangxiaoer(王小二.信息技术中心JAVA技术部.产品经理)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档</td>
-                            <td class="center">admin(adadasda)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档这是测试文档这是测试文档</td>
-                            <td class="center">wangxiaoer(王小二.信息技术中心JAVA技术部.产品经理)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        <tr>
-                            <td>这是测试文档这是测试文档</td>
-                            <td class="center">admin(adadasda)</td>
-                            <td class="center">2018-09-10: 08:19:09</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="panel-heading"><strong>文档最近更新</strong></div>
+                <div class="panel-body" style="min-height: 550px">
+                    <div class="document-update">
+                        <ul>
+                            {{range $logDocument := $logDocuments}}
+                            <li>
+                                <div>
+                                    <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent" class="text text-info text-font-15">
+                                        {{if eq $logDocument.document_type "1"}}
+                                            <i class="fa fa-file-word-o"></i>
+                                        {{else}}
+                                            <i class="fa fa-folder-o"></i>
+                                        {{end}}
+                                         {{$logDocument.document_name}}</a>
+                                </div>
+                                <span class="text text-font-12 document-user-time"><i class="fa fa-calendar"></i> 被 <a href="">{{$logDocument.username}}（{{$logDocument.given_name}}）</a>
+                                {{if eq $logDocument.action "1"}}创建{{else if eq $logDocument.action "2"}}修改{{else if eq $logDocument.action "3"}}删除{{end}}于 {{dateFormat $logDocument.create_time "Y-m-d H:i:s"}}</span>
+                            </li>
+                            <hr>
+                            {{end}}
+                        </ul>
+                    </div>
+                    <div class="center">
+                    {{template "paginator/document_update.html" .}}
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-5" >
+        <div class="col-md-5">
             <div class="panel panel-default" style="height: 320px">
                 <div class="panel-heading"><strong>快速链接</strong></div>
                 <div class="panel-body">

@@ -131,6 +131,18 @@ func (ld *LogDocument) GetLogDocumentsByUserIdAndLimit(userId string, limit int,
 	return
 }
 
+func (ld *LogDocument) GetLogDocumentsByLimit(limit int, number int) (logDocuments []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_LogDocument_Name).Limit(limit, number).OrderBy("log_document_id", "DESC"))
+	if err != nil {
+		return
+	}
+	logDocuments = rs.Rows()
+
+	return
+}
+
 func (ld *LogDocument) CountLogDocumentsByDocumentId(documentId string) (count int64, err error) {
 
 	db := G.DB()

@@ -202,6 +202,26 @@ select.input-xs {
     font-size: 14px;
 }
 
+
+/*document_update*/
+.document-update  > ul {
+    padding-left: 8px;
+    line-height: 20px;
+}
+.document-update > ul > li {
+    padding: 5px 3px;
+    list-style-type:none;
+}
+
+.document-user-time {
+    color: #8e8e8e;
+}
+
+.document-update hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 /*width 按百分比*/
 .w5p{width:5%;}
 .w6p{width:6%;}
