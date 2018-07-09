@@ -132,6 +132,12 @@ ul,li {
     border-color: #337ab7!important;
     background-color: #337ab7!important;
 }
+
+.layui-layer-btn {
+    text-align: center!important;
+    padding-bottom: 20px!important;
+}
+
 .layui-layer-content {
     font-size: 14px!important;
     text-align: center!important;

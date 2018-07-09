@@ -180,7 +180,7 @@ CREATE TABLE `mw_log_document` (
   `log_document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档日志 id',
   `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 增加 2 修改 3 删除',
+  `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 创建 2 修改 3 删除',
   `comment` varchar(255) NOT NULL DEFAULT '' COMMENT '备注信息',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`log_document_id`)

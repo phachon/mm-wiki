@@ -1,0 +1,43 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+            </div>
+            <br>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td class="w10p text-left"><strong>用户</strong></td>
+                    <td class="w10p text-left"><strong>操作</strong></td>
+                    <td class=""><strong>备注</strong></td>
+                    <td class="w20p center"><strong>时间</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $logDocument := .logDocuments}}
+                <tr>
+                    <td>{{$logDocument.username}}</td>
+                    <td>
+                    {{if eq $logDocument.action "1"}}
+                        <label class="text text-info">创建</label>
+                    {{else if eq $logDocument.action "2"}}
+                        <label class="text text-primary">修改</label>
+                    {{else if eq $logDocument.action "3"}}
+                        <label class="text text-danger">删除</label>
+                    {{end}}
+                    </td>
+                    <td>{{$logDocument.comment}}</td>
+                    <td class="center">
+                    {{dateFormat $logDocument.create_time "Y-m-d H:i:s"}}
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            {{template "paginator/default.html" .}}
+        </div>
+    </div>
+</div>

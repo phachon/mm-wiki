@@ -11,7 +11,7 @@
                         </div>
                         <div class="col-md-2 text-center" >
                             <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form)"><i class="fa fa-save"></i> 保存</button>
-                            <a type="button" class="btn btn-default" href="/document/index?document_id={{$document.document_id}}" target="_parent"><i class="fa fa-mail-reply"></i> 返回</a>
+                            <button type="button" class="btn btn-default" onclick="Page.cancelSave('确定要放弃此次修改吗?', '/document/index?document_id={{$document.document_id}}')"><i class="fa fa-mail-reply"></i> 取消</button>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,9 @@
     </div>
 </div>
 <script type="text/javascript">
-    parent.layoutClose();
+    if(parent.layoutClose) {
+        parent.layoutClose();
+    }
     $(function() {
         editormd.katexURL = {
             js  : "/static/plugins/editor.md/lib/katex/katex.min",

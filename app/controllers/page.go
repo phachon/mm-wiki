@@ -129,6 +129,7 @@ func (this *PageController) Modify() {
 	documentId := this.GetString("document_id", "")
 	newName := strings.TrimSpace(this.GetString("name", ""))
 	documentContent := this.GetString("document_page_editor-markdown-doc", "")
+	comment := strings.TrimSpace(this.GetString("comment", ""))
 
 	if documentId == "" {
 		this.jsonError("您没有选择文档！")
@@ -138,6 +139,9 @@ func (this *PageController) Modify() {
 	}
 	if newName == utils.Document_Default_FileName {
 		this.jsonError("文档名称不能为 "+ utils.Document_Default_FileName+" ！")
+	}
+	if comment == "" {
+		this.jsonError("必须输入此次修改的备注！")
 	}
 
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
@@ -184,12 +188,12 @@ func (this *PageController) Modify() {
 		"name": newName,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.Update(documentId, updateValue)
+	_, err = models.DocumentModel.Update(documentId, updateValue, comment)
 	if err != nil {
 		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("修改文档失败！")
 	}
 
-	this.InfoLog("修改保存文档 "+documentId+" 成功")
-	this.jsonSuccess("修改文档成功！", nil, "/document/index?document_id="+documentId)
+	this.InfoLog("修改文档 "+documentId+" 成功")
+	this.jsonSuccess("文档修改成功！", nil, "/document/index?document_id="+documentId)
 }

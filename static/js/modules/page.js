@@ -49,13 +49,44 @@ var Page = {
             }
         }
 
-        var options = {
-            dataType: 'json',
-            success: response
-        };
+        layer.prompt({
+            title: '<i class="fa fa-volume-up"></i> 请输入修改备注',
+            formType: 2,
+            maxlength: 150,
+            value: '',
+            area: ['340px', '80px']
+        }, function(comment, index, elem){
+            if (comment.trim()) {
+                layer.close(index);
+                var options = {
+                    dataType: 'json',
+                    success: response,
+                    data: {'comment': comment}
+                };
+                $(element).ajaxSubmit(options);
+            }else {
+                elem.focus()
+            }
+        });
 
-        $(element).ajaxSubmit(options);
         return false;
+    },
+
+    /**
+     * cancel save
+     */
+    cancelSave: function (title, url) {
+        title = '<i class="fa fa-volume-up"></i> '+title;
+        layer.confirm(title, {
+            btn: ['是','否'],
+            skin: Layers.skin,
+            btnAlign: 'c',
+            title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
+        }, function() {
+            parent.location = url
+        }, function() {
+
+        });
     }
 
 };

@@ -17,9 +17,10 @@
                                 {{end}}
                             </p>
                             <p class="view-page-time">
-                                <i class="glyphicon glyphicon-time fa-fw"></i>
+                                <i class="fa fa-calendar fa-fw"></i>
                                 被 <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}} </a> 创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ，
                                 被 <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}"> {{$editUser.username}} </a> 最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
+                            <a name="history" data-link="/document/history?document_id={{$document.document_id}}">(查看修改历史)</a>
                             </p>
                         </div>
                         <div class="col-md-4 text-right">
@@ -51,7 +52,10 @@
     </div>
 </div>
 <script type="text/javascript">
-    parent.layoutOpen();
+    Layers.bindIframe("[name='history']", "文档修改历史", "508px", "1000px");
+    if (parent.layoutOpen) {
+        parent.layoutOpen();
+    }
     $(function() {
         editormd.katexURL = {
             js  : "/static/plugins/editor.md/lib/katex/katex.min",

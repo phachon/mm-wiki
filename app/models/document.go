@@ -127,11 +127,17 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 		return
 	}
 	id = rs.LastInsertId
+
+	// create document log
+	_, err = LogDocumentModel.CreateAction(document["create_user_id"], fmt.Sprintf("%d", id))
+	if err != nil {
+		return
+	}
 	return
 }
 
 // update document by document_id
-func (d *Document) Update(documentId string, documentValue map[string]interface{}) (id int64, err error) {
+func (d *Document) Update(documentId string, documentValue map[string]interface{}, comment string) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	documentValue["update_time"] =  time.Now().Unix()
@@ -143,6 +149,12 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 		return
 	}
 	id = rs.LastInsertId
+
+	// create document log
+	_, err = LogDocumentModel.UpdateAction(documentValue["edit_user_id"].(string), documentId, comment)
+	if err != nil {
+		return
+	}
 	return
 }
 

@@ -1,30 +1,31 @@
 <div id="main-left" class="ui-layout-west">
-    <div class="left-collection">
+    <div class="left-collection">{{$documents := .documents}}{{$count := .count}}
         <div class="collection-search">
             <form>
-                <div class="input-group">
-                    <input class="form-control input-sm" type="text" value="" placeholder="搜索文档...">
-                    <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default btn-search" type="button"><i class="fa fa-search"></i></button>
-                            </span>
+                <div class="form-group has-feedback">
+                    <i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>
+                    <input class="form-control input-sm" id="collect_doc_search" type="text" value="" placeholder="搜索收藏文档..." style="padding-right: 28px;">
                 </div>
             </form>
         </div>
         <div class="collection-doc">
-            <h3 class="text-left"> 收藏文档 <span class="badge">42</span> </h3>
+            <h3 class="text-left"> 收藏文档 <span class="badge">{{$count}}</span> </h3>
             <hr>
-            <ul>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测试文档是测试文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测试文档这文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测文档是测试文档</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试测试</a></li>
-                <li><a href="/page/index?page_id=1"><i class="fa fa-file-word-o"></i> 这是测测试文档是测试文档测试测试测试测试测试</a></li>
+            <ul id="collection_documents">
+                {{range $document := $documents}}
+                    {{if eq $document.type "1"}}
+                        <li><a href="/document/index?document_id={{$document.document_id}}"><i class="fa fa-file-word-o"></i> <span>{{$document.name}}</span></a></li>
+                    {{else}}
+                        <li><a href="/document/index?document_id={{$document.document_id}}"><i class="fa fa-folder-o"></i> <span>{{$document.name}}</span></a></li>
+                    {{end}}
+                {{end}}
             </ul>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        Main.Search("#collect_doc_search");
+    })
+</script>
 <iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes" style="overflow-y: auto" src="/main/default"></iframe>

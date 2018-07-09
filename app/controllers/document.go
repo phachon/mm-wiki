@@ -200,7 +200,7 @@ func (this *DocumentController) Edit() {
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("修改文档目录失败："+err.Error())
-		this.ViewError("修改文档目录失败！")
+		this.ViewError("修改文档失败！")
 	}
 	if len(space) == 0 {
 		this.ViewError("空间不存在！")
@@ -237,4 +237,59 @@ func (this *DocumentController) Modify() {
 	documentId := this.GetString("document_id", "")
 
 	this.Redirect("/document/view?document_id="+documentId, 302)
+}
+
+func (this *DocumentController) History() {
+
+	page, _ := this.GetInt("page", 1)
+	documentId := this.GetString("document_id", "0")
+	number := 8
+	limit := (page - 1) * number
+
+	if documentId == "0" {
+		this.ViewError("没有选择文档目录！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查看文档 "+documentId+" 修改历史失败："+err.Error())
+		this.ViewError("查看文档修改历史失败！")
+	}
+	if len(document) == 0 {
+		this.jsonError("文档不存在！")
+	}
+
+	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByDocumentIdAndLimit(documentId, limit, number)
+	if err != nil {
+		this.ErrorLog("查看文档 "+documentId+" 修改历史失败："+err.Error())
+		this.ViewError("查看文档修改历史失败！")
+	}
+	count, err := models.LogDocumentModel.CountLogDocumentsByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查看文档 "+documentId+" 修改历史失败："+err.Error())
+		this.ViewError("查看文档修改历史失败！")
+	}
+
+	userIds := []string{}
+	for _, logDocument := range logDocuments {
+		userIds = append(userIds, logDocument["user_id"])
+	}
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
+	if err != nil {
+		this.ErrorLog("查看文档 "+documentId+" 修改历史失败："+err.Error())
+		this.ViewError("查看文档修改历史失败！")
+	}
+	for _, logDocument := range logDocuments {
+		logDocument["username"] = ""
+		for _, user := range users {
+			if logDocument["user_id"] == user["user_id"] {
+				logDocument["username"] = user["username"]
+				break
+			}
+		}
+	}
+
+	this.Data["logDocuments"] = logDocuments
+	this.SetPaginator(number, count)
+	this.viewLayout("document/history", "default")
 }
