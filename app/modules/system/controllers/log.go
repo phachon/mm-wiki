@@ -56,3 +56,79 @@ func (this *LogController) Info() {
 	this.Data["log"] = log
 	this.viewLayout("log/info", "default")
 }
+
+func (this *LogController) Document() {
+
+	page, _ := this.GetInt("page", 1)
+	number := 12
+	limit := (page - 1) * number
+	keyword := strings.TrimSpace(this.GetString("keyword", ""))
+	userId := strings.TrimSpace(this.GetString("user_id", ""))
+
+	var logDocuments = []map[string]string{}
+	var err error
+	var count int64
+	if keyword != "" && userId != "" {
+		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdKeywordAndLimit(userId, keyword, limit, number)
+		count, err = models.LogDocumentModel.CountLogDocumentsByUserIdAndKeyword(userId, keyword)
+	}else if userId != "" {
+		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(userId, limit, number)
+		count, err = models.LogDocumentModel.CountLogDocumentsByUserId(userId)
+	}else if keyword != "" {
+		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByKeywordAndLimit(keyword, limit, number)
+		count, err = models.LogDocumentModel.CountLogDocumentsByKeyword(userId)
+	}else {
+		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
+		count, err = models.LogDocumentModel.CountLogDocuments()
+	}
+	if err != nil {
+		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ViewError("文档日志查找失败！", "/system/main/index")
+	}
+
+	userIds := []string{}
+	docIds := []string{}
+	for _, logDocument := range logDocuments {
+		userIds = append(userIds, logDocument["user_id"])
+		docIds = append(docIds, logDocument["document_id"])
+	}
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
+	if err != nil {
+		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ViewError("文档日志查找失败！", "/system/main/index")
+	}
+	docs, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	if err != nil {
+		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ViewError("文档日志查找失败！", "/system/main/index")
+	}
+	for _, logDocument := range logDocuments {
+		logDocument["username"] = ""
+		for _, user := range users {
+			if logDocument["user_id"] == user["user_id"] {
+				logDocument["username"] = user["username"]
+				logDocument["given_name"] = user["given_name"]
+				break
+			}
+		}
+		for _, doc := range docs {
+			if logDocument["document_id"] == doc["document_id"] {
+				logDocument["document_name"] = doc["name"]
+				logDocument["document_type"] = doc["type"]
+				break
+			}
+		}
+	}
+
+	users, err = models.UserModel.GetUsers()
+	if err != nil {
+		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ViewError("文档日志查找失败！", "/system/main/index")
+	}
+	this.Data["logDocuments"] = logDocuments
+	this.Data["keyword"] = keyword
+	this.Data["userId"] = userId
+	this.Data["users"] = users
+	this.SetPaginator(number, count)
+	this.viewLayout("log/document", "default")
+}

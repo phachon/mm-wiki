@@ -3,8 +3,25 @@
         <div class="panel-body">
             <div class="row">
                 <form action="" method="get">
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         <div class="input-group">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-addon">用户</span>
+                            <select name="user_id" class="form-control selectpicker show-menu-arrow"
+                                    multiple data-live-search="true"
+                                    data-max-options="1"
+                                    title="选择用户搜索">
+                            {{range $user := .users}}
+                                {{if eq $user.user_id $.userId}}
+                                    <option title="{{$user.username}}({{$user.given_name}})" value="{{$user.user_id}}" selected="selected">{{$user.username}}({{$user.given_name}})</option>
+                                {{else}}
+                                    <option title="{{$user.username}}({{$user.given_name}})" value="{{$user.user_id}}">{{$user.username}}({{$user.given_name}})</option>
+                                {{end}}
+                            {{end}}
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -22,15 +39,19 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
+                    <th class="w8p">ID</th>
+                    <th class="w8p">用户</th>
                     <th class="w8p">动作</th>
                     <th>文档</th>
-                    <th class="w35p">备注</th>
+                    <th class="w30p">备注</th>
                     <th class="w15p">时间</th>
                 </tr>
                 </thead>
                 <tbody>
                 {{range $logDocument := .logDocuments}}
                 <tr>
+                    <td class="center">{{$logDocument.log_document_id}}</td>
+                    <td class="center">{{$logDocument.username}}</td>
                     <td class="center">
                     {{if eq $logDocument.action "1"}}
                         <label class="text text-info">创建</label>

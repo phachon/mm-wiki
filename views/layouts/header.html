@@ -5,7 +5,7 @@
                 <a class="navbar-brand" href="/" style="width: 238px">&nbsp;&nbsp;Markdown Mini Wiki</a>
                 <ul class="nav navbar-nav">
                     <li {{if eq .navName "main"}}class="active"{{end}}><a href="/"><i class="fa fa-home"></i>&nbsp;主页</a></li>
-                    <li {{if eq .navName "space"}}class="active"{{end}}><a href="/space/index"><i class="fa fa-folder"></i>&nbsp;空间</a></li>
+                    <li {{if eq .navName "space"}}class="active"{{end}}><a href="/space/index"><i class="fa fa-cube"></i>&nbsp;空间</a></li>
                     <li {{if eq .navName "user"}}class="active"{{end}}><a href="/user/index"><i class="fa fa-user "></i>&nbsp;用户</a></li>
                     <li {{if eq .navName "system"}}class="active"{{end}}><a href="/system/main/index"><i class="fa fa-cog"></i>&nbsp;系统</a></li>
                 </ul>
@@ -38,13 +38,13 @@
                     </li>
                     <li class="dropdown">
                         <a type="button" data-toggle="web-popover" data-placement="bottom">
-                            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;root
+                            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.login_username}}
                             <span class="caret"></span>
                         </a>
                         <div class="webui-popover-content">
                             <ul class="dropdown-menu webui-popover-menu">
                                 <li><a href="/system/main/index"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人中心</a></li>
-                                <li><a href="/system/profile/repass"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
+                                <li><a name="repass" data-link="/system/profile/password"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
                                 <li><a href="/author/logout"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
                             </ul>
                         </div>
@@ -61,5 +61,6 @@
     if (self != top) {
         parent.location.href = '/'
     }
+    Layers.bindIframe("a[name='repass']", "修改密码", "325px", "800px");
     Layers.bindIframe("a[name='about']", "关于MM-Wiki", "315px", "500px");
 </script>

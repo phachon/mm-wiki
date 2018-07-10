@@ -47,6 +47,9 @@ func (this *TemplateController) Prepare() {
 		this.StopRun()
 	}
 
+	this.Data["login_user_id"] = this.UserId
+	this.Data["login_username"] = this.User["username"]
+
 	if !this.checkAccess() {
 		if this.IsPost() {
 			this.JsonError("抱歉，您没有权限操作！", nil, "/system/main/index")

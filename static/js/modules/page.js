@@ -49,25 +49,64 @@ var Page = {
             }
         }
 
-        layer.prompt({
+        var commentHtml =
+            '<div class="container-fluid" style="padding: 20px 20px 0 20px">'+
+                '<textarea name="edit_comment" class="form-control" rows="3" autofocus="autofocus" style="resize:none""></textarea>'+
+                '<div style="margin-top: 8px;text-align: left">'+
+                    '<label> 通知关注用户&nbsp;</label>' +
+                    '<input type="checkbox" name="is_notice_user" checked="checked">' +
+                '</div>' +
+            '</div>';
+
+        layer.open({
             title: '<i class="fa fa-volume-up"></i> 请输入修改备注',
-            formType: 2,
-            maxlength: 150,
-            value: '',
-            area: ['340px', '80px']
-        }, function(comment, index, elem){
-            if (comment.trim()) {
+            type: 1,
+            area: ['380px', '232px'],
+            content: commentHtml,
+            btn: ['确定','取消'],
+            yes: function(index, layero){
+                var commentText = $("textarea[name='edit_comment']").val().trim();
+                var isNoticeUser = $("input[type='checkbox'][name='is_notice_user']").is(':checked');
+                if (commentText && commentText.length > 0) {
+                    if (commentText.length > 50 ) {
+                        layer.tips("最多50个字符！", $("textarea[name='edit_comment']"))
+                    }else {
+                        layer.close(index);
+                        var options = {
+                            dataType: 'json',
+                            success: response,
+                            data: {'comment': commentText, 'is_notice_user': isNoticeUser}
+                        };
+                        $(element).ajaxSubmit(options);
+                    }
+                }else {
+                    $("textarea[name='edit_comment']").focus();
+                }
+            },
+            btn2: function(index, layero){
                 layer.close(index);
-                var options = {
-                    dataType: 'json',
-                    success: response,
-                    data: {'comment': comment}
-                };
-                $(element).ajaxSubmit(options);
-            }else {
-                elem.focus()
             }
         });
+
+        // layer.prompt({
+        //     title: '<i class="fa fa-volume-up"></i> 请输入修改备注',
+        //     formType: 2,
+        //     maxlength: 150,
+        //     value: '',
+        //     area: ['340px', '80px']
+        // }, function(comment, index, elem){
+        //     if (comment.trim()) {
+        //         layer.close(index);
+        //         var options = {
+        //             dataType: 'json',
+        //             success: response,
+        //             data: {'comment': comment}
+        //         };
+        //         $(element).ajaxSubmit(options);
+        //     }else {
+        //         elem.focus()
+        //     }
+        // });
 
         return false;
     },

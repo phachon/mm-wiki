@@ -131,6 +131,35 @@ func (ld *LogDocument) GetLogDocumentsByUserIdAndLimit(userId string, limit int,
 	return
 }
 
+func (ld *LogDocument) GetLogDocumentsByUserIdKeywordAndLimit(userId string, keyword string, limit int, number int) (logDocuments []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_LogDocument_Name).Where(map[string]interface{}{
+		"comment LIKE": "%" + keyword + "%",
+		"user_id": userId,
+	}).Limit(limit, number).OrderBy("log_document_id", "DESC"))
+	if err != nil {
+		return
+	}
+	logDocuments = rs.Rows()
+
+	return
+}
+
+func (ld *LogDocument) GetLogDocumentsByKeywordAndLimit(keyword string, limit int, number int) (logDocuments []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_LogDocument_Name).Where(map[string]interface{}{
+		"comment LIKE": "%" + keyword + "%",
+	}).Limit(limit, number).OrderBy("log_document_id", "DESC"))
+	if err != nil {
+		return
+	}
+	logDocuments = rs.Rows()
+
+	return
+}
+
 func (ld *LogDocument) GetLogDocumentsByLimit(limit int, number int) (logDocuments []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -163,6 +192,35 @@ func (ld *LogDocument) CountLogDocumentsByUserId(userId string) (count int64, er
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_LogDocument_Name).Where(map[string]interface{}{
 		"user_id": userId,
+	}))
+	if err != nil {
+		return
+	}
+	count = utils.Convert.StringToInt64(rs.Value("total"))
+	return
+}
+
+func (ld *LogDocument) CountLogDocumentsByUserIdAndKeyword(userId string, keyword string) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_LogDocument_Name).Where(map[string]interface{}{
+		"comment LIKE": "%" + keyword + "%",
+		"user_id": userId,
+	}))
+	if err != nil {
+		return
+	}
+	count = utils.Convert.StringToInt64(rs.Value("total"))
+	return
+}
+
+func (ld *LogDocument) CountLogDocumentsByKeyword(keyword string) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_LogDocument_Name).Where(map[string]interface{}{
+		"comment LIKE": "%" + keyword + "%",
 	}))
 	if err != nil {
 		return

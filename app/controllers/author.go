@@ -14,7 +14,7 @@ type AuthorController struct {
 
 // login index
 func (this *AuthorController) Index() {
-	this.viewLayout("author/login", "author")
+	this.viewLayout("author/login1", "author")
 }
 
 // login

@@ -18,9 +18,20 @@
                             </p>
                             <p class="view-page-time">
                                 <i class="fa fa-calendar fa-fw"></i>
-                                被 <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}} </a> 创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ，
-                                被 <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}"> {{$editUser.username}} </a> 最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
-                            <a name="history" data-link="/document/history?document_id={{$document.document_id}}">(查看修改历史)</a>
+                                被
+                                {{if eq $createUser.user_id $.login_user_id}}
+                                    <a class="text text-info" href="/system/main/index" target="_parent">{{$createUser.username}}（{{$createUser.given_name}}）</a>
+                                {{else}}
+                                    <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}}（{{$createUser.given_name}} </a>
+                                {{end}}
+                                创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ， 被
+                                {{if eq $editUser.user_id $.login_user_id}}
+                                    <a class="text text-info" href="/system/main/index" target="_parent">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
+                                {{else}}
+                                    <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
+                                {{end}}
+                                最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
+                                <a name="history" data-link="/document/history?document_id={{$document.document_id}}">(查看修改历史)</a>
                             </p>
                         </div>
                         <div class="col-md-4 text-right">

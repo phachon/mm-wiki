@@ -27,7 +27,7 @@ func (this *FollowController) Add() {
 		this.jsonError("不能关注自己！")
 	}
 
-	follow, err := models.FollowModel.GetFollowsByUserIdAndTypeAndObjectId(this.UserId, followType, objectId)
+	follow, err := models.FollowModel.GetFollowByUserIdAndTypeAndObjectId(this.UserId, followType, objectId)
 	if err != nil {
 		this.ErrorLog("添加关注失败：" + err.Error())
 		this.jsonError("添加关注失败！")

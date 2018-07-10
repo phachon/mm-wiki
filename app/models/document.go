@@ -133,6 +133,12 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	if err != nil {
 		return
 	}
+
+	// follow document
+	_, err = FollowModel.createFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
+	if err != nil {
+		return
+	}
 	return
 }
 
@@ -152,6 +158,12 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 
 	// create document log
 	_, err = LogDocumentModel.UpdateAction(documentValue["edit_user_id"].(string), documentId, comment)
+	if err != nil {
+		return
+	}
+
+	// follow document
+	_, err = FollowModel.createFollowDocument(documentValue["edit_user_id"].(string), documentId)
 	if err != nil {
 		return
 	}

@@ -206,6 +206,40 @@ CREATE TABLE `mw_log` (
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统操作日志表';
 
+
+-- --------------------------------
+-- 邮件服务器表
+-- --------------------------------
+DROP TABLE IF EXISTS `mw_email`;
+CREATE TABLE `mw_email` (
+  `email_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '邮箱 id',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱服务器名称',
+  `sender_address` varchar(100) NOT NULL DEFAULT '' COMMENT '发件人邮件地址',
+  `sender_name` varchar(100) NOT NULL DEFAULT '' COMMENT '发件人显示名',
+  `sender_title_prefix` varchar(100) NOT NULL DEFAULT '' COMMENT '发送邮件标题前缀',
+  `host` char(100) NOT NULL DEFAULT '' COMMENT '服务器主机名',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` varchar(50) NOT NULL DEFAULT '' COMMENT '密码',
+  `is_default` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否默认 1 默认',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件服务器表';
+
+-- --------------------------------
+-- 快捷链接表
+-- --------------------------------
+DROP TABLE IF EXISTS `mw_link`;
+CREATE TABLE `mw_link` (
+  `link_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '链接 id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '链接名称',
+  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '链接地址',
+  `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序号(越小越靠前)',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`link_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快捷链接表';
+
 -- --------------------------------
 -- 系统联系人表
 -- --------------------------------

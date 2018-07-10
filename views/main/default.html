@@ -24,7 +24,12 @@
                                         {{end}}
                                          {{$logDocument.document_name}}</a>
                                 </div>
-                                <span class="text text-font-12 document-user-time"><i class="fa fa-calendar"></i> 被 <a href="">{{$logDocument.username}}（{{$logDocument.given_name}}）</a>
+                                <span class="text text-font-12 document-user-time"><i class="fa fa-calendar"></i> 被
+                                {{if eq $logDocument.user_id $.login_user_id}}
+                                    <a href="/system/main/index" target="_parent">{{$logDocument.username}}（{{$logDocument.given_name}}）<span class="text text-primary"></span> </a>
+                                {{else}}
+                                    <a href="/user/info?user_id={{$logDocument.user_id}}">{{$logDocument.username}}（{{$logDocument.given_name}}）<span class="text text-primary"></span> </a>
+                                {{end}}
                                 {{if eq $logDocument.action "1"}}创建{{else if eq $logDocument.action "2"}}修改{{else if eq $logDocument.action "3"}}删除{{end}}于 {{dateFormat $logDocument.create_time "Y-m-d H:i:s"}}</span>
                             </li>
                             <hr>

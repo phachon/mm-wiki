@@ -100,7 +100,7 @@ func (this *UserController) Info() {
 
 	userId := this.GetString("user_id", "")
 	if userId == "" {
-		this.ViewError("用户不存在！", "/user/list")
+		this.ViewError("用户不存在！", "/main/index")
 	}
 
 	if this.UserId == userId {
@@ -110,13 +110,42 @@ func (this *UserController) Info() {
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
 		this.ErrorLog("查找用户出错："+err.Error())
-		this.ViewError("查找用户出错！", "/user/list")
+		this.ViewError("查找用户出错！", "/main/index")
 	}
 	if len(user) == 0 {
-		this.ViewError("用户不存在！", "/user/list")
+		this.ViewError("用户不存在！", "/main/index")
+	}
+	
+	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(userId, 0, 10)
+	if err != nil {
+		this.ErrorLog("查找用户活动出错："+err.Error())
+		this.ViewError("查找用户活动出错！", "/main/index")
+	}
+
+	docIds := []string{}
+	for _, logDocument := range logDocuments {
+		docIds = append(docIds, logDocument["document_id"])
+	}
+	documents, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	if err != nil {
+		this.ErrorLog("查找用户活动出错: "+err.Error())
+		this.ViewError("查找用户活动出错", "/main/index")
+	}
+
+	for _, logDocument := range logDocuments {
+		for _, document := range documents {
+			if document["document_id"] == logDocument["document_id"] {
+				logDocument["document_id"] = document["document_id"]
+				logDocument["document_name"] = document["name"]
+				logDocument["document_type"] = document["type"]
+				logDocument["update_time"] = document["update_time"]
+			}
+		}
 	}
 
 	this.Data["user"] = user
+	this.Data["logDocuments"] = logDocuments
+	this.Data["count"] = len(logDocuments)
 	this.viewLayout("user/info", "default")
 }
 
@@ -182,7 +211,6 @@ func (this *UserController) FollowUser() {
 	this.Data["followCount"] = len(users)
 	this.Data["fansCount"] = len(fansUsers)
 	this.Data["user"] = user
-	this.Data["login_user_id"] = this.UserId
 	this.viewLayout("user/follow_user", "default")
 }
 

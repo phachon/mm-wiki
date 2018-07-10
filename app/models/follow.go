@@ -33,7 +33,7 @@ func (f *Follow) GetFollowByFollowId(followId string) (follow map[string]string,
 	return
 }
 
-// get follows by user_id
+// get follows by user_id and type
 func (f *Follow) GetFollowsByUserIdAndType(userId string, followType int) (follows []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -41,6 +41,21 @@ func (f *Follow) GetFollowsByUserIdAndType(userId string, followType int) (follo
 		"user_id":  userId,
 		"type":  followType,
 	}))
+	if err != nil {
+		return
+	}
+	follows = rs.Rows()
+	return
+}
+
+// get follows by user_id and type limit
+func (f *Follow) GetFollowsByUserIdTypeAndLimit(userId string, followType int, limit int, number int) (follows []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
+		"user_id":  userId,
+		"type":  followType,
+	}).Limit(limit, number).OrderBy("follow_id", "DESC"))
 	if err != nil {
 		return
 	}
@@ -64,7 +79,7 @@ func (f *Follow) GetFollowsByObjectIdAndType(objectId string, followType int) (f
 }
 
 // get followed follow
-func (f *Follow) GetFollowsByUserIdAndTypeAndObjectId(userId string, followType int, objectId string) (follow map[string]string, err error) {
+func (f *Follow) GetFollowByUserIdAndTypeAndObjectId(userId string, followType int, objectId string) (follow map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
@@ -139,6 +154,22 @@ func (f *Follow) CountFollows() (count int64, err error) {
 	return
 }
 
+// get follow count
+func (f *Follow) CountFollowsByUserIdAndType(userId string, followType int) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_Follow_Name).Where(map[string]interface{}{
+		"user_id": userId,
+		"type": followType,
+	}))
+	if err != nil {
+		return
+	}
+	count = utils.Convert.StringToInt64(rs.Value("total"))
+	return
+}
+
 // get follows by many follow_id
 func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string]string, err error) {
 	db := G.DB()
@@ -150,5 +181,18 @@ func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string
 		return
 	}
 	follows = rs.Rows()
+	return
+}
+
+// create follow document
+func (f *Follow) createFollowDocument(userId string, documentId string) (id int64, err error) {
+
+	follow, err := f.GetFollowByUserIdAndTypeAndObjectId(userId, Follow_Type_Doc, documentId)
+	if err != nil {
+		return
+	}
+	if len(follow) == 0 {
+		return f.Insert(userId, Follow_Type_Doc, documentId)
+	}
 	return
 }

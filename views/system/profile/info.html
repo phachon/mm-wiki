@@ -7,63 +7,37 @@
             <ul class="nav nav-tabs">
                 <li  class="active"><a href="/system/profile/info">用户信息</a></li>
                 <li><a href="/system/profile/followUser">关注用户</a></li>
-                <li><a href="/system/profile/followPage">关注页面</a></li>
+                <li><a href="/system/profile/followDoc">关注文档</a></li>
             </ul>
             <br>
             <div class="row">
                 <div class="col-md-7" style="padding-left: 30px">
                     <h3>最近活动</h3>
                     <div class="user-activity">
+                        {{if eq .count 0}}
+                            <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                                <p><i class="glyphicon glyphicon-volume-up"></i> 还没有任何活动！</p>
+                            </div>
+                        {{else}}
                         <ul>
+                        {{range $logDocument := .logDocuments}}
                             <li>
                                 <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
+                                    <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent" class="text text-info text-font-15">
+                                    {{if eq $logDocument.document_type "1"}}
+                                        <i class="fa fa-file-word-o"></i>
+                                    {{else}}
+                                        <i class="fa fa-folder-o"></i>
+                                    {{end}}
+                                    {{$logDocument.document_name}}</a>
                                 </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
+                                <span class="text text-font-12 activity-time">{{if eq $logDocument.action "1"}}创建
+                                {{else if eq $logDocument.action "2"}}修改{{else if eq $logDocument.action "3"}}删除
+                                {{end}}于 {{dateFormat $logDocument.update_time "Y-m-d H:i:s"}}</span>
                             </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试这是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">创建于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档是这是测试这是测试测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试这是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="/page/index?page_id=1" target="_parent" class="text text-info text-font-15"><i class="fa fa-file-word-o"></i> 这是测试文档这是测试文档是测试文档是测试文档</a>
-                                </div>
-                                <span class="text text-font-12 activity-time">更新于 2018-06-09 08:18</span>
-                            </li>
+                        {{end}}
                         </ul>
+                        {{end}}
                     </div>
                 </div>
                 <div class="col-md-5">

@@ -1,0 +1,41 @@
+<div class="container-fluid">{{$user := .user}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="page-header">
+                <h3><i class="fa fa-address-card-o"></i> {{$user.username}}（{{$user.given_name}}）</h3>
+            </div>
+            <ul class="nav nav-tabs">
+                <li><a href="/system/profile/info">用户信息</a></li>
+                <li><a href="/system/profile/followUser">关注用户</a></li>
+                <li class="active"><a href="/system/profile/followDoc">关注文档</a></li>
+            </ul>
+            <br>
+            <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 10px">
+                <p><i class="glyphicon glyphicon-volume-up"></i> 你创建、编辑过的文档，会被自动设置成关注！点击 <i class="glyphicon glyphicon-remove-circle"></i> 移除</p>
+            </div>
+            {{if eq .count 0}}
+            {{else}}
+            <table class="table">
+                <tbody>
+                {{range $followDocument := .followDocuments}}
+                <tr>
+                    <td>
+                        <strong>
+                            <a href="/document/index?document_id={{$followDocument.document_id}}" target="_parent"> <i class="fa fa-file-o"></i> {{$followDocument.document_name}} </a>
+                        </strong>
+                        <span class="text-font-10" style="color: #8e8e8e;">（最后更新于 {{dateFormat $followDocument.update_time "Y-m-d H:i:s"}}）</span>
+                    </td>
+                <td class="w5p center">
+                    <a onclick="Common.ajaxSubmit('/follow/cancel?follow_id={{$followDocument.follow_id}}')" title="移除关注"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+            <div class="center" style="margin-top: 5px">
+            {{template "paginator/default.html" .}}
+            </div>
+        {{end}}
+        </div>
+    </div>
+</div>
