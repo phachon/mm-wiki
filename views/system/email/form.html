@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br>{{$email := .email}}
+            <form class="form-horizontal" method="post" action="{{if $email}} /system/email/modify {{else}} /system/email/save {{end}}">
+                <input type="hidden" name="email_id" value="{{$email.email_id}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 服务器名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" placeholder="请输入邮件服务器名称" value="{{$email.name}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 服务器主机</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="host" class="form-control" placeholder="请输入 smtp 邮件服务器 host" value="{{$email.host}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件人邮箱</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="sender_address" class="form-control" placeholder="请输入发件人邮箱" value="{{$email.sender_address}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件用户名</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="username" class="form-control" placeholder="请输入发件人邮箱用户名" value="{{$email.username}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件人密码</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="password" class="form-control" placeholder="请输入发件人邮箱密码" value="{{$email.password}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 发件人显示名</label>
+                    <div class="col-sm-4">
+                        {{if $email}}
+                        <input type="text" name="sender_name" class="form-control" placeholder="请输入发件人显示名" value="{{if eq $email.sender_name ""}}MM-Wiki{{else}}{{$email.sender_name}}{{end}}">
+                        {{else}}
+                        <input type="text" name="sender_name" class="form-control" placeholder="请输入发件人显示名" value="MM-Wiki">
+                        {{end}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 邮件标题前缀</label>
+                    <div class="col-sm-4">
+                        {{if $email}}
+                        <input type="text" name="sender_title_prefix" class="form-control" placeholder="请输入邮件标题前缀" value="{{if eq $email.sender_title_prefix ""}}[MM-Wiki]{{else}}{{$email.sender_title_prefix}}{{end}}">
+                        {{else}}
+                        <input type="text" name="sender_title_prefix" class="form-control" placeholder="请输入邮件标题前缀" value="[MM-Wiki]">
+                        {{end}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

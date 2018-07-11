@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-2">
+                        <button type="button" name="add" data-link="/system/link/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加链接</button>
+                    </div>
+                    <div class="col-md-7"></div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="链接名称">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="w8p">ID</th>
+                    <th class="w30p">名称</th>
+                    <th>url</th>
+                    <th class="w10p">排序号</th>
+                    <th class="w13p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $link := .links}}
+                <tr>
+                    <td class="center">{{$link.link_id}}</td>
+                    <td>{{$link.name}}</td>
+                    <td><a href="{{$link.url}}" target="_blank">{{$link.url}}</a></td>
+                    <td class="center">{{$link.sequence}}</td>
+                    <td class="center">
+                        <a name="edit" data-link="/system/link/edit?link_id={{$link.link_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/link/delete?link_id={{$link.link_id}}');"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("button[name='add']", "添加链接", "340px", "900px");
+    Layers.bindIframe("[name='edit']", "修改链接", "340px", "900px");
+</script>

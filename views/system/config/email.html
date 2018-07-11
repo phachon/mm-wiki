@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-2">
+                        <button type="button" name="add" data-link="/system/email/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加邮件服务器</button>
+                    </div>
+                    <div class="col-md-7"></div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="keyword" type="text" value="" placeholder="角色名称">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="w8p">ID</th>
+                    <th>名称</th>
+                    <th class="w15p">创建时间</th>
+                    <th class="w15p">修改时间</th>
+                    <th class="w20p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $email := .emails}}
+                <tr>
+                    <td class="center">{{$email.email_id}}</td>
+                    <td>{{$email.name}}</td>
+                    <td class="center">
+                    {{dateFormat $email.create_time "Y-m-d H:i:s"}}
+                    </td>
+                    <td class="center">
+                    {{dateFormat $email.update_time "Y-m-d H:i:s"}}
+                    </td>
+                    <td class="center">
+                    {{if eq $email.email_id "1"}}
+                        <a name="user" class="glyphicon glyphicon-user" data-link="/system/email/user?email_id={{$email.email_id}}">用户</a>
+                    {{else}}
+                        <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/email/edit?email_id={{$email.email_id}}">修改</a>
+                        <a name="privilege" class="glyphicon glyphicon-lock" data-link="/system/email/privilege?email_id={{$email.email_id}}">权限</a>
+                        <a name="user" class="glyphicon glyphicon-user" data-link="/system/email/user?email_id={{$email.email_id}}">用户</a>
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/email/delete?email_id={{$email.email_id}}');" class="remove glyphicon glyphicon-trash">删除</a>
+                    {{end}}
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("button[name='add']", "添加邮件服务器", "300px", "800px");
+    Layers.bindIframe("[name='edit']", "修改角色信息", "300px", "800px");
+    Layers.bindIframe("[name='privilege']", "角色授权", "500px", "1050px");
+    Layers.bindIframe("[name='user']", "角色用户", "500px", "1000px");
+</script>

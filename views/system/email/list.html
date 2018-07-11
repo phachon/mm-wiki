@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-2">
+                        <button type="button" name="add" data-link="/system/email/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加邮件服务器</button>
+                    </div>
+                    <div class="col-md-7"></div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="服务器名称">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="w5p">ID</th>
+                    <th>名称</th>
+                    <th class="w15p">smtp服务器主机</th>
+                    <th class="w15p">发件人邮箱</th>
+                    <th class="w15p">用户名</th>
+                    <th class="w15p">密码</th>
+                    <th class="w8p">是否启用</th>
+                    <th class="w13p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $email := .emails}}
+                <tr>
+                    <td class="center">{{$email.email_id}}</td>
+                    <td>{{$email.name}}</td>
+                    <td>{{$email.host}}</td>
+                    <td>{{$email.sender_address}}</td>
+                    <td>{{$email.username}}</td>
+                    <td>{{$email.password}}</td>
+                    <td class="center">
+                    {{if eq $email.is_default "1"}}
+                    <span class="label label-success">是</span>
+                    {{else}}
+                    <span class="label label-danger">否</span>
+                    {{end}}
+                    </td>
+                    <td class="center">
+                        <a name="edit" data-link="/system/email/edit?email_id={{$email.email_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                        {{if eq $email.is_default "1"}}{{else}}
+                            <a onclick="Layers.confirm('确定要启用该邮件服务器吗？', '/system/email/default?email_id={{$email.email_id}}');"><i class="glyphicon glyphicon-ok-circle"></i>启用</a>
+                        {{end}}
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/email/delete?email_id={{$email.email_id}}');"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("button[name='add']", "添加邮件服务器", "500px", "900px");
+    Layers.bindIframe("[name='edit']", "修改邮件服务器", "500px", "900px");
+</script>

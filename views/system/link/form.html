@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br>{{$link := .link}}
+            <form class="form-horizontal" method="post" action="{{if $link}} /system/link/modify {{else}} /system/link/save {{end}}">
+                <input type="hidden" name="link_id" value="{{$link.link_id}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" placeholder="请输入链接名称" value="{{$link.name}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 地址</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="url" class="form-control" placeholder="请输入链接 URL" value="{{$link.url}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>排序号</label>
+                    <div class="col-sm-4">
+                        <div class="input-group spinner">
+                            <input type="text" class="form-control" name="sequence" value="{{$link.sequence}}" placeholder="数字越小的显示越靠前">
+                            <div class="input-group-btn-vertical">
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

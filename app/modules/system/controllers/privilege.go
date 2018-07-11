@@ -193,5 +193,5 @@ func (this *PrivilegeController) Delete() {
 	}
 
 	this.InfoLog("删除权限 "+privilegeId+" 成功")
-	this.jsonSuccess("删除权限成功", nil, "system/privilege/list")
+	this.jsonSuccess("删除权限成功", nil, "/system/privilege/list")
 }
