@@ -14,11 +14,11 @@ var Login = {
 		var name = usernameEle.val();
 		var password = passwordEle.val();
 		if(!name) {
-			layer.tips("请输入用户名！", usernameEle);
+			layer.tips(usernameEle.attr("placeholder"), usernameEle);
 			return false;
 		}
 		if (!password) {
-            layer.tips("请输入密码！", passwordEle);
+            layer.tips(passwordEle.attr("placeholder"), passwordEle);
 			return false;
 		}
 

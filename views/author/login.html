@@ -8,12 +8,12 @@
             <input type="radio" id="tab1" name="tab-control" checked>
             <input type="radio" id="tab2" name="tab-control">
             <ul>
-                <li title="普通登录">
-                    <label for="tab1" role="button"><span>普通登录</span></label>
+                <li title="普通登录" style="border-right: 2px solid #929daf">
+                    <label for="tab1" role="button"><br><span>普通登录</span></label>
                 </li>
-                <div style="float:left;width: 2px;height: 20px; background: #929daf;margin-bottom: 6px"></div>
+                {{/*<div style="float:left;width: 2px;height: 20px; background: #929daf;margin-bottom: 6px"></div>*/}}
                 <li title="统一登录">
-                    <label for="tab2" role="button"><span>统一登录</span></label>
+                    <label for="tab2" role="button"><br><span>统一登录</span></label>
                 </li>
             </ul>
             <div class="slider"><div class="indicator"></div></div>
@@ -68,3 +68,8 @@
         <a style="color: #d8d8d8;" target="_blank" href="https://github.com/phachon/MM-Wiki">MM Wiki Version {{.version}}</a>
     </div>
 </div>
+<script type="text/javascript">
+    if (self != top ) {
+        parent.location.href = "/"
+    }
+</script>
