@@ -14,7 +14,7 @@ type AuthorController struct {
 
 // login index
 func (this *AuthorController) Index() {
-	this.viewLayout("author/login1", "author")
+	this.viewLayout("author/login", "author")
 }
 
 // login
@@ -38,7 +38,7 @@ func (this *AuthorController) Login()  {
 	password = utils.Encrypt.Md5Encode(password)
 
 	if user["password"] != password {
-		this.jsonError("账号或密码错误!")
+		this.jsonError("用户名或密码错误!")
 	}
 
 	// save session
@@ -53,7 +53,7 @@ func (this *AuthorController) Login()  {
 	this.Ctx.Request.PostForm.Del("password")
 
 	this.InfoLog("登录成功")
-	this.jsonSuccess("登录成功", nil, "/main/index")
+	this.jsonSuccess("登录成功！", nil, "/main/index")
 }
 
 //logout

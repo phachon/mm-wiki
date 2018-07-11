@@ -8,10 +8,18 @@ var Login = {
 	 */
 	ajaxSubmit: function (element) {
 
-		var name = $("input[name='username']").val();
-		var password = $("input[name='password']").val();
-		if(!name || !password) {
-			return false
+		var usernameEle = $(element).find("input[name='username']");
+		var passwordEle = $(element).find("input[name='password']");
+		var submitEle = $(element).find("input[name='submit']");
+		var name = usernameEle.val();
+		var password = passwordEle.val();
+		if(!name) {
+			layer.tips("请输入用户名！", usernameEle);
+			return false;
+		}
+		if (!password) {
+            layer.tips("请输入密码！", passwordEle);
+			return false;
 		}
 
 		function success(messages, data) {
@@ -33,12 +41,15 @@ var Login = {
 		}
 
 		function response(result) {
-			$(Login.errorMessage).addClass('hidden');
+			// $(Login.errorMessage).addClass('hidden');
 			if(result.code == 0) {
-				failed(result.message, result.data);
+				layer.tips(result.message, submitEle);
+				// failed(result.message, result.data);
 			}
 			if(result.code == 1) {
-				success(result.message, result.data);
+				// success(result.message, result.data);
+                var content = '<i class="fa fa-smile-o"></i> '+result.message;
+                layer.msg(content);
                 if (result.redirect.url) {
                     var sleepTime = result.redirect.sleep || 3000;
                     setTimeout(function() {

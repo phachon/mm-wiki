@@ -1,64 +1,70 @@
-<body id="login-body">
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand hidden-sm" href="/">MM Wiki</a>
-            <span class="navbar-brand" style="font-size: 16px"> 快速构建团队协作与知识分享平台</span>
-        </div>
-        <div class="navbar-collapse collapse" role="navigation">
-            <ul class="nav navbar-nav navbar-right hidden-sm">
-                <li class="dropdown">
-                    <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="helpLabel">
-                        <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
-                        <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
-                    </ul>
+<div class="login_box">
+    <div class="login_l_img animated bounceInLeft">
+        <span>如何管理团队文档？</span>
+        <img src="/static/images/logo_new.png" />
+    </div>
+    <div class="login">
+        <div class="tabs">
+            <input type="radio" id="tab1" name="tab-control" checked>
+            <input type="radio" id="tab2" name="tab-control">
+            <ul>
+                <li title="普通登录">
+                    <label for="tab1" role="button"><span>普通登录</span></label>
                 </li>
-                <li><a href="/"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;关于</a></li>
+                <div style="float:left;width: 2px;height: 20px; background: #929daf;margin-bottom: 6px"></div>
+                <li title="统一登录">
+                    <label for="tab2" role="button"><span>统一登录</span></label>
+                </li>
             </ul>
+            <div class="slider"><div class="indicator"></div></div>
+            <div class="content">
+                <section>
+                    <form role="form" action="/author/login" method="post" onsubmit="return false">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="username"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" name="username" class="form-control" placeholder="请输入系统用户名" autocomplete="new-username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="password"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="请输入密码" autocomplete="new-password">
+                                </div>
+                            </div>
+                            <input name="submit" type="button" value="登录" class="btn btn-primary btn-block" onclick="Login.ajaxSubmit(this.form)">
+                        </fieldset>
+                    </form>
+                </section>
+                <section>
+                    <form role="form" action="/author/login" method="post" onsubmit="return false">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="username"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" name="username" class="form-control" placeholder="请输入统一登录用户名" autocomplete="new-username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="password"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="请输入统一登录密码" autocomplete="new-password">
+                                </div>
+                            </div>
+                            <input name="submit" type="button" value="登录" class="btn btn-primary btn-block" onclick="Login.ajaxSubmit(this.form)">
+                        </fieldset>
+                    </form>
+                </section>
+            </div>
+            <div class="text-center" style="margin-top: 30px; font-size: 10px;color: #7d7d7d;">
+                * 请使用 Firefox, Chrome, IE9+ 浏览器达到更好效果 *
+            </div>
         </div>
     </div>
-</div>
-<div class="container wrap1" style="height:450px;">
-    <div class="col-sm-8 col-md-5 center-auto pd-sm-50 pd-xs-20 main_content">
-        <h3 class="mg-b20 text-center">欢迎登录</h3>
-        <div id="errorMessage" class="alert alert-danger hidden" role="alert" style="padding: 10px; margin-bottom: 15px;">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only"></span><strong></strong>
-        </div>
-        <form action="/author/login" method="post" onsubmit="return false">
-            <div class="form-group mg-t20">
-                <i class="glyphicon glyphicon-user icon_font"></i>
-                <input type="text" class="login_input" name="username" required oninvalid="setCustomValidity('请输入用户名')" oninput="setCustomValidity('')" placeholder="请输入用户名" autocomplete="new-username" />
-            </div>
-            <div class="form-group mg-t20">
-                <i class="glyphicon glyphicon-lock icon_font"></i>
-                <input type="password" class="login_input" name="password" required oninvalid="setCustomValidity('请输入密码')" oninput="setCustomValidity('')" placeholder="请输入密码" autocomplete="new-password" />
-            </div>
-            <div class="checkbox mg-b25">
-                <label><input type="checkbox" />记住我的登录信息</label>
-            </div>
-            <button type="submit" class="login_btn" onclick="Login.ajaxSubmit(this.form)">登 录</button>
-        </form>
-    </div>
-    <div style="margin-top: 40px;color: #949CAF;line-height: 1.6" >
-        <div class="text-center" style="font-size: 12px;">© 2018 <a style="color: #949CAF;" target="_blank" href="https://github.com/phachon">phachon</a></div>
-        <div class="text-center" style="font-size: 13px;">请使用 Firefox, Chrome, IE9+ 浏览器达到更好效果</div>
-        <div class="text-center" style="font-size: 12px;"><a style="color: #949CAF;" target="_blank" href="https://github.com/phachon/MM-Wiki"><i class="glyphicon glyphicon-hand-right"></i>&nbsp;&nbsp;MM Wiki Version {{.version}}</a></div>
+    <div class="copyright">
+        © 2018 <a style="color: #d8d8d8;" target="_blank" href="https://github.com/phachon">phachon</a>
+        &nbsp;<i class="glyphicon glyphicon-hand-right"></i>
+        <a style="color: #d8d8d8;" target="_blank" href="https://github.com/phachon/MM-Wiki">MM Wiki Version {{.version}}</a>
     </div>
 </div>
-<script type="text/javascript">
-    if (self != top) {
-        parent.location.href = "/author/index"
-    }
-</script>
-</body>

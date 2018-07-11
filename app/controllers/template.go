@@ -5,10 +5,10 @@ import (
 	"strings"
 	"github.com/astaxie/beego"
 	"mm-wiki/app/utils"
-	"fmt"
 	"time"
 	"mm-wiki/app/models"
 	"mm-wiki/app"
+	"fmt"
 )
 
 type TemplateController struct {
@@ -76,7 +76,6 @@ func (this *TemplateController) isLogin() bool {
 	cookieValue, _ := utils.Encrypt.Base64Decode(cookie)
 	identifyList := strings.Split(cookieValue, "@")
 	if cookieValue == "" || len(identifyList) != 2 {
-		fmt.Println(identifyList)
 		return false
 	}
 	username := identifyList[0]
@@ -120,7 +119,6 @@ func (this *TemplateController) checkAccess() bool {
 		if this.IsRoot() {
 			return true
 		}
-		fmt.Println(this.UserId)
 		_, controllers, err := models.PrivilegeModel.GetTypePrivilegesByUserId(this.UserId)
 		if err != nil {
 			this.ErrorLog("获取用户 "+this.UserId+" 权限失败："+err.Error())
