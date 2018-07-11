@@ -86,7 +86,7 @@ func (this *AuthController) List() {
 
 func (this *AuthController) Edit() {
 
-	authId := this.GetString("auth_id", "")
+	authId := this.GetString("login_auth_id", "")
 	if authId == "" {
 		this.ViewError("登录认证不存在", "/system/auth/list")
 	}
@@ -105,10 +105,12 @@ func (this *AuthController) Modify() {
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/auth/list")
 	}
-	authId := this.GetString("auth_id", "")
+	authId := this.GetString("login_auth_id", "")
 	name := strings.TrimSpace(this.GetString("name", ""))
 	url := strings.TrimSpace(this.GetString("url", ""))
-	sequence := strings.TrimSpace(this.GetString("sequence", ""))
+	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
+	usernameSuffix := strings.TrimSpace(this.GetString("username_suffix", ""))
+	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
 	if authId == "" {
 		this.jsonError("登录认证不存在！")
@@ -136,12 +138,14 @@ func (this *AuthController) Modify() {
 	_, err = models.AuthModel.Update(authId, map[string]interface{}{
 		"name": name,
 		"url": url,
-		"sequence": sequence,
+		"username_prefix": usernamePrefix,
+		"username_suffix": usernameSuffix,
+		"ext_data": extData,
 	})
 
 	if err != nil {
 		this.ErrorLog("修改登录认证 "+authId+" 失败：" + err.Error())
-		this.jsonError("修改登录认证"+authId+"失败")
+		this.jsonError("修改登录认证失败")
 	}
 	this.InfoLog("修改登录认证 "+authId+" 成功")
 	this.jsonSuccess("修改登录认证成功", nil, "/system/auth/list")
@@ -152,7 +156,7 @@ func (this *AuthController) Delete() {
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/auth/list")
 	}
-	authId := this.GetString("auth_id", "")
+	authId := this.GetString("login_auth_id", "")
 	if authId == "" {
 		this.jsonError("没有选择登录认证！")
 	}
@@ -181,7 +185,7 @@ func (this *AuthController) Used() {
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/auth/list")
 	}
-	authId := this.GetString("auth_id", "")
+	authId := this.GetString("login_auth_id", "")
 	if authId == "" {
 		this.jsonError("没有选择登录认证！")
 	}
