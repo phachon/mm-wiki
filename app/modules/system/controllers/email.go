@@ -170,7 +170,7 @@ func (this *EmailController) Modify() {
 	this.jsonSuccess("修改邮件服务器成功", nil, "/system/email/list")
 }
 
-func (this *EmailController) Default() {
+func (this *EmailController) Used() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/email/list")
@@ -188,7 +188,7 @@ func (this *EmailController) Default() {
 	if len(email) == 0 {
 		this.jsonError("邮件服务器不存在")
 	}
-	_, err = models.EmailModel.SetEmailDefault(emailId)
+	_, err = models.EmailModel.SetEmailUsed(emailId)
 	if err != nil {
 		this.ErrorLog("邮件服务器 "+emailId+" 启用失败: "+err.Error())
 		this.jsonError("邮件服务器启用失败")

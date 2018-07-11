@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	Email_Is_Default = 1
-	Email_No_Default = 0
+	Email_Used_True = 1
+	Email_Used_False = 0
 )
 
 const Table_Email_Name = "email"
@@ -232,18 +232,18 @@ func (u *Email) GetEmailByEmailIds(emailIds []string) (emails []map[string]strin
 	return
 }
 
-// set email default
-func (u *Email) SetEmailDefault(emailId string) (id int64, err error) {
+// set email used
+func (u *Email) SetEmailUsed(emailId string) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 
-	rs, err = db.Exec(db.AR().Update(Table_Email_Name, map[string]interface{}{"is_default": Email_No_Default}, map[string]interface{}{
-		"is_default": Email_Is_Default,
+	rs, err = db.Exec(db.AR().Update(Table_Email_Name, map[string]interface{}{"is_used": Email_Used_False}, map[string]interface{}{
+		"is_used": Email_Used_True,
 	}))
 	if err != nil {
 		return
 	}
-	rs, err = db.Exec(db.AR().Update(Table_Email_Name, map[string]interface{}{"is_default": Email_Is_Default}, map[string]interface{}{
+	rs, err = db.Exec(db.AR().Update(Table_Email_Name, map[string]interface{}{"is_used": Email_Used_True}, map[string]interface{}{
 		"email_id":   emailId,
 	}))
 	if err != nil {

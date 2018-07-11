@@ -4,12 +4,12 @@
             <div class="row">
                 <form action="" method="get">
                     <div class="col-md-2">
-                        <button type="button" name="add" data-link="/system/email/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加邮件服务器</button>
+                        <button type="button" name="add" data-link="/system/auth/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加认证</button>
                     </div>
                     <div class="col-md-7"></div>
                     <div class="col-md-3">
                         <div class="input-group">
-                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="服务器名称">
+                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="认证名称">
                             <span class="input-group-btn">
 				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
 				            </span>
@@ -24,7 +24,7 @@
                 <tr>
                     <th class="w5p">ID</th>
                     <th>名称</th>
-                    <th class="w15p">smtp服务器主机</th>
+                    <th class="w15p">smtp认证主机</th>
                     <th class="w15p">发件人邮箱</th>
                     <th class="w15p">用户名</th>
                     <th class="w15p">密码</th>
@@ -33,27 +33,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{range $email := .emails}}
+                {{range $auth := .auths}}
                 <tr>
-                    <td class="center">{{$email.email_id}}</td>
-                    <td>{{$email.name}}</td>
-                    <td>{{$email.host}}</td>
-                    <td>{{$email.sender_address}}</td>
-                    <td>{{$email.username}}</td>
-                    <td>{{$email.password}}</td>
+                    <td class="center">{{$auth.auth_id}}</td>
+                    <td>{{$auth.name}}</td>
+                    <td>{{$auth.host}}</td>
+                    <td>{{$auth.sender_address}}</td>
+                    <td>{{$auth.username}}</td>
+                    <td>{{$auth.password}}</td>
                     <td class="center">
-                    {{if eq $email.is_used "1"}}
+                    {{if eq $auth.is_default "1"}}
                     <span class="label label-success">是</span>
                     {{else}}
                     <span class="label label-danger">否</span>
                     {{end}}
                     </td>
                     <td class="center">
-                        <a name="edit" data-link="/system/email/edit?email_id={{$email.email_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
-                        {{if eq $email.is_used "1"}}{{else}}
-                            <a onclick="Layers.confirm('确定要启用该邮件服务器吗？', '/system/email/used?email_id={{$email.email_id}}');"><i class="glyphicon glyphicon-ok-circle"></i>启用</a>
+                        <a name="edit" data-link="/system/auth/edit?auth_id={{$auth.auth_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                        {{if eq $auth.is_default "1"}}{{else}}
+                            <a onclick="Layers.confirm('确定要启用该邮件认证吗？', '/system/auth/default?auth_id={{$auth.auth_id}}');"><i class="glyphicon glyphicon-ok-circle"></i>启用</a>
                         {{end}}
-                        <a onclick="Layers.confirm('确定删除吗？', '/system/email/delete?email_id={{$email.email_id}}');"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/auth/delete?auth_id={{$auth.auth_id}}');"><i class="glyphicon glyphicon-trash"></i>删除</a>
                     </td>
                 </tr>
                 {{end}}
@@ -65,6 +65,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    Layers.bindIframe("button[name='add']", "添加邮件服务器", "500px", "900px");
-    Layers.bindIframe("[name='edit']", "修改邮件服务器", "500px", "900px");
+    Layers.bindIframe("button[name='add']", "添加登录认证", "400px", "900px");
+    Layers.bindIframe("[name='edit']", "修改登录认证", "500px", "900px");
 </script>
