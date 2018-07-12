@@ -261,6 +261,25 @@ func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err err
 	return
 }
 
+// get document count
+func (d *Document) CountDocuments() (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_Document_Name).
+			Where(map[string]interface{}{
+			"is_delete": Document_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
 // get document by name
 func (d *Document) GetDocumentsByLikeName(name string) (documents []map[string]string, err error) {
 	db := G.DB()

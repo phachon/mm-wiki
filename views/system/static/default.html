@@ -10,54 +10,14 @@
                                 <i class="fa fa-x fa-user-circle fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge" id="group_count_text">100</div>
-                                <div>用户总数</div>
+                                <div class="huge" id="group_count_text">{{.normalUserCount}}</div>
+                                <div>正常用户数</div>
                             </div>
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <span class="pull-left text-primary"><strong>用户</strong></span>
-                        <span class="pull-right"><a href="/user/index" class="text-primary" target="_parent"><i class="glyphicon glyphicon-hand-right"></i> 查看</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-yellow">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-x fa-cube fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge" id="project_count_text">10</div>
-                                <div>空间总数</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <span class="pull-left text-warning"><strong>空间</strong></span>
-                        <span class="pull-right"><a href="/space/index" class="text-warning" target="_parent"><i class="glyphicon glyphicon-hand-right"></i> 查看</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-x fa-file-word-o fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge" id="success_publish_text">200</div>
-                                <div>文档总数</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <span class="pull-left text-success"><strong>文档</strong></span>
-                        <span class="pull-right text-success"></span>
+                        <span class="pull-left text-primary"><strong>正常用户</strong></span>
+                        <span class="pull-right text text-primary"><i class="glyphicon glyphicon-ok"></i></span>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -70,14 +30,54 @@
                                 <i class="fa fa-x fa-lightbulb-o fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge" id="failed_publish_text"></div>
-                                <div>失败次数</div>
+                                <div class="huge" id="failed_publish_text">{{.forbiddenUserCount}}</div>
+                                <div>屏蔽用户数</div>
                             </div>
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <span class="pull-left text-danger"><strong>发布失败</strong></span>
+                        <span class="pull-left text-danger"><strong>屏蔽用户</strong></span>
                         <span class="pull-right text-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-cube fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="project_count_text">{{.spaceCount}}</div>
+                                <div>空间数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-warning"><strong>空间</strong></span>
+                        <span class="pull-right text-warning"><i class="fa fa-cube"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-file-word-o fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="success_publish_text">{{.documentCount}}</div>
+                                <div>文档数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-success"><strong>文档</strong></span>
+                        <span class="pull-right text-success"><i class="fa fa-file-word-o"></i></span>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> <strong>文档数量增长趋势(天)</strong> </div>
+                    <div class="panel-heading"> <strong><i class="fa fa-line-chart"></i> 文档数量增长趋势(天)</strong> </div>
                     <div class="panel-body">
                         <div id="docs-line"></div>
                     </div>
@@ -96,7 +96,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> <strong>空间文档数排行</strong> </div>
+                    <div class="panel-heading"> <strong><i class="fa fa-bar-chart"></i> 空间文档数排行</strong> </div>
                     <div class="panel-body">
                         <div id="space-docs-rank"></div>
                     </div>
@@ -104,7 +104,7 @@
             </div>
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> <strong>空间文档数占比</strong> </div>
+                    <div class="panel-heading"> <strong><i class="fa fa-pie-chart"></i> 空间文档数占比</strong> </div>
                     <div class="panel-body">
                         <div id="space-docs-percent"></div>
                     </div>
@@ -114,37 +114,32 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> <strong>当天文档数据统计</strong></div>
+                    <div class="panel-heading"> <strong>社交数据统计</strong></div>
                     <div class="panel-body">
                         <br>
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <td><strong>统计项目</strong></td>
-                                {{/*<td><strong>今日</strong></td>*/}}
-                                <td><strong>昨日</strong></td>
+                                <td><strong>统计值</strong></td>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td><strong>新增文档</strong></td>
+                                <td><strong>收藏最多文档</strong></td>
                                 <td data-name="today_task_total">0</td>
-                                <td data-name="yesterday_task_total">0</td>
                             </tr>
                             <tr>
                                 <td><strong>修改文档</strong></td>
                                 <td data-name="today_user_total"></td>
-                                <td data-name="yesterday_user_total">0</td>
                             </tr>
                             <tr>
                                 <td><strong>修改文档</strong></td>
                                 <td data-name="today_success_node">0</td>
-                                <td data-name="yesterday_success_node">0</td>
                             </tr>
                             <tr>
                                 <td><strong>修改文档</strong></td>
                                 <td data-name="today_failed_node">0</td>
-                                <td data-name="yesterday_failed_node">0</td>
                             </tr>
                             </tbody>
                         </table>

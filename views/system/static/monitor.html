@@ -1,0 +1,150 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-blue">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-user-circle fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="group_count_text"></div>
+                                <div>正常用户数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-primary"><strong>正常用户</strong></span>
+                        <span class="pull-right text text-primary"><i class="glyphicon glyphicon-ok"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-lightbulb-o fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="failed_publish_text"></div>
+                                <div>屏蔽用户数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-danger"><strong>屏蔽用户</strong></span>
+                        <span class="pull-right text-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-cube fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="project_count_text"></div>
+                                <div>空间数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-warning"><strong>空间</strong></span>
+                        <span class="pull-right text-warning"><i class="fa fa-cube"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-x fa-file-word-o fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge" id="success_publish_text"></div>
+                                <div>文档数</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <span class="pull-left text-success"><strong>文档</strong></span>
+                        <span class="pull-right text-success"><i class="fa fa-file-word-o"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>服务器状态</strong></div>
+                    <div class="panel-body">
+                        <br>
+                        <p> CPU使用率：<strong class="cpu_text">0%</strong></p>
+                        <div class="progress" style="height: 14px">
+                            <div id="cpu_progress" class="progress-bar progress-bar-success progress-bar-striped active"
+                                 role="progressbar"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 style="min-width: 2em; width: 0">
+                                <div style="font-size:10px;line-height:14px;" class="cpu_text"> 0%</div>
+                            </div>
+                        </div>
+                        <p>磁盘使用率：<strong class="disk_text">0%</strong></p>
+                        <div class="progress" style="height: 14px">
+                            <div id="disk_progress" class="progress-bar progress-bar-warning progress-bar-striped active"
+                                 role="progressbar"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 style="width: 60%">
+                                <div style="font-size:10px;line-height:14px;" class="disk_text"> 0%</div>
+                            </div>
+                        </div>
+                        <p>内存使用率：<strong class="memory_text">0%</strong></p>
+                        <div class="progress" style="height: 14px">
+                            <div id="memory_progress" class="progress-bar progress-bar-danger progress-bar-striped active"
+                                 role="progressbar"
+                                 aria-valuenow="0"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 style="width: 80%">
+                                <div style="font-size:10px;line-height:14px;" class="memory_text"> 0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default" style="height: 269px;" >
+                    <div class="panel-heading"><strong>系统联系人手册</strong></div>
+                    <div class="panel-body" style="height: 223px; overflow-y:scroll;">
+                        <ul class="list-group" id="contact">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" src="/static/js/modules/system/statics.js"></script>
+<script type="text/javascript">
+    $(window).load(function(){
+        Statics.GetDocCountByTime("docs-line", "/system/static/docCountByTime");
+        Statics.GetSpaceDocsRank("space-docs-rank", "space-docs-percent", "/system/static/spaceDocsRank");
+        Statics.GetServerStatus("/system/static/serverStatus");
+        setInterval('Statics.GetServerStatus("/system/static/serverStatus")', 2000);
+    });
+</script>

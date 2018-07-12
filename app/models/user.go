@@ -231,6 +231,46 @@ func (u *User) CountUsers() (count int64, err error) {
 	return
 }
 
+// get normal user count
+func (u *User) CountNormalUsers() (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_User_Name).
+			Where(map[string]interface{}{
+			"is_forbidden": User_Is_Forbidden_False,
+			"is_delete": User_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
+// get forbidden user count
+func (u *User) CountForbiddenUsers() (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_User_Name).
+			Where(map[string]interface{}{
+			"is_forbidden": User_Forbidden_True,
+			"is_delete": User_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
 // get user count by keyword
 func (u *User) CountUsersByKeywords(keywords map[string]string) (count int64, err error) {
 
