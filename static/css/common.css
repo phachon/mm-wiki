@@ -222,6 +222,82 @@ select.input-xs {
     margin-bottom: 8px;
 }
 
+
+/* fast-link */
+.fast-link {
+    padding: 10px 20px 10px 20px;
+}
+
+.panel-green {
+    line-height: normal;
+    border-color: #00a65a;
+}
+
+.panel-green > .panel-heading {
+    color: #fff;
+    background-color: #00a65a;
+    border-color: #00a65a;
+}
+
+.panel-yellow {
+    line-height: normal;
+    border-color: #f39c12;
+}
+
+.panel-yellow > .panel-heading {
+    color: #fff;
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.panel-red {
+    line-height: normal;
+    border-color: #dd4b39;
+}
+
+.panel-red > .panel-heading {
+    color: #fff;
+    background-color: #dd4b39;
+    border-color: #dd4b39;
+}
+
+.panel-blue {
+    line-height: normal;
+    border-color: #0178bc;
+}
+
+.panel-blue > .panel-heading {
+    color: #fff;
+    background-color: #0178bc;
+    border-color: #0178bc;
+}
+
+.panel-purple {
+    line-height: normal;
+    border-color: #7044a6;
+}
+
+.panel-purple > .panel-heading {
+    color: #fff;
+    background-color: #7044a6;
+    border-color: #7044a6;
+}
+
+.panel-grey {
+    line-height: normal;
+    border-color: #eee;
+}
+
+.panel-grey > .panel-heading {
+    color: #000;
+    background-color: #eee;
+    border-color: #eee;
+}
+
+.huge {
+    font-size: 30px;
+}
+
 /*width 按百分比*/
 .w5p{width:5%;}
 .w6p{width:6%;}

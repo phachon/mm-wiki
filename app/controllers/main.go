@@ -82,11 +82,26 @@ func (this *MainController) Default() {
 		}
 	}
 
+	// link
+	links, err := models.LinkModel.GetLinks()
+	if err != nil {
+		this.ErrorLog("查找快速链接失败："+err.Error())
+		this.ViewError("查找快速链接失败！")
+	}
+	// contacts
+	contacts, err := models.ContactModel.GetAllContact()
+	if err != nil {
+		this.ErrorLog("查找快速链接失败："+err.Error())
+		this.ViewError("查找快速链接失败！")
+	}
+
 	title := beego.AppConfig.String("panel::title")
 	description := beego.AppConfig.String("panel::description")
 	this.Data["panel_title"] = title
 	this.Data["panel_description"] = description
 	this.Data["logDocuments"] = logDocuments
+	this.Data["links"] = links
+	this.Data["contacts"] = contacts
 	this.SetPaginator(number, count)
 	this.viewLayout("main/default", "default")
 }

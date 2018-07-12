@@ -22,13 +22,15 @@ func (this *AuthController) Save() {
 	name := strings.TrimSpace(this.GetString("name", ""))
 	url := strings.TrimSpace(this.GetString("url", ""))
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
-	usernameSuffix := strings.TrimSpace(this.GetString("username_suffix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 	if name == "" {
 		this.jsonError("登录认证名称不能为空！")
 	}
 	if url == "" {
 		this.jsonError("登录认证地址不能为空！")
+	}
+	if usernamePrefix == "" {
+		this.jsonError("用户名前缀不能为空！")
 	}
 
 	ok, err := models.AuthModel.HasAuthName(name)
@@ -37,14 +39,22 @@ func (this *AuthController) Save() {
 		this.jsonError("添加登录认证失败！")
 	}
 	if ok {
-		this.jsonError("登录认证名已经存在！")
+		this.jsonError("登录认证名称已经存在！")
+	}
+
+	ok, err = models.AuthModel.HasAuthUsernamePrefix(usernamePrefix)
+	if err != nil {
+		this.ErrorLog("添加登录认证失败："+err.Error())
+		this.jsonError("添加登录认证失败！")
+	}
+	if ok {
+		this.jsonError("用户名前缀已经存在！")
 	}
 
 	authId, err := models.AuthModel.Insert(map[string]interface{}{
 		"name": name,
 		"url": url,
 		"username_prefix": usernamePrefix,
-		"username_suffix": usernameSuffix,
 		"ext_data": extData,
 	})
 
@@ -109,7 +119,6 @@ func (this *AuthController) Modify() {
 	name := strings.TrimSpace(this.GetString("name", ""))
 	url := strings.TrimSpace(this.GetString("url", ""))
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
-	usernameSuffix := strings.TrimSpace(this.GetString("username_suffix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
 	if authId == "" {
@@ -120,6 +129,9 @@ func (this *AuthController) Modify() {
 	}
 	if url == "" {
 		this.jsonError("登录认证地址不能为空！")
+	}
+	if usernamePrefix == "" {
+		this.jsonError("用户名前缀不能为空！")
 	}
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)
@@ -133,13 +145,17 @@ func (this *AuthController) Modify() {
 
 	ok , _ := models.AuthModel.HasSameName(authId, name)
 	if ok {
-		this.jsonError("登录认证名已经存在！")
+		this.jsonError("登录认证名称已经存在！")
 	}
+	ok , _ = models.AuthModel.HasSameUsernamePrefix(authId, usernamePrefix)
+	if ok {
+		this.jsonError("用户名前缀已经存在！")
+	}
+
 	_, err = models.AuthModel.Update(authId, map[string]interface{}{
 		"name": name,
 		"url": url,
 		"username_prefix": usernamePrefix,
-		"username_suffix": usernameSuffix,
 		"ext_data": extData,
 	})
 

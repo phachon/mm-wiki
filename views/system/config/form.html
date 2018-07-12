@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <br>
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" action="/system/config/modify">
+                <input type="hidden" name="config_id" value="">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>主页标题</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" value="" placeholder="请输入主页标题">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>主页描述</label>
+                    <div class="col-sm-4">
+                        <textarea name="module" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启自动关注</label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" name="is_display" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启邮件通知</label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" name="is_display" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启统一登录</label>
+                    <div class="col-sm-4">
+                        <input type="checkbox" name="is_display" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, false);" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("input[name='is_display']").bootstrapSwitch({
+            size: 'small',
+            onText: '是',
+            offText: '否'
+        });
+    });
+</script>

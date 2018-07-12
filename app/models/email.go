@@ -94,11 +94,24 @@ func (u *Email) Delete(emailId string) (err error) {
 
 // insert email
 func (u *Email) Insert(emailValue map[string]interface{}) (id int64, err error) {
-
-	emailValue["create_time"] = time.Now().Unix()
-	emailValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
+
+	// is_used
+	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
+		"is_used":  Email_Used_True,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	if rs.Len() == 0 {
+		emailValue["is_used"] = Email_Used_True
+	}else {
+		emailValue["is_used"] = Email_Used_False
+	}
+	emailValue["create_time"] = time.Now().Unix()
+	emailValue["update_time"] = time.Now().Unix()
+
 	rs, err = db.Exec(db.AR().Insert(Table_Email_Name, emailValue))
 	if err != nil {
 		return

@@ -1,0 +1,58 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <a name="add" data-link="/system/contact/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加联系人 </a>
+                    </div>
+                </div>
+                <form action="" method="get">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="w5p">ID</th>
+                    <th class="w10p">姓名</th>
+                    <th class="w11p">职位</th>
+                    <th class="w9p">联系电话</th>
+                    <th class="w13p">邮箱</th>
+                    <th class="w10p">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $contact := .contacts}}
+                <tr>
+                    <td class="center">{{$contact.contact_id}}</td>
+                    <td>{{$contact.name}}</td>
+                    <td class="center">{{$contact.position}}</td>
+                    <td class="center">{{$contact.mobile}}</td>
+                    <td class="center">{{$contact.email}}</td>
+                    <td class="center">
+                        <a name="edit" data-link="/system/contact/edit?contact_id={{$contact.contact_id}}"><i class="glyphicon glyphicon-edit" ></i>修改</a>
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/contact/delete?contact_id={{$contact.contact_id}}');"><i class="glyphicon glyphicon-trash"></i>删除</a>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+            <div class="panel-footer"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='add']", "添加系统联系人", "400px", "850px");
+    Layers.bindIframe("[name='edit']", "修改系统联系人", "400px", "850px");
+</script>

@@ -320,3 +320,42 @@ func (d *Document) GetParentDocumentsByPath(path string) (parentDocuments []map[
 	}
 	return
 }
+
+func (d *Document) GetSpaceIdsOrderByCountDocumentLimit(limit int) (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("space_id, count('space_id') as total").
+		From(Table_Document_Name).Where(map[string]interface{}{
+			"is_delete": Document_Delete_False,
+		}).
+		GroupBy("space_id").
+		OrderBy("total", "DESC").
+		Limit(0, limit)
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+func (d *Document) GetCountGroupByCreateTime() (documents []map[string]string, err error) {
+	/*select month(FROM_UNIXTIME(time)) from table_name group by month(FROM_UNIXTIME(time))*/
+
+	/*select DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m") from tcm_fund_list group by DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m")*/
+	/*select FROM_UNIXTIME(time,"%Y-%m") from tcm_fund_list group by FROM_UNIXTIME(time,"%Y-%m")*/
+
+	/*select DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m-%d") from tcm_fund_list group by DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m-%d")*/
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d') as date, count('date') as total").
+		From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete": Document_Delete_False,
+	}).GroupBy("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d')")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}

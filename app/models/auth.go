@@ -50,12 +50,45 @@ func (u *Auth) HasSameName(authId, name string) (has bool, err error) {
 	return
 }
 
+// auth_id and name is exists
+func (u *Auth) HasSameUsernamePrefix(authId, usernamePrefix string) (has bool, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
+		"login_auth_id <>": authId,
+		"username_prefix": usernamePrefix,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	if rs.Len() > 0 {
+		has = true
+	}
+	return
+}
+
 // name is exists
 func (u *Auth) HasAuthName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
 		"name":  name,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	if rs.Len() > 0 {
+		has = true
+	}
+	return
+}
+
+// name is exists
+func (u *Auth) HasAuthUsernamePrefix(usernamePrefix string) (has bool, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
+		"username_prefix":  usernamePrefix,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -94,16 +127,30 @@ func (u *Auth) Delete(authId string) (err error) {
 
 // insert auth
 func (u *Auth) Insert(authValue map[string]interface{}) (id int64, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+
+	// is_used
+	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
+		"is_used":  Auth_Used_True,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	if rs.Len() == 0 {
+		authValue["is_used"] = Auth_Used_True
+	}else {
+		authValue["is_used"] = Auth_Used_False
+	}
 
 	authValue["create_time"] = time.Now().Unix()
 	authValue["update_time"] = time.Now().Unix()
-	db := G.DB()
-	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Auth_Name, authValue))
 	if err != nil {
 		return
 	}
 	id = rs.LastInsertId
+
 	return
 }
 

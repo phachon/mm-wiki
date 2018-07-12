@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div id="failedBox" class="hide"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br>{{$contact := .contact}}
+            <form class="form-horizontal" method="post" action="{{if $contact}} /system/contact/modify {{else}} /system/contact/save {{end}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 姓名 </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" value="{{$contact.name}}" placeholder="请输入联系人姓名" required>
+                    </div>
+                </div>
+                <input type="hidden" name="contact_id" class="form-control" value="{{$contact.contact_id}}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 职位 </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="position" class="form-control" value="{{$contact.position}}" placeholder="请输入联系人职位" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 电话 </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="mobile" class="form-control" value="{{$contact.mobile}}" placeholder="请输入联系电话" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 邮箱 </label>
+                    <div class="col-sm-4">
+                        <input type="text" name="email" class="form-control" value="{{$contact.email}}" placeholder="请输入联系人邮箱" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Form.ajaxSubmit(this.form, true)" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

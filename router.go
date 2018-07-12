@@ -41,6 +41,9 @@ func initRouter() {
 		beego.NSAutoRouter(&systemControllers.EmailController{}),
 		beego.NSAutoRouter(&systemControllers.LinkController{}),
 		beego.NSAutoRouter(&systemControllers.AuthController{}),
+		beego.NSAutoRouter(&systemControllers.ConfigController{}),
+		beego.NSAutoRouter(&systemControllers.ContactController{}),
+		beego.NSAutoRouter(&systemControllers.StaticController{}),
 	)
 	beego.AddNamespace(systemNamespace)
 

@@ -9,7 +9,7 @@
         </div>{{$logDocuments := .logDocuments}}
         <div class="col-md-7">
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>文档最近更新</strong></div>
+                <div class="panel-heading"><strong><i class="fa fa-file-word-o"></i>  最近更新文档</strong></div>
                 <div class="panel-body" style="min-height: 550px">
                     <div class="document-update">
                         <ul>
@@ -43,39 +43,27 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="panel panel-default" style="height: 320px">
-                <div class="panel-heading"><strong>快速链接</strong></div>
+            <div class="panel panel-default" style="min-height: 300px">
+                <div class="panel-heading"><strong><i class="fa fa-internet-explorer"></i> 快速链接</strong></div>
                 <div class="panel-body">
-                    <div class="alert alert-info alert-dismissible fade in" role="alert" style="padding: 10px 10px;margin-bottom: 10px;">
-                        <p>
-                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-                            <strong>公告内容：公告内容公告内容公告内容</strong>
-                        </p>
-                    </div>
-                    <div class="alert alert-info alert-dismissible fade in" role="alert" style="padding: 10px 10px;margin-bottom: 10px;">
-                        <p>
-                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-                            <strong>公告内容：公告内容公告内容公告内容</strong>
-                        </p>
-                    </div>
-                    <div class="alert alert-info alert-dismissible fade in" role="alert" style="padding: 10px 10px;margin-bottom: 10px;">
-                        <p>
-                            <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-                            <strong>公告内容：公告内容公告内容公告内容</strong>
-                        </p>
+                    <div class="row">
+                        {{range $link := .links}}
+                        <div class="col-md-6 fast-link">
+                            <label> <a href="{{$link.url}}" target="_blank"><i class="fa fa-angle-double-right fa-lg"></i> {{$link.name}} <i class="fa fa-external-link"></i></a></label>
+                        </div>
+                        {{end}}
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-5" >
-            <div class="panel panel-default" style="height: 315px">
-                <div class="panel-heading"><strong>系统联系手册</strong></div>
+            <div class="panel panel-default" style="min-height: 300px">
+                <div class="panel-heading"><strong><i class="fa fa-address-book-o"></i> 系统联系人</strong></div>
                 <div class="panel-body">
                     <ul class="list-group">
-                        <li class="list-group-item">技术：<span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;13245676543&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;phachon@163.com</li>
-                        <li class="list-group-item">运维：<span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;13245676543&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;phachon@163.com</li>
-                        <li class="list-group-item">产品：<span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;13245676543&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;phachon@163.com</li>
-                        <li class="list-group-item">技术：<span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;13245676543&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;phachon@163.com</li>
+                        {{range $contact := .contacts}}
+                        <li class="list-group-item">{{$contact.position}}({{$contact.name}})：<i class="glyphicon glyphicon-phone"></i>{{$contact.mobile}} <i class="glyphicon glyphicon-envelope"></i> {{$contact.email}}</li>
+                        {{end}}
                     </ul>
                 </div>
             </div>

@@ -6,33 +6,33 @@
             <form class="form-horizontal" method="post" action="{{if $auth}} /system/auth/modify {{else}} /system/auth/save {{end}}">
                 <input type="hidden" name="login_auth_id" value="{{$auth.login_auth_id}}">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 名称</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 认证名称</label>
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" placeholder="请输入登录认证名称" value="{{$auth.name}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> URL</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名前缀</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="username_prefix" class="form-control" placeholder="请输入用户名前缀（如：ldap）" value="{{$auth.username_prefix}}">
+                    </div>
+                    <div class="col-sm-2 form-comment">
+                        <span class="text-danger"> * 数字或字母组成</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 认证URL</label>
                     <div class="col-sm-5">
                         <input type="text" name="url" class="form-control" placeholder="请输入登录认证接口" value="{{$auth.url}}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 额外数据</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 扩展数据</label>
                     <div class="col-sm-5">
-                        <input type="text" name="ext_data" class="form-control" placeholder="请输入登录认证接口额外数据：a=b&d=c" value="{{$auth.ext_data}}">
+                        <input type="text" name="ext_data" class="form-control" placeholder="请输入登录认证接口需要的扩展数据" value="{{$auth.ext_data}}">
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 用户名前缀</label>
-                    <div class="col-sm-5">
-                        <input type="text" name="username_prefix" class="form-control" placeholder="请输入登录用户名前缀" value="{{$auth.username_prefix}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"></span> 用户名后缀</label>
-                    <div class="col-sm-5">
-                        <input type="text" name="username_suffix" class="form-control" placeholder="请输入登录用户名后缀" value="{{$auth.username_suffix}}">
+                    <div class="col-sm-2 form-comment">
+                        <span class="text-danger"> * 格式：a=b&d=c</span>
                     </div>
                 </div>
                 <div class="form-group">

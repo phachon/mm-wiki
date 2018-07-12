@@ -248,7 +248,6 @@ CREATE TABLE `mw_login_auth` (
   `login_auth_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '认证表主键ID',
   `name` varchar(30) NOT NULL COMMENT '登录认证名称',
   `username_prefix` varchar(30) NOT NULL COMMENT '用户名前缀',
-  `username_suffix` varchar(30) NOT NULL COMMENT '用户名后缀',
   `url` varchar(200) NOT NULL COMMENT '认证接口 url',
   `ext_data` char(100) NOT NULL DEFAULT '' COMMENT '额外数据: token=aaa&key=bbb',
   `is_used` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被使用， 0 默认不使用 1 使用',
@@ -259,22 +258,23 @@ CREATE TABLE `mw_login_auth` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一登录认证表';
 
 -- --------------------------------
--- 配置表
+-- 全局配置表
 -- --------------------------------
 DROP TABLE IF EXISTS `mw_config`;
 CREATE TABLE `mw_config` (
   `config_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '配置表主键Id',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '配置名称',
   `key` char(50) NOT NULL DEFAULT '' COMMENT '配置键',
-  `value` text NOT NULL DEFAULT '' COMMENT '配置值',
+  `value` text NOT NULL COMMENT '配置值',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '是否删除，0 否 1 是',
   PRIMARY KEY (`config_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置表';
 
-INSERT INTO `mw_config` VALUES ('1', '是否开启邮件通知', 'email_open', '', '1500825600', '1500825600', '0');
-INSERT INTO `mw_config` VALUES ('2', '是否开启统一登录', 'SSO_open', '', '1500825600', '1500825600', '0');
+INSERT INTO `mw_config` VALUES ('1', '主页标题', 'main_title', '这里可以填写公司名称，例如：欢迎来到 XXXX 科技公司 wiki 平台！', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('2', '主页描述', 'main_description', '这是写一些描述：请使用域账号登录，使用中有任何问题请联系管理员 root@xxx.com！', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('3', '是否开启邮件通知', 'email_open', '', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('4', '是否开启统一登录', 'SSO_open', '', '1531365619', '1531365619');
 
 -- --------------------------------
 -- 系统联系人表
@@ -283,8 +283,7 @@ DROP TABLE IF EXISTS `mw_contact`;
 CREATE TABLE `mw_contact` (
   `contact_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '联系人 id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '联系人名称',
-  `telephone` char(13) NOT NULL DEFAULT '' COMMENT '联系人座机电话',
-  `mobile` char(13) NOT NULL DEFAULT '' COMMENT '联系人手机',
+  `mobile` char(13) NOT NULL DEFAULT '' COMMENT '联系电话',
   `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
   `position` varchar(100) NOT NULL DEFAULT '' COMMENT '联系人职位',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
