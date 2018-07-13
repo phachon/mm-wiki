@@ -11,6 +11,7 @@ import (
 	"github.com/fatih/color"
 	"mm-wiki/app/models"
 	"path/filepath"
+	"time"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 
 var (
 	Version = "v0.1"
+	StartTime = int64(0)
 )
 
 func init() {
@@ -26,6 +28,7 @@ func init() {
 	initConfig()
 	initDB()
 	initDocumentDir()
+	StartTime = time.Now().Unix()
 }
 
 // poster logo

@@ -187,21 +187,13 @@ var Statics = {
                 _seconds.animate({transform: "r" + second * 6 + "," + 80 + "," + 80}, 500, mina.elastic);
             }
         };
-        var updateSeconds = function(_clock, _seconds){
-            var currentTime, second;
-            currentTime = new Date();
-            second = currentTime.getSeconds();
 
-            if(second == 0){
-                //got to 360deg at 60s
-                second = 60;
-            }else if(second == 1 && _seconds){
-                //reset rotation transform(going from 360 to 6 deg)
-                _seconds.attr({transform: "r" + 0 + "," + 80 + "," + 80});
-            }
-            if(_seconds){
-                _seconds.attr({transform: "r" + second * 6 + "," + 80 + "," + 80});
-            }
+        var updateRuntime = function (runTime) {
+            var timeRes = Common.secondsFormat(runTime);
+            $("#run-days").text(timeRes.d);
+            $("#run-hours").text(timeRes.h);
+            $("#run-minutes").text(timeRes.m);
+            $("#run-seconds").text(timeRes.s);
         };
 
         function getServerTime(url) {
@@ -211,8 +203,11 @@ var Statics = {
                 data : {},
                 dataType: "json",
                 success : function(response) {
-                    console.log(response.data.server_time)
+                    // console.log(response.data.server_time);
+                    // update lock time
                     updateTime(response.data.server_time, clock4, hours4, minutes4, seconds4);
+                    // update run time
+                    updateRuntime(response.data.run_time);
                 },
                 error : function(response) {
                     console.log("request error")
@@ -222,10 +217,8 @@ var Statics = {
 
         getServerTime(url);
 
-        // update the clocks
         setInterval(function(){
             getServerTime(url);
-            // updateTime(clock4, hours4, minutes4, seconds4);
         }, 1000);
     }
 };

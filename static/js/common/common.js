@@ -91,5 +91,31 @@ var Common = {
 		$(element).append('<strong><i class="glyphicon glyphicon-volume-up"></i> 警告：</strong>');
 		$(element).append(message);
 		$(element).show();
+	},
+
+    secondsFormat: function (s) {
+		var day = Math.floor( s/ (24*3600) ); // Math.floor()向下取整
+		var hour = Math.floor( (s - day*24*3600) / 3600);
+		var minute = Math.floor( (s - day*24*3600 - hour*3600) /60 );
+		var second = s - day * 24 * 3600 - hour * 3600 - minute * 60;
+
+		function formatStr(t) {
+			if (parseInt(t) <= 0) {
+				return "00"
+			}
+			if (0 < parseInt(t) && parseInt(t) < 10) {
+				return "0"+t.toString()
+			}
+			return t
+        }
+
+		var timeRes = {
+			d: formatStr(day),
+			h: formatStr(hour),
+			m: formatStr(minute),
+			s: formatStr(second)
+		};
+
+		return timeRes
 	}
 };

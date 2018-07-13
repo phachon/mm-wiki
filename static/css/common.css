@@ -298,6 +298,44 @@ select.input-xs {
     font-size: 30px;
 }
 
+.metric-text {
+    text-align: center;
+    font-weight: 300;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 100px auto;
+    font-size: 90px
+}
+
+ul.countdown {
+    list-style: none;
+    margin: 39px 0;
+    padding: 0;
+    display: block;
+    text-align: center;
+}
+
+ul.countdown li {
+    display: inline-block;
+}
+
+ul.countdown li span {
+    font-size: 80px;
+    font-weight: 300;
+    line-height: 80px;
+}
+
+ul.countdown li.seperator {
+    font-size: 80px;
+    line-height: 70px;
+    vertical-align: top;
+}
+
+ul.countdown li p {
+    color: #a7abb1;
+    font-size: 14px;
+}
+
 /*width 按百分比*/
 .w5p{width:5%;}
 .w6p{width:6%;}

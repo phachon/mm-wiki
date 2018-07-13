@@ -14,37 +14,93 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong><i class="fa fa-pie-chart"></i> 磁盘使用率</strong></div>
+                    <div class="panel-heading"><strong><i class="fa fa-calendar"></i> 系统已正常运行</strong></div>
                     <div class="panel-body">
-                        <div id="disk-percent"></div>
+                        <div id="system-runtime">
+                            <ul class="countdown">
+                                <li>
+                                    <span class="days number-roll" id="run-days">00</span>
+                                    <p class="days_ref">Days</p>
+                                </li>
+                                <li class="seperator">.</li>
+                                <li>
+                                    <span class="hours number-roll" id="run-hours">00</span>
+                                    <p class="hours_ref">Hours</p>
+                                </li>
+                                <li class="seperator">:</li>
+                                <li>
+                                    <span class="minutes number-roll" id="run-minutes">00</span>
+                                    <p class="minutes_ref">Minutes</p>
+                                </li>
+                                <li class="seperator">:</li>
+                                <li>
+                                    <span class="seconds number-roll" id="run-seconds">00</span>
+                                    <p class="seconds_ref">Seconds</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong><i class="fa fa-pie-chart"></i> 内存使用率</strong></div>
+                    <div class="panel-heading"><strong><i class="fa fa-pie-chart"></i> 系统错误日志数（<a href="/system/log/system?level=3">查看</a>）</strong></div>
                     <div class="panel-body">
-                        <div id="mem-percent"></div>
+                        <div class="metric-text number-roll">
+                        {{.errorLogCount}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong><i class="fa fa-pie-chart"></i> 系统最近错误日志（<a href="/system/log/system?level=3">查看更多</a>）</strong></div>
+                    <div class="panel-body" style="height: 240px;overflow-y: auto">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <td class="w15p"><strong>用户</strong></td>
+                                <td><strong>错误描述</strong></td>
+                                <td class="w15p center"><strong>时间</strong></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{range $errLog:= .errLogs}}
+                            <tr>
+                                <td>{{$errLog.username}}</td>
+                                <td>{{$errLog.message}}</td>
+                                <td class="center">{{dateFormat $errLog.create_time "m-d H:i"}}</td>
+                            </tr>
+                            {{end}}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="panel panel-default" style="height: 269px;" >
-                    <div class="panel-heading"><strong>系统服务器信息</strong></div>
-                    <div class="panel-body" style="height: 223px; overflow-y:scroll;">
-                        <ul class="list-group" id="contact">
-
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong><i class="fa fa-server"></i> 服务器版本信息</strong></div>
+                    <div class="panel-body">
+                        <br>
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="fa fa-globe fa-fw"></i> IP：{{.serverInfo.localIp}}</li>
+                            <li class="list-group-item"><i class="fa fa-user-circle-o fa-fw"></i> 主机名：{{.serverInfo.hostname}}</li>
+                            <li class="list-group-item"><i class="fa fa-desktop fa-fw"></i> 操作系统：{{.serverInfo.os}}</li>
+                            <li class="list-group-item"><i class="fa fa-flag fa-fw"></i> 系统版本：{{.serverInfo.platform}}</li>
+                            <li class="list-group-item"><i class="fa fa-flag-checkered fa-fw"></i> 版本家族：{{.serverInfo.platformFamily}}</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong>系统服务器状态</strong></div>
+                    <div class="panel-heading"><strong><i class="fa fa-align-left"></i> 服务器状态</strong></div>
                     <div class="panel-body">
                         <br>
                         <p> CPU使用率：<strong class="cpu_text">0%</strong></p>
@@ -80,6 +136,7 @@
                                 <div style="font-size:10px;line-height:14px;" class="memory_text"> 0%</div>
                             </div>
                         </div>
+                        <br>
                     </div>
                 </div>
             </div>
@@ -90,9 +147,29 @@
 <script type="text/javascript" src="/static/plugins/clock/js/snap.svg-min.js"></script>
 <script type="text/javascript" src="/static/js/modules/system/statics.js"></script>
 <script type="text/javascript">
+    Statics.GetServerStatus("/system/static/serverStatus");
+    Statics.GetServerTime("serverTime", "/system/static/serverTime");
     $(window).load(function(){
-        Statics.GetServerStatus("/system/static/serverStatus");
-        Statics.GetServerTime("serverTime", "/system/static/serverTime");
+        // number roll
+        $('.number-roll').each(function(){
+            $(this).prop('Counter', 0).animate({
+                Counter: $(this).text()
+            },{
+                duration: 1000,
+                easing: 'swing',
+                step: function (now){
+                    var t = Math.ceil(now);
+                    var tStr = t.toString();
+                    if (parseInt(t) <= 0) {
+                        tStr = "00"
+                    }
+                    if (0 < parseInt(t) && parseInt(t) < 10) {
+                        tStr = "0"+t.toString()
+                    }
+                    $(this).text(tStr);
+                }
+            });
+        });
         setInterval('Statics.GetServerStatus("/system/static/serverStatus")', 2000);
     });
 </script>

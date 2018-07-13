@@ -6,6 +6,10 @@ import (
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/mem"
 	"time"
+	"github.com/shirou/gopsutil/host"
+	"mm-wiki/app/utils"
+	"mm-wiki/app"
+	"fmt"
 )
 
 type StaticController struct {
@@ -215,6 +219,32 @@ func (this *StaticController) DocCountByTime() {
 }
 
 func (this *StaticController) Monitor() {
+
+	hostInfo, err := host.Info()
+	if err != nil {
+		this.ErrorLog("获取服务器数据错误")
+	}
+
+	serverInfo := map[string]string{
+		"localIp": utils.Misc.GetLocalIp(),
+		"hostname": hostInfo.Hostname,
+		"os": hostInfo.OS,
+		"platform": hostInfo.Platform,
+		"platformFamily": hostInfo.PlatformFamily,
+	}
+
+	errorLogCount, err := models.LogModel.CountLogsByLevel(models.Log_Level_Error)
+	if err != nil {
+		this.ErrorLog("获取数据错误")
+	}
+
+	errLogs, err := models.LogModel.GetLogsByKeywordAndLimit(fmt.Sprintf("%d", models.Log_Level_Error), "", "", 0, 5)
+	if err != nil {
+		this.ErrorLog("获取数据错误")
+	}
+	this.Data["serverInfo"] = serverInfo
+	this.Data["errorLogCount"] = errorLogCount
+	this.Data["errLogs"] = errLogs
 	this.viewLayout("static/monitor", "static")
 }
 
@@ -235,6 +265,7 @@ func (this *StaticController) ServerStatus() {
 func (this *StaticController) ServerTime() {
 	data := map[string]interface{}{
 		"server_time": time.Now().Unix(),
+		"run_time": time.Now().Unix() - app.StartTime,
 	}
 
 	this.jsonSuccess("ok", data)

@@ -108,6 +108,24 @@ func (l *Log) CountLogs() (count int64, err error) {
 	return
 }
 
+func (l *Log) CountLogsByLevel(level int) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			Where(map[string]interface{}{
+				"level": level,
+			}).
+			From(Table_Log_Name))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
 // 根据关键字获取日志总数
 func (l *Log) CountLogsByKeyword(level, message, username string) (count int64, err error) {
 
