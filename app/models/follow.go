@@ -196,3 +196,35 @@ func (f *Follow) createFollowDocument(userId string, documentId string) (id int6
 	}
 	return
 }
+
+func (f *Follow) GetFollowGroupUserId(fType int) (collects []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("user_id, count('user_id') as total").
+		From(Table_Follow_Name).Where(map[string]interface{}{
+		"type": fType,
+	}).GroupBy("user_id")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	collects = rs.Rows()
+	return
+}
+
+func (f *Follow) GetFansUserGroupUserId() (collects []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("object_id, count('object_id') as total").
+		From(Table_Follow_Name).Where(map[string]interface{}{
+		"type": Follow_Type_User,
+	}).GroupBy("object_id")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	collects = rs.Rows()
+	return
+}

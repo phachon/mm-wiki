@@ -231,6 +231,26 @@ func (u *User) CountUsers() (count int64, err error) {
 	return
 }
 
+// get user count by lastTime
+func (u *User) CountUsersByLastTime(lastTime int64) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_User_Name).
+			Where(map[string]interface{}{
+			"last_time >=": lastTime,
+			"is_delete": User_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
 // get normal user count
 func (u *User) CountNormalUsers() (count int64, err error) {
 

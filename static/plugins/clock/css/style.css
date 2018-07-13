@@ -1,0 +1,136 @@
+body, html {
+  color: #ff6400;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: #736963;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 1200px;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin: 0 auto;
+  text-align: center;
+  height: 100%;
+}
+
+.watch-section {
+  display: table;
+  width: 100%;
+  
+  position: relative;
+  overflow: hidden;
+}
+
+.watch-section .watch-inner {
+  display: table-cell;
+  
+}
+
+.watch-section header {
+  text-align: center;
+}
+
+.watch-section h2 {
+  font-size: 60px;
+  margin-bottom: 70px;
+  margin-top: 0;
+}
+@media (max-height: 768px) {
+  .watch-section h2 {
+    margin-bottom: 40px;
+  }
+}
+@media (max-height: 600px) {
+  .watch-section h2 {
+    margin-bottom: 20px;
+  }
+}
+
+.watch-section h3 {
+  font-size: 36px;
+  margin-bottom: 50px;
+}
+@media (max-height: 768px) {
+  .watch-section h3 {
+    margin-bottom: 40px;
+  }
+}
+@media (max-height: 600px) {
+  .watch-section h3 {
+    margin-bottom: 10px;
+  }
+}
+
+.watch-section .more {
+  position: absolute;
+  display: block;
+  margin: 0 auto;
+  bottom: 110px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+}
+
+.watch-section .more .more-text {
+  display: block;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: -30px;
+  color: #ff6400;
+  font-size: 11.5px;
+}
+
+.faces .face {
+  background: transparent url("faces.png") top left no-repeat;
+  width: 160px;
+  height: 160px;
+  padding: 0;
+  display: inline-block;
+  position: relative;
+  margin: 10px;
+}
+
+.faces .face:before {
+  top: inherit;
+  bottom: -35px;
+  left: 57px;
+}
+
+.faces .face1 {
+  background-position: 0 0;
+}
+
+.faces .face2 {
+  background-position: -179px 0;
+}
+
+.faces .face3 {
+  background-position: -359px 0;
+}
+
+.faces .face4 {
+  background-position: -542px 0;
+}
+
+.faces .face5 {
+  background-position: -724px 0;
+}
+
+.faces .clock {
+  width: 160px;
+  height: 160px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

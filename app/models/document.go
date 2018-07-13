@@ -358,7 +358,7 @@ func (d *Document) GetSpaceIdsOrderByCountDocumentLimit(limit int) (documents []
 	return
 }
 
-func (d *Document) GetCountGroupByCreateTime() (documents []map[string]string, err error) {
+func (d *Document) GetCountGroupByCreateTime(startTime int64) (documents []map[string]string, err error) {
 	/*select month(FROM_UNIXTIME(time)) from table_name group by month(FROM_UNIXTIME(time))*/
 
 	/*select DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m") from tcm_fund_list group by DATE_FORMAT(FROM_UNIXTIME(time),"%Y-%m")*/
@@ -370,7 +370,40 @@ func (d *Document) GetCountGroupByCreateTime() (documents []map[string]string, e
 	sql := db.AR().Select("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d') as date, count('date') as total").
 		From(Table_Document_Name).Where(map[string]interface{}{
 		"is_delete": Document_Delete_False,
+		"create_time >=": startTime,
 	}).GroupBy("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d')")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+func (d *Document) GetDocumentGroupCreateUserId() (documents []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("create_user_id, count('create_user_id') as total").
+		From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete": Document_Delete_False,
+	}).GroupBy("create_user_id")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+func (d *Document) GetDocumentGroupEditUserId() (documents []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("edit_user_id, count('edit_user_id') as total").
+		From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete": Document_Delete_False,
+	}).GroupBy("edit_user_id")
 	rs, err = db.Query(sql)
 	if err != nil {
 		return

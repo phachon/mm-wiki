@@ -112,50 +112,50 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading"> <strong>社交数据统计</strong></div>
+                    <div class="panel-heading"> <strong><i class="fa fa-bar-chart"></i> 文档收藏排行</strong> </div>
                     <div class="panel-body">
-                        <br>
+                        <div id="docs-collect-rank"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> <strong><i class="fa fa-user"></i> 用户数据统计</strong></div>
+                    <div class="panel-body" style="min-height: 370px">
+                        <br><br>
                         <table class="table table-hover">
                             <thead>
                             <tr>
                                 <td><strong>统计项目</strong></td>
-                                <td><strong>统计值</strong></td>
+                                <td class="w30p center"><strong>统计结果</strong></td>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td><strong>收藏最多文档</strong></td>
-                                <td data-name="today_task_total">0</td>
+                                <td><strong>今日登录用户数</strong></td>
+                                <td class="center">{{.todayLoginUserCount}}</td>
                             </tr>
                             <tr>
-                                <td><strong>修改文档</strong></td>
-                                <td data-name="today_user_total"></td>
+                                <td><strong>创建文档最多用户</strong></td>
+                                <td class="center">{{.createMaxUser.username}}</td>
                             </tr>
                             <tr>
-                                <td><strong>修改文档</strong></td>
-                                <td data-name="today_success_node">0</td>
+                                <td><strong>修改文档最多用户</strong></td>
+                                <td class="center">{{.editMaxUser.username}}</td>
                             </tr>
                             <tr>
-                                <td><strong>修改文档</strong></td>
-                                <td data-name="today_failed_node">0</td>
+                                <td><strong>收藏文档最多用户</strong></td>
+                                <td class="center">{{.collectMaxUser.username}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>粉丝数最多用户</strong></td>
+                                <td class="center">{{.fansMaxUser.username}}</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="panel panel-default" style="height: 278px">
-                    <div class="panel-heading"><strong>系统公告</strong></div>
-                    <ul class="list-group">
-                    {{range $notice:=.notices}}
-                        <li class="list-group-item">
-                            <a name="info" data-link="/notice/info?notice_id={{$notice.notice_id}}"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;{{$notice.title}}<small class="pull-right">{{dateFormat $notice.create_time "Y/m/d"}}</small></a>
-                        </li>
-                    {{end}}
-                    </ul>
                 </div>
             </div>
         </div>
@@ -167,6 +167,6 @@
     $(window).load(function(){
         Statics.GetDocCountByTime("docs-line", "/system/static/docCountByTime");
         Statics.GetSpaceDocsRank("space-docs-rank", "space-docs-percent", "/system/static/spaceDocsRank");
-        // setInterval('Main.GetServerStatus("/main/serverStatus")', 2000);
+        Statics.GetCollectDocsRank("docs-collect-rank", "/system/static/collectDocRank");
     });
 </script>

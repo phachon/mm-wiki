@@ -144,3 +144,37 @@ func (c *Collection) GetCollectionsByCollectionIds(collectionIds []string) (coll
 	collections = rs.Rows()
 	return
 }
+
+func (c *Collection) GetResourceIdsOrderByCountLimit(limit int, collectType int) (collects []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("resource_id, count('resource_id') as total").
+		From(Table_Collection_Name).Where(map[string]interface{}{
+		"type": collectType,
+	}).
+		GroupBy("resource_id").
+		OrderBy("total", "DESC").
+		Limit(0, limit)
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	collects = rs.Rows()
+	return
+}
+
+func (c *Collection) GetCollectionGroupUserId(colType int) (collects []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	sql := db.AR().Select("user_id, count('user_id') as total").
+		From(Table_Collection_Name).Where(map[string]interface{}{
+		"type": colType,
+	}).GroupBy("user_id")
+	rs, err = db.Query(sql)
+	if err != nil {
+		return
+	}
+	collects = rs.Rows()
+	return
+}

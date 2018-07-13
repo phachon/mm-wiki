@@ -4,7 +4,8 @@ import (
 	"mm-wiki/app/models"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
-	mem "github.com/shirou/gopsutil/mem"
+	"github.com/shirou/gopsutil/mem"
+	"time"
 )
 
 type StaticController struct {
@@ -15,13 +16,13 @@ func (this *StaticController) Default() {
 
 	normalUserCount, err := models.UserModel.CountNormalUsers()
 	if err != nil {
-		this.ErrorLog("查找用户数出错："+err.Error())
+		this.ErrorLog("查找正常用户数出错："+err.Error())
 		this.jsonError("查找数据出错")
 	}
 
 	forbiddenUserCount, err := models.UserModel.CountForbiddenUsers()
 	if err != nil {
-		this.ErrorLog("查找用户数出错："+err.Error())
+		this.ErrorLog("查找屏蔽用户数出错："+err.Error())
 		this.jsonError("查找数据出错")
 	}
 
@@ -36,17 +37,98 @@ func (this *StaticController) Default() {
 		this.ErrorLog("查找文档总数出错："+err.Error())
 		this.jsonError("查找数据出错")
 	}
+
+	time.Now().Unix()
+	today := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.Local).Unix()
+	todayLoginUserCount, err := models.UserModel.CountUsersByLastTime(today)
+	if err != nil {
+		this.ErrorLog("查找今日登录用户数出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+
+	createUserId := "0"
+	createUserIds, err := models.DocumentModel.GetDocumentGroupCreateUserId()
+	if err != nil {
+		this.ErrorLog("查找创建文档最多用户出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+	if len(createUserIds) > 0 {
+		createUserId = createUserIds[0]["create_user_id"]
+	}
+
+	editUserId := "0"
+	editUserIds, err := models.DocumentModel.GetDocumentGroupEditUserId()
+	if err != nil {
+		this.ErrorLog("查找修改文档最多用户出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+	if len(editUserIds) > 0 {
+		editUserId = editUserIds[0]["edit_user_id"]
+	}
+
+	collectUserId := "0"
+	collectUserIds, err := models.CollectionModel.GetCollectionGroupUserId(models.Collection_Type_Doc)
+	if err != nil {
+		this.ErrorLog("查找收藏文档最多用户出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+	if len(collectUserIds) > 0 {
+		collectUserId = collectUserIds[0]["user_id"]
+	}
+
+	fansUserId := "0"
+	fansUserIds, err := models.FollowModel.GetFansUserGroupUserId()
+	if err != nil {
+		this.ErrorLog("查找粉丝数最多用户出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+	if len(fansUserIds) > 0 {
+		fansUserId = fansUserIds[0]["object_id"]
+	}
+
+	userIds := []string{createUserId, editUserId, collectUserId, fansUserId}
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
+	if err != nil {
+		this.ErrorLog("查找文档总数出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+
+	var createMaxUser = map[string]string{"user_id": createUserId, "username": ""}
+	var editMaxUser = map[string]string{"user_id": editUserId, "username": ""}
+	var collectMaxUser = map[string]string{"user_id": collectUserId, "username": ""}
+	var fansMaxUser = map[string]string{"user_id": fansUserId, "username": ""}
+	for _, user := range users {
+		if user["user_id"] == createUserId {
+			createMaxUser["username"] = user["username"]
+		}
+		if user["user_id"] == editUserId {
+			editMaxUser["username"] = user["username"]
+		}
+		if user["user_id"] == collectUserId {
+			collectMaxUser["username"] = user["username"]
+		}
+		if user["user_id"] == fansUserId {
+			fansMaxUser["username"] = user["username"]
+		}
+	}
+
 	this.Data["normalUserCount"] = normalUserCount
 	this.Data["forbiddenUserCount"] = forbiddenUserCount
 	this.Data["spaceCount"] = spaceCount
 	this.Data["documentCount"] = documentCount
+
+	this.Data["todayLoginUserCount"] = todayLoginUserCount
+	this.Data["createMaxUser"] = createMaxUser
+	this.Data["editMaxUser"] = editMaxUser
+	this.Data["collectMaxUser"] = collectMaxUser
+	this.Data["fansMaxUser"] = fansMaxUser
+
 	this.viewLayout("static/default", "static")
 }
 
 func (this *StaticController) SpaceDocsRank() {
 
-	number := 15
-
+	number, _ := this.GetInt("number", 15)
 	spaceDocsRank := []map[string]string{}
 	spaceDocCountIds , err := models.DocumentModel.GetSpaceIdsOrderByCountDocumentLimit(number)
 	if err != nil {
@@ -81,9 +163,49 @@ func (this *StaticController) SpaceDocsRank() {
 	this.jsonSuccess("ok", spaceDocsRank)
 }
 
+func (this *StaticController) CollectDocRank() {
+
+	number, _ := this.GetInt("number", 10)
+	collectDocsRank := []map[string]string{}
+	collectionDocIds , err := models.CollectionModel.GetResourceIdsOrderByCountLimit(number, models.Collection_Type_Doc)
+	if err != nil {
+		this.ErrorLog("查找收藏文档排行出错："+err.Error())
+		this.jsonError("查找数据出错")
+	}
+	if len(collectionDocIds) > 0 {
+		documentIds := []string{}
+		for _, collectionDocId := range collectionDocIds {
+			documentIds = append(documentIds, collectionDocId["resource_id"])
+		}
+		documents, err := models.DocumentModel.GetDocumentsByDocumentIds(documentIds)
+		if err != nil {
+			this.ErrorLog("查找收藏文档排行出错："+err.Error())
+			this.jsonError("查找数据出错")
+		}
+		for _, collectionDocId := range collectionDocIds {
+			collectDocCount := map[string]string{
+				"document_name": "",
+				"total": collectionDocId["total"],
+			}
+			for _, document := range documents {
+				if collectionDocId["resource_id"] == document["document_id"] {
+					collectDocCount["document_name"] = document["name"]
+					break
+				}
+			}
+			collectDocsRank = append(collectDocsRank, collectDocCount)
+		}
+	}
+
+	this.jsonSuccess("ok", collectDocsRank)
+}
+
 func (this *StaticController) DocCountByTime() {
 
-	documentCountDate , err := models.DocumentModel.GetCountGroupByCreateTime()
+	limitDay, _ := this.GetInt("limit_day", 10)
+	startTime := time.Now().Unix() - int64(limitDay * 3600 * 24)
+
+	documentCountDate , err := models.DocumentModel.GetCountGroupByCreateTime(startTime)
 	if err != nil {
 		this.ErrorLog("查找空间文档排行出错："+err.Error())
 		this.jsonError("查找数据出错")
@@ -93,7 +215,6 @@ func (this *StaticController) DocCountByTime() {
 }
 
 func (this *StaticController) Monitor() {
-
 	this.viewLayout("static/monitor", "static")
 }
 
@@ -106,6 +227,14 @@ func (this *StaticController) ServerStatus() {
 		"memory_used_percent": int(vm.UsedPercent),
 		"cpu_used_percent":    int(cpuPercent[0]),
 		"disk_used_percent":   int(d.UsedPercent),
+	}
+
+	this.jsonSuccess("ok", data)
+}
+
+func (this *StaticController) ServerTime() {
+	data := map[string]interface{}{
+		"server_time": time.Now().Unix(),
 	}
 
 	this.jsonSuccess("ok", data)
