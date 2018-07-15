@@ -42,6 +42,23 @@ func (u *Config) Update(configId string, configValue map[string]interface{}) (id
 	return
 }
 
+// update config by key
+func (u *Config) UpdateByKey(key string, value string) (id int64, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	configValue := map[string]interface{}{}
+	configValue["value"] = value
+	configValue["update_time"] =  time.Now().Unix()
+	rs, err = db.Exec(db.AR().Update(Table_Config_Name, configValue, map[string]interface{}{
+		"key": key,
+	}))
+	if err != nil {
+		return
+	}
+	id = rs.LastInsertId
+	return
+}
+
 // get all configs
 func (u *Config) GetConfigs() (configs []map[string]string, err error) {
 
@@ -67,5 +84,18 @@ func (u *Config) GetConfigByConfigIds(configIds []string) (configs []map[string]
 		return
 	}
 	configs = rs.Rows()
+	return
+}
+
+// insert batch configs
+func (u *Config) InsertBatch(insertValues []map[string]interface{}) (id int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Exec(db.AR().InsertBatch(Table_Config_Name, insertValues))
+	if err != nil {
+		return
+	}
+	id = rs.LastInsertId
 	return
 }

@@ -4,35 +4,34 @@
         <br>
         <div class="panel-body">
             <form class="form-horizontal" method="post" action="/system/config/modify">
-                <input type="hidden" name="config_id" value="">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>主页标题</label>
                     <div class="col-sm-4">
-                        <input type="text" name="name" class="form-control" value="" placeholder="请输入主页标题">
+                        <input type="text" name="main_title" class="form-control" value="{{.configValue.main_title}}" placeholder="请输入主页标题">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>主页描述</label>
                     <div class="col-sm-4">
-                        <textarea name="module" class="form-control" rows="4"></textarea>
+                        <textarea name="main_description" class="form-control" rows="4" placeholder="请输入主页描述">{{.configValue.main_description}}</textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启自动关注</label>
                     <div class="col-sm-4">
-                        <input type="checkbox" name="is_display" value="1">
+                        <input type="checkbox" name="auto_follow_doc_open" value="1" {{if eq .configValue.auto_follow_doc_open "1"}} checked="checked" {{end}} placeholder="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启邮件通知</label>
                     <div class="col-sm-4">
-                        <input type="checkbox" name="is_display" value="1">
+                        <input type="checkbox" name="send_email_open" value="1" {{if eq .configValue.send_email_open "1"}} checked="checked" {{end}} placeholder="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启统一登录</label>
                     <div class="col-sm-4">
-                        <input type="checkbox" name="is_display" value="1">
+                        <input type="checkbox" name="sso_open" value="1" {{if eq .configValue.sso_open "1"}} checked="checked" {{end}} placeholder="">
                     </div>
                 </div>
                 <div class="form-group">
@@ -46,7 +45,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        $("input[name='is_display']").bootstrapSwitch({
+        $("input[type='checkbox']").bootstrapSwitch({
             size: 'small',
             onText: '是',
             offText: '否'

@@ -268,13 +268,15 @@ CREATE TABLE `mw_config` (
   `value` text NOT NULL COMMENT '配置值',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`config_id`)
+  PRIMARY KEY (`config_id`),
+  unique KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置表';
 
 INSERT INTO `mw_config` VALUES ('1', '主页标题', 'main_title', '这里可以填写公司名称，例如：欢迎来到 XXXX 科技公司 wiki 平台！', '1531365619', '1531365619');
 INSERT INTO `mw_config` VALUES ('2', '主页描述', 'main_description', '这是写一些描述：请使用域账号登录，使用中有任何问题请联系管理员 root@xxx.com！', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('3', '是否开启邮件通知', 'email_open', '', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('4', '是否开启统一登录', 'SSO_open', '', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('3', '是否开启自动关注', 'auto_follow_doc_open', '', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('4', '是否开启邮件通知', 'send_email_open', '', '1531365619', '1531365619');
+INSERT INTO `mw_config` VALUES ('5', '是否开启统一登录', 'sso_open', '', '1531365619', '1531365619');
 
 -- --------------------------------
 -- 系统联系人表

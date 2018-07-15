@@ -147,8 +147,8 @@
 <script type="text/javascript" src="/static/plugins/clock/js/snap.svg-min.js"></script>
 <script type="text/javascript" src="/static/js/modules/system/statics.js"></script>
 <script type="text/javascript">
-    Statics.GetServerStatus("/system/static/serverStatus");
     Statics.GetServerTime("serverTime", "/system/static/serverTime");
+    Statics.GetServerStatus("/system/static/serverStatus");
     $(window).load(function(){
         // number roll
         $('.number-roll').each(function(){

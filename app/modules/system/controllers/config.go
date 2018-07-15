@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"mm-wiki/app/models"
+	"strings"
 )
 
 type ConfigController struct {
@@ -16,70 +17,65 @@ func (this *ConfigController) Global() {
 		this.ViewError("邮件服务器不存在", "/system/main/index")
 	}
 
-	this.Data["configs"] = configs
+	var configValue = map[string]string{}
+	for _, config := range configs{
+		if config["key"] == "auto_follow_doc_open" && config["value"] != "1" {
+			config["value"] = "0"
+		}
+		if config["key"] == "send_email_open" && config["value"] != "1" {
+			config["value"] = "0"
+		}
+		if config["key"] == "sso_open" && config["value"] != "1" {
+			config["value"] = "0"
+		}
+		configValue[config["key"]] = config["value"]
+	}
+
+	this.Data["configValue"] = configValue
 	this.viewLayout("config/form", "default")
 }
 
 func (this *ConfigController) Modify() {
 
-	//if !this.IsPost() {
-	//	this.ViewError("请求方式有误！", "/system/email/list")
-	//}
-	//emailId := this.GetString("email_id", "")
-	//name := strings.TrimSpace(this.GetString("name", ""))
-	//senderAddress := strings.TrimSpace(this.GetString("sender_address", ""))
-	//senderName := strings.TrimSpace(this.GetString("sender_name", ""))
-	//senderTitlePrefix := strings.TrimSpace(this.GetString("sender_title_prefix", ""))
-	//host := strings.TrimSpace(this.GetString("host", ""))
-	//username := strings.TrimSpace(this.GetString("username", ""))
-	//password := strings.TrimSpace(this.GetString("password", ""))
-	//
-	//if emailId == "" {
-	//	this.jsonError("邮件服务器不存在！")
-	//}
-	//if name == "" {
-	//	this.jsonError("邮件服务器名称不能为空！")
-	//}
-	//if host == "" {
-	//	this.jsonError("邮件服务器主机不能为空！")
-	//}
-	//if senderAddress == "" {
-	//	this.jsonError("发件人邮箱不能为空！")
-	//}
-	//if username == "" {
-	//	this.jsonError("发件用户名不能为空！")
-	//}
-	//if password == "" {
-	//	this.jsonError("发件人密码不能为空！")
-	//}
-	//
-	//email, err := models.ConfigModel.GetConfigByConfigId(emailId)
-	//if err != nil {
-	//	this.ErrorLog("修改邮件服务器 "+emailId+" 失败: "+err.Error())
-	//	this.jsonError("修改邮件服务器失败！")
-	//}
-	//if len(email) == 0 {
-	//	this.jsonError("邮件服务器不存在！")
-	//}
-	//
-	//ok , _ := models.ConfigModel.HasSameName(emailId, name)
-	//if ok {
-	//	this.jsonError("邮件服务器名称已经存在！")
-	//}
-	//_, err = models.ConfigModel.Update(emailId, map[string]interface{}{
-	//	"name": name,
-	//	"sender_address": senderAddress,
-	//	"sender_name": senderName,
-	//	"sender_title_prefix": senderTitlePrefix,
-	//	"host": host,
-	//	"username": username,
-	//	"password": password,
-	//})
-	//
-	//if err != nil {
-	//	this.ErrorLog("修改邮件服务器 "+emailId+" 失败：" + err.Error())
-	//	this.jsonError("修改邮件服务器"+emailId+"失败")
-	//}
-	//this.InfoLog("修改邮件服务器 "+emailId+" 成功")
-	//this.jsonSuccess("修改邮件服务器成功", nil, "/system/email/list")
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/email/list")
+	}
+	mainTitle := this.GetString("main_title", "")
+	mainDescription := strings.TrimSpace(this.GetString("main_description", ""))
+	autoFollowDocOpen := strings.TrimSpace(this.GetString("auto_follow_doc_open", "0"))
+	sendEmailOpen := strings.TrimSpace(this.GetString("send_email_open", "0"))
+	ssoOpen := strings.TrimSpace(this.GetString("sso_open", "0"))
+
+	_, err := models.ConfigModel.UpdateByKey("main_title", mainTitle)
+	if err != nil {
+		this.ErrorLog("修改配置 main_title  失败: "+err.Error())
+		this.jsonError("主页标题配置失败！")
+	}
+
+	_, err = models.ConfigModel.UpdateByKey("main_description", mainDescription)
+	if err != nil {
+		this.ErrorLog("修改配置 main_description  失败: "+err.Error())
+		this.jsonError("主页描述配置失败！")
+	}
+
+	_, err = models.ConfigModel.UpdateByKey("auto_follow_doc_open", autoFollowDocOpen)
+	if err != nil {
+		this.ErrorLog("修改配置 auto_follow_doc_open  失败: "+err.Error())
+		this.jsonError("开启自动关注配置失败！")
+	}
+
+	_, err = models.ConfigModel.UpdateByKey("send_email_open", sendEmailOpen)
+	if err != nil {
+		this.ErrorLog("修改配置 send_email_open  失败: "+err.Error())
+		this.jsonError("开启邮件通知配置失败！")
+	}
+
+	_, err = models.ConfigModel.UpdateByKey("sso_open", ssoOpen)
+	if err != nil {
+		this.ErrorLog("修改配置 sso_open  失败: "+err.Error())
+		this.jsonError("开启统一登录配置失败！")
+	}
+
+	this.InfoLog("修改全局配置成功")
+	this.jsonSuccess("修改全局配置成功", nil, "/system/config/global")
 }
