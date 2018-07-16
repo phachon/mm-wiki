@@ -85,5 +85,25 @@ var Layers = {
 				});
 			})
 		})
-	}
+	},
+
+	bindPage: function (element, title, height, width, html) {
+        $(element).each(function () {
+            height = height||"500px";
+            width = width||"1000px";
+            $(this).bind('click', function () {
+                layer.open({
+                    type: 1,
+                    skin: Layers.skin,
+                    title: '<strong>'+title+'</strong>',
+                    shadeClose: true,
+                    shade : 0.6,
+                    maxmin: true,
+                    area: [width, height],
+                    content: html,
+                    padding: "10px"
+                });
+            })
+        })
+    }
 };

@@ -47,9 +47,6 @@ func (this *TemplateController) Prepare() {
 		this.StopRun()
 	}
 
-	this.Data["login_user_id"] = this.UserId
-	this.Data["login_username"] = this.User["username"]
-
 	if !this.checkAccess() {
 		if this.IsPost() {
 			this.JsonError("抱歉，您没有权限操作！", nil, "/system/main/index")
@@ -62,6 +59,11 @@ func (this *TemplateController) Prepare() {
 
 // check is login
 func (this *TemplateController) isLogin() bool {
+
+	if this.controllerName == "page" && this.actionName == "display" {
+		return true
+	}
+
 	passport := beego.AppConfig.String("author::passport")
 	cookie := this.Ctx.GetCookie(passport)
 	// cookie is empty
@@ -100,6 +102,10 @@ func (this *TemplateController) isLogin() bool {
 	this.SetSession("author", newUser)
 	this.User = this.GetSession("author").(map[string]string)
 	this.UserId = this.User["user_id"]
+
+	this.Data["login_user_id"] = this.UserId
+	this.Data["login_username"] = this.User["username"]
+
 	// success
 	return true
 }

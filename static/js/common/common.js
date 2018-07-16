@@ -1,3 +1,8 @@
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    // $("[data-toggle='web-popover']").webuiPopover({animation: 'pop',autoHide:3000});
+});
+
 var Common = {
 
 	/**

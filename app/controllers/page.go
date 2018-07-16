@@ -197,3 +197,66 @@ func (this *PageController) Modify() {
 	this.InfoLog("修改文档 "+documentId+" 成功")
 	this.jsonSuccess("文档修改成功！", nil, "/document/index?document_id="+documentId)
 }
+
+// document share display
+func (this *PageController) Display() {
+
+	documentId := this.GetString("document_id", "")
+	if documentId == "" {
+		this.ViewError("文档未找到！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(document) == 0 {
+		this.ViewError("文档不存在！")
+	}
+
+	// get parent documents by document
+	parentDocuments, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
+	}
+	if len(parentDocuments) == 0 {
+		this.ViewError("父文档不存在！")
+	}
+
+	// get document content
+	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("文档不存在！")
+	}
+
+	// get edit user and create user
+	users, err := models.UserModel.GetUsersByUserIds([]string{document["create_user_id"], document["edit_user_id"]})
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(users) == 0 {
+		this.ViewError("文档创建用户不存在！")
+	}
+
+	var createUser = map[string]string{}
+	var editUser = map[string]string{}
+	for _, user := range users {
+		if user["user_id"] == document["create_user_id"] {
+			createUser = user
+		}
+		if user["user_id"] == document["edit_user_id"] {
+			editUser = user
+		}
+	}
+
+	this.Data["create_user"] = createUser
+	this.Data["edit_user"] = editUser
+	this.Data["document"] = document
+	this.Data["page_content"] = documentContent
+	this.Data["parent_documents"] = parentDocuments
+	this.viewLayout("page/display", "document_share")
+}

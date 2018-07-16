@@ -42,7 +42,7 @@
                                 {{else}}
                                     <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
                                 {{end}}
-                                <button class="btn btn-default"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</button>
+                                <a class="btn btn-default" name="share" href="/page/display?document_id={{$document.document_id}}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</a>
                                 <button class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
                             </div>
 

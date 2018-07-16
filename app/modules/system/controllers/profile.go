@@ -158,7 +158,7 @@ func (this *ProfileController) FollowUser() {
 func (this *ProfileController) FollowDoc() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 8
+	number := 10
 	limit := (page - 1) * number
 
 	// follow docs limit
