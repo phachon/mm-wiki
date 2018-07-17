@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"mm-wiki/app/models"
-	"github.com/astaxie/beego"
 )
 
 type MainController struct {
@@ -95,10 +94,28 @@ func (this *MainController) Default() {
 		this.ViewError("查找快速链接失败！")
 	}
 
-	title := beego.AppConfig.String("panel::title")
-	description := beego.AppConfig.String("panel::description")
-	this.Data["panel_title"] = title
-	this.Data["panel_description"] = description
+	// main title config
+	mainTitle := ""
+	mainDescription := ""
+	mainTitleConfig, err := models.ConfigModel.GetConfigByKey(models.Config_Key_MainTitle)
+	if err != nil {
+		this.ErrorLog("查找 main_title 配置失败："+err.Error())
+	}else {
+		if len(mainTitleConfig) > 0 {
+			mainTitle = mainTitleConfig["value"]
+		}
+	}
+	mainDescriptionConfig, err := models.ConfigModel.GetConfigByKey(models.Config_Key_MainDescription)
+	if err != nil {
+		this.ErrorLog("查找 main_description 配置失败："+err.Error())
+	}else {
+		if len(mainDescriptionConfig) > 0 {
+			mainDescription = mainDescriptionConfig["value"]
+		}
+	}
+
+	this.Data["panel_title"] = mainTitle
+	this.Data["panel_description"] = mainDescription
 	this.Data["logDocuments"] = logDocuments
 	this.Data["links"] = links
 	this.Data["contacts"] = contacts

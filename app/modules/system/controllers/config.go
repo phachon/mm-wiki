@@ -40,11 +40,11 @@ func (this *ConfigController) Modify() {
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/email/list")
 	}
-	mainTitle := this.GetString("main_title", "")
-	mainDescription := strings.TrimSpace(this.GetString("main_description", ""))
-	autoFollowDocOpen := strings.TrimSpace(this.GetString("auto_follow_doc_open", "0"))
-	sendEmailOpen := strings.TrimSpace(this.GetString("send_email_open", "0"))
-	ssoOpen := strings.TrimSpace(this.GetString("sso_open", "0"))
+	mainTitle := this.GetString(models.Config_Key_MainTitle, "")
+	mainDescription := strings.TrimSpace(this.GetString(models.Config_Key_MainDescription, ""))
+	autoFollowDocOpen := strings.TrimSpace(this.GetString(models.Config_Key_AutoFollowDoc, "0"))
+	sendEmailOpen := strings.TrimSpace(this.GetString(models.Config_Key_SendEmail, "0"))
+	ssoOpen := strings.TrimSpace(this.GetString(models.Config_Key_AuthLogin, "0"))
 
 	if sendEmailOpen == "1" {
 		email, err := models.EmailModel.GetUsedEmail()
@@ -68,31 +68,31 @@ func (this *ConfigController) Modify() {
 		}
 	}
 
-	_, err := models.ConfigModel.UpdateByKey("main_title", mainTitle)
+	_, err := models.ConfigModel.UpdateByKey(models.Config_Key_MainTitle, mainTitle)
 	if err != nil {
 		this.ErrorLog("修改配置 main_title  失败: "+err.Error())
 		this.jsonError("主页标题配置失败！")
 	}
 
-	_, err = models.ConfigModel.UpdateByKey("main_description", mainDescription)
+	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_MainDescription, mainDescription)
 	if err != nil {
 		this.ErrorLog("修改配置 main_description  失败: "+err.Error())
 		this.jsonError("主页描述配置失败！")
 	}
 
-	_, err = models.ConfigModel.UpdateByKey("auto_follow_doc_open", autoFollowDocOpen)
+	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_AutoFollowDoc, autoFollowDocOpen)
 	if err != nil {
 		this.ErrorLog("修改配置 auto_follow_doc_open  失败: "+err.Error())
 		this.jsonError("开启自动关注配置失败！")
 	}
 
-	_, err = models.ConfigModel.UpdateByKey("send_email_open", sendEmailOpen)
+	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_SendEmail, sendEmailOpen)
 	if err != nil {
 		this.ErrorLog("修改配置 send_email_open  失败: "+err.Error())
 		this.jsonError("开启邮件通知配置失败！")
 	}
 
-	_, err = models.ConfigModel.UpdateByKey("sso_open", ssoOpen)
+	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_AuthLogin, ssoOpen)
 	if err != nil {
 		this.ErrorLog("修改配置 sso_open  失败: "+err.Error())
 		this.jsonError("开启统一登录配置失败！")
