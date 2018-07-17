@@ -5,11 +5,13 @@
         <div class="panel-body">
             <form class="form-horizontal" method="post" action="{{if $space}} /system/space/modify {{else}}/system/space/save {{end}}">
                 <input type="hidden" name="space_id" value="{{$space.space_id}}">
-
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>空间名称</label>
                     <div class="col-sm-4">
                         <input type="text" name="name" class="form-control" value="{{$space.name}}" placeholder="请输入空间名称">
+                    </div>
+                    <div class="col-sm-3 form-comment">
+                        <span class="text-danger"> * 只能由数字和字母组成</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -36,15 +38,28 @@
                             <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 只能是该空间下的用户才可以访问</span>
                         </div>
                         <div class="radio radio-primary">
-                            <input type="radio" name="visit_level" id="radio-internal" value="internal" {{if $space}} {{if eq $space.visit_level "internal"}} checked="checked" {{end}}{{else}} checked="checked" {{end}}>
-                            <label for="radio-internal"><i class="fa fa-shield fa-fw"></i>&nbsp;Internal</label>
+                            <input type="radio" name="visit_level" id="radio-internal" value="public" {{if $space}} {{if eq $space.visit_level "public"}} checked="checked" {{end}}{{else}} checked="checked" {{end}}>
+                            <label for="radio-internal"><i class="fa fa-shield fa-fw"></i>&nbsp;Public</label>
                             <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 可以由任何登录用户访问</span>
                         </div>
-                        <div class="radio radio-primary">
-                            <input type="radio" name="visit_level" id="radio-public" value="public" {{if $space}} {{if eq $space.visit_level "public"}} checked="checked" {{end}}{{end}}>
-                            <label for="radio-public"><i class="fa fa-globe fa-fw"></i>&nbsp;Public</label>
-                            <span class="text text-danger"> &nbsp;&nbsp;&nbsp;* 没有任何身份验证的情况下也可以访问该空间</span>
-                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>允许分享</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="is_share" value="1" {{if $space}} {{if eq $space.is_share "1"}} checked="checked" {{end}} {{else}} checked="checked" {{end}} placeholder="">
+                    </div>
+                    <div class="col-sm-3 form-comment">
+                        <span class="text-danger"> * 该空间下的文档是否允许分享</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>允许导出</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="is_export" value="1" {{if $space}} {{if eq $space.is_export "1"}} checked="checked" {{end}} {{end}} placeholder="">
+                    </div>
+                    <div class="col-sm-3 form-comment">
+                        <span class="text-danger"> * 该空间下的文档是否允许导出</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -59,7 +74,7 @@
 <script type="text/javascript">
     $(function () {
         // is_display
-        $("input[name='is_display']").bootstrapSwitch({
+        $("input[type='checkbox']").bootstrapSwitch({
             size: 'small',
             onText: '是',
             offText: '否'

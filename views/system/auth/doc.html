@@ -1,0 +1,113 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong><i class="fa fa-file-text-o"></i> 认证接口开发文档</strong></div>
+                <div class="panel-body"></div>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td class="w10p"><strong>接口URL</strong></td>
+                        <td>统一登录认证接口地址（例如：http://intra.mmWiki.com/login/ldap）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>请求方式</strong></td>
+                        <td>POST</td>
+                    </tr>
+                    <tr>
+                        <td><strong>请求参数</strong></td>
+                        <td>
+<pre>
+username: 用户名（string）
+password: 密码（string）
+ext_data: 登录认证扩展数据（string）
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>成功返回</strong></td>
+                        <td>必须为 json 字符串
+<pre>
+{
+    "message": "", // 必须返回，成功时为空
+    "data": {
+        "given_name": "王哈哈", // 姓名，string，不能为空
+        "mobile": "111111111111", // 手机号，string，可以为空
+        "phone": "010-9929921", // 电话，string，可以为空
+        "email": "root@mmWiki.com", // 邮箱，string，不能为空
+        "department": "广告事业部.技术部.系统开发组", // 部门，string，可以为空
+        "position": "高级JAVA开发工程师", // 职位，string，可以为空
+        "location": "B座32层E区1002", // 工位位置，string，可以为空
+        "im": "QQ：12211", // 即时聊天工具，string，可以为空
+    } // 必须返回, 成功时非空
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>失败返回</strong></td>
+                        <td>必须为 json 字符串
+<pre>
+{
+    "message": "密码错误", // 失败原因，失败时不能为空
+    "data": {} // 失败时为空
+}
+</pre>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong><i class="fa fa-file-code-o"></i> PHP 代码示例 </strong></div>
+                <div class="panel-body">
+<pre>
+<?php
+// 获取数据
+$username = isset($_POST["username"]) ? $_POST["username"] : "";
+$password = isset($_POST["password"]) ? $_POST["password"] : "";
+$extData = isset($_POST["ext_data"]) ? $_POST["ext_data"] : "";
+
+if (!$username || !$password) {
+	echo json_encode(['message'=>'参数错误', 'data'=>[]], JSON_UNESCAPED_UNICODE);
+	exit();
+}
+// 1. ext_data 可用于接口安全验证
+if ($extData != "login api token") {
+    $result = [
+        'message' => '登录接口验证失败',
+        'data' => [],
+    ];
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    exit();
+}
+
+// 2. 验证用户名密码是否正确
+// ....
+// ....
+
+// 3. 成功返回
+$result = [
+    'message' => '',
+    'data' => [
+        'given_name' => '王哈哈',
+        'mobile' => '111111111111',
+        'phone' => '010-9929921',
+        'email' => 'root@mmWiki.com',
+        'department' => '广告事业部.技术部.系统开发组',
+        'position' => '高级JAVA开发工程师',
+        'location' => 'B座32层E区1002',
+        'im' => 'QQ：12211',
+    ],
+];
+echo json_encode($result, JSON_UNESCAPED_UNICODE);
+</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

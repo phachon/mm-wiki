@@ -4,8 +4,8 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
-	"time"
 	"fmt"
+	"github.com/astaxie/beego/validation"
 )
 
 type SpaceController struct {
@@ -24,9 +24,16 @@ func (this *SpaceController) Save() {
 	name := strings.TrimSpace(this.GetString("name", ""))
 	description := strings.TrimSpace(this.GetString("description", ""))
 	tags := strings.TrimSpace(this.GetString("tags", ""))
-	visitLevel := strings.TrimSpace(this.GetString("visit_level", ""))
+	visitLevel := strings.TrimSpace(this.GetString("visit_level", "public"))
+	isShare := strings.TrimSpace(this.GetString("is_share", "1"))
+	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
+
+	v := validation.Validation{}
 	if name == "" {
 		this.jsonError("空间名称不能为空！")
+	}
+	if !v.AlphaNumeric(name, "name").Ok {
+		this.jsonError("空间名称格式不正确！")
 	}
 	ok, err := models.SpaceModel.HasSpaceName(name)
 	if err != nil {
@@ -42,9 +49,9 @@ func (this *SpaceController) Save() {
 		"name": name,
 		"description": description,
 		"tags": tags,
-		"visit_level": visitLevel,
-		"create_time": time.Now().Unix(),
-		"update_time": time.Now().Unix(),
+		"visit_level": strings.ToLower(visitLevel),
+		"is_share": isShare,
+		"is_export": isExport,
 	})
 	if err != nil {
 		this.ErrorLog("添加空间失败：" + err.Error())
@@ -124,7 +131,9 @@ func (this *SpaceController) Modify() {
 	name := strings.TrimSpace(this.GetString("name", ""))
 	description := strings.TrimSpace(this.GetString("description", ""))
 	tags := strings.TrimSpace(this.GetString("tags", ""))
-	visitLevel := strings.TrimSpace(this.GetString("visit_level", ""))
+	visitLevel := strings.TrimSpace(this.GetString("visit_level", "public"))
+	isShare := strings.TrimSpace(this.GetString("is_share", "0"))
+	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
 	if spaceId == "" {
 		this.jsonError("空间不存在！")
@@ -151,12 +160,13 @@ func (this *SpaceController) Modify() {
 		"description": description,
 		"tags": tags,
 		"visit_level": visitLevel,
-		"update_time": time.Now().Unix(),
+		"is_share": isShare,
+		"is_export": isExport,
 	})
 
 	if err != nil {
 		this.ErrorLog("修改空间 "+spaceId+" 失败：" + err.Error())
-		this.jsonError("修改空间"+spaceId+"失败")
+		this.jsonError("修改空间失败")
 	}
 	this.InfoLog("修改空间 "+spaceId+" 成功")
 	this.jsonSuccess("修改空间成功", nil, "/system/space/list")

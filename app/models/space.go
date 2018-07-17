@@ -7,12 +7,22 @@ import (
 )
 
 const (
+
+	Space_Share_False = 0
+	Space_Share_True = 1
+
+	Space_Download_False = 0
+	Space_Download_True = 1
+
 	Space_Delete_True = 1
 	Space_Delete_False = 0
 
 	Space_Root_Id = 1
 	Space_Admin_Id = 2
 	Space_Default_Id = 3
+
+	Space_VisitLevel_Public = "public"
+	Space_VisitLevel_Private = "private"
 )
 
 const Table_Space_Name = "space"
@@ -105,6 +115,9 @@ func (s *Space) Delete(spaceId string) (err error) {
 
 // insert space
 func (s *Space) Insert(spaceValue map[string]interface{}) (id int64, err error) {
+
+	spaceValue["create_time"] = time.Now().Unix()
+	spaceValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Space_Name, spaceValue))

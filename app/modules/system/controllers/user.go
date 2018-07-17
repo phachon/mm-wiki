@@ -5,6 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
 	"fmt"
+	"github.com/astaxie/beego/validation"
 )
 
 type UserController struct {
@@ -40,8 +41,12 @@ func (this *UserController) Save() {
 	im := strings.TrimSpace(this.GetString("im", ""))
 	this.Ctx.Request.PostForm.Del("password")
 
+	v := validation.Validation{}
 	if username == "" {
 		this.jsonError("用户名不能为空！")
+	}
+	if !v.AlphaNumeric(username, "username").Ok {
+		this.jsonError("用户名格式不正确！")
 	}
 	if givenName == "" {
 		this.jsonError("姓名不能为空！")
@@ -52,11 +57,20 @@ func (this *UserController) Save() {
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
+	if !v.Email(email, "email").Ok {
+		this.jsonError("邮箱格式不正确！")
+	}
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
+	if !v.Mobile(mobile, "mobile").Ok {
+		this.jsonError("手机号格式不正确！")
+	}
 	if roleId == "" {
 		this.jsonError("没有选择角色！")
+	}
+	if phone != "" && !v.Phone(phone, "phone").Ok {
+		this.jsonError("电话格式不正确！")
 	}
 
 	ok , err := models.UserModel.HasUsername(username)
@@ -200,20 +214,27 @@ func (this *UserController) Modify() {
 	location := strings.TrimSpace(this.GetString("location", ""))
 	im := strings.TrimSpace(this.GetString("im", ""))
 
-	if userId == "" {
-		this.jsonError("没有选择用户！")
-	}
+	v := validation.Validation{}
 	if givenName == "" {
 		this.jsonError("姓名不能为空！")
 	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
+	if !v.Email(email, "email").Ok {
+		this.jsonError("邮箱格式不正确！")
+	}
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
+	if !v.Mobile(mobile, "mobile").Ok {
+		this.jsonError("手机号格式不正确！")
+	}
 	if roleId == "" {
 		this.jsonError("没有选择角色！")
+	}
+	if phone != "" && !v.Phone(phone, "phone").Ok {
+		this.jsonError("电话格式不正确！")
 	}
 
 	user, err := models.UserModel.GetUserByUserId(userId)

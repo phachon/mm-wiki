@@ -11,7 +11,6 @@
                 <li title="普通登录" style="border-right: 2px solid #929daf">
                     <label for="tab1" role="button"><br><span>普通登录</span></label>
                 </li>
-                {{/*<div style="float:left;width: 2px;height: 20px; background: #929daf;margin-bottom: 6px"></div>*/}}
                 <li title="统一登录">
                     <label for="tab2" role="button"><br><span>统一登录</span></label>
                 </li>
@@ -38,21 +37,21 @@
                     </form>
                 </section>
                 <section>
-                    <form role="form" action="/author/login" method="post" onsubmit="return false">
+                    <form role="form" action="/author/authLogin" method="post" onsubmit="return false">
                         <fieldset>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="username"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input type="text" name="username" class="form-control" placeholder="请输入统一登录用户名" autocomplete="new-username">
+                                    <input type="text" name="username" class="form-control" placeholder="请输入统一登录用户名" {{if ne .sso_open "1"}} disabled="disabled" {{end}} autocomplete="new-username">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="password"><i class="glyphicon glyphicon-lock"></i></span>
-                                    <input type="password" name="password" class="form-control" placeholder="请输入统一登录密码" autocomplete="new-password">
+                                    <input type="password" name="password" class="form-control" placeholder="请输入统一登录密码" {{if ne .sso_open "1"}} disabled="disabled" {{end}} autocomplete="new-password">
                                 </div>
                             </div>
-                            <input name="submit" type="button" value="登录" class="btn btn-primary btn-block" onclick="Login.ajaxSubmit(this.form)">
+                            <input name="submit" type="button" value="登录" class="btn btn-primary" {{if eq .sso_open "1"}} onclick="Login.ajaxSubmit(this.form)" {{else}} disabled="disabled" {{end}}>
                         </fieldset>
                     </form>
                 </section>

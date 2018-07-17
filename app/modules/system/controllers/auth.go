@@ -223,3 +223,7 @@ func (this *AuthController) Used() {
 	this.InfoLog("启用登录认证 "+authId+" 成功")
 	this.jsonSuccess("启用登录认证成功", nil, "/system/auth/list")
 }
+
+func (this *AuthController) Doc() {
+	this.viewLayout("auth/doc", "default")
+}

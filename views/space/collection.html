@@ -24,7 +24,7 @@
                 <tbody>
                 {{range $space := .spaces}}
                 <tr class="space-list">
-                    <td><a href="/space/page?space_id={{$space.space_id}}" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
+                    <td><a href="/space/document?space_id={{$space.space_id}}" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
                     <td>{{$space.description}}</td>
                     <td class="tags-show">{{$space.tags}}</td>
                     <td class="center">

@@ -215,3 +215,20 @@ func (s *SpaceUser) GetSpaceUsersBySpaceUserIds(spaceUserIds []string) (spaceUse
 	spaceUsers = rs.Rows()
 	return
 }
+
+// space user is exists
+func (s *SpaceUser) HasSpaceUser(spaceId string, userId string) (has bool, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
+		"space_id":  spaceId,
+		"user_id":  userId,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	if rs.Len() > 0 {
+		has = true
+	}
+	return
+}

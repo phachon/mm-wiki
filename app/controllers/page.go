@@ -27,6 +27,23 @@ func (this *PageController) View() {
 		this.ViewError("文档不存在！")
 	}
 
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 所在空间失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
+	}
+
 	// get parent documents by document
 	parentDocuments, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
 	if err != nil {
@@ -75,6 +92,7 @@ func (this *PageController) View() {
 		collectionId = collection["collection_id"]
 	}
 
+	this.Data["space"] = space
 	this.Data["create_user"] = createUser
 	this.Data["edit_user"] = editUser
 	this.Data["document"] = document
@@ -259,4 +277,52 @@ func (this *PageController) Display() {
 	this.Data["page_content"] = documentContent
 	this.Data["parent_documents"] = parentDocuments
 	this.viewLayout("page/display", "document_share")
+}
+
+func (this *PageController) Export() {
+
+	documentId := this.GetString("document_id", "")
+	if documentId == "" {
+		this.ViewError("文档未找到！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(document) == 0 {
+		this.ViewError("文档不存在！")
+	}
+
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 所在空间失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
+	}
+
+	// get parent documents by document
+	parentDocuments, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("查找父文档失败："+err.Error())
+		this.ViewError("查找父文档失败！")
+	}
+	if len(parentDocuments) == 0 {
+		this.ViewError("父文档不存在！")
+	}
+
+	// get document file
+	absPageFile := utils.Document.GetAbsPageFileByPageFile(pageFile)
+	this.Ctx.Output.Download(absPageFile, document["name"]+utils.Document_Page_Suffix)
 }

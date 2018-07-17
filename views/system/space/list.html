@@ -26,15 +26,17 @@
                 <th class="w15p">名称</th>
                 <th>描述</th>
                 <th class="w15p">标签</th>
-                <th class="w15p">访问级别</th>
-                <th class="w20p">操作</th>
+                <th class="w8p">访问级别</th>
+                <th class="w8p">分享</th>
+                <th class="w8p">导出</th>
+                <th class="w15p">操作</th>
             </tr>
             </thead>
             <tbody>
             {{range $space := .spaces}}
             <tr>
                 <td class="center">{{$space.space_id}}</td>
-                <td><a href="/space/page?space_id={{$space.space_id}}" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
+                <td><a href="/space/document?space_id={{$space.space_id}}" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
                 <td>{{$space.description}}</td>
                 <td class="tags-show center">{{$space.tags}}</td>
                 <td class="center">
@@ -45,6 +47,20 @@
                  {{else}}
                      <label class="text text-primary">Public</label>
                  {{end}}
+                </td>
+                <td class="center">
+                {{if eq $space.is_share "1"}}
+                    <span class="label label-success">是</span>
+                {{else}}
+                    <span class="label label-danger">否</span>
+                {{end}}
+                </td>
+                <td class="center">
+                {{if eq $space.is_export "1"}}
+                    <span class="label label-success">是</span>
+                {{else}}
+                    <span class="label label-danger">否</span>
+                {{end}}
                 </td>
                 <td class="center">
                     <a name="edit" class="glyphicon glyphicon-edit" data-link="/system/space/edit?space_id={{$space.space_id}}">修改</a>

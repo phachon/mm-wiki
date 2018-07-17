@@ -284,7 +284,7 @@ func (this *SpaceController) Collection() {
 	this.viewLayout("space/collection", "default")
 }
 
-func (this *SpaceController) Page() {
+func (this *SpaceController) Document() {
 
 	spaceId := this.GetString("space_id", "")
 	if spaceId == "" {
@@ -297,6 +297,14 @@ func (this *SpaceController) Page() {
 	}
 	if len(space) == 0 {
 		this.ViewError("空间不存在！")
+	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
 	}
 
 	spaceDocument, err := models.DocumentModel.GetSpaceDefaultDocument(spaceId)

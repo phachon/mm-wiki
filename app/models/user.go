@@ -108,6 +108,9 @@ func (u *User) Delete(userId string) (err error) {
 
 // insert user
 func (u *User) Insert(userValue map[string]interface{}) (id int64, err error) {
+
+	userValue["create_time"] = time.Now().Unix()
+	userValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_User_Name, userValue))

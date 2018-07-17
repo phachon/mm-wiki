@@ -36,6 +36,13 @@ func (this *DocumentController) Index() {
 	if len(space) == 0 {
 		this.ViewError("文档所在空间不存在！")
 	}
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
+	}
 
 	// get default space document
 	spaceDocument, err := models.DocumentModel.GetSpaceDefaultDocument(spaceId)
@@ -81,6 +88,15 @@ func (this *DocumentController) Add() {
 	if len(space) == 0 {
 		this.ViewError("空间不存在！")
 	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
+	}
+
 	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
 	if err != nil {
 		this.ErrorLog("添加文档 "+parentId+" 失败："+err.Error())
@@ -142,6 +158,14 @@ func (this *DocumentController) Save() {
 	}
 	if len(space) == 0 {
 		this.jsonError("空间不存在！")
+	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.jsonError("您没有权限操作该空间！")
+		}
 	}
 
 	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
@@ -206,6 +230,14 @@ func (this *DocumentController) Edit() {
 		this.ViewError("空间不存在！")
 	}
 
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
+	}
+
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
 	if err != nil {
 		this.ErrorLog("修改文档目录失败："+err.Error())
@@ -257,6 +289,24 @@ func (this *DocumentController) History() {
 	}
 	if len(document) == 0 {
 		this.jsonError("文档不存在！")
+	}
+
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找文档 "+documentId+" 所在空间失败："+err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
+		if !ok {
+			this.ViewError("您没有权限访问该空间！")
+		}
 	}
 
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByDocumentIdAndLimit(documentId, limit, number)

@@ -183,6 +183,21 @@ func (u *Email) GetEmails() (emails []map[string]string, err error) {
 	return
 }
 
+// get used email
+func (u *Email) GetUsedEmail() (email map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().Select("*").From(Table_Email_Name).Where(map[string]interface{}{
+		"is_used": Email_Used_True,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	email = rs.Row()
+	return
+}
+
 // get email count
 func (u *Email) CountEmails() (count int64, err error) {
 

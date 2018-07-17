@@ -46,6 +46,28 @@ func (this *ConfigController) Modify() {
 	sendEmailOpen := strings.TrimSpace(this.GetString("send_email_open", "0"))
 	ssoOpen := strings.TrimSpace(this.GetString("sso_open", "0"))
 
+	if sendEmailOpen == "1" {
+		email, err := models.EmailModel.GetUsedEmail()
+		if err != nil {
+			this.ErrorLog("获取可用的邮箱配置失败: "+err.Error())
+			this.jsonError("配置出错！")
+		}
+		if len(email) == 0 {
+			this.jsonError("开启邮件通知必须先启用一个邮件服务器配置！")
+		}
+	}
+
+	if ssoOpen == "1" {
+		auth, err := models.AuthModel.GetUsedAuth()
+		if err != nil {
+			this.ErrorLog("获取可用的登录认证失败: "+err.Error())
+			this.jsonError("配置出错！")
+		}
+		if len(auth) == 0 {
+			this.jsonError("开启统一登录必须先添加并启用一个登录认证！")
+		}
+	}
+
 	_, err := models.ConfigModel.UpdateByKey("main_title", mainTitle)
 	if err != nil {
 		this.ErrorLog("修改配置 main_title  失败: "+err.Error())
