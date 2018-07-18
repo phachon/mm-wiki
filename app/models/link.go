@@ -165,7 +165,7 @@ func (u *Link) GetLinks() (links []map[string]string, err error) {
 	return
 }
 
-// get all links
+// get all links by sequence
 func (u *Link) GetLinksOrderBySequence() (links []map[string]string, err error) {
 
 	db := G.DB()
