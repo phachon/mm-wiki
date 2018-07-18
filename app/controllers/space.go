@@ -12,6 +12,24 @@ type SpaceController struct {
 }
 
 func (this *SpaceController) Index() {
+
+	// get space tags
+	spaceTags := map[string]string{}
+	spaces, err := models.SpaceModel.GetSpaces()
+	if err == nil {
+		for _, space := range spaces {
+			tags := space["tags"]
+			if tags == "" {
+				continue
+			}
+			tagList := strings.Split(tags, ",")
+			for _, tagName := range tagList {
+				spaceTags[tagName] = tagName
+			}
+		}
+	}
+
+	this.Data["spaceTags"] = spaceTags
 	this.viewLayout("space/index", "space")
 }
 
@@ -319,4 +337,37 @@ func (this *SpaceController) Document() {
 	documentId := spaceDocument["document_id"]
 
 	this.Redirect("/document/index?document_id="+documentId, 302)
+}
+
+func (this *SpaceController) Search() {
+
+	tagName := strings.TrimSpace(this.GetString("tag", ""))
+
+	spaces, err := models.SpaceModel.GetSpacesByTags(tagName)
+	if err != nil {
+		this.ErrorLog("搜索空间标签列表失败: "+err.Error())
+		this.ViewError("获取空间列表失败", "/main/index")
+	}
+
+	collectionSpaces, err := models.CollectionModel.GetCollectionsByUserIdAndType(this.UserId, models.Collection_Type_Space)
+	if err != nil {
+		this.ErrorLog("获取全部空间列表失败: "+err.Error())
+		this.ViewError("获取全部空间列表失败", "/main/index")
+	}
+	for _, space := range spaces {
+		space["collection"] = "0"
+		space["collection_id"] = "0"
+		for _, collectionSpace := range collectionSpaces {
+			if collectionSpace["resource_id"] == space["space_id"] {
+				space["collection"] = "1"
+				space["collection_id"] = collectionSpace["collection_id"]
+				break
+			}
+		}
+	}
+
+	this.Data["tag"] = tagName
+	this.Data["spaces"] = spaces
+	this.Data["count"] = len(spaces)
+	this.viewLayout("space/search", "default")
 }

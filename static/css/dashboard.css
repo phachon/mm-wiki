@@ -179,3 +179,39 @@ body {
 .nav-second-level > li, #side-menu > .nav-third-level > li {
     border-bottom: none !important;
 }
+
+.widget .title {
+    /* margin-top: 0; */
+    padding-bottom: 0;
+    margin-bottom: 0;
+    position: relative;
+    font-size: 1.5em;
+}
+
+.widget > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(82, 82, 82, 1);
+}
+
+.widget .tag-cloud a {
+    /*border: 1px solid #ebebeb;*/
+    border: 1px solid #777;
+    border-radius: .25em;
+    padding: 2px 7px;
+    /*color: rgba(34, 85, 115, 0.9);;*/
+    /*color: #959595;*/
+    color: #fff;
+    line-height: 1.4em;
+    display: inline-block;
+    margin: 0 7px 7px 0;
+    -webkit-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    background: #777;
+}
+
+.widget .tag-cloud a:hover {
+    background: #555;
+}
+

@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="page-header">
+                <h2>空间标签 <small style="font-size: 12px"><span class="label label-default">{{.tag}}</span></small></h2>
+            </div>
+            {{if eq .count 0}}
+                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                    <p><i class="glyphicon glyphicon-volume-up"></i> 没有搜索到该标签下的空间！</p>
+                </div>
+            {{else}}
+            <br>
+            <table class="table" style="margin-bottom: 0">
+                <thead>
+                <tr>
+                    <td class="w15p text-left"><strong>名称</strong></td>
+                    <td class="text-left"><strong>描述</strong></td>
+                    <td class="w15p text-left"><strong>标签</strong></td>
+                    <td class="w15p center"><strong>访问级别</strong></td>
+                    <td class="w13p center"><strong>创建时间</strong></td>
+                    <td class="w13p center"><strong>操作</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $space := .spaces}}
+                <tr class="space-list">
+                    <td><a href="/space/document?space_id={{$space.space_id}}" target="_parent" title="查看空间文档"><strong>{{$space.name}}</strong> <span class="text text-primary"><i class="glyphicon glyphicon-new-window"></i></span></a></td>
+                    <td>{{$space.description}}</td>
+                    <td class="tags-show">{{$space.tags}}</td>
+                    <td class="center">
+                    {{if eq $space.visit_level "private"}}
+                        <label class="text text-danger">Private</label>
+                    {{else if eq $space.visit_level "internal"}}
+                        <label class="text text-warning">Internal</label>
+                    {{else}}
+                        <label class="text text-primary">Public</label>
+                    {{end}}
+                    </td>
+                    <td class="center">
+                    {{dateFormat $space.create_time "Y-m-d"}}
+                    </td>
+                    <td class="center">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
+                            <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+                </tbody>
+            </table>
+            {{end}}
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".tags-show").each(function () {
+            var tags = $(this).text();
+            if (tags !== "") {
+                var html = "";
+                var tagList = tags.split(",");
+                for (var i = 0; i < tagList.length; i++) {
+                    html += "<span class='label label-default'>"+tagList[i]+"</span> ";
+                }
+                $(this).html(html);
+            }
+        });
+    });
+    Layers.bindIframe("[name='user']", "空间成员列表", "500px", "1000px");
+</script>

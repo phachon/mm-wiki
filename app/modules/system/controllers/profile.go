@@ -3,6 +3,7 @@ package controllers
 import (
 	"strings"
 	"mm-wiki/app/models"
+	"github.com/astaxie/beego/validation"
 )
 
 type ProfileController struct {
@@ -75,14 +76,24 @@ func (this *ProfileController) Modify() {
 	location := strings.TrimSpace(this.GetString("location", ""))
 	im := strings.TrimSpace(this.GetString("im", ""))
 
+	v := validation.Validation{}
 	if givenName == "" {
 		this.jsonError("姓名不能为空！")
 	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
+	if !v.Email(email, "email").Ok {
+		this.jsonError("邮箱格式不正确！")
+	}
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
+	}
+	if !v.Mobile(mobile, "mobile").Ok {
+		this.jsonError("手机号格式不正确！")
+	}
+	if phone != "" && !v.Phone(phone, "phone").Ok {
+		this.jsonError("电话格式不正确！")
 	}
 
 	_, err := models.UserModel.Update(this.UserId, map[string]interface{}{

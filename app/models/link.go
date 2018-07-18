@@ -15,7 +15,7 @@ type Link struct {
 var LinkModel = Link{}
 
 // get link by link_id
-func (u *Link) GetLinkByLinkId(linkId string) (link map[string]string, err error) {
+func (l *Link) GetLinkByLinkId(linkId string) (link map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
@@ -29,7 +29,7 @@ func (u *Link) GetLinkByLinkId(linkId string) (link map[string]string, err error
 }
 
 // link_id and name is exists
-func (u *Link) HasSameName(linkId, name string) (has bool, err error) {
+func (l *Link) HasSameName(linkId, name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
@@ -46,7 +46,7 @@ func (u *Link) HasSameName(linkId, name string) (has bool, err error) {
 }
 
 // name is exists
-func (u *Link) HasLinkName(name string) (has bool, err error) {
+func (l *Link) HasLinkName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
@@ -62,7 +62,7 @@ func (u *Link) HasLinkName(name string) (has bool, err error) {
 }
 
 // get link by name
-func (u *Link) GetLinkByName(name string) (link map[string]string, err error) {
+func (l *Link) GetLinkByName(name string) (link map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
@@ -76,7 +76,7 @@ func (u *Link) GetLinkByName(name string) (link map[string]string, err error) {
 }
 
 // delete link by link_id
-func (u *Link) Delete(linkId string) (err error) {
+func (l *Link) Delete(linkId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_Link_Name, map[string]interface{}{
 		"link_id": linkId,
@@ -88,7 +88,7 @@ func (u *Link) Delete(linkId string) (err error) {
 }
 
 // insert link
-func (u *Link) Insert(linkValue map[string]interface{}) (id int64, err error) {
+func (l *Link) Insert(linkValue map[string]interface{}) (id int64, err error) {
 
 	linkValue["create_time"] = time.Now().Unix()
 	linkValue["update_time"] = time.Now().Unix()
@@ -103,7 +103,7 @@ func (u *Link) Insert(linkValue map[string]interface{}) (id int64, err error) {
 }
 
 // update link by link_id
-func (u *Link) Update(linkId string, linkValue map[string]interface{}) (id int64, err error) {
+func (l *Link) Update(linkId string, linkValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	linkValue["update_time"] =  time.Now().Unix()
@@ -118,7 +118,7 @@ func (u *Link) Update(linkId string, linkValue map[string]interface{}) (id int64
 }
 
 // get limit links by search keyword
-func (u *Link) GetLinksByKeywordAndLimit(keyword string, limit int, number int) (links []map[string]string, err error) {
+func (l *Link) GetLinksByKeywordAndLimit(keyword string, limit int, number int) (links []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -134,7 +134,7 @@ func (u *Link) GetLinksByKeywordAndLimit(keyword string, limit int, number int) 
 }
 
 // get limit links
-func (u *Link) GetLinksByLimit(limit int, number int) (links []map[string]string, err error) {
+func (l *Link) GetLinksByLimit(limit int, number int) (links []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -152,7 +152,7 @@ func (u *Link) GetLinksByLimit(limit int, number int) (links []map[string]string
 }
 
 // get all links
-func (u *Link) GetLinks() (links []map[string]string, err error) {
+func (l *Link) GetLinks() (links []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -166,7 +166,7 @@ func (u *Link) GetLinks() (links []map[string]string, err error) {
 }
 
 // get all links by sequence
-func (u *Link) GetLinksOrderBySequence() (links []map[string]string, err error) {
+func (l *Link) GetLinksOrderBySequence() (links []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -180,7 +180,7 @@ func (u *Link) GetLinksOrderBySequence() (links []map[string]string, err error) 
 }
 
 // get link count
-func (u *Link) CountLinks() (count int64, err error) {
+func (l *Link) CountLinks() (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -196,7 +196,7 @@ func (u *Link) CountLinks() (count int64, err error) {
 }
 
 // get link count by keyword
-func (u *Link) CountLinksByKeyword(keyword string) (count int64, err error) {
+func (l *Link) CountLinksByKeyword(keyword string) (count int64, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -214,7 +214,7 @@ func (u *Link) CountLinksByKeyword(keyword string) (count int64, err error) {
 }
 
 // get links by like name
-func (u *Link) GetLinksByLikeName(name string) (links []map[string]string, err error) {
+func (l *Link) GetLinksByLikeName(name string) (links []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
@@ -228,7 +228,7 @@ func (u *Link) GetLinksByLikeName(name string) (links []map[string]string, err e
 }
 
 // get link by many link_id
-func (u *Link) GetLinkByLinkIds(linkIds []string) (links []map[string]string, err error) {
+func (l *Link) GetLinkByLinkIds(linkIds []string) (links []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{

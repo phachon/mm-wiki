@@ -222,6 +222,26 @@ func (s *Space) CountSpaces() (count int64, err error) {
 	return
 }
 
+// get space count
+func (s *Space) CountSpacesByTags(tag string) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_Space_Name).
+			Where(map[string]interface{}{
+			"tags LIKE": "%" + tag + "%",
+			"is_delete": Space_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.NewConvert().StringToInt64(rs.Value("total"))
+	return
+}
+
 // get space count by keyword
 func (s *Space) CountSpacesByKeyword(keyword string) (count int64, err error) {
 
@@ -236,6 +256,23 @@ func (s *Space) CountSpacesByKeyword(keyword string) (count int64, err error) {
 		return
 	}
 	count = utils.Convert.StringToInt64(rs.Value("total"))
+	return
+}
+
+// get space count by tags
+func (s *Space) GetSpacesByTags(tag string) (spaces []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
+		"tags LIKE": "%" + tag + "%",
+		"is_delete": Space_Delete_False,
+	}).OrderBy("space_id", "DESC"))
+	if err != nil {
+		return
+	}
+	spaces = rs.Rows()
+
 	return
 }
 

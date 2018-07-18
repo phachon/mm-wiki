@@ -5,7 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
 	"fmt"
-	"github.com/astaxie/beego/validation"
+	"regexp"
 )
 
 type SpaceController struct {
@@ -28,11 +28,14 @@ func (this *SpaceController) Save() {
 	isShare := strings.TrimSpace(this.GetString("is_share", "1"))
 	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
-	v := validation.Validation{}
 	if name == "" {
 		this.jsonError("空间名称不能为空！")
 	}
-	if !v.AlphaDash(name, "name").Ok {
+	match, err := regexp.MatchString(`[\\\\/:*?\"<>、|]`, name)
+	if err != nil {
+		this.jsonError("空间名称格式不正确！")
+	}
+	if match {
 		this.jsonError("空间名称格式不正确！")
 	}
 	ok, err := models.SpaceModel.HasSpaceName(name)
@@ -135,14 +138,17 @@ func (this *SpaceController) Modify() {
 	isShare := strings.TrimSpace(this.GetString("is_share", "0"))
 	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
-	v := validation.Validation{}
 	if spaceId == "" {
 		this.jsonError("空间不存在！")
 	}
 	if name == "" {
 		this.jsonError("空间名称不能为空！")
 	}
-	if !v.AlphaDash(name, "name").Ok {
+	match, err := regexp.MatchString(`[\\\\/:*?\"<>、|]`, name)
+	if err != nil {
+		this.jsonError("空间名称格式不正确！")
+	}
+	if match {
 		this.jsonError("空间名称格式不正确！")
 	}
 
