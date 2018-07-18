@@ -18,6 +18,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 服务器端口</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="port" class="form-control" placeholder="请输入 smtp 邮件服务器端口(25)" value="{{$email.port}}">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件人邮箱</label>
                     <div class="col-sm-4">
                         <input type="text" name="sender_address" class="form-control" placeholder="请输入发件人邮箱" value="{{$email.sender_address}}">

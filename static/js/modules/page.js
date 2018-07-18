@@ -54,7 +54,7 @@ var Page = {
                 '<textarea name="edit_comment" class="form-control" rows="3" autofocus="autofocus" style="resize:none""></textarea>'+
                 '<div style="margin-top: 8px;text-align: left">'+
                     '<label> 通知关注用户&nbsp;</label>' +
-                    '<input type="checkbox" name="is_notice_user" checked="checked">' +
+                    '<input type="checkbox" name="is_notice_user" checked="checked" value="1">' +
                 '</div>' +
             '</div>';
 
@@ -66,7 +66,11 @@ var Page = {
             btn: ['确定','取消'],
             yes: function(index, layero){
                 var commentText = $("textarea[name='edit_comment']").val().trim();
-                var isNoticeUser = $("input[type='checkbox'][name='is_notice_user']").is(':checked');
+                var isNoticeCheck = $("input[type='checkbox'][name='is_notice_user']").is(':checked');
+                var isNoticeUser = "0";
+                if (isNoticeCheck) {
+                    isNoticeUser = "1";
+                }
                 if (commentText && commentText.length > 0) {
                     if (commentText.length > 50 ) {
                         layer.tips("最多50个字符！", $("textarea[name='edit_comment']"))

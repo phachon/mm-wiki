@@ -209,7 +209,6 @@ CREATE TABLE `mw_log` (
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统操作日志表';
 
-
 -- --------------------------------
 -- 邮件服务器表
 -- --------------------------------
@@ -221,6 +220,7 @@ CREATE TABLE `mw_email` (
   `sender_name` varchar(100) NOT NULL DEFAULT '' COMMENT '发件人显示名',
   `sender_title_prefix` varchar(100) NOT NULL DEFAULT '' COMMENT '发送邮件标题前缀',
   `host` char(100) NOT NULL DEFAULT '' COMMENT '服务器主机名',
+  `port` int(5) NOT NULL DEFAULT '25' COMMENT '服务器端口',
   `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(50) NOT NULL DEFAULT '' COMMENT '密码',
   `is_used` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否被使用， 0 默认不使用 1 使用',

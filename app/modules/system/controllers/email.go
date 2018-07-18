@@ -46,6 +46,7 @@ func (this *EmailController) Save() {
 	senderName := strings.TrimSpace(this.GetString("sender_name", ""))
 	senderTitlePrefix := strings.TrimSpace(this.GetString("sender_title_prefix", ""))
 	host := strings.TrimSpace(this.GetString("host", ""))
+	port := strings.TrimSpace(this.GetString("port", "25"))
 	username := strings.TrimSpace(this.GetString("username", ""))
 	password := strings.TrimSpace(this.GetString("password", ""))
 
@@ -57,6 +58,12 @@ func (this *EmailController) Save() {
 	}
 	if validation.Validate(host, is.Host) != nil {
 		this.jsonError("邮件服务器主机格式不正确！")
+	}
+	if port == "" {
+		this.jsonError("邮件服务器端口不能为空！")
+	}
+	if validation.Validate(port, is.Port) != nil {
+		this.jsonError("邮件服务器端口格式不正确！")
 	}
 	if senderAddress == "" {
 		this.jsonError("发件人邮箱不能为空！")
@@ -83,6 +90,7 @@ func (this *EmailController) Save() {
 		"sender_name": senderName,
 		"sender_title_prefix": senderTitlePrefix,
 		"host": host,
+		"port": port,
 		"username": username,
 		"password": password,
 	})
@@ -122,6 +130,7 @@ func (this *EmailController) Modify() {
 	senderName := strings.TrimSpace(this.GetString("sender_name", ""))
 	senderTitlePrefix := strings.TrimSpace(this.GetString("sender_title_prefix", ""))
 	host := strings.TrimSpace(this.GetString("host", ""))
+	port := strings.TrimSpace(this.GetString("port", ""))
 	username := strings.TrimSpace(this.GetString("username", ""))
 	password := strings.TrimSpace(this.GetString("password", ""))
 
@@ -136,6 +145,12 @@ func (this *EmailController) Modify() {
 	}
 	if validation.Validate(host, is.Host) != nil {
 		this.jsonError("邮件服务器主机格式不正确！")
+	}
+	if port == "" {
+		this.jsonError("邮件服务器端口不能为空！")
+	}
+	if validation.Validate(port, is.Port) != nil {
+		this.jsonError("邮件服务器端口格式不正确！")
 	}
 	if senderAddress == "" {
 		this.jsonError("发件人邮箱不能为空！")
@@ -166,6 +181,7 @@ func (this *EmailController) Modify() {
 		"sender_name": senderName,
 		"sender_title_prefix": senderTitlePrefix,
 		"host": host,
+		"port": port,
 		"username": username,
 		"password": password,
 	})

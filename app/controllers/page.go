@@ -5,6 +5,8 @@ import (
 	"strings"
 	"mm-wiki/app/utils"
 	"regexp"
+	"github.com/astaxie/beego/context"
+	"fmt"
 )
 
 type PageController struct {
@@ -93,6 +95,8 @@ func (this *PageController) View() {
 		collectionId = collection["collection_id"]
 	}
 
+	//sendEmail(documentId, document["name"], "1", this.UserId, this.User["username"], this.Ctx)
+
 	this.Data["space"] = space
 	this.Data["create_user"] = createUser
 	this.Data["edit_user"] = editUser
@@ -149,6 +153,10 @@ func (this *PageController) Modify() {
 	newName := strings.TrimSpace(this.GetString("name", ""))
 	documentContent := this.GetString("document_page_editor-markdown-doc", "")
 	comment := strings.TrimSpace(this.GetString("comment", ""))
+	isNoticeUser := strings.TrimSpace(this.GetString("is_notice_user", "0"))
+
+	// rm document_page_editor-markdown-doc
+	this.Ctx.Request.PostForm.Del("document_page_editor-markdown-doc")
 
 	if documentId == "" {
 		this.jsonError("您没有选择文档！")
@@ -220,6 +228,12 @@ func (this *PageController) Modify() {
 		this.jsonError("修改文档失败！")
 	}
 
+	fmt.Println(isNoticeUser)
+
+	// send follow user email
+	go func() {
+		sendEmail(documentId, newName, isNoticeUser, this.UserId, this.User["username"], this.Ctx)
+	}()
 	this.InfoLog("修改文档 "+documentId+" 成功")
 	this.jsonSuccess("文档修改成功！", nil, "/document/index?document_id="+documentId)
 }
@@ -333,4 +347,73 @@ func (this *PageController) Export() {
 	// get document file
 	absPageFile := utils.Document.GetAbsPageFileByPageFile(pageFile)
 	this.Ctx.Output.Download(absPageFile, document["name"]+utils.Document_Page_Suffix)
+}
+
+func sendEmail(documentId string, documentName string, isNoticeUser string, userId string, username string, ctx *context.Context) {
+
+	if isNoticeUser == "1" {
+
+		// get send email open config
+		sendEmailConfig, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SendEmail)
+		if err != nil {
+			models.LogModel.RecordLogByCtx("发送邮件查找发送邮件配置失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+		if len(sendEmailConfig) == 0 {
+			models.LogModel.RecordLogByCtx("发送邮件发送邮件开启配置不存在", models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+		if sendEmailConfig["value"] == "0" {
+			return
+		}
+
+		// get email config
+		emailConfig, err := models.EmailModel.GetUsedEmail()
+		if err != nil {
+			models.LogModel.RecordLogByCtx("发送邮件查找邮件服务器配置失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+		if len(emailConfig) == 0 {
+			models.LogModel.RecordLogByCtx("发送邮件邮件服务器配置不存在", models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+
+		// get follow doc user
+		follows, err := models.FollowModel.GetFollowsByObjectIdAndType(documentId, models.Follow_Type_Doc)
+		if err != nil {
+			models.LogModel.RecordLogByCtx("发送邮件查找关注文档用户失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+		if len(follows) == 0 {
+			return
+		}
+		userIds := []string{}
+		for _, follow := range follows {
+			userIds = append(userIds, follow["user_id"])
+		}
+		users, err := models.UserModel.GetUsersByUserIds(userIds)
+		if err != nil {
+			models.LogModel.RecordLogByCtx("发送邮件查找关注文档用户失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+		if len(users) == 0 {
+			return
+		}
+		emails := []string{}
+		for _, user := range users {
+			if user["email"] != "" {
+				emails = append(emails, user["email"])
+			}
+		}
+
+		body := fmt.Sprintf("用户 %s 编辑页面 %s", username, documentName)
+
+		fmt.Println(strings.Join(emails, ","))
+		// start send email
+		err = utils.Email.SendByEmail(emailConfig, emails, documentName+"修改通知", body)
+		if err != nil {
+			models.LogModel.RecordLogByCtx("发送邮件通知失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
+			return
+		}
+	}
 }
