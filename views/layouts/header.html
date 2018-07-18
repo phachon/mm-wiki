@@ -11,10 +11,16 @@
                 </ul>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <form class="navbar-form navbar-left">
+                <form class="navbar-form navbar-left" action="#" method="post">
                     <div class="form-group has-feedback">
-                        <i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>
-                        <input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="padding-right: 28px;width: 280px">
+                        {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
+                        <div class="input-group input-group-sm">
+                            <input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="width: 280px">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" name="search"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                        {{/*<input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="padding-right: 28px;width: 280px">*/}}
                     </div>
                     &nbsp;
                     <div class="btn-group btn-group-sm" role="group">
@@ -61,6 +67,7 @@
     if (self != top) {
         parent.location.href = '/'
     }
+    Layers.bindIframe("button[name='search']", "搜索文档", "425px", "800px");
     Layers.bindIframe("a[name='repass']", "修改密码", "325px", "800px");
     Layers.bindIframe("a[name='about']", "关于MM-Wiki", "315px", "500px");
 </script>
