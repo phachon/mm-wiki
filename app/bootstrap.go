@@ -76,10 +76,10 @@ func initConfig()  {
 	beego.BConfig.WebConfig.ViewsPath = "views/"
 
 	// session
-	beego.BConfig.WebConfig.Session.SessionProvider = "file"
-	beego.BConfig.WebConfig.Session.SessionProviderConfig = ".session"
-	beego.BConfig.WebConfig.Session.SessionName = "mmwikissid"
-	beego.BConfig.WebConfig.Session.SessionOn = true
+	//beego.BConfig.WebConfig.Session.SessionProvider = "memory"
+	//beego.BConfig.WebConfig.Session.SessionProviderConfig = ".session"
+	//beego.BConfig.WebConfig.Session.SessionName = "mmwikissid"
+	//beego.BConfig.WebConfig.Session.SessionOn = true
 
 	// log
 	logConfigs, err := beego.AppConfig.GetSection("log")

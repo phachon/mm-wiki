@@ -4,7 +4,8 @@ logs/*.log
 *.exe
 *.exe~
 mm-wiki
-.session/
+*.session/
+.mmwiki.sessions/
 conf/mm-wiki.conf
 release-*
 data/
