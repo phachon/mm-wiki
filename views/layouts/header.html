@@ -18,34 +18,34 @@
                     </div>
                     &nbsp;
                     <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-fullscreen"></i></button>
-                        <button type="button" onclick="layoutToggle()" class="btn btn-primary"><i class="glyphicon glyphicon-transfer"></i></button>
+                        {{/*<button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-fullscreen"></i></button>*/}}
+                        <button type="button" onclick="layoutToggle()" class="btn btn-primary"><i class="fa fa-columns"></i></button>
                     </div>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a type="button" data-toggle="web-popover" data-placement="bottom">
-                            <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
+                            <span class="fa fa-question-circle"></span>&nbsp;帮助
                             <span class="caret"></span>
                         </a>
                         <div class="webui-popover-content">
                             <ul class="dropdown-menu webui-popover-menu">
-                                <li><a href="https://github.com/phachon/mm-wiki" target="_blank"><span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;开源地址</a></li>
-                                <li><a href="https://github.com/phachon/mm-wiki" target="_blank"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
-                                <li><a name="about" data-link="/main/about"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;关于软件</a></li>
+                                <li><a href="https://github.com/phachon/mm-wiki/issues" target="_blank"><span class="fa fa-question-circle"></span>&nbsp;问题反馈</a></li>
+                                <li><a href="https://github.com/phachon/mm-wiki" target="_blank"><span class="fa fa-book"></span>&nbsp;在线文档</a></li>
+                                <li><a name="about" data-link="/main/about"><span class="fa fa-send"></span>&nbsp;关于软件</a></li>
                             </ul>
                         </div>
                     </li>
                     <li class="dropdown">
                         <a type="button" data-toggle="web-popover" data-placement="bottom">
-                            <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.login_username}}
+                            <span class="fa fa-user"></span>&nbsp;{{.login_username}}
                             <span class="caret"></span>
                         </a>
                         <div class="webui-popover-content">
                             <ul class="dropdown-menu webui-popover-menu">
-                                <li><a href="/system/main/index"><span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;个人中心</a></li>
-                                <li><a name="repass" data-link="/system/profile/password"><span class="glyphicon glyphicon-lock"></span>&nbsp;&nbsp;修改密码</a></li>
-                                <li><a href="/author/logout"><span class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;安全退出</a></li>
+                                <li><a href="/system/main/index"><span class="glyphicon glyphicon-edit"></span>&nbsp;个人中心</a></li>
+                                <li><a name="repass" data-link="/system/profile/password"><span class="glyphicon glyphicon-lock"></span>&nbsp;修改密码</a></li>
+                                <li><a href="/author/logout"><span class="glyphicon glyphicon-off"></span>&nbsp;安全退出</a></li>
                             </ul>
                         </div>
                     </li>
