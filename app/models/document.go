@@ -295,6 +295,41 @@ func (d *Document) GetDocumentsByLikeName(name string) (documents []map[string]s
 	return
 }
 
+// get document link name and limit
+func (d *Document) GetDocumentsByLikeNameAndLimit(name string, limit int, number int) (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"name Like": "%" + name + "%",
+		"is_delete":     Document_Delete_False,
+	}).Limit(limit, number))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
+// count document like name
+func (d *Document) CountDocumentsLikeName(name string) (count int64, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().
+			Select("count(*) as total").
+			From(Table_Document_Name).
+			Where(map[string]interface{}{
+			"name Like": "%" + name + "%",
+			"is_delete": Document_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	count = utils.Convert.StringToInt64(rs.Value("total"))
+	return
+}
+
 // get document by spaceId and document_ids
 func (d *Document) GetDocumentsByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
 	db := G.DB()

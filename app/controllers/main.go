@@ -126,3 +126,37 @@ func (this *MainController) Default() {
 func (this *MainController) About() {
 	this.viewLayout("main/about", "default")
 }
+
+func (this *MainController) Search() {
+
+	page, _ := this.GetInt("page", 1)
+	documentName := this.GetString("document_name", "")
+
+	number := 15
+	limit := (page - 1) * number
+
+	var documents = []map[string]string{}
+	var err error
+	var count int64
+
+	if documentName != "" {
+		count, err = models.DocumentModel.CountDocumentsLikeName(documentName)
+		if err != nil {
+			this.ErrorLog("搜索文档总数出错："+err.Error())
+			this.ViewError("搜索文档错误！")
+		}
+		if count > 0 {
+			documents, err = models.DocumentModel.GetDocumentsByLikeNameAndLimit(documentName, limit, number)
+			if err != nil {
+				this.ErrorLog("搜索文档列表出错："+err.Error())
+				this.ViewError("搜索文档错误！")
+			}
+		}
+	}
+
+	this.Data["document_name"] = documentName
+	this.Data["documents"] = documents
+	this.Data["count"] = count
+	this.SetPaginator(number, count)
+	this.viewLayout("main/search", "default")
+}

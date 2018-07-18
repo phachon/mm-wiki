@@ -10,6 +10,9 @@ const (
 	Role_Delete_True = 1
 	Role_Delete_False = 0
 
+	Role_Type_System = 1
+	Role_Type_Default = 0
+
 	Role_Root_Id = 1
 	Role_Admin_Id = 2
 	Role_Default_Id = 3
@@ -105,6 +108,9 @@ func (u *Role) Delete(roleId string) (err error) {
 
 // insert role
 func (u *Role) Insert(roleValue map[string]interface{}) (id int64, err error) {
+
+	roleValue["create_time"] =  time.Now().Unix()
+	roleValue["update_time"] =  time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Role_Name, roleValue))
@@ -214,7 +220,7 @@ func (u *Role) CountRolesByKeyword(keyword string) (count int64, err error) {
 		From(Table_Role_Name).
 		Where(map[string]interface{}{
 			"name LIKE": "%" + keyword + "%",
-			"is_delete":     Role_Delete_False,
+			"is_delete": Role_Delete_False,
 		}))
 	if err != nil {
 		return
@@ -229,7 +235,7 @@ func (u *Role) GetRoleByLikeName(name string) (roles []map[string]string, err er
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
 		"name Like": "%" + name + "%",
-		"is_delete":     Role_Delete_False,
+		"is_delete": Role_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -260,6 +266,7 @@ func (u *Role) UpdateRoleByName(role map[string]interface{}) (affect int64, err 
 	role["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Role_Name, role, map[string]interface{}{
 		"name": role["name"],
+		"is_delete": Role_Delete_False,
 	}))
 	if err != nil {
 		return

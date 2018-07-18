@@ -6,6 +6,7 @@ import (
 	"mm-wiki/app/utils"
 	"fmt"
 	"regexp"
+	"os"
 )
 
 type SpaceController struct {
@@ -118,6 +119,10 @@ func (this *SpaceController) Edit() {
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
+		this.ErrorLog("查找空间失败: "+err.Error())
+		this.ViewError("查找空间失败", "/system/space/list")
+	}
+	if len(space) == 0 {
 		this.ViewError("空间不存在", "/system/space/list")
 	}
 
@@ -239,4 +244,96 @@ func (this *SpaceController) Member() {
 	this.Data["otherUsers"] = otherUsers
 	this.SetPaginator(number, count)
 	this.viewLayout("space/member", "default")
+}
+
+func (this *SpaceController) Delete() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/space/list")
+	}
+	spaceId := this.GetString("space_id", "")
+	if spaceId == "" {
+		this.jsonError("没有选择空间！")
+	}
+
+	space, err := models.RoleModel.GetRoleByRoleId(spaceId)
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
+	}
+	if len(space) == 0 {
+		this.jsonError("空间不存在")
+	}
+
+	// check space user
+	spaceUsers, err := models.SpaceUserModel.GetSpaceUsersBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
+	}
+	if len(spaceUsers) > 0 {
+		this.jsonError("不能删除空间，请先移除该空间下用户成员!")
+	}
+
+	// check space documents
+	documents, err := models.DocumentModel.GetDocumentsBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
+	}
+	if len(documents) > 0 {
+		this.jsonError("不能删除空间，请先删除该空间下文档!")
+	}
+
+	// delete space
+	err = models.RoleModel.Delete(spaceId)
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
+	}
+
+	this.InfoLog("删除空间 "+spaceId+" 成功")
+	this.jsonSuccess("删除空间成功", nil, "/system/space/list")
+}
+
+func (this *SpaceController) Download() {
+
+	spaceId := this.GetString("space_id", "")
+	if spaceId == "" {
+		this.ViewError("空间不存在", "/system/space/list")
+	}
+
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找空间失败: "+err.Error())
+		this.ViewError("查找空间失败", "/system/space/list")
+	}
+	if len(space) == 0 {
+		this.ViewError("空间不存在", "/system/space/list")
+	}
+
+	spaceName := space["name"]
+	spacePath := utils.Document.GetAbsPageFileByPageFile(spaceName)
+
+	f3, err := os.Open(spacePath)
+	if err != nil {
+		this.ErrorLog("下载空间 "+spaceId+" 打开空间目录失败："+err.Error())
+		this.ViewError("下载空间文档失败")
+	}
+	defer f3.Close()
+	var files = []*os.File{f3}
+
+	tempDir := os.TempDir()+"/"+"mmwiki"
+	os.RemoveAll(tempDir)
+	os.Mkdir(tempDir, 0777)
+	var dest = tempDir+"/"+spaceName+".zip"
+
+	fmt.Println(dest)
+	err = utils.Zipx.Compress(files, dest)
+	if err != nil {
+		this.ErrorLog("下载空间 "+spaceId+" 压缩文档失败："+err.Error())
+		this.ViewError("空间文档压缩失败")
+	}
+
+	this.Ctx.Output.Download(dest, spaceName+".zip")
 }

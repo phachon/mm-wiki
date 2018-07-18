@@ -349,6 +349,22 @@ func (u *User) GetUsersByUserIds(userIds []string) (users []map[string]string, e
 	return
 }
 
+// get user by many user_id
+func (u *User) GetUsersByRoleId(roleId string) (users []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
+		"role_id":   roleId,
+		"is_delete": User_Delete_False,
+	}).OrderBy("user_id", "DESC"))
+	if err != nil {
+		return
+	}
+	users = rs.Rows()
+	return
+}
+
+
 // get user by not in user_ids
 func (u *User) GetUserByNotUserIds(userIds []string) (users []map[string]string, err error) {
 	db := G.DB()

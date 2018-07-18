@@ -15,9 +15,9 @@
                     <div class="form-group has-feedback">
                         {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
                         <div class="input-group input-group-sm">
-                            <input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="width: 280px">
+                            <input class="form-control input-sm" name="document_name" type="text" placeholder="输入文档名搜索..." style="width: 280px">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" name="search"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-primary" type="button" name="search" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
                             </span>
                         </div>
                         {{/*<input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="padding-right: 28px;width: 280px">*/}}
@@ -67,7 +67,21 @@
     if (self != top) {
         parent.location.href = '/'
     }
-    Layers.bindIframe("button[name='search']", "搜索文档", "425px", "800px");
+    function mainSearch(element, url) {
+        var searchText = $(element).find("input[name='document_name']").val();
+        url = url + "?document_name="+searchText;
+        layer.open({
+            type: 2,
+            skin: Layers.skin,
+            title: '<strong>搜索文档</strong>',
+            shadeClose: true,
+            shade : 0.6,
+            maxmin: true,
+            area: ["1000px", "525px"],
+            content: url,
+            padding:"10px"
+        });
+    }
     Layers.bindIframe("a[name='repass']", "修改密码", "325px", "800px");
     Layers.bindIframe("a[name='about']", "关于MM-Wiki", "315px", "500px");
 </script>

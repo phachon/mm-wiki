@@ -39,20 +39,21 @@ DROP TABLE IF EXISTS `mw_role`;
 CREATE TABLE `mw_role` (
   `role_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色 id',
   `name` char(10) NOT NULL DEFAULT '' COMMENT '角色名称',
+  `type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '角色类型 0 自定义角色，1 系统角色',
   `is_delete` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否删除，0 否 1 是',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色表';
 
-INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
-VALUES ('超级管理员', '0', '1500825600', '1500825600');
+INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
+VALUES ('超级管理员', '1', '0', '1500825600', '1500825600');
 
-INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
-VALUES ('管理员', '0', '1500825600', '1500825600');
+INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
+VALUES ('管理员', '1', '0', '1500825600', '1500825600');
 
-INSERT INTO `mw_role` (`name`, `is_delete`, `create_time`, `update_time`)
-VALUES ('普通用户', '0', '1500825600', '1500825600');
+INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
+VALUES ('普通用户', '1', '0', '1500825600', '1500825600');
 
 -- -------------------------------------------------------
 -- 系统权限表

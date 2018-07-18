@@ -24,7 +24,7 @@
             <tr>
                 <th class="w8p">ID</th>
                 <th>名称</th>
-                <th class="w15p">创建时间</th>
+                <th class="w8p">类型</th>
                 <th class="w15p">修改时间</th>
                 <th class="w20p">操作</th>
             </tr>
@@ -35,7 +35,11 @@
                 <td class="center">{{$role.role_id}}</td>
                 <td>{{$role.name}}</td>
                 <td class="center">
-                {{dateFormat $role.create_time "Y-m-d H:i:s"}}
+                {{if eq $role.type "1"}}
+                    <span class="label label-danger">系统</span>
+                {{else}}
+                    <span class="label label-success">自定义</span>
+                {{end}}
                 </td>
                 <td class="center">
                 {{dateFormat $role.update_time "Y-m-d H:i:s"}}
@@ -47,7 +51,9 @@
                     <a name="edit" data-link="/system/role/edit?role_id={{$role.role_id}}"><i class="glyphicon glyphicon-edit" ></i>修改</a>
                     <a name="privilege" data-link="/system/role/privilege?role_id={{$role.role_id}}"><i class="glyphicon glyphicon-lock" ></i>权限</a>
                     <a name="user" data-link="/system/role/user?role_id={{$role.role_id}}"><i class="glyphicon glyphicon-user" ></i>用户</a>
-                    <a onclick="Layers.confirm('确定删除吗？', '/system/role/delete?role_id={{$role.role_id}}');"><i class="remove glyphicon glyphicon-trash"></i>删除</a>
+                    {{if eq $role.type "0"}}
+                        <a onclick="Layers.confirm('确定删除吗？', '/system/role/delete?role_id={{$role.role_id}}');"><i class="remove glyphicon glyphicon-trash"></i>删除</a>
+                    {{end}}
                     {{end}}
                 </td>
             </tr>

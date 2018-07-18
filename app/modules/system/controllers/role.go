@@ -80,9 +80,16 @@ func (this *RoleController) Edit() {
 	if roleId == "" {
 		this.ViewError("角色不存在", "/system/role/list")
 	}
+	if roleId == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.ViewError("不能修改超级管理员", "/system/role/list")
+	}
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
+		this.ErrorLog("查找角色错误：" +err.Error())
+		this.ViewError("查找角色错误", "/system/role/list")
+	}
+	if len(role) == 0 {
 		this.ViewError("角色不存在", "/system/role/list")
 	}
 
@@ -98,8 +105,12 @@ func (this *RoleController) Modify() {
 	roleId := this.GetString("role_id", "")
 	name := strings.TrimSpace(this.GetString("name", ""))
 
+
 	if roleId == "" {
 		this.jsonError("角色不存在！")
+	}
+	if roleId == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("超级管理员不能修改！")
 	}
 	if name == "" {
 		this.jsonError("角色名称不能为空！")
@@ -244,4 +255,91 @@ func (this *RoleController) GrantPrivilege() {
 
 	this.InfoLog("角色 "+roleId+" 授权成功")
 	this.jsonSuccess("角色授权成功", nil, "/system/role/list")
+}
+
+func (this *RoleController) Delete() {
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/role/list")
+	}
+
+	roleId := this.GetString("role_id", "")
+	if roleId == "" {
+		this.jsonError("没有选择角色！")
+	}
+	if roleId == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("超级管理员不能修改！")
+	}
+
+	role, err := models.RoleModel.GetRoleByRoleId(roleId)
+	if err != nil {
+		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.jsonError("删除角色失败")
+	}
+	if len(role) == 0 {
+		this.jsonError("角色不存在")
+	}
+	if role["type"] == fmt.Sprintf("%d", models.Role_Type_System) {
+		this.jsonError("系统角色不能删除！")
+	}
+
+	// check role user
+	users, err := models.UserModel.GetUsersByRoleId(roleId)
+	if err != nil {
+		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.jsonError("删除角色失败")
+	}
+	if len(users) > 0 {
+		this.jsonError("不能删除角色，请先移除该角色下用户!")
+	}
+
+	// check role privilege
+	privileges, err := models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+	if err != nil {
+		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.jsonError("删除角色失败")
+	}
+	if len(privileges) > 0 {
+		this.jsonError("不能删除角色，请先移除该角色下权限!")
+	}
+
+	// delete role
+	err = models.RoleModel.Delete(roleId)
+	if err != nil {
+		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.jsonError("删除角色失败")
+	}
+
+	this.InfoLog("删除角色 "+roleId+" 成功")
+	this.jsonSuccess("删除角色成功", nil, "/system/role/list")
+}
+
+func (this *RoleController) ResetUser() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/role/list")
+	}
+	userId := this.GetString("user_id", "")
+	if userId == "" {
+		this.jsonError("用户不存在")
+	}
+
+	user, err := models.UserModel.GetUserByUserId(userId)
+	if err != nil {
+		this.ErrorLog("重置用户 "+userId+" 角色失败: "+err.Error())
+		this.jsonError("重置用户角色失败")
+	}
+	if len(user) == 0 {
+		this.jsonError("用户不存在")
+	}
+
+	_, err = models.UserModel.Update(userId, map[string]interface{}{
+		"role_id": models.Role_Default_Id,
+	})
+	if err != nil {
+		this.ErrorLog("重置用户 "+userId+" 角色失败: "+err.Error())
+		this.jsonError("重置用户角色失败")
+	}
+
+	this.InfoLog("重置用户 "+userId+" 角色成功")
+	this.jsonSuccess("重置用户角色成功", nil, "system/role/list")
 }

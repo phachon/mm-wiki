@@ -19,8 +19,9 @@
                 <th>姓名</th>
                 <th class="w15p">邮箱</th>
                 <th class="w11p">手机号</th>
-                <th class="w15p">角色</th>
                 <th class="w8p">状态</th>
+                <th class="w15p">角色</th>
+                <th class="w10p">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -32,14 +33,17 @@
                 <td>{{$user.email}}</td>
                 <td class="center">{{$user.mobile}}</td>
                 <td class="center">
+                {{if eq $user.is_forbidden "1"}}
+                    <span class="label label-danger">屏蔽</span>
+                {{else}}
+                    <span class="label label-success">正常</span>
+                {{end}}
+                </td>
+                <td class="center">
                     <label class="text-info">{{$user.role_name}}</label>
                 </td>
                 <td class="center">
-                    {{if eq $user.is_forbidden "1"}}
-                    <span class="label label-danger">屏蔽</span>
-                    {{else}}
-                    <span class="label label-success">正常</span>
-                    {{end}}
+                    <a onclick="Layers.confirm('确定重置该用户为默认角色吗？', '/system/role/resetUser?user_id={{$user.user_id}}');"><i class="remove glyphicon glyphicon-refresh"></i>重置角色</a>
                 </td>
             </tr>
             {{end}}

@@ -1,0 +1,52 @@
+<div class="container-fluid">{{$documents := .documents}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="/main/search" method="get">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input class="form-control" name="document_name" type="text" value="{{.document_name}}" placeholder="输入文档名搜索...">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            {{if eq .count 0}}
+                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                    <p><i class="glyphicon glyphicon-volume-up"></i> 没有找到搜索结果！</p>
+                </div>
+            {{else}}
+            <div class="row">
+                <div class="document-update">
+                    <ul>
+                    {{range $document := $documents}}
+                        <li>
+                            <div>
+                                <a href="/document/index?document_id={{$document.document_id}}" target="_parent" class="text text-info text-font-15">
+                                {{if eq $document.type "1"}}
+                                    <i class="fa fa-file-word-o"></i>
+                                {{else}}
+                                    <i class="fa fa-folder-o"></i>
+                                {{end}}
+                                {{$document.name}}</a>
+                            </div>
+                            <span class="text text-font-12 document-user-time"><i class="fa fa-calendar"></i>
+                    创建于 {{dateFormat $document.create_time "Y-m-d H:i:s"}}，修改于{{dateFormat $document.update_time "Y-m-d H:i:s"}}
+                    </span>
+                        </li>
+                        <hr>
+                    {{end}}
+                    </ul>
+                </div>
+            </div>
+            <div class="center">
+            {{template "paginator/default.html" .}}
+            </div>
+            {{end}}
+
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <br>{{$role := .role}}
-            <form class="form-horizontal" method="post" action="{{if $role}} /system/role/modify {{else}} /system/role/save {{end}}">
+            <form class="form-horizontal" method="post" action="{{if $role}} /system/role/modify {{else}} /system/role/save {{end}}" onsubmit="return false">
                 <input type="hidden" name="role_id" value="{{$role.role_id}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 角色名称</label>
