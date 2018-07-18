@@ -165,6 +165,20 @@ func (u *Link) GetLinks() (links []map[string]string, err error) {
 	return
 }
 
+// get all links
+func (u *Link) GetLinksOrderBySequence() (links []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Link_Name).OrderBy("sequence", "DESC"))
+	if err != nil {
+		return
+	}
+	links = rs.Rows()
+	return
+}
+
 // get link count
 func (u *Link) CountLinks() (count int64, err error) {
 
