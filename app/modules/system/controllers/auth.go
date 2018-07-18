@@ -4,6 +4,9 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	"github.com/astaxie/beego/validation"
+	valid "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 )
 
 type AuthController struct {
@@ -23,14 +26,22 @@ func (this *AuthController) Save() {
 	url := strings.TrimSpace(this.GetString("url", ""))
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
+
+	v := validation.Validation{}
 	if name == "" {
 		this.jsonError("登录认证名称不能为空！")
 	}
-	if url == "" {
-		this.jsonError("登录认证地址不能为空！")
-	}
 	if usernamePrefix == "" {
 		this.jsonError("用户名前缀不能为空！")
+	}
+	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
+		this.jsonError("用户名前缀格式不正确！")
+	}
+	if url == "" {
+		this.jsonError("认证URL不能为空！")
+	}
+	if valid.Validate(url, is.URL) != nil {
+		this.jsonError("认证URL格式不正确！")
 	}
 
 	ok, err := models.AuthModel.HasAuthName(name)
@@ -121,17 +132,24 @@ func (this *AuthController) Modify() {
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
+	v := validation.Validation{}
 	if authId == "" {
 		this.jsonError("登录认证不存在！")
 	}
 	if name == "" {
 		this.jsonError("登录认证名称不能为空！")
 	}
-	if url == "" {
-		this.jsonError("登录认证地址不能为空！")
-	}
 	if usernamePrefix == "" {
 		this.jsonError("用户名前缀不能为空！")
+	}
+	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
+		this.jsonError("用户名前缀格式不正确！")
+	}
+	if url == "" {
+		this.jsonError("认证URL不能为空！")
+	}
+	if valid.Validate(url, is.URL) != nil {
+		this.jsonError("认证URL格式不正确！")
 	}
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)

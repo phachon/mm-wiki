@@ -4,8 +4,8 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
-	"regexp"
 	"time"
+	"github.com/astaxie/beego/validation"
 )
 
 type ContactController struct {
@@ -26,6 +26,7 @@ func (this *ContactController) Save() {
 	position := strings.Trim(this.GetString("position", ""), "")
 	email := strings.Trim(this.GetString("email", ""), "")
 
+	v := validation.Validation{}
 	if name == "" {
 		this.jsonError("联系人姓名不能为空！")
 	}
@@ -35,14 +36,13 @@ func (this *ContactController) Save() {
 	if mobile == "" {
 		this.jsonError("联系电话不能为空！")
 	}
+	if !v.Phone(mobile, "mobile").Ok {
+		this.jsonError("联系电话格式不正确！")
+	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
-	res, err := regexp.MatchString(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, email)
-	if err != nil {
-		this.jsonError("邮箱格式不正确！")
-	}
-	if !res && email != "" {
+	if !v.Email(email, "email").Ok {
 		this.jsonError("邮箱格式不正确！")
 	}
 
@@ -104,6 +104,7 @@ func (this *ContactController) Modify() {
 	position := strings.Trim(this.GetString("position", ""), "")
 	email := strings.Trim(this.GetString("email", ""), "")
 
+	v := validation.Validation{}
 	if contactId == "" {
 		this.jsonError("参数错误！")
 	}
@@ -116,14 +117,13 @@ func (this *ContactController) Modify() {
 	if mobile == "" {
 		this.jsonError("联系电话不能为空！")
 	}
+	if !v.Phone(mobile, "mobile").Ok {
+		this.jsonError("联系电话格式不正确！")
+	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
-	res, err := regexp.MatchString(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, email)
-	if err != nil {
-		this.jsonError("邮箱格式不正确！")
-	}
-	if !res && email != "" {
+	if !v.Email(email, "email").Ok {
 		this.jsonError("邮箱格式不正确！")
 	}
 
@@ -134,7 +134,7 @@ func (this *ContactController) Modify() {
 		"email":       email,
 		"update_time": time.Now().Unix(),
 	}
-	_, err = models.ContactModel.UpdateByContactId(contact, contactId)
+	_, err := models.ContactModel.UpdateByContactId(contact, contactId)
 	if err != nil {
 		this.ErrorLog("修改联系人 "+contactId+" 失败：" + err.Error())
 		this.jsonError("修改联系人"+contactId+"失败")

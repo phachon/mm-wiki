@@ -5,6 +5,7 @@ import (
 	"mm-wiki/app/models"
 	"strings"
 	"fmt"
+	"github.com/astaxie/beego/validation"
 )
 
 type DocumentController struct {
@@ -134,6 +135,7 @@ func (this *DocumentController) Save() {
 	docType, _ := this.GetInt("type", models.Document_Type_Page)
 	name := strings.TrimSpace(this.GetString("name", ""))
 
+	v := validation.Validation{}
 	if spaceId == "0" {
 		this.jsonError("没有选择空间！")
 	}
@@ -142,6 +144,9 @@ func (this *DocumentController) Save() {
 	}
 	if name == "" {
 		this.jsonError("文档名称不能为空！")
+	}
+	if !v.AlphaDash(name, "name").Ok {
+		this.jsonError("文档名称格式不正确！")
 	}
 	if name == utils.Document_Default_FileName {
 		this.jsonError("文档名称不能为 "+ utils.Document_Default_FileName+" ！")

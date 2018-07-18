@@ -4,6 +4,8 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	valid "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 )
 
 type LinkController struct {
@@ -28,7 +30,9 @@ func (this *LinkController) Save() {
 	if url == "" {
 		this.jsonError("链接地址不能为空！")
 	}
-
+	if valid.Validate(url, is.URL) != nil {
+		this.jsonError("链接地址格式不正确！")
+	}
 	ok, err := models.LinkModel.HasLinkName(name)
 	if err != nil {
 		this.ErrorLog("添加链接失败："+err.Error())
@@ -114,6 +118,9 @@ func (this *LinkController) Modify() {
 	}
 	if url == "" {
 		this.jsonError("链接地址不能为空！")
+	}
+	if valid.Validate(url, is.URL) != nil {
+		this.jsonError("链接地址格式不正确！")
 	}
 
 	link, err := models.LinkModel.GetLinkByLinkId(linkId)

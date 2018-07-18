@@ -4,6 +4,8 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	"github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 )
 
 type EmailController struct {
@@ -52,6 +54,9 @@ func (this *EmailController) Save() {
 	}
 	if host == "" {
 		this.jsonError("邮件服务器主机不能为空！")
+	}
+	if validation.Validate(host, is.Host) != nil {
+		this.jsonError("邮件服务器主机格式不正确！")
 	}
 	if senderAddress == "" {
 		this.jsonError("发件人邮箱不能为空！")
@@ -128,6 +133,9 @@ func (this *EmailController) Modify() {
 	}
 	if host == "" {
 		this.jsonError("邮件服务器主机不能为空！")
+	}
+	if validation.Validate(host, is.Host) != nil {
+		this.jsonError("邮件服务器主机格式不正确！")
 	}
 	if senderAddress == "" {
 		this.jsonError("发件人邮箱不能为空！")

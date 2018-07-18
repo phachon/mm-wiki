@@ -32,7 +32,7 @@ func (this *SpaceController) Save() {
 	if name == "" {
 		this.jsonError("空间名称不能为空！")
 	}
-	if !v.AlphaNumeric(name, "name").Ok {
+	if !v.AlphaDash(name, "name").Ok {
 		this.jsonError("空间名称格式不正确！")
 	}
 	ok, err := models.SpaceModel.HasSpaceName(name)
@@ -135,11 +135,15 @@ func (this *SpaceController) Modify() {
 	isShare := strings.TrimSpace(this.GetString("is_share", "0"))
 	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
+	v := validation.Validation{}
 	if spaceId == "" {
 		this.jsonError("空间不存在！")
 	}
 	if name == "" {
 		this.jsonError("空间名称不能为空！")
+	}
+	if !v.AlphaDash(name, "name").Ok {
+		this.jsonError("空间名称格式不正确！")
 	}
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)

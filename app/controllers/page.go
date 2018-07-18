@@ -4,6 +4,7 @@ import (
 	"mm-wiki/app/models"
 	"strings"
 	"mm-wiki/app/utils"
+	"github.com/astaxie/beego/validation"
 )
 
 type PageController struct {
@@ -149,11 +150,15 @@ func (this *PageController) Modify() {
 	documentContent := this.GetString("document_page_editor-markdown-doc", "")
 	comment := strings.TrimSpace(this.GetString("comment", ""))
 
+	v := validation.Validation{}
 	if documentId == "" {
 		this.jsonError("您没有选择文档！")
 	}
 	if newName == "" {
 		this.jsonError("文档名称不能为空！")
+	}
+	if !v.AlphaDash(newName, "name").Ok {
+		this.jsonError("文档名称格式不正确！")
 	}
 	if newName == utils.Document_Default_FileName {
 		this.jsonError("文档名称不能为 "+ utils.Document_Default_FileName+" ！")
