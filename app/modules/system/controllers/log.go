@@ -97,7 +97,7 @@ func (this *LogController) Document() {
 		this.ErrorLog("文档日志查找失败："+err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
-	docs, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
 		this.ErrorLog("文档日志查找失败："+err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")

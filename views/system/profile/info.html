@@ -23,13 +23,22 @@
                         {{range $logDocument := .logDocuments}}
                             <li>
                                 <div>
-                                    <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent" class="text text-info text-font-15">
-                                    {{if eq $logDocument.document_type "1"}}
-                                        <i class="fa fa-file-word-o"></i>
+                                    {{if eq $logDocument.action "3"}}
+                                        {{if eq $logDocument.document_type "1"}}
+                                            <i class="fa fa-file-word-o"></i>
+                                        {{else}}
+                                            <i class="fa fa-folder-o"></i>
+                                        {{end}}
+                                        {{$logDocument.document_name}}
                                     {{else}}
-                                        <i class="fa fa-folder-o"></i>
+                                        <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent" class="text text-info text-font-15">
+                                        {{if eq $logDocument.document_type "1"}}
+                                            <i class="fa fa-file-word-o"></i>
+                                        {{else}}
+                                            <i class="fa fa-folder-o"></i>
+                                        {{end}}
+                                        {{$logDocument.document_name}}</a>
                                     {{end}}
-                                    {{$logDocument.document_name}}</a>
                                 </div>
                                 <span class="text text-font-12 activity-time">{{if eq $logDocument.action "1"}}创建
                                 {{else if eq $logDocument.action "2"}}修改{{else if eq $logDocument.action "3"}}删除

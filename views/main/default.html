@@ -16,6 +16,14 @@
                             {{range $logDocument := $logDocuments}}
                             <li>
                                 <div>
+                                    {{if eq $logDocument.action "3"}}
+                                        {{if eq $logDocument.document_type "1"}}
+                                            <i class="fa fa-file-word-o"></i>
+                                        {{else}}
+                                            <i class="fa fa-folder-o"></i>
+                                        {{end}}
+                                        {{$logDocument.document_name}}
+                                    {{else}}
                                     <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent" class="text text-info text-font-15">
                                         {{if eq $logDocument.document_type "1"}}
                                             <i class="fa fa-file-word-o"></i>
@@ -23,6 +31,7 @@
                                             <i class="fa fa-folder-o"></i>
                                         {{end}}
                                          {{$logDocument.document_name}}</a>
+                                    {{end}}
                                 </div>
                                 <span class="text text-font-12 document-user-time"><i class="fa fa-calendar"></i> 被
                                 {{if eq $logDocument.user_id $.login_user_id}}

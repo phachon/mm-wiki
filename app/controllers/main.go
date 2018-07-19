@@ -58,7 +58,7 @@ func (this *MainController) Default() {
 		this.ErrorLog("查找更新文档用户失败："+err.Error())
 		this.ViewError("查找更新文档列表失败！")
 	}
-	docs, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
 		this.ErrorLog("查找文档信息失败："+err.Error())
 		this.ViewError("查找更新文档列表失败！")

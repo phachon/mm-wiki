@@ -74,6 +74,8 @@ func (this *SpaceController) Save() {
 	}
 	_, err = models.DocumentModel.Insert(spaceDocument)
 	if err != nil {
+		// delete space
+		models.SpaceModel.Delete(fmt.Sprintf("%d", spaceId))
 		this.ErrorLog("添加空间文档失败："+err.Error())
 		this.jsonError("添加空间失败！")
 	}

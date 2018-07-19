@@ -28,7 +28,7 @@ func (this *ProfileController) Info() {
 	for _, logDocument := range logDocuments {
 		docIds = append(docIds, logDocument["document_id"])
 	}
-	documents, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	documents, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
 		this.ErrorLog("查找用户活动出错: "+err.Error())
 		this.ViewError("查找用户活动出错", "/main/index")
@@ -244,7 +244,7 @@ func (this *ProfileController) Activity() {
 		this.ErrorLog("我的活动查找失败："+err.Error())
 		this.ViewError("我的活动查找失败！", "/system/main/index")
 	}
-	docs, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
+	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
 		this.ErrorLog("我的活动查找失败："+err.Error())
 		this.ViewError("我的活动查找失败！", "/system/main/index")

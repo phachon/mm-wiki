@@ -61,7 +61,13 @@
                         <label class="text text-danger">删除</label>
                     {{end}}
                     </td>
-                    <td><a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent">{{$logDocument.document_name}}</a></td>
+                    <td>
+                    {{if eq $logDocument.action "3"}}
+                       {{$logDocument.document_name}}
+                    {{else}}
+                        <a href="/document/index?document_id={{$logDocument.document_id}}" target="_parent">{{$logDocument.document_name}}</a>
+                    {{end}}
+                    </td>
                     <td>{{$logDocument.comment}}</td>
                     <td class="center">{{dateFormat $logDocument.create_time "Y-m-d H:i:s"}}</td>
                 </tr>

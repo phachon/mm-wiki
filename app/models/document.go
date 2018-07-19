@@ -496,6 +496,19 @@ func (d *Document) GetDocumentsByDocumentIds(documentIds []string) (documents []
 	return
 }
 
+func (d *Document) GetAllDocumentsByDocumentIds(documentIds []string) (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"document_id": documentIds,
+	}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
 func (d *Document) GetParentDocumentsByDocument(document map[string]string) (parentDocuments []map[string]string, pageFile string, err error) {
 
 	if document["parent_id"] == "0" {
