@@ -106,6 +106,19 @@ func (f *Follow) Delete(followId string) (err error) {
 	return
 }
 
+// delete follow by type and object_id
+func (f *Follow) DeleteByObjectIdType(objectId string, followType string) (err error) {
+	db := G.DB()
+	_, err = db.Exec(db.AR().Delete(Table_Follow_Name, map[string]interface{}{
+		"type": followType,
+		"object_id": objectId,
+	}))
+	if err != nil {
+		return
+	}
+	return
+}
+
 // insert follow user
 func (f *Follow) Insert(userId string, fType int, objectId string) (id int64, err error) {
 	followValue := map[string]interface{}{

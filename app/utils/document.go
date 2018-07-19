@@ -138,8 +138,23 @@ func (d *document) Delete(path string, docType int) error {
 	d.lock.Lock()
 	defer d.lock.Unlock()
 
+	absPageFile := d.GetAbsPageFileByPageFile(path)
+
 	if docType == Document_Type_Page {
-		return os.Remove(path)
+		return os.Remove(absPageFile)
 	}
-	return os.Remove(filepath.Dir(path))
+	return os.RemoveAll(filepath.Dir(absPageFile))
+}
+
+func (d *document) Move(movePath string, targetPath string, docType int) error {
+	d.lock.Lock()
+	defer d.lock.Unlock()
+
+	absOldPageFile := d.GetAbsPageFileByPageFile(movePath)
+	absTargetPageFile := d.GetAbsPageFileByPageFile(targetPath)
+
+	if docType == Document_Type_Page {
+		return os.Rename(absOldPageFile, absTargetPageFile)
+	}
+	return os.Rename(filepath.Dir(absOldPageFile), filepath.Dir(absTargetPageFile))
 }

@@ -39,6 +39,21 @@ func (d *Document) GetDocumentByDocumentId(documentId string) (document map[stri
 	return
 }
 
+// get documents by parent_id
+func (d *Document) GetDocumentsByParentId(parentId string) (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"parent_id": parentId,
+		"is_delete": Document_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
 // get document by name
 func (d *Document) GetDocumentsByName(name string) (documents []map[string]string, err error) {
 	db := G.DB()
@@ -89,14 +104,33 @@ func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId str
 }
 
 // delete document by document_id
-func (d *Document) Delete(documentId string) (err error) {
+func (d *Document) Delete(documentId string, userId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Document_Name, map[string]interface{}{
-		"is_delete": Document_Delete_False,
+		"is_delete": Document_Delete_True,
 		"update_time": time.Now().Unix(),
+		"edit_user_id": userId,
 	}, map[string]interface{}{
 		"document_id": documentId,
 	}))
+	if err != nil {
+		return
+	}
+
+	// create document log
+	_, err = LogDocumentModel.DeleteAction(userId, documentId)
+	if err != nil {
+		return
+	}
+
+	// delete follow doc
+	err = FollowModel.DeleteByObjectIdType(fmt.Sprintf("%d", Follow_Type_Doc), documentId)
+	if err != nil {
+		return
+	}
+
+	// delete collect doc
+	err = CollectionModel.DeleteByResourceIdType(fmt.Sprintf("%d", Collection_Type_Doc), documentId)
 	if err != nil {
 		return
 	}

@@ -216,69 +216,7 @@ func (this *DocumentController) Save() {
 	this.jsonSuccess("创建文档成功", nil, "/document/index?document_id="+utils.Convert.IntToString(documentId, 10))
 }
 
-// edit document
-func (this *DocumentController) Edit() {
-
-	documentId := this.GetString("document_id", "0")
-	spaceId := strings.TrimSpace(this.GetString("space_id", "0"))
-
-	if spaceId == "0" {
-		this.ViewError("没有选择空间！")
-	}
-	if documentId == "0" {
-		this.ViewError("没有选择文档目录！")
-	}
-
-	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
-	if err != nil {
-		this.ErrorLog("修改文档目录失败："+err.Error())
-		this.ViewError("修改文档失败！")
-	}
-	if len(space) == 0 {
-		this.ViewError("空间不存在！")
-	}
-
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
-	}
-
-	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
-	if err != nil {
-		this.ErrorLog("修改文档目录失败："+err.Error())
-		this.jsonError("修改文档目录失败！")
-	}
-	if len(document) == 0 {
-		this.jsonError("文档目录不存在！")
-	}
-
-	path := document["path"]
-	// get parent documents by path
-	parentDocuments, err := models.DocumentModel.GetParentDocumentsByPath(path)
-	if err != nil {
-		this.ErrorLog("查找父文档失败："+err.Error())
-		this.ViewError("查找父文档失败！")
-	}
-	if len(parentDocuments) == 0 {
-		this.ViewError("父文档不存在！")
-	}
-
-	this.Data["document"] = document
-	this.Data["parent_documents"] = parentDocuments
-	this.viewLayout("document/edit", "default")
-}
-
-// modify document
-func (this *DocumentController) Modify() {
-
-	documentId := this.GetString("document_id", "")
-
-	this.Redirect("/document/view?document_id="+documentId, 302)
-}
-
+// document history
 func (this *DocumentController) History() {
 
 	page, _ := this.GetInt("page", 1)
@@ -350,4 +288,165 @@ func (this *DocumentController) History() {
 	this.Data["logDocuments"] = logDocuments
 	this.SetPaginator(number, count)
 	this.viewLayout("document/history", "default")
+}
+
+// move document
+func (this *DocumentController) Move() {
+
+	documentId := this.GetString("document_id", "0")
+	targetId := this.GetString("target_id", "0")
+
+	if documentId == "0" {
+		this.jsonError("没有选择文档节点！")
+	}
+	if targetId == "0" {
+		this.jsonError("没有选择目标文档节点！")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找移动文档失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	if len(document) == 0 {
+		this.jsonError("文档不存在！")
+	}
+	if document["type"] == fmt.Sprintf("%d", models.Document_Type_Dir) {
+		this.jsonError("不能移动文档目录！")
+	}
+
+	targetDocument, err := models.DocumentModel.GetDocumentByDocumentId(targetId)
+	if err != nil {
+		this.ErrorLog("查找目标文档失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	if len(targetDocument) == 0 {
+		this.jsonError("目标文档不存在！")
+	}
+	if document["space_id"] != targetDocument["space_id"] {
+		this.jsonError("文档和目标文档不在同一空间！")
+	}
+	if targetDocument["type"] != fmt.Sprintf("%d", models.Document_Type_Dir) {
+		this.jsonError("目标文档必须是目录！")
+	}
+
+	space, err := models.SpaceModel.GetSpaceBySpaceId(document["space_id"])
+	if err != nil {
+		this.ErrorLog("移动文档失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	if len(space) == 0 {
+		this.jsonError("文档空间不存在！")
+	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(document["space_id"], this.UserId)
+		if !ok {
+			this.ViewError("您没有权限移动该空间！")
+		}
+	}
+
+	_, oldPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	newDocument := map[string]string{
+		"space_id": document["space_id"],
+		"parent_id": targetId,
+		"name": document["name"],
+		"type": document["type"],
+		"path": targetDocument["path"]+","+targetId,
+	}
+	_, newPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(newDocument)
+	if err != nil {
+		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	err = utils.Document.Move(oldPageFile, newPageFile, utils.Convert.StringToInt(document["type"]))
+	if err != nil {
+		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+
+	// update database
+	updateValue := map[string]interface{}{
+		"parent_id": targetId,
+		"path": targetDocument["path"]+","+targetId,
+		"edit_user_id": this.UserId,
+	}
+	_, err = models.DocumentModel.Update(documentId, updateValue, "移动文档到 "+targetDocument["name"])
+	if err != nil {
+		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("移动文档失败！")
+	}
+
+	this.InfoLog("移动文档 "+documentId+" 成功")
+	this.jsonSuccess("移动文档成功", nil, "/document/index?document_id="+documentId)
+}
+
+// delete document
+func (this *DocumentController) Delete() {
+
+	documentId := this.GetString("document_id", "0")
+
+	if documentId == "0" {
+		this.jsonError("没有选择文档！")
+	}
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("删除文档失败："+err.Error())
+		this.jsonError("删除文档失败！")
+	}
+	if len(document) == 0 {
+		this.jsonError("文档不存在！")
+	}
+	if document["type"] == fmt.Sprintf("%d", models.Document_Type_Dir) {
+		childDocs, err := models.DocumentModel.GetDocumentsByParentId(document["document_id"])
+		if err != nil {
+			this.ErrorLog("删除文档失败："+err.Error())
+			this.jsonError("删除文档失败！")
+		}
+		if len(childDocs) > 0 {
+			this.jsonError("请先删除或移动目录下所有文档！")
+		}
+	}
+
+	space, err := models.SpaceModel.GetSpaceBySpaceId(document["space_id"])
+	if err != nil {
+		this.ErrorLog("删除文档失败："+err.Error())
+		this.jsonError("删除文档失败！")
+	}
+	if len(space) == 0 {
+		this.jsonError("文档空间不存在！")
+	}
+
+	// check space visit_level
+	if space["visit_level"] == models.Space_VisitLevel_Private {
+		ok, _  := models.SpaceUserModel.HasSpaceUser(document["space_id"], this.UserId)
+		if !ok {
+			this.ViewError("您没有权限删除该空间！")
+		}
+	}
+
+	_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
+	if err != nil {
+		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("删除文档失败！")
+	}
+	err = utils.Document.Delete(pageFile, utils.Convert.StringToInt(document["type"]))
+	if err != nil {
+		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("删除文档失败！")
+	}
+
+	err = models.DocumentModel.Delete(documentId, this.UserId)
+	if err != nil {
+		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("删除文档失败！")
+	}
+
+	this.InfoLog("删除文档 "+documentId+" 成功")
+	this.jsonSuccess("删除文档成功", "", "/document/index?document_id="+document["parent_id"])
 }

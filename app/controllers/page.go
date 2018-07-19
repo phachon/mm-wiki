@@ -228,7 +228,7 @@ func (this *PageController) Modify() {
 		this.jsonError("修改文档失败！")
 	}
 
-	fmt.Println(isNoticeUser)
+	//fmt.Println(isNoticeUser)
 
 	// send follow user email
 	go func() {

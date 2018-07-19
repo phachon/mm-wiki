@@ -89,6 +89,19 @@ func (c *Collection) Delete(collectionId string) (err error) {
 	return
 }
 
+// delete collection by type and object_id
+func (c *Collection) DeleteByResourceIdType(resourceId string, collectType string) (err error) {
+	db := G.DB()
+	_, err = db.Exec(db.AR().Delete(Table_Collection_Name, map[string]interface{}{
+		"type": collectType,
+		"resource_id": resourceId,
+	}))
+	if err != nil {
+		return
+	}
+	return
+}
+
 // insert collection
 func (c *Collection) Insert(collectionValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()

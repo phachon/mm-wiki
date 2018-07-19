@@ -39,7 +39,7 @@ var Document = {
             },
             edit: {
                 enable: true,
-                showRemoveBtn: false,
+                showRemoveBtn: true,
                 showRenameBtn: false
                 // removeTitle: '删除',
                 // renameTitle: '修改'
@@ -64,7 +64,9 @@ var Document = {
                 beforeDrag: beforeDrag,
                 onDrag : onDrag,
                 beforeDrop  : beforeDrop,
-                onDrop   : onDrop
+                onDrop   : onDrop,
+
+                beforeRemove: beforeRemove,
             },
             drag: {
                 isCopy: false,
@@ -105,6 +107,27 @@ var Document = {
 
         function beforeRemove(treeId, treeNode) {
             console.log("删除节点前...");
+            console.log(treeNode);
+            if (treeNode.isParent) {
+                if (treeNode.children && treeNode.children.length > 0) {
+                    Layers.failedMsg("请先删除或移动目录下所有文档！");
+                    return false;
+                }
+            }
+
+            var title = '<i class="fa fa-volume-up"></i> 确定要删除文档吗？';
+            layer.confirm(title, {
+                btn: ['是','否'],
+                skin: Layers.skin,
+                btnAlign: 'c',
+                title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
+            }, function() {
+                Common.ajaxSubmit("/document/delete?document_id="+treeNode.id);
+                // location.href = "/document/index?document_id="+moveNode.id;
+            }, function() {
+
+            });
+
             return false;
         }
 
@@ -119,6 +142,9 @@ var Document = {
         
         function beforeDrag(treeId, treeNodes) {
             console.log("拖拽节点前...");
+            if (treeNodes[0].isParent) {
+                return false;
+            }
             return true;
         }
 
@@ -129,10 +155,42 @@ var Document = {
 
         function beforeDrop(treeId, treeNodes, targetNode, moveType) {
             console.log("拖拽节点完成...");
-            return true;
+            if (moveType === "prev") {
+                return false;
+            }
+            if (moveType === "next") {
+                return false;
+            }
+            console.log(treeNodes[0]);
+            console.log(targetNode);
+            var moveNode = treeNodes[0];
+            if (moveNode.isParent) {
+                return false;
+            }
+            if (!targetNode.isParent) {
+                return false;
+            }
+
+            console.log(treeNodes[0]);
+            console.log(targetNode);
+
+            var title = '<i class="fa fa-volume-up"></i> 确定要移动文档吗？';
+            layer.confirm(title, {
+                btn: ['是','否'],
+                skin: Layers.skin,
+                btnAlign: 'c',
+                title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
+            }, function() {
+                Common.ajaxSubmit("/document/move?document_id="+moveNode.id+"&target_id="+targetNode.id);
+                // location.href = "/document/index?document_id="+moveNode.id;
+            }, function() {
+
+            });
+
+            return false;
         }
 
-        function onDrop() {
+        function onDrop(treeId, treeNodes, targetNode, moveType) {
             console.log("拖拽节点完成中...");
             return false;
         }
@@ -143,13 +201,9 @@ var Document = {
             }
             var sObj = $("#" + treeNode.tId + "_span");
             var addBtn = $("#addBtn_"+treeNode.tId);
-            var editBtn = $("#editBtn_"+treeNode.tId);
             if (addBtn.length > 0) return;
-            if (editBtn.length > 0) return;
 
-            var spanHtml =
-                "<span class='button add' id='addBtn_"+treeNode.tId+"' title='新建文档' onfocus='this.blur();'></span>"+
-                "<span class='button edit' id='editBtn_"+treeNode.tId+"' title='修改目录' onfocus='this.blur();'></span>";
+            var spanHtml = "<span class='button add' id='addBtn_"+treeNode.tId+"' title='新建文档' onfocus='this.blur();'></span>";
             sObj.append(spanHtml);
 
             // bind add
@@ -169,29 +223,10 @@ var Document = {
                 });
                 return false;
             });
-
-            // bind edit
-            var editBtn = $("#editBtn_"+treeNode.tId);
-            if (editBtn) editBtn.bind("click", function() {
-                var content = "/document/edit?space_id="+treeNode.spaceId+"&document_id="+treeNode.id;
-                layer.open({
-                    type: 2,
-                    skin: Layers.skin,
-                    title: '<strong>修改目录</strong>',
-                    shadeClose: true,
-                    shade : 0.6,
-                    maxmin: true,
-                    area: ["800px", "345px"],
-                    content: content,
-                    padding:"10px"
-                });
-                return false;
-            });
         }
 
         function removeHoverDom(treeId, treeNode) {
             $("#addBtn_"+treeNode.tId).unbind().remove();
-            $("#editBtn_"+treeNode.tId).unbind().remove();
         }
 
         $(document).ready(function() {

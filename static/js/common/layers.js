@@ -31,16 +31,16 @@ var Layers = {
 		})
 	},
 	
-	failedMsg: function (info) {
+	failedMsg: function (info, callback) {
 		var content = '<i class="fa fa-frown-o"></i> ';
 		content += info;
-		layer.msg(content, function () {});
+		layer.msg(content, callback);
 	},
 
-	successMsg: function (info) {
+	successMsg: function (info, callback) {
 		var content = '<i class="fa fa-smile-o"></i> ';
 		content += info;
-		layer.msg(content);
+		layer.msg(content, callback);
 	},
 
 	/**
