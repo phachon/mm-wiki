@@ -104,42 +104,75 @@ func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId str
 }
 
 // delete document by document_id
-func (d *Document) Delete(documentId string, userId string) (err error) {
+func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile string, docType string) (err error) {
 	db := G.DB()
-	_, err = db.Exec(db.AR().Update(Table_Document_Name, map[string]interface{}{
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+	_, err = db.ExecTx(db.AR().Update(Table_Document_Name, map[string]interface{}{
 		"is_delete": Document_Delete_True,
 		"update_time": time.Now().Unix(),
 		"edit_user_id": userId,
 	}, map[string]interface{}{
 		"document_id": documentId,
-	}))
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// delete document file
+	err = utils.Document.Delete(pageFile, utils.Convert.StringToInt(docType))
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	err = tx.Commit()
 	if err != nil {
 		return
 	}
 
 	// create document log
-	_, err = LogDocumentModel.DeleteAction(userId, documentId)
-	if err != nil {
-		return
-	}
+	go func() {
+		LogDocumentModel.DeleteAction(userId, documentId)
+	}()
 
 	// delete follow doc
-	err = FollowModel.DeleteByObjectIdType(fmt.Sprintf("%d", Follow_Type_Doc), documentId)
-	if err != nil {
-		return
-	}
+	go func() {
+		FollowModel.DeleteByObjectIdType(fmt.Sprintf("%d", Follow_Type_Doc), documentId)
+	}()
 
 	// delete collect doc
-	err = CollectionModel.DeleteByResourceIdType(fmt.Sprintf("%d", Collection_Type_Doc), documentId)
-	if err != nil {
-		return
-	}
+	go func() {
+		CollectionModel.DeleteByResourceIdType(fmt.Sprintf("%d", Collection_Type_Doc), documentId)
+	}()
+
 	return
 }
 
 // insert document
 func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
 
+	db := G.DB()
+	// start db begin
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+
+	var rs *mysql.ResultSet
+	documentValue["create_time"] = time.Now().Unix()
+	documentValue["update_time"] = time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Insert(Table_Document_Name, documentValue), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	// create document page file
 	document := map[string]string{
 		"space_id": documentValue["space_id"].(string),
 		"parent_id": documentValue["parent_id"].(string),
@@ -150,29 +183,23 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	_, pageFile, err := d.GetParentDocumentsByDocument(document)
 	err = utils.Document.Create(pageFile)
 	if err != nil {
+		tx.Rollback()
 		return
 	}
-	documentValue["create_time"] = time.Now().Unix()
-	documentValue["update_time"] = time.Now().Unix()
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Exec(db.AR().Insert(Table_Document_Name, documentValue))
+	err = tx.Commit()
 	if err != nil {
 		return
 	}
-	id = rs.LastInsertId
 
 	// create document log
-	_, err = LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
-	if err != nil {
-		return
-	}
+	go func() {
+		LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
+	}()
 
 	// follow document
-	_, err = FollowModel.createFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
-	if err != nil {
-		return
-	}
+	go func() {
+		FollowModel.createFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
+	}()
 	return
 }
 
@@ -191,16 +218,106 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 	id = rs.LastInsertId
 
 	// create document log
-	_, err = LogDocumentModel.UpdateAction(documentValue["edit_user_id"].(string), documentId, comment)
+	go func() {
+		LogDocumentModel.UpdateAction(documentValue["edit_user_id"].(string), documentId, comment)
+	}()
+
+	// follow document
+	go func() {
+		FollowModel.createFollowDocument(documentValue["edit_user_id"].(string), documentId)
+	}()
+	return
+}
+
+// move document
+func (d *Document) MoveDBAndFile(documentId string, updateValue map[string]interface{}, oldPageFile string, newPageFile string, docType string, comment string) (id int64, err error) {
+
+	db := G.DB()
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+	var rs *mysql.ResultSet
+	updateValue["update_time"] =  time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Update(Table_Document_Name, updateValue, map[string]interface{}{
+		"document_id":   documentId,
+		"is_delete": Document_Delete_False,
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	err = utils.Document.Move(oldPageFile, newPageFile, utils.Convert.StringToInt(docType))
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Commit()
 	if err != nil {
 		return
 	}
 
-	// follow document
-	_, err = FollowModel.createFollowDocument(documentValue["edit_user_id"].(string), documentId)
+	// create document log
+	go func() {
+		LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
+	}()
+
+	return
+}
+
+// update document by document_id
+func (d *Document) UpdateDBAndFile(documentId string, document map[string]string, documentContent string, updateValue map[string]interface{}, comment string) (id int64, err error) {
+
+	// get document page file
+	_, oldPageFile, err := DocumentModel.GetParentDocumentsByDocument(document)
 	if err != nil {
 		return
 	}
+	// begin update
+	db := G.DB()
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+	var rs *mysql.ResultSet
+	updateValue["update_time"] =  time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Update(Table_Document_Name, updateValue, map[string]interface{}{
+		"document_id":   documentId,
+		"is_delete": Document_Delete_False,
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	// update document file
+	docType := utils.Convert.StringToInt(document["type"])
+	nameIsChange := updateValue["name"].(string) == document["name"]
+	err = utils.Document.Update(oldPageFile, updateValue["name"].(string), documentContent, docType, nameIsChange)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// commit
+	err = tx.Commit()
+	if err != nil {
+		return
+	}
+
+	// create document log
+	go func() {
+		LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
+	}()
+
+	// create follow doc
+	go func() {
+		FollowModel.createFollowDocument(updateValue["edit_user_id"].(string), documentId)
+	}()
+
 	return
 }
 

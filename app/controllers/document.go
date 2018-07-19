@@ -364,19 +364,14 @@ func (this *DocumentController) Move() {
 		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("移动文档失败！")
 	}
-	err = utils.Document.Move(oldPageFile, newPageFile, utils.Convert.StringToInt(document["type"]))
-	if err != nil {
-		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
-		this.jsonError("移动文档失败！")
-	}
 
-	// update database
+	// update database and move document file
 	updateValue := map[string]interface{}{
 		"parent_id": targetId,
 		"path": targetDocument["path"]+","+targetId,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.Update(documentId, updateValue, "移动文档到 "+targetDocument["name"])
+	_, err = models.DocumentModel.MoveDBAndFile(documentId, updateValue, oldPageFile, newPageFile, document["type"], "移动文档到 "+targetDocument["name"])
 	if err != nil {
 		this.ErrorLog("移动文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("移动文档失败！")
@@ -435,13 +430,8 @@ func (this *DocumentController) Delete() {
 		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("删除文档失败！")
 	}
-	err = utils.Document.Delete(pageFile, utils.Convert.StringToInt(document["type"]))
-	if err != nil {
-		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
-		this.jsonError("删除文档失败！")
-	}
 
-	err = models.DocumentModel.Delete(documentId, this.UserId)
+	err = models.DocumentModel.DeleteDBAndFile(documentId, this.UserId, pageFile, document["type"])
 	if err != nil {
 		this.ErrorLog("删除文档 "+documentId+" 失败："+err.Error())
 		this.jsonError("删除文档失败！")

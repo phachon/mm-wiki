@@ -140,6 +140,10 @@ func (d *document) Delete(path string, docType int) error {
 
 	absPageFile := d.GetAbsPageFileByPageFile(path)
 
+	ok , _ := File.PathIsExists(absPageFile)
+	if !ok {
+		return nil
+	}
 	if docType == Document_Type_Page {
 		return os.Remove(absPageFile)
 	}
