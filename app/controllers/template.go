@@ -263,6 +263,28 @@ func (this *TemplateController) IsRoot() bool {
 	return this.User["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id)
 }
 
+func (this *TemplateController) GetDocumentPrivilege(space map[string]string) (isVisit, isEditor, isDelete bool) {
+
+	if this.IsRoot() {
+		return true, true, true
+	}
+	spaceUser, _  := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(space["space_id"], this.UserId)
+	if len(spaceUser) == 0 {
+		if space["visit_level"] == models.Space_VisitLevel_Private {
+			return false, false, false
+		}else {
+			return true, false, false
+		}
+	}
+	if spaceUser["privilege"] == fmt.Sprintf("%d", models.SpaceUser_Privilege_Editor) {
+		return true, true, false
+	}
+	if spaceUser["privilege"] == fmt.Sprintf("%d", models.SpaceUser_Privilege_Manager) {
+		return true, true, true
+	}
+	return true, false, false
+}
+
 // insert action log
 func (this *TemplateController) RecordLog(message string, level int) {
 	userAgent := this.Ctx.Request.UserAgent()

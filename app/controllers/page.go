@@ -40,11 +40,9 @@ func (this *PageController) View() {
 		this.ViewError("文档所在空间不存在！")
 	}
 	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
+	isVisit, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isVisit {
+		this.ViewError("您没有权限访问该空间！")
 	}
 
 	// get parent documents by document
@@ -95,8 +93,7 @@ func (this *PageController) View() {
 		collectionId = collection["collection_id"]
 	}
 
-	//sendEmail(documentId, document["name"], "1", this.UserId, this.User["username"], this.Ctx)
-
+	this.Data["is_editor"] = isEditor
 	this.Data["space"] = space
 	this.Data["create_user"] = createUser
 	this.Data["edit_user"] = editUser
@@ -122,6 +119,21 @@ func (this *PageController) Edit() {
 	}
 	if len(document) == 0 {
 		this.ViewError("文档不存在！")
+	}
+
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.ViewError("修改文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+	// check space visit_level
+	_, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isEditor {
+		this.ViewError("您没有权限修改该空间下文档！")
 	}
 
 	// get parent documents by document
@@ -186,6 +198,22 @@ func (this *PageController) Modify() {
 	if len(document) == 0 {
 		this.jsonError("文档不存在！")
 	}
+
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("修改文档 "+documentId+" 失败："+err.Error())
+		this.jsonError("保存文档失败！")
+	}
+	if len(space) == 0 {
+		this.jsonError("文档所在空间不存在！")
+	}
+	// check space document privilege
+	_, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isEditor {
+		this.jsonError("您没有权限修改该空间下文档！")
+	}
+
 	// not allow update space document home page name
 	if document["parent_id"] == "0" {
 		newName = document["name"]

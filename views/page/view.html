@@ -36,7 +36,9 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <div class="btn-group" role="group" aria-label="...">
-                                <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                                {{if eq .is_editor true}}
+                                    <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                                {{end}}
                                 {{if eq $collectionId "0"}}
                                     <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
                                 {{else}}

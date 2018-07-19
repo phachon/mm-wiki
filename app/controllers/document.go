@@ -38,11 +38,9 @@ func (this *DocumentController) Index() {
 		this.ViewError("文档所在空间不存在！")
 	}
 	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
+	isVisit, _, _ := this.GetDocumentPrivilege(space)
+	if !isVisit {
+		this.ViewError("您没有权限访问该空间下的文档！")
 	}
 
 	// get default space document
@@ -90,21 +88,19 @@ func (this *DocumentController) Add() {
 		this.ViewError("空间不存在！")
 	}
 
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
+	// check space document privilege
+	_, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isEditor {
+		this.ViewError("您没有权限创建该空间下的文档！")
 	}
 
 	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
 	if err != nil {
 		this.ErrorLog("添加文档 "+parentId+" 失败："+err.Error())
-		this.jsonError("添加文档失败！")
+		this.ViewError("添加文档失败！")
 	}
 	if len(parentDocument) == 0 {
-		this.jsonError("父文档不存在！")
+		this.ViewError("父文档不存在！")
 	}
 	path := parentDocument["path"] + ","+parentId
 	// get parent documents by path
@@ -168,12 +164,10 @@ func (this *DocumentController) Save() {
 		this.jsonError("空间不存在！")
 	}
 
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.jsonError("您没有权限操作该空间！")
-		}
+	// check space document privilege
+	_, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isEditor {
+		this.jsonError("您没有权限在该空间下创建文档！")
 	}
 
 	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)
@@ -338,13 +332,10 @@ func (this *DocumentController) Move() {
 	if len(space) == 0 {
 		this.jsonError("文档空间不存在！")
 	}
-
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(document["space_id"], this.UserId)
-		if !ok {
-			this.ViewError("您没有权限移动该空间！")
-		}
+	// check space document privilege
+	_, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isEditor {
+		this.jsonError("您没有权限移动该空间下的文档！")
 	}
 
 	_, oldPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
@@ -416,13 +407,10 @@ func (this *DocumentController) Delete() {
 	if len(space) == 0 {
 		this.jsonError("文档空间不存在！")
 	}
-
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(document["space_id"], this.UserId)
-		if !ok {
-			this.ViewError("您没有权限删除该空间！")
-		}
+	// check space document privilege
+	_, _, isDelete := this.GetDocumentPrivilege(space)
+	if !isDelete {
+		this.jsonError("您没有权限删除该空间下的文档！")
 	}
 
 	_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
