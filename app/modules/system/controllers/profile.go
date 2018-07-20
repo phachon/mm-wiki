@@ -204,9 +204,16 @@ func (this *ProfileController) FollowDoc() {
 		}
 	}
 
+	autoFollowDoc := "0"
+	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_AutoFollowDoc)
+	if len(autoFollowConfig) > 0 && autoFollowConfig["value"] == "1" {
+		autoFollowDoc = "1"
+	}
+
 	this.Data["followDocuments"] = followDocuments
 	this.Data["count"] = len(documents)
 	this.Data["user"] = this.User
+	this.Data["autoFollowDoc"] = autoFollowDoc
 	this.SetPaginator(number, count)
 	this.viewLayout("profile/follow_doc", "default")
 }

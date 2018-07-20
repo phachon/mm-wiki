@@ -150,6 +150,20 @@ func (this *PageController) Edit() {
 		this.ViewError("文档不存在！")
 	}
 
+	autoFollowDoc := "0"
+	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_AutoFollowDoc)
+	if len(autoFollowConfig) > 0 && autoFollowConfig["value"] == "1" {
+		autoFollowDoc = "1"
+	}
+
+	sendEmail := "0"
+	sendEmailConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_SendEmail)
+	if len(sendEmailConfig) > 0 && sendEmailConfig["value"] == "1" {
+		sendEmail = "1"
+	}
+
+	this.Data["sendEmail"] = sendEmail
+	this.Data["autoFollowDoc"] = autoFollowDoc
 	this.Data["page_content"] = documentContent
 	this.Data["document"] = document
 	this.viewLayout("page/edit", "document_page")
@@ -166,6 +180,7 @@ func (this *PageController) Modify() {
 	documentContent := this.GetString("document_page_editor-markdown-doc", "")
 	comment := strings.TrimSpace(this.GetString("comment", ""))
 	isNoticeUser := strings.TrimSpace(this.GetString("is_notice_user", "0"))
+	isFollowDoc := strings.TrimSpace(this.GetString("is_follow_doc", "0"))
 
 	// rm document_page_editor-markdown-doc
 	this.Ctx.Request.PostForm.Del("document_page_editor-markdown-doc")
@@ -242,10 +257,16 @@ func (this *PageController) Modify() {
 		this.jsonError("修改文档失败！")
 	}
 
-	// send follow user email
+	// send email to follow user
 	if isNoticeUser == "1" {
 		go func() {
 			sendEmail(documentId, newName, this.UserId, this.User["username"], this.Ctx)
+		}()
+	}
+	// follow doc
+	if isFollowDoc == "1" {
+		go func() {
+			models.FollowModel.FollowDocument(this.UserId, documentId)
 		}()
 	}
 

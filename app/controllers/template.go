@@ -263,7 +263,7 @@ func (this *TemplateController) IsRoot() bool {
 	return this.User["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id)
 }
 
-func (this *TemplateController) GetDocumentPrivilege(space map[string]string) (isVisit, isEditor, isDelete bool) {
+func (this *TemplateController) GetDocumentPrivilege(space map[string]string) (isVisit, isEditor, isManager bool) {
 
 	if this.IsRoot() {
 		return true, true, true

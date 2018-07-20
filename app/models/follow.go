@@ -197,17 +197,35 @@ func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string
 	return
 }
 
-// create follow document
-func (f *Follow) createFollowDocument(userId string, documentId string) (id int64, err error) {
+// create auto follow document
+func (f *Follow) CreateAutoFollowDocument(userId string, documentId string) (id int64, err error) {
+
+	autoFollow, err := ConfigModel.GetConfigByKey(Config_Key_AutoFollowDoc)
+	if err != nil {
+		return 0, err
+	}
+	if len(autoFollow) > 0 && autoFollow["value"] == "1" {
+		follow, err := f.GetFollowByUserIdAndTypeAndObjectId(userId, Follow_Type_Doc, documentId)
+		if err != nil {
+			return 0, err
+		}
+		if len(follow) == 0 {
+			return f.Insert(userId, Follow_Type_Doc, documentId)
+		}
+	}
+	return 0, nil
+}
+
+func (f *Follow) FollowDocument(userId string, documentId string) (id int64, err error) {
 
 	follow, err := f.GetFollowByUserIdAndTypeAndObjectId(userId, Follow_Type_Doc, documentId)
 	if err != nil {
-		return
+		return 0, err
 	}
 	if len(follow) == 0 {
 		return f.Insert(userId, Follow_Type_Doc, documentId)
 	}
-	return
+	return 0, nil
 }
 
 func (f *Follow) GetFollowGroupUserId(fType int) (collects []map[string]string, err error) {

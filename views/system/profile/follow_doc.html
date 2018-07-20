@@ -11,7 +11,7 @@
             </ul>
             <br>
             <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 10px">
-                <p><i class="glyphicon glyphicon-volume-up"></i> 你创建、编辑过的文档，会被自动设置成关注！点击 <i class="glyphicon glyphicon-remove-circle"></i> 移除</p>
+                <p><i class="glyphicon glyphicon-volume-up"></i> {{if eq .autoFollowDoc "1"}}你创建、编辑过的文档，会被自动设置成关注！{{end}}当关注文档更新时会发送邮件通知，点击 <i class="glyphicon glyphicon-remove-circle"></i> 移除</p>
             </div>
             {{if eq .count 0}}
             {{else}}

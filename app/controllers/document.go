@@ -408,8 +408,8 @@ func (this *DocumentController) Delete() {
 		this.jsonError("文档空间不存在！")
 	}
 	// check space document privilege
-	_, _, isDelete := this.GetDocumentPrivilege(space)
-	if !isDelete {
+	_, _, isManager := this.GetDocumentPrivilege(space)
+	if !isManager {
 		this.jsonError("您没有权限删除该空间下的文档！")
 	}
 

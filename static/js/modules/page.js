@@ -9,7 +9,7 @@ var Page = {
      * @param element
      * @returns {boolean}
      */
-    ajaxSave: function (element) {
+    ajaxSave: function (element, sendEmail, isAutoFollow) {
 
         /**
          * 成功信息条
@@ -49,27 +49,40 @@ var Page = {
             }
         }
 
-        var commentHtml =
-            '<div class="container-fluid" style="padding: 20px 20px 0 20px">'+
-                '<textarea name="edit_comment" class="form-control" rows="3" autofocus="autofocus" style="resize:none""></textarea>'+
-                '<div style="margin-top: 8px;text-align: left">'+
-                    '<label> 通知关注用户&nbsp;</label>' +
-                    '<input type="checkbox" name="is_notice_user" checked="checked" value="1">' +
-                '</div>' +
-            '</div>';
+        var containerHtml = '<div class="container-fluid" style="padding: 20px 20px 0 20px">';
+        containerHtml += '<textarea name="edit_comment" class="form-control" rows="3" autofocus="autofocus" style="resize:none""></textarea>';
+        containerHtml += '<div style="margin-top: 8px;text-align: left">';
+
+        if (sendEmail === "1") {
+            containerHtml += '<label>&nbsp;&nbsp;通知关注用户&nbsp;</label><input type="checkbox" name="is_notice_user" checked="checked" value="1">';
+        }
+        if (isAutoFollow !== "1") {
+            containerHtml += '<label>&nbsp;&nbsp;关注该文档&nbsp;</label><input type="checkbox" name="is_follow_doc" checked="checked" value="1">';
+        }
+        containerHtml += "</div>";
+        containerHtml += "</div>";
 
         layer.open({
             title: '<i class="fa fa-volume-up"></i> 请输入修改备注',
             type: 1,
             area: ['380px', '232px'],
-            content: commentHtml,
+            content: containerHtml,
             btn: ['确定','取消'],
             yes: function(index, layero){
                 var commentText = $("textarea[name='edit_comment']").val().trim();
-                var isNoticeCheck = $("input[type='checkbox'][name='is_notice_user']").is(':checked');
                 var isNoticeUser = "0";
-                if (isNoticeCheck) {
-                    isNoticeUser = "1";
+                var isFollowDoc = "0";
+                if (sendEmail === "1") {
+                    var isNoticeCheck = $("input[type='checkbox'][name='is_notice_user']").is(':checked');
+                    if (isNoticeCheck) {
+                        isNoticeUser = "1";
+                    }
+                }
+                if (isAutoFollow !== "1") {
+                    var followDocCheck = $("input[type='checkbox'][name='is_follow_doc']").is(':checked');
+                    if (followDocCheck) {
+                        isFollowDoc = "1";
+                    }
                 }
                 if (commentText && commentText.length > 0) {
                     if (commentText.length > 50 ) {
@@ -79,7 +92,7 @@ var Page = {
                         var options = {
                             dataType: 'json',
                             success: response,
-                            data: {'comment': commentText, 'is_notice_user': isNoticeUser}
+                            data: {'comment': commentText, 'is_notice_user': isNoticeUser, 'is_follow_doc': isFollowDoc}
                         };
                         $(element).ajaxSubmit(options);
                     }

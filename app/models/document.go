@@ -141,12 +141,12 @@ func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile st
 
 	// delete follow doc
 	go func() {
-		FollowModel.DeleteByObjectIdType(fmt.Sprintf("%d", Follow_Type_Doc), documentId)
+		FollowModel.DeleteByObjectIdType(documentId, fmt.Sprintf("%d", Follow_Type_Doc))
 	}()
 
 	// delete collect doc
 	go func() {
-		CollectionModel.DeleteByResourceIdType(fmt.Sprintf("%d", Collection_Type_Doc), documentId)
+		CollectionModel.DeleteByResourceIdType(documentId, fmt.Sprintf("%d", Collection_Type_Doc))
 	}()
 
 	return
@@ -198,7 +198,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 
 	// follow document
 	go func() {
-		FollowModel.createFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
+		FollowModel.CreateAutoFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
 	}()
 	return
 }
@@ -224,7 +224,7 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 
 	// follow document
 	go func() {
-		FollowModel.createFollowDocument(documentValue["edit_user_id"].(string), documentId)
+		FollowModel.CreateAutoFollowDocument(documentValue["edit_user_id"].(string), documentId)
 	}()
 	return
 }
@@ -315,7 +315,7 @@ func (d *Document) UpdateDBAndFile(documentId string, document map[string]string
 
 	// create follow doc
 	go func() {
-		FollowModel.createFollowDocument(updateValue["edit_user_id"].(string), documentId)
+		FollowModel.CreateAutoFollowDocument(updateValue["edit_user_id"].(string), documentId)
 	}()
 
 	return

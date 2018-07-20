@@ -3,7 +3,6 @@ package controllers
 import (
 	"strings"
 	"mm-wiki/app/models"
-	"fmt"
 	"time"
 )
 
@@ -87,6 +86,14 @@ func (this *SpaceController) Member() {
 	if spaceId == "" {
 		this.ViewError("没有选择空间！")
 	}
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找空间 "+spaceId+" 失败："+err.Error())
+		this.ViewError("空间不存在！")
+	}
+	if len(space) == 0 {
+		this.ViewError("空间不存在！")
+	}
 
 	number := 20
 	limit := (page - 1) * number
@@ -123,13 +130,9 @@ func (this *SpaceController) Member() {
 	this.Data["space_id"] = spaceId
 	this.SetPaginator(number, count)
 
-	spaceUser, err := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(spaceId, this.UserId)
-	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
-		this.ViewError("获取空间成员列表失败！", "/space/index")
-	}
-	// if user is space member and space privilege is manager
-	if len(spaceUser) > 0 && (spaceUser["privilege"] == fmt.Sprintf("%d", models.SpaceUser_Privilege_Manager)) {
+	// check user space privilege
+	_, _, isManager := this.GetDocumentPrivilege(space)
+	if !isManager {
 		var otherUsers = []map[string]string{}
 		if len(userIds) > 0 {
 			otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)
@@ -175,13 +178,9 @@ func (this *SpaceController) AddMember() {
 	}
 
 	// check login user space member privilege
-	loginSpaceUser, err := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(spaceId, this.UserId)
-	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
-		this.ViewError("获取空间成员列表失败！", "/space/index")
-	}
-	if len(loginSpaceUser) == 0 || (loginSpaceUser["privilege"] != fmt.Sprintf("%d", models.SpaceUser_Privilege_Manager)) {
-		this.ViewError("您没有空间操作权限！", "/space/index")
+	_, _, isManager := this.GetDocumentPrivilege(space)
+	if !isManager {
+		this.jsonError("您没有权限添加该空间成员！", "/space/index")
 	}
 
 	spaceUser, err := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(spaceId, userId)
@@ -229,7 +228,22 @@ func (this *SpaceController) RemoveMember() {
 		this.jsonError("用户不存在！")
 	}
 
-	err := models.SpaceUserModel.Delete(spaceUserId)
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("移除空间 "+spaceId+" 成员失败: "+err.Error())
+		this.jsonError("移除空间成员失败！")
+	}
+	if len(space) == 0 {
+		this.jsonError("空间不存在！")
+	}
+
+	// check login user space member privilege
+	_, _, isManager := this.GetDocumentPrivilege(space)
+	if !isManager {
+		this.ViewError("您没有权限移除该空间成员！", "/space/index")
+	}
+
+	err = models.SpaceUserModel.Delete(spaceUserId)
 	if err != nil {
 		this.ErrorLog("移除空间 "+spaceId+" 下成员 "+userId+" 失败：" + err.Error())
 		this.jsonError("移除成员失败！")
@@ -256,7 +270,22 @@ func (this *SpaceController) ModifyMember() {
 		this.jsonError("没有选择权限！")
 	}
 
-	_, err := models.SpaceUserModel.Update(spaceUserId, map[string]interface{}{
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("更新空间 "+spaceId+" 成员权限失败: "+err.Error())
+		this.jsonError("更新空间成员权限失败！")
+	}
+	if len(space) == 0 {
+		this.jsonError("空间不存在！")
+	}
+
+	// check login user space member privilege
+	_, _, isManager := this.GetDocumentPrivilege(space)
+	if !isManager {
+		this.ViewError("您没有权限修改该空间成员！", "/space/index")
+	}
+
+	_, err = models.SpaceUserModel.Update(spaceUserId, map[string]interface{}{
 		"privilege": privilege,
 		"update_time": time.Now().Unix(),
 	})
