@@ -28,7 +28,7 @@ var Document = {
     /**
      * list nav
      */
-    ListTree: function (element, treeData, defaultId) {
+    ListTree: function (element, treeData, defaultId, isEditor, isDelete) {
 
         //配置信息
         var setting = {
@@ -64,9 +64,7 @@ var Document = {
                 beforeDrag: beforeDrag,
                 onDrag : onDrag,
                 beforeDrop  : beforeDrop,
-                onDrop   : onDrop,
-
-                beforeRemove: beforeRemove,
+                onDrop   : onDrop
             },
             drag: {
                 isCopy: false,
@@ -76,6 +74,10 @@ var Document = {
                 next: true
             }
         };
+
+        if(isDelete == false) {
+            setting.edit.showRemoveBtn = false;
+        }
 
         function beforeClick(treeId, treeNode) {
             console.log("点击节点前....");
@@ -142,6 +144,9 @@ var Document = {
         
         function beforeDrag(treeId, treeNodes) {
             console.log("拖拽节点前...");
+            if(isEditor == false) {
+                return false;
+            }
             if (treeNodes[0].isParent) {
                 return false;
             }
@@ -155,6 +160,9 @@ var Document = {
 
         function beforeDrop(treeId, treeNodes, targetNode, moveType) {
             console.log("拖拽节点完成...");
+            if(isEditor == false) {
+                return false;
+            }
             if (moveType === "prev") {
                 return false;
             }
@@ -196,6 +204,9 @@ var Document = {
         }
 
         function addHoverDom(treeId, treeNode) {
+            if(isEditor == false) {
+                return false;
+            }
             if (treeNode.isParent === false || treeNode.isParent === undefined) {
                 return false
             }

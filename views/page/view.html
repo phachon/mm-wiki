@@ -22,7 +22,7 @@
                                 {{if eq $createUser.user_id $.login_user_id}}
                                     <a class="text text-info" href="/system/main/index" target="_parent">{{$createUser.username}}（{{$createUser.given_name}}）</a>
                                 {{else}}
-                                    <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}}（{{$createUser.given_name}} </a>
+                                    <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}}（{{$createUser.given_name}}） </a>
                                 {{end}}
                                 创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ， 被
                                 {{if eq $editUser.user_id $.login_user_id}}

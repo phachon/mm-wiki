@@ -157,7 +157,7 @@ input[type=submit], input[type=button] {
     width: 100%;
     float: left;
     text-align: center;
-    margin-top: 100px;
+    margin-top: 80px;
 }
 
 #password_text {
@@ -165,7 +165,7 @@ input[type=submit], input[type=button] {
     vertical-align: middle;
     border-radius: 3px;
     height: 50px;
-    padding: 0px 16px;
+    padding: 0 16px;
     font-size: 14px;
     color: #888;
     outline: none;

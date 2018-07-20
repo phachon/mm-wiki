@@ -132,7 +132,7 @@ func (this *SpaceController) Member() {
 
 	// check user space privilege
 	_, _, isManager := this.GetDocumentPrivilege(space)
-	if !isManager {
+	if isManager {
 		var otherUsers = []map[string]string{}
 		if len(userIds) > 0 {
 			otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)

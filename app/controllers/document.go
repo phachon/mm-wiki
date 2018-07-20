@@ -60,6 +60,11 @@ func (this *DocumentController) Index() {
 		this.ViewError("查找文档失败！")
 	}
 
+	// get space privilege
+	_, isEditor, isDelete := this.GetDocumentPrivilege(space)
+
+	this.Data["is_editor"] = isEditor
+	this.Data["is_delete"] = isDelete
 	this.Data["documents"] = documents
 	this.Data["default_document_id"] = documentId
 	this.Data["space"] = space
