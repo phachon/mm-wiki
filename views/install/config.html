@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>安装步骤</strong></div>
+                        <div class="list-group">
+                            <a href="/install/license" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 1. 许可协议</a>
+                            <a href="/install/env" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 2. 环境检测</a>
+                            <a href="/install/config" class="list-group-item active"><i class="glyphicon glyphicon-hand-right"></i> 2. 系统配置</a>
+                            <a href="/install/database" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 3. 数据库配置</a>
+                            <a href="/install/ready" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 4. 准备安装</a>
+                            <a href="#" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 5. 安装完成</a>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-9">
+            <div class="panel-body">
+                <!-- 系统配置 -->
+                <div class="row">{{$sysConf := .sysConf}}
+                    <form class="form-horizontal" method="post" action="/install/config">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong><i class="fa fa-globe"></i> 系统监听地址和端口</strong></div>
+                        <div class="panel-body"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> addr </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="addr" class="form-control" value="{{$sysConf.addr}}" placeholder="请输入address, 默认为0.0.0.0" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 端口 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="port" class="form-control" value="{{$sysConf.port}}" placeholder="请输入启动端口" required>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong><i class="fa fa-folder"></i> 系统文档根目录</strong></div>
+                            <div class="panel-body"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 文档根目录 </label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="addr" class="form-control" value="{{$sysConf.document_dir}}" placeholder="请输入Markdown文档根目录" required>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                    <div class="col-md-offset-8 pull-right">
+                        <a href="/install/env">
+                            <button type="button" class="btn btn-warning">上一步</button>
+                        </a>
+                        <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">下一步
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <p>© phachon 2018</p>
+    </footer>
+</div>

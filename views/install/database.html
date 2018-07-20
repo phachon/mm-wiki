@@ -1,0 +1,113 @@
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>安装步骤</strong></div>
+                        <div class="list-group">
+                            <a href="/install/license" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 1. 许可协议</a>
+                            <a href="/install/env" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 2. 环境检测</a>
+                            <a href="/install/config" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 2. 系统配置</a>
+                            <a href="/install/database" class="list-group-item active"><i class="glyphicon glyphicon-hand-right"></i> 3. 数据库配置</a>
+                            <a href="/install/ready" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 4. 准备安装</a>
+                            <a href="#" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 5. 安装完成</a>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-9">
+            <div id="failedBox" style="margin-bottom: 0; margin-top: 10px;" class="hide"></div>
+            <div class="panel-body">
+                <!-- 系统配置 -->
+                <div class="row">{{$databaseConf := .databaseConf}}
+                    <form class="form-horizontal" method="post" action="/install/database">
+                        <div class="panel panel-default">
+                        <div class="panel-heading"><strong><i class="fa fa-database"></i> 数据库配置</strong></div>
+                        <div class="panel-body"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> host </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="host" class="form-control" value="{{$databaseConf.host}}" placeholder="请输入域名或ip" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 端口 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="port" class="form-control" value="{{$databaseConf.port}}" placeholder="请输入数据库端口" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="user" class="form-control" value="{{$databaseConf.user}}" placeholder="请输入数据库连接用户名" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="pass" class="form-control" value="{{$databaseConf.pass}}" placeholder="请输入数据库连接密码" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 数据库名 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="name" class="form-control" value="{{$databaseConf.name}}" placeholder="请输入数据库名" required>
+                            </div>
+                            <div class="col-sm-4" style="margin-top: 7px;">
+                                <span class="text-danger"> * 不存在会自动创建</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 连接数 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="conn_max_idle" class="form-control" value="{{$databaseConf.conn_max_idle}}" placeholder="请输入数据库名" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 最大连接数 </label>
+                            <div class="col-sm-4">
+                                <input type="text" name="conn_max_connection" class="form-control" value="{{$databaseConf.conn_max_connection}}" placeholder="请输入数据库名" required>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                            <div class="panel-heading"><strong><i class="fa fa-user-circle-o"></i> 添加超级管理员</strong></div>
+                            <div class="panel-body"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                        <div class="col-md-offset-8 pull-right">
+                            <a href="/install/config">
+                                <button type="button" class="btn btn-warning">上一步</button>
+                            </a>
+                            <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">下一步
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <p>© phachon 2018</p>
+    </footer>
+</div>

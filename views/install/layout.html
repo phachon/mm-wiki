@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MM-Wiki 安装程序</title>
+    <link rel="stylesheet" type="text/css" href="/static/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/font-awesome/css/font-awesome.min.css">
+    <link rel="icon" href="/static/images/favicon.ico">
+
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+    <script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/plugins/layui/layer/layer.js"></script>
+    <script src="/static/plugins/jquery/jquery.form.js"></script>
+    <script src="/static/js/common/layers.js"></script>
+    <script src="/static/js/common/form.js"></script>
+    <script src="/static/js/common/common.js"></script>
+    <script src="/static/js/modules/install.js"></script>
+    <link rel="stylesheet" href="/static/css/common.css">
+</head>
+<body style="padding-top: 60px; overflow-y: auto">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand hidden-sm" href="/">MM-Wiki</a>
+                <span class="navbar-brand" style="font-size: 16px"> 快速构建团队协作与知识分享平台</span>
+            </div>
+            <div class="navbar-collapse collapse" role="navigation">
+                <ul class="nav navbar-nav navbar-right hidden-sm">
+                    <li class="dropdown">
+                        <a id="helpLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;帮助
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="helpLabel">
+                            <li><a href="/"><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;在线文档</a></li>
+                            <li><a href="/"><span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp;联系我们</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;关于</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {{.LayoutContent}}
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>安装步骤</strong></div>
+                        <div class="list-group">
+                            <a href="/install/license" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 1. 许可协议</a>
+                            <a href="/install/env" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 2. 环境检测</a>
+                            <a href="/install/config" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 2. 系统配置</a>
+                            <a href="/install/database" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 3. 数据库配置</a>
+                            <a href="/install/ready" class="list-group-item active"><i class="glyphicon glyphicon-hand-right"></i> 4. 准备安装</a>
+                            <a href="#" class="list-group-item"><i class="glyphicon glyphicon-hand-right"></i> 5. 安装完成</a>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-9">
+            <div id="failedBox" style="margin-bottom: 0; margin-top: 10px;" class="hide"></div>
+            <div class="panel-body">
+                <!-- 安装准备页面 -->
+                <div class="row">{{$readyConf := .readyConf}}
+                    <form class="form-horizontal" method="post" action="/install/ready">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong><i class="fa fa-hourglass-start"></i> 安装准备</strong></div>
+                        <div class="panel-body"></div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="w15p">准备项</th>
+                                    <th>准备结果</th>
+                                    <th class="w11p">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{range $ready := $readyConf}}
+                                <tr>
+                                    <td class="center">{{$ready.name}}</td>
+                                    <td class="center">
+                                        {{$ready.value}}
+                                        {{if eq $ready.result "1"}}
+                                        <i class="glyphicon glyphicon-ok text-success"></i>
+                                        {{else}}
+                                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                                        {{end}}
+                                    </td>
+                                    <td class="center">
+                                        <i class="glyphicon glyphicon-pencil"></i><a href="{{$ready.url}}">查看</a>
+                                    </td>
+                                </tr>
+                                {{end}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                    <div class="center">
+                        <a href="/install/database">
+                            <button type="button" class="btn btn-warning">上一步</button>
+                        </a>
+                        <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">开始安装
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <p>© phachon 2018</p>
+    </footer>
+</div>
