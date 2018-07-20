@@ -1,5 +1,6 @@
 package models
 
+import "fmt"
 
 var RolePrivilegeModel = RolePrivilege{}
 
@@ -19,6 +20,23 @@ func (rolePrivilege *RolePrivilege) GetRolePrivilegesByRoleId(roleId string) (ro
 		return
 	}
 	rolePrivileges = res.Rows()
+	return
+}
+
+func (rolePrivilege *RolePrivilege) GetRootRolePrivileges() (rolePrivileges []map[string]string, err error) {
+
+	privileges, err := PrivilegeModel.GetPrivileges()
+	if err != nil {
+		return
+	}
+	for _, privilege := range privileges {
+		rolePrivilege := map[string]string{
+			"role_privilege_id": "",
+			"role_id": fmt.Sprintf("%d", Role_Root_Id),
+			"privilege_id": privilege["privilege_id"],
+		}
+		rolePrivileges = append(rolePrivileges, rolePrivilege)
+	}
 	return
 }
 

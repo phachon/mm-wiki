@@ -43,7 +43,11 @@
                     <label class="text-info">{{$user.role_name}}</label>
                 </td>
                 <td class="center">
-                    <a onclick="Layers.confirm('确定重置该用户为默认角色吗？', '/system/role/resetUser?user_id={{$user.user_id}}');"><i class="remove glyphicon glyphicon-refresh"></i>重置角色</a>
+                    {{if eq $user.user_id "1"}}
+                    无
+                    {{else}}
+                        <a onclick="Layers.confirm('确定重置该用户为默认角色吗？', '/system/role/resetUser?user_id={{$user.user_id}}');"><i class="remove glyphicon glyphicon-refresh"></i>重置角色</a>
+                    {{end}}
                 </td>
             </tr>
             {{end}}

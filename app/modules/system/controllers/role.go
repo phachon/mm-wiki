@@ -207,7 +207,13 @@ func (this *RoleController) Privilege() {
 		this.ViewError("查找角色权限失败！")
 	}
 
-	rolePrivileges, err := models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+
+	var rolePrivileges = []map[string]string{}
+	if this.IsRoot() {
+		rolePrivileges, err = models.RolePrivilegeModel.GetRootRolePrivileges()
+	}else {
+		rolePrivileges, err = models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+	}
 	if err != nil {
 		this.ViewError("查找用户权限出错")
 	}
@@ -233,6 +239,10 @@ func (this *RoleController) GrantPrivilege() {
 	}
 	if len(privilegeIds) == 0 {
 		this.jsonError("没有选择权限!")
+	}
+
+	if this.IsRoot() {
+		this.jsonError("超级管理员不需要授权！")
 	}
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
@@ -267,7 +277,7 @@ func (this *RoleController) Delete() {
 		this.jsonError("没有选择角色！")
 	}
 	if roleId == fmt.Sprintf("%d", models.Role_Root_Id) {
-		this.jsonError("超级管理员不能修改！")
+		this.jsonError("超级管理员不能删除！")
 	}
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
@@ -323,6 +333,10 @@ func (this *RoleController) ResetUser() {
 		this.jsonError("用户不存在")
 	}
 
+	if this.UserId == "1" {
+		this.jsonError("root 用户不能重置角色！")
+	}
+
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
 		this.ErrorLog("重置用户 "+userId+" 角色失败: "+err.Error())
@@ -341,5 +355,5 @@ func (this *RoleController) ResetUser() {
 	}
 
 	this.InfoLog("重置用户 "+userId+" 角色成功")
-	this.jsonSuccess("重置用户角色成功", nil, "system/role/list")
+	this.jsonSuccess("重置用户角色成功", nil, "/system/role/list")
 }

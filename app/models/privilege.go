@@ -41,6 +41,18 @@ func (p *Privilege) GetTypePrivileges() (menus, controllers []map[string]string,
 	return
 }
 
+func (p *Privilege) GetPrivileges() (privileges []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name))
+	if err != nil {
+		return
+	}
+	privileges = rs.Rows()
+
+	return
+}
+
 func (p *Privilege) GetTypePrivilegesByUserId(userId string) (menus, controllers []map[string]string, err error) {
 
 	user, err := UserModel.GetUserByUserId(userId)
