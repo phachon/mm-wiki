@@ -13,7 +13,7 @@ type ContactController struct {
 }
 
 func (this *ContactController) Add() {
-	this.viewLayout("contact/form", "default")
+	this.viewLayout("contact/form", "contact")
 }
 
 func (this *ContactController) Save() {
@@ -74,7 +74,7 @@ func (this *ContactController) List() {
 	}
 
 	this.Data["contacts"] = contacts
-	this.viewLayout("contact/list", "default")
+	this.viewLayout("contact/list", "contact")
 }
 
 func (this *ContactController) Edit() {
@@ -90,7 +90,7 @@ func (this *ContactController) Edit() {
 	}
 
 	this.Data["contact"] = contact
-	this.viewLayout("contact/form", "default")
+	this.viewLayout("contact/form", "contact")
 }
 
 func (this *ContactController) Modify() {
@@ -137,7 +137,7 @@ func (this *ContactController) Modify() {
 	_, err := models.ContactModel.UpdateByContactId(contact, contactId)
 	if err != nil {
 		this.ErrorLog("修改联系人 "+contactId+" 失败：" + err.Error())
-		this.jsonError("修改联系人"+contactId+"失败")
+		this.jsonError("修改联系人失败")
 	}
 	this.InfoLog("修改联系人 "+contactId+" 成功")
 	this.jsonSuccess("修改联系人成功", nil, "/system/contact/list")

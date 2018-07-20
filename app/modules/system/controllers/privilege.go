@@ -18,7 +18,7 @@ func (this *PrivilegeController) Add() {
 	}
 
 	this.Data["menus"] = menus
-	this.viewLayout("privilege/form", "default")
+	this.viewLayout("privilege/form", "privilege")
 }
 
 func (this *PrivilegeController) Save() {
@@ -85,7 +85,7 @@ func (this *PrivilegeController) List() {
 	this.Data["menus"] = menus
 	this.Data["controllers"] = controllers
 
-	this.viewLayout("privilege/list", "default")
+	this.viewLayout("privilege/list", "privilege")
 }
 
 func (this *PrivilegeController) Edit() {
@@ -111,7 +111,7 @@ func (this *PrivilegeController) Edit() {
 
 	this.Data["menus"] = menus
 	this.Data["privilege"] = privilege
-	this.viewLayout("privilege/form", "default")
+	this.viewLayout("privilege/form", "privilege")
 }
 
 func (this *PrivilegeController) Modify() {

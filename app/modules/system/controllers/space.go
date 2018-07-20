@@ -14,7 +14,7 @@ type SpaceController struct {
 }
 
 func (this *SpaceController) Add() {
-	this.viewLayout("space/form", "default")
+	this.viewLayout("space/form", "space")
 }
 
 func (this *SpaceController) Save() {
@@ -109,7 +109,7 @@ func (this *SpaceController) List() {
 	this.Data["spaces"] = spaces
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
-	this.viewLayout("space/list", "default")
+	this.viewLayout("space/list", "space")
 }
 
 func (this *SpaceController) Edit() {
@@ -129,7 +129,7 @@ func (this *SpaceController) Edit() {
 	}
 
 	this.Data["space"] = space
-	this.viewLayout("space/form", "default")
+	this.viewLayout("space/form", "space")
 }
 
 func (this *SpaceController) Modify() {
@@ -245,7 +245,7 @@ func (this *SpaceController) Member() {
 	this.Data["space_id"] = spaceId
 	this.Data["otherUsers"] = otherUsers
 	this.SetPaginator(number, count)
-	this.viewLayout("space/member", "default")
+	this.viewLayout("space/member", "space")
 }
 
 func (this *SpaceController) Delete() {

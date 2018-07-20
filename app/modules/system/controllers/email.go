@@ -29,11 +29,11 @@ func (this *EmailController) List() {
 
 	this.Data["emails"] = emails
 	this.Data["keyword"] = keyword
-	this.viewLayout("email/list", "default")
+	this.viewLayout("email/list", "email")
 }
 
 func (this *EmailController) Add() {
-	this.viewLayout("email/form", "default")
+	this.viewLayout("email/form", "email")
 }
 
 func (this *EmailController) Save() {
@@ -116,7 +116,7 @@ func (this *EmailController) Edit() {
 	}
 
 	this.Data["email"] = email
-	this.viewLayout("email/form", "default")
+	this.viewLayout("email/form", "email")
 }
 
 func (this *EmailController) Modify() {
@@ -188,7 +188,7 @@ func (this *EmailController) Modify() {
 
 	if err != nil {
 		this.ErrorLog("修改邮件服务器 "+emailId+" 失败：" + err.Error())
-		this.jsonError("修改邮件服务器"+emailId+"失败")
+		this.jsonError("修改邮件服务器失败")
 	}
 	this.InfoLog("修改邮件服务器 "+emailId+" 成功")
 	this.jsonSuccess("修改邮件服务器成功", nil, "/system/email/list")

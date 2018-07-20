@@ -48,7 +48,7 @@ func (this *ProfileController) Info() {
 	this.Data["logDocuments"] = logDocuments
 	this.Data["count"] = len(logDocuments)
 	this.Data["user"] = user
-	this.viewLayout("profile/info", "default")
+	this.viewLayout("profile/info", "profile")
 }
 
 func (this *ProfileController) Edit() {
@@ -59,7 +59,7 @@ func (this *ProfileController) Edit() {
 		this.ViewError("获取资料失败")
 	}
 	this.Data["user"] = user
-	this.viewLayout("profile/edit", "default")
+	this.viewLayout("profile/edit", "profile")
 }
 
 func (this *ProfileController) Modify() {
@@ -163,7 +163,7 @@ func (this *ProfileController) FollowUser() {
 	this.Data["followCount"] = len(users)
 	this.Data["fansCount"] = len(fansUsers)
 	this.Data["user"] = this.User
-	this.viewLayout("profile/follow_user", "default")
+	this.viewLayout("profile/follow_user", "profile")
 }
 
 func (this *ProfileController) FollowDoc() {
@@ -215,7 +215,7 @@ func (this *ProfileController) FollowDoc() {
 	this.Data["user"] = this.User
 	this.Data["autoFollowDoc"] = autoFollowDoc
 	this.SetPaginator(number, count)
-	this.viewLayout("profile/follow_doc", "default")
+	this.viewLayout("profile/follow_doc", "profile")
 }
 
 func (this *ProfileController) Activity() {
@@ -277,12 +277,12 @@ func (this *ProfileController) Activity() {
 	this.Data["logDocuments"] = logDocuments
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
-	this.viewLayout("profile/activity", "default")
+	this.viewLayout("profile/activity", "profile")
 }
 
 func (this *ProfileController) Password()  {
 
-	this.viewLayout("profile/password", "default")
+	this.viewLayout("profile/password", "profile")
 }
 
 func (this *ProfileController) SavePass()  {

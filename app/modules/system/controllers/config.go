@@ -32,7 +32,7 @@ func (this *ConfigController) Global() {
 	}
 
 	this.Data["configValue"] = configValue
-	this.viewLayout("config/form", "default")
+	this.viewLayout("config/form", "config")
 }
 
 func (this *ConfigController) Modify() {

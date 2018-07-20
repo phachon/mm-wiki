@@ -38,7 +38,7 @@ func (this *LogController) System() {
 	this.Data["level"] = level
 	this.Data["message"] = message
 	this.SetPaginator(number, count)
-	this.viewLayout("log/system", "default")
+	this.viewLayout("log/system", "log")
 }
 
 func (this *LogController) Info() {
@@ -54,7 +54,7 @@ func (this *LogController) Info() {
 	}
 
 	this.Data["log"] = log
-	this.viewLayout("log/info", "default")
+	this.viewLayout("log/info", "log")
 }
 
 func (this *LogController) Document() {
@@ -130,5 +130,5 @@ func (this *LogController) Document() {
 	this.Data["userId"] = userId
 	this.Data["users"] = users
 	this.SetPaginator(number, count)
-	this.viewLayout("log/document", "default")
+	this.viewLayout("log/document", "log")
 }

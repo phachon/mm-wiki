@@ -13,7 +13,7 @@ type LinkController struct {
 }
 
 func (this *LinkController) Add() {
-	this.viewLayout("link/form", "default")
+	this.viewLayout("link/form", "link")
 }
 
 func (this *LinkController) Save() {
@@ -81,7 +81,7 @@ func (this *LinkController) List() {
 	this.Data["links"] = links
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
-	this.viewLayout("link/list", "default")
+	this.viewLayout("link/list", "link")
 }
 
 func (this *LinkController) Edit() {
@@ -97,7 +97,7 @@ func (this *LinkController) Edit() {
 	}
 
 	this.Data["link"] = link
-	this.viewLayout("link/form", "default")
+	this.viewLayout("link/form", "link")
 }
 
 func (this *LinkController) Modify() {
@@ -144,7 +144,7 @@ func (this *LinkController) Modify() {
 
 	if err != nil {
 		this.ErrorLog("修改链接 "+linkId+" 失败：" + err.Error())
-		this.jsonError("修改链接"+linkId+"失败")
+		this.jsonError("修改链接失败")
 	}
 	this.InfoLog("修改链接 "+linkId+" 成功")
 	this.jsonSuccess("修改链接成功", nil, "/system/link/list")

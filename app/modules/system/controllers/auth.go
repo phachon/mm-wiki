@@ -14,7 +14,7 @@ type AuthController struct {
 }
 
 func (this *AuthController) Add() {
-	this.viewLayout("auth/form", "default")
+	this.viewLayout("auth/form", "auth")
 }
 
 func (this *AuthController) Save() {
@@ -102,7 +102,7 @@ func (this *AuthController) List() {
 	this.Data["auths"] = auths
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
-	this.viewLayout("auth/list", "default")
+	this.viewLayout("auth/list", "auth")
 }
 
 func (this *AuthController) Edit() {
@@ -118,7 +118,7 @@ func (this *AuthController) Edit() {
 	}
 
 	this.Data["auth"] = auth
-	this.viewLayout("auth/form", "default")
+	this.viewLayout("auth/form", "auth")
 }
 
 func (this *AuthController) Modify() {
@@ -243,5 +243,5 @@ func (this *AuthController) Used() {
 }
 
 func (this *AuthController) Doc() {
-	this.viewLayout("auth/doc", "default")
+	this.viewLayout("auth/doc", "auth")
 }

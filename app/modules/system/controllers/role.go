@@ -12,7 +12,7 @@ type RoleController struct {
 }
 
 func (this *RoleController) Add() {
-	this.viewLayout("role/form", "default")
+	this.viewLayout("role/form", "role")
 }
 
 func (this *RoleController) Save() {
@@ -71,7 +71,7 @@ func (this *RoleController) List() {
 	this.Data["roles"] = roles
 	this.Data["keyword"] = keyword
 	this.SetPaginator(number, count)
-	this.viewLayout("role/list", "default")
+	this.viewLayout("role/list", "role")
 }
 
 func (this *RoleController) Edit() {
@@ -94,7 +94,7 @@ func (this *RoleController) Edit() {
 	}
 
 	this.Data["role"] = role
-	this.viewLayout("role/form", "default")
+	this.viewLayout("role/form", "role")
 }
 
 func (this *RoleController) Modify() {
@@ -183,7 +183,7 @@ func (this *RoleController) User() {
 	this.Data["users"] = users
 	this.Data["roleId"] = roleId
 	this.SetPaginator(number, count)
-	this.viewLayout("role/user", "default")
+	this.viewLayout("role/user", "role")
 }
 
 func (this *RoleController) Privilege() {
@@ -209,7 +209,7 @@ func (this *RoleController) Privilege() {
 
 
 	var rolePrivileges = []map[string]string{}
-	if this.IsRoot() {
+	if role["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
 		rolePrivileges, err = models.RolePrivilegeModel.GetRootRolePrivileges()
 	}else {
 		rolePrivileges, err = models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
@@ -223,7 +223,7 @@ func (this *RoleController) Privilege() {
 	this.Data["controllers"] = controllers
 	this.Data["rolePrivileges"] = rolePrivileges
 
-	this.viewLayout("role/privilege", "default")
+	this.viewLayout("role/privilege", "role")
 }
 
 func (this *RoleController) GrantPrivilege() {
@@ -241,10 +241,6 @@ func (this *RoleController) GrantPrivilege() {
 		this.jsonError("没有选择权限!")
 	}
 
-	if this.IsRoot() {
-		this.jsonError("超级管理员不需要授权！")
-	}
-
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
 		this.ErrorLog("角色 "+roleId+" 授权失败："+err.Error())
@@ -252,6 +248,10 @@ func (this *RoleController) GrantPrivilege() {
 	}
 	if len(role) == 0 {
 		this.jsonError("角色不存在")
+	}
+
+	if role["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("超级管理员不需要授权！")
 	}
 
 	res, err := models.RolePrivilegeModel.GrantRolePrivileges(roleId, privilegeIds)

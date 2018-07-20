@@ -20,7 +20,7 @@ func (this *UserController) Add() {
 		this.ViewError("获取用户角色失败！")
 	}
 	this.Data["roles"] = roles
-	this.viewLayout("user/form", "default")
+	this.viewLayout("user/form", "user")
 }
 
 func (this *UserController) Save() {
@@ -168,7 +168,7 @@ func (this *UserController) List() {
 	this.Data["roleId"] = roleId
 	this.Data["roles"] = allRoles
 	this.SetPaginator(number, count)
-	this.viewLayout("user/list", "default")
+	this.viewLayout("user/list", "user")
 }
 
 func (this *UserController) Edit() {
@@ -195,7 +195,7 @@ func (this *UserController) Edit() {
 
 	this.Data["user"] = user
 	this.Data["roles"] = roles
-	this.viewLayout("user/edit", "default")
+	this.viewLayout("user/edit", "user")
 }
 
 func (this *UserController) Modify() {
@@ -357,5 +357,5 @@ func (this *UserController) Info() {
 	}
 	this.Data["user"] = user
 	this.Data["role"] = role
-	this.viewLayout("user/info", "default")
+	this.viewLayout("user/info", "user")
 }
