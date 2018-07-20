@@ -247,11 +247,9 @@ func (this *DocumentController) History() {
 	}
 
 	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
+	isVisit, _, _ := this.GetDocumentPrivilege(space)
+	if !isVisit {
+		this.ViewError("您没有权限查看该空间修改历史！")
 	}
 
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByDocumentIdAndLimit(documentId, limit, number)
