@@ -6,6 +6,8 @@ import (
 	"mm-wiki/app/utils"
 	"regexp"
 	"github.com/astaxie/beego/context"
+	"github.com/pkg/errors"
+	"github.com/astaxie/beego"
 	"fmt"
 )
 
@@ -259,9 +261,13 @@ func (this *PageController) Modify() {
 
 	// send email to follow user
 	if isNoticeUser == "1" {
-		go func() {
-			sendEmail(documentId, newName, this.UserId, this.User["username"], this.Ctx)
-		}()
+		go func(comment string, userId string, username string, ctx *context.Context) {
+			url := fmt.Sprintf("%s:%d/document/index?document_id=%s", ctx.Input.Site(), ctx.Input.Port(), documentId)
+			err := sendEmail(documentId, username, comment, url)
+			if err != nil {
+				models.LogModel.RecordLogByCtx(err.Error(), models.Log_Level_Error, userId, username, ctx)
+			}
+		}(comment, this.UserId, this.User["username"], this.Ctx)
 	}
 	// follow doc
 	if isFollowDoc == "1" {
@@ -385,41 +391,42 @@ func (this *PageController) Export() {
 	this.Ctx.Output.Download(absPageFile, document["name"]+utils.Document_Page_Suffix)
 }
 
-func sendEmail(documentId string, documentName string, userId string, username string, ctx *context.Context) {
+func sendEmail(documentId string, username string, comment string, url string) error {
+
+	// get document by documentId
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		return errors.New("发送邮件通知查找文档失败："+err.Error())
+	}
 
 	// get send email open config
 	sendEmailConfig, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SendEmail)
 	if err != nil {
-		models.LogModel.RecordLogByCtx("发送邮件查找发送邮件配置失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
-		return
+		return errors.New("发送邮件通知查找发送邮件配置失败："+err.Error())
 	}
 	if len(sendEmailConfig) == 0 {
-		models.LogModel.RecordLogByCtx("发送邮件发送邮件开启配置不存在", models.Log_Level_Error, userId, username, ctx)
-		return
+		return nil
 	}
 	if sendEmailConfig["value"] == "0" {
-		return
+		return nil
 	}
 
 	// get email config
 	emailConfig, err := models.EmailModel.GetUsedEmail()
 	if err != nil {
-		models.LogModel.RecordLogByCtx("发送邮件查找邮件服务器配置失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
-		return
+		return errors.New("发送邮件通知查找邮件服务器配置失败："+err.Error())
 	}
 	if len(emailConfig) == 0 {
-		models.LogModel.RecordLogByCtx("发送邮件邮件服务器配置不存在", models.Log_Level_Error, userId, username, ctx)
-		return
+		return nil
 	}
 
 	// get follow doc user
 	follows, err := models.FollowModel.GetFollowsByObjectIdAndType(documentId, models.Follow_Type_Doc)
 	if err != nil {
-		models.LogModel.RecordLogByCtx("发送邮件查找关注文档用户失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
-		return
+		return errors.New("发送邮件查找关注文档用户失败："+err.Error())
 	}
 	if len(follows) == 0 {
-		return
+		return nil
 	}
 	userIds := []string{}
 	for _, follow := range follows {
@@ -427,11 +434,10 @@ func sendEmail(documentId string, documentName string, userId string, username s
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		models.LogModel.RecordLogByCtx("发送邮件查找关注文档用户失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
-		return
+		return errors.New("发送邮件查找关注文档用户失败："+err.Error())
 	}
 	if len(users) == 0 {
-		return
+		return nil
 	}
 	emails := []string{}
 	for _, user := range users {
@@ -440,13 +446,33 @@ func sendEmail(documentId string, documentName string, userId string, username s
 		}
 	}
 
-	body := fmt.Sprintf("用户 %s 编辑页面 %s", username, documentName)
-
-	fmt.Println(strings.Join(emails, ","))
-	// start send email
-	err = utils.Email.SendByEmail(emailConfig, emails, documentName+"修改通知", body)
+	// get parent documents by document
+	parentDocuments, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
 	if err != nil {
-		models.LogModel.RecordLogByCtx("发送邮件通知失败："+err.Error(), models.Log_Level_Error, userId, username, ctx)
-		return
+		return errors.New("查找文档内容失败: "+err.Error())
 	}
+	if len(parentDocuments) == 0 {
+		return errors.New("查找文档内容失败")
+	}
+	// get document content
+	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
+	if err != nil {
+		return errors.New("查找文档内容失败: "+err.Error())
+	}
+
+	documentContent = string([]byte(documentContent)[:500])
+
+	documentValue := document
+	documentValue["content"] = documentContent
+	documentValue["username"] = username
+	documentValue["comment"] = comment
+	documentValue["url"] = url
+
+	emailTemplate := beego.BConfig.WebConfig.ViewsPath+"system/email/template.html"
+	body, err := utils.Email.MakeDocumentHtmlBody(documentValue, emailTemplate)
+	if err != nil {
+		return errors.New("发送邮件生成模板失败："+err.Error())
+	}
+	// start send email
+	return utils.Email.SendByEmail(emailConfig, emails, "文档更新通知", body ,"html")
 }
