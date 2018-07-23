@@ -295,7 +295,10 @@ func (d *Document) UpdateDBAndFile(documentId string, document map[string]string
 
 	// update document file
 	docType := utils.Convert.StringToInt(document["type"])
-	nameIsChange := updateValue["name"].(string) == document["name"]
+	nameIsChange := false
+	if updateValue["name"].(string) != document["name"] {
+		nameIsChange = true
+	}
 	err = utils.Document.Update(oldPageFile, updateValue["name"].(string), documentContent, docType, nameIsChange)
 	if err != nil {
 		tx.Rollback()

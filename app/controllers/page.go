@@ -460,7 +460,9 @@ func sendEmail(documentId string, username string, comment string, url string) e
 		return errors.New("查找文档内容失败: "+err.Error())
 	}
 
-	documentContent = string([]byte(documentContent)[:500])
+	if len([]byte(documentContent)) > 500 {
+		documentContent = string([]byte(documentContent)[:500])
+	}
 
 	documentValue := document
 	documentValue["content"] = documentContent
