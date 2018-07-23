@@ -368,12 +368,11 @@ func (this *PageController) Export() {
 	if len(space) == 0 {
 		this.ViewError("文档所在空间不存在！")
 	}
-	// check space visit_level
-	if space["visit_level"] == models.Space_VisitLevel_Private {
-		ok, _  := models.SpaceUserModel.HasSpaceUser(spaceId, this.UserId)
-		if !ok {
-			this.ViewError("您没有权限访问该空间！")
-		}
+
+	// check space document privilege
+	isVisit, _, _ := this.GetDocumentPrivilege(space)
+	if !isVisit {
+		this.jsonError("您没有权限导出该空间下文档！")
 	}
 
 	// get parent documents by document
