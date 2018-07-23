@@ -1,6 +1,7 @@
 logs/*.log
 .DS_Store
 !.gitignore
+.gitignore___jb_tmp___
 *.exe
 *.exe~
 mm-wiki
@@ -9,3 +10,5 @@ mm-wiki
 conf/mm-wiki.conf
 release-*
 data/
+install/install
+install/install.exe

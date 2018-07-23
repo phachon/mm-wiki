@@ -153,7 +153,8 @@ func (this *InstallController) Env() {
 func (this *InstallController) Config() {
 
 	if this.isPost() {
-		addr := this.GetString("addr", "")
+		addr := strings.TrimSpace(this.GetString("addr", ""))
+		documentDir := strings.TrimSpace(this.GetString("document_dir", ""))
 		port, _ := this.GetInt32("port", 0)
 
 		if addr == "" {
@@ -165,10 +166,14 @@ func (this *InstallController) Config() {
 		if port > int32(65535) {
 			this.jsonError("端口超出范围")
 		}
+		if documentDir == "" {
+			this.jsonError("文档根目录不能为空")
+		}
 
 		storage.Data.SystemConf = map[string]string{
 			"addr": addr,
 			"port": strconv.FormatInt(int64(port),10),
+			"document_dir": documentDir,
 		}
 		storage.Data.System = storage.Sys_Access
 		this.jsonSuccess("", nil, "/install/database")
@@ -187,15 +192,15 @@ func (this *InstallController) Database() {
 		this.viewLayoutTitle("mm-wiki-安装-数据库配置", "install/database", "install")
 	}
 
-	host := this.GetString("host", "")
-	port := this.GetString("port", "")
-	name := this.GetString("name", "")
-	user := this.GetString("user", "")
-	pass := this.GetString("pass", "")
-	connMaxIdle := this.GetString("conn_max_idle", "0")
-	connMaxConn := this.GetString("conn_max_connection", "0")
-	adminName := this.GetString("admin_name", "")
-	adminPass := this.GetString("admin_pass", "")
+	host := strings.TrimSpace(this.GetString("host", ""))
+	port := strings.TrimSpace(this.GetString("port", ""))
+	name := strings.TrimSpace(this.GetString("name", ""))
+	user := strings.TrimSpace(this.GetString("user", ""))
+	pass := strings.TrimSpace(this.GetString("pass", ""))
+	connMaxIdle := strings.TrimSpace(this.GetString("conn_max_idle", "0"))
+	connMaxConn := strings.TrimSpace(this.GetString("conn_max_connection", "0"))
+	adminName := strings.TrimSpace(this.GetString("admin_name", ""))
+	adminPass := strings.TrimSpace(this.GetString("admin_pass", ""))
 
 	if host == "" {
 		this.jsonError("数据库 host 不能为空！")
@@ -316,7 +321,7 @@ func (this *InstallController) End() {
 		this.Redirect("/install/ready", 302)
 	}
 
-	this.viewLayoutTitle("mm-wiki-安装完成", "install/end", "install")
+	this.view("install/end")
 }
 
 // 获取状态

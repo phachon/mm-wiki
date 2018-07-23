@@ -42,13 +42,13 @@ const Install_Success = 2 // 安装成功
 var defaultSystemConf = map[string]string{
 	"addr": "0.0.0.0",
 	"port": "8080",
-	"document_root": "",
+	"document_dir": "",
 }
 
 var defaultDatabaseConf = map[string]string{
 	"host": "127.0.0.1",
 	"port": "3306",
-	"name": "mm-wiki",
+	"name": "mm_wiki",
 	"user": "",
 	"pass": "",
 	"conn_max_idle": "30",
@@ -188,6 +188,7 @@ func makeConf() (err error) {
 	// replace conf tag
 	templateConf = strings.Replace(templateConf, "#httpaddr#", Data.SystemConf["addr"], 1)
 	templateConf = strings.Replace(templateConf, "#httpport#", Data.SystemConf["port"], 1)
+	templateConf = strings.Replace(templateConf, "#document_dir#", Data.SystemConf["document_dir"], 1)
 	templateConf = strings.Replace(templateConf, "#db.host#", Data.DatabaseConf["host"], 1)
 	templateConf = strings.Replace(templateConf, "#db.port#", Data.DatabaseConf["port"], 1)
 	templateConf = strings.Replace(templateConf, "#db.name#", Data.DatabaseConf["name"], 1)
