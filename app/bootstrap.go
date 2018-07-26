@@ -12,6 +12,7 @@ import (
 	"mm-wiki/app/models"
 	"path/filepath"
 	"time"
+	"path"
 )
 
 var (
@@ -21,6 +22,8 @@ var (
 var (
 	Version = "v0.1"
 	StartTime = int64(0)
+
+	ImageAbsDir = ""
 )
 
 func init() {
@@ -127,10 +130,36 @@ func initDocumentDir() {
 		beego.Error("document root dir "+docRootDir+" is not exists!")
 		os.Exit(1)
 	}
+
 	rootAbsDir, err := filepath.Abs(docRootDir)
 	if err != nil {
 		beego.Error("document root dir "+docRootDir+" is error!")
 		os.Exit(1)
 	}
-	utils.Document.RootAbsDir = rootAbsDir
+
+	markDownAbsDir := path.Join(rootAbsDir, "markdowns")
+	imagesAbsDir := path.Join(rootAbsDir, "images")
+
+	ok, _ = utils.File.PathIsExists(markDownAbsDir)
+	if !ok {
+		err := os.Mkdir(markDownAbsDir, 0777)
+		if err != nil {
+			beego.Error("create document markdown dir "+markDownAbsDir+" error!")
+			os.Exit(1)
+		}
+	}
+
+	ok, _ = utils.File.PathIsExists(imagesAbsDir)
+	if !ok {
+		err := os.Mkdir(imagesAbsDir, 0777)
+		if err != nil {
+			beego.Error("create document image dir "+imagesAbsDir+" error!")
+			os.Exit(1)
+		}
+	}
+
+	utils.Document.RootAbsDir = markDownAbsDir
+	ImageAbsDir = imagesAbsDir
+
+	beego.SetStaticPath("/images/", ImageAbsDir)
 }
