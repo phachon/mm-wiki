@@ -231,6 +231,7 @@ func installFailed(err string)  {
 }
 
 func installSuccess()  {
+
 	Data.Status = Install_End
 	Data.IsSuccess = Install_Success
 	result := map[string]string{
@@ -244,6 +245,10 @@ func installSuccess()  {
 	}
 	resByte, _ := json.Marshal(result)
 	Data.Result = string(resByte)
+
+	// create install lock file
+	file, _ := os.Create("../install.lock")
+	file.Close()
 }
 
 func StartInstall()  {
@@ -256,7 +261,7 @@ func ListenInstall()  {
 		defer func() {
 			err := recover()
 			if err != nil {
-				fmt.Printf("%v", err)
+				log.Println(fmt.Sprintf("install crash: %v", err))
 			}
 		}()
 		for  {

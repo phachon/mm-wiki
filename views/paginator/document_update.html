@@ -1,4 +1,4 @@
-
+{{if gt .paginator.PageNums 1 }}
 <ul class="pagination pagination-sm">
     {{/*<li><span>共 {{.paginator.Nums}} 条数据 </span></li>*/}}
     {{if .paginator.HasPrev}}
@@ -21,3 +21,4 @@
     <li class="disabled"><a>尾页</a></li>
     {{end}}
 </ul>
+{{end}}
