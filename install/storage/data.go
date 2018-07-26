@@ -167,12 +167,12 @@ func createAdmin() (err error)  {
 		return
 	}
 	defer db.Close()
-	stmt, err := db.Prepare("INSERT cp_user SET username=?,password=?,role=?, create_time=?,update_time=?")
+	stmt, err := db.Prepare("INSERT mw_user SET username=?,password=?,role_id=?, create_time=?,update_time=?")
 	if err != nil {
 		return
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(adminName, adminPass, 3, time.Now().Unix(), time.Now().Unix())
+	_, err = stmt.Exec(adminName, adminPass, 1, time.Now().Unix(), time.Now().Unix())
 	return
 }
 

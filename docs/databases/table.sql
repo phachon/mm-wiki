@@ -29,8 +29,8 @@ CREATE TABLE `mw_user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
-INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role_id`, `is_delete`, `create_time`, `update_time`)
-VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '1', '0', '1500825600', '1500825600');
+-- INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role_id`, `is_delete`, `create_time`, `update_time`)
+-- VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '1', '0', '1500825600', '1500825600');
 
 -- ---------------------------------------------------------------
 -- 系统角色表

@@ -1,9 +1,18 @@
 <div class="container-fluid">
-    <div id="failedBox" class="hide"></div>
+    {{if eq .mode "dev"}}
+        <div id="failedBox" class="hide"></div>
+    {{else}}
+        <div id="failedBox" class="">
+            <div class="alert alert-danger" style="margin-bottom: 8px">
+                <a class="close" href="#" onclick="$(this).parent().hide();">×</a><strong>
+                <i class="glyphicon glyphicon-warning-sign"></i> 警告：</strong>只允许在开发模式下添加权限！
+            </div>
+        </div>
+    {{end}}
     <div class="panel panel-default">
         <br>{{$privilege := .privilege}}{{$menus := .menus}}
         <div class="panel-body">
-            <form class="form-horizontal" method="post" action="{{if $privilege}} /system/privilege/modify {{else}}/system/privilege/save {{end}}">
+            <form class="form-horizontal" method="post" action="{{if $privilege}} /system/privilege/modify {{else}}/system/privilege/save {{end}}" onsubmit="return false">
                 <input type="hidden" name="privilege_id" value="{{$privilege.privilege_id}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>权限名称</label>
@@ -108,7 +117,11 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $privilege}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
+                        {{if eq .mode "dev"}}
+                            <button type="button" onclick="Form.ajaxSubmit(this.form, {{if $privilege}} true {{else}} false {{end}});" class="btn btn-primary">保存</button>
+                        {{else}}
+                            <button type="button" class="btn btn-primary" disabled="disabled">保存</button>
+                        {{end}}
                     </div>
                 </div>
             </form>

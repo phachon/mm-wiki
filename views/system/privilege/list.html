@@ -5,10 +5,18 @@
             <br>
             {{range $menu := $.menus}}
                 <ul class="list-group w240 inline-group">
-                    <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$menu.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$menu.privilege_id}}')">删</a></span></li>
+                    <li class="list-group-item"><strong>{{$menu.name}}</strong>
+                        {{if eq $.mode "dev"}}
+                        <span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$menu.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$menu.privilege_id}}')">删</a></span>
+                        {{end}}
+                    </li>
                     {{range $controller := $.controllers}}
                         {{if eq $controller.parent_id $menu.privilege_id}}
-                            <li class="list-group-item">{{$controller.name}}<span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$controller.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$controller.privilege_id}}')">删</a></span></li>
+                            <li class="list-group-item">{{$controller.name}}
+                                {{if eq $.mode "dev"}}
+                                <span class="pull-right"><a name='edit' data-link='/system/privilege/edit?privilege_id={{$controller.privilege_id}}'>改</a> | <a onclick="Layers.confirm('确定要删除权限吗？','/system/privilege/delete?privilege_id={{$controller.privilege_id}}')">删</a></span>
+                                {{end}}
+                            </li>
                         {{end}}
                     {{end}}
                 </ul>

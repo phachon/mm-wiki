@@ -4,6 +4,7 @@ import (
 	"strings"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	"github.com/astaxie/beego"
 )
 
 type PrivilegeController struct {
@@ -18,6 +19,7 @@ func (this *PrivilegeController) Add() {
 	}
 
 	this.Data["menus"] = menus
+	this.Data["mode"] = beego.BConfig.RunMode
 	this.viewLayout("privilege/form", "privilege")
 }
 
@@ -25,6 +27,9 @@ func (this *PrivilegeController) Save() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式错误", "/system/privilege/add")
+	}
+	if beego.BConfig.RunMode != "dev" {
+		this.jsonError("只允许在开发模式下添加权限!")
 	}
 
 	name := strings.TrimSpace(this.GetString("name", ""))
@@ -84,7 +89,7 @@ func (this *PrivilegeController) List() {
 
 	this.Data["menus"] = menus
 	this.Data["controllers"] = controllers
-
+	this.Data["mode"] = beego.BConfig.RunMode
 	this.viewLayout("privilege/list", "privilege")
 }
 
@@ -111,6 +116,7 @@ func (this *PrivilegeController) Edit() {
 
 	this.Data["menus"] = menus
 	this.Data["privilege"] = privilege
+	this.Data["mode"] = beego.BConfig.RunMode
 	this.viewLayout("privilege/form", "privilege")
 }
 
@@ -118,6 +124,9 @@ func (this *PrivilegeController) Modify() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式错误", "/system/privilege/list")
+	}
+	if beego.BConfig.RunMode != "dev" {
+		this.jsonError("只允许在开发模式下修改权限!")
 	}
 	privilegeId := strings.TrimSpace(this.GetString("privilege_id", ""))
 	name := strings.TrimSpace(this.GetString("name", ""))
@@ -172,6 +181,9 @@ func (this *PrivilegeController) Delete() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/privilege/list")
+	}
+	if beego.BConfig.RunMode != "dev" {
+		this.jsonError("只允许在开发模式下删除权限!")
 	}
 	privilegeId := this.GetString("privilege_id", "")
 	if privilegeId == "" {
