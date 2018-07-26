@@ -317,9 +317,9 @@ func (this *InstallController) Ready() {
 // 安装完成
 func (this *InstallController) End() {
 
-	//if storage.Data.Status == storage.Install_Ready {
-	//	this.Redirect("/install/ready", 302)
-	//}
+	if storage.Data.Status == storage.Install_Ready {
+		this.Redirect("/install/ready", 302)
+	}
 
 	this.view("install/end")
 }
