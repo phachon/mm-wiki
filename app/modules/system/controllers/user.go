@@ -299,7 +299,7 @@ func (this *UserController) Forbidden() {
 	}
 
 	this.InfoLog("屏蔽用户 "+userId+" 成功")
-	this.jsonSuccess("屏蔽用户成功", nil, "system/user/list")
+	this.jsonSuccess("屏蔽用户成功", nil, "/system/user/list")
 }
 
 func (this *UserController) Recover() {
@@ -314,8 +314,8 @@ func (this *UserController) Recover() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
-		this.jsonError("屏蔽用户失败")
+		this.ErrorLog("恢复用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("恢复用户失败")
 	}
 	if len(user) == 0 {
 		this.jsonError("用户不存在")
@@ -327,12 +327,12 @@ func (this *UserController) Recover() {
 		"is_forbidden": models.User_Is_Forbidden_False,
 	})
 	if err != nil {
-		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
-		this.jsonError("屏蔽用户失败")
+		this.ErrorLog("恢复用户 "+userId+" 失败: "+err.Error())
+		this.jsonError("恢复用户失败")
 	}
 
 	this.InfoLog("恢复用户 "+userId+" 成功")
-	this.jsonSuccess("恢复用户成功", nil, "system/user/list")
+	this.jsonSuccess("恢复用户成功", nil, "/system/user/list")
 }
 
 func (this *UserController) Info() {

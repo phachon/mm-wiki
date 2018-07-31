@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/snail007/go-activerecord/mysql"
 	"fmt"
+	"time"
 )
 
 type Privilege struct {
@@ -184,6 +185,9 @@ func (p *Privilege) Delete(privilegeId string) (err error) {
 	return
 }
 func (p *Privilege) Insert(privilege map[string]interface{}) (id int64, err error) {
+
+	privilege["create_time"] = time.Now().Unix()
+	privilege["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Privilege_Name, privilege))
@@ -195,6 +199,8 @@ func (p *Privilege) Insert(privilege map[string]interface{}) (id int64, err erro
 }
 
 func (p *Privilege) Update(privilegeId string, privilege map[string]interface{}) (id int64, err error) {
+
+	privilege["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Update(Table_Privilege_Name, privilege, map[string]interface{}{

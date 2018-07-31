@@ -1,7 +1,10 @@
 -- --------------------------------
--- database: mm_wiki
+-- MM-Wiki 表结构
 -- author: phachon
 -- --------------------------------
+
+-- 手动安装时首先需要创建数据库
+-- CREATE DATABASE IF NOT EXISTS mm_wiki DEFAULT CHARSET utf8;
 
 -- --------------------------------
 -- 用户表
@@ -29,9 +32,6 @@ CREATE TABLE `mw_user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
--- INSERT INTO `mw_user` (`username`, `password`, `email`,  `mobile`, `role_id`, `is_delete`, `create_time`, `update_time`)
--- VALUES ('root', 'e10adc3949ba59abbe56e057f20f883e', 'root@123456.com', '1102222', '1', '0', '1500825600', '1500825600');
-
 -- ---------------------------------------------------------------
 -- 系统角色表
 -- ---------------------------------------------------------------
@@ -45,15 +45,6 @@ CREATE TABLE `mw_role` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色表';
-
-INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
-VALUES ('超级管理员', '1', '0', '1500825600', '1500825600');
-
-INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
-VALUES ('管理员', '1', '0', '1500825600', '1500825600');
-
-INSERT INTO `mw_role` (`name`, `type`, `is_delete`, `create_time`, `update_time`)
-VALUES ('普通用户', '1', '0', '1500825600', '1500825600');
 
 -- -------------------------------------------------------
 -- 系统权限表
@@ -274,12 +265,6 @@ CREATE TABLE `mw_config` (
   PRIMARY KEY (`config_id`),
   unique KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置表';
-
-INSERT INTO `mw_config` VALUES ('1', '主页标题', 'main_title', '这里可以填写公司名称，例如：欢迎来到 XXXX 科技公司 wiki 平台！', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('2', '主页描述', 'main_description', '这是写一些描述：请使用域账号登录，使用中有任何问题请联系管理员 root@xxx.com！', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('3', '是否开启自动关注', 'auto_follow_doc_open', '', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('4', '是否开启邮件通知', 'send_email_open', '', '1531365619', '1531365619');
-INSERT INTO `mw_config` VALUES ('5', '是否开启统一登录', 'sso_open', '', '1531365619', '1531365619');
 
 -- --------------------------------
 -- 系统联系人表

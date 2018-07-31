@@ -211,8 +211,8 @@ func (this *StaticController) DocCountByTime() {
 
 	documentCountDate , err := models.DocumentModel.GetCountGroupByCreateTime(startTime)
 	if err != nil {
-		this.ErrorLog("查找空间文档排行出错："+err.Error())
-		this.jsonError("查找数据出错")
+		this.ErrorLog("查找文档数量增长趋势出错："+err.Error())
+		this.jsonError("查找文档数量增长趋势出错")
 	}
 
 	this.jsonSuccess("ok", documentCountDate)

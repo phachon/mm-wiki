@@ -13,6 +13,34 @@ type AuthController struct {
 	BaseController
 }
 
+func (this *AuthController) List() {
+
+	page, _ := this.GetInt("page", 1)
+	keyword := strings.TrimSpace(this.GetString("keyword", ""))
+
+	number := 20
+	limit := (page - 1) * number
+	var err error
+	var count int64
+	var auths []map[string]string
+	if keyword != "" {
+		count, err = models.AuthModel.CountAuthsByKeyword(keyword)
+		auths, err = models.AuthModel.GetAuthsByKeywordAndLimit(keyword, limit, number)
+	} else {
+		count, err = models.AuthModel.CountAuths()
+		auths, err = models.AuthModel.GetAuthsByLimit(limit, number)
+	}
+	if err != nil {
+		this.ErrorLog("获取登录认证列表失败: "+err.Error())
+		this.ViewError("获取登录认证列表失败", "/system/main/index")
+	}
+
+	this.Data["auths"] = auths
+	this.Data["keyword"] = keyword
+	this.SetPaginator(number, count)
+	this.viewLayout("auth/list", "auth")
+}
+
 func (this *AuthController) Add() {
 	this.viewLayout("auth/form", "auth")
 }
@@ -75,34 +103,6 @@ func (this *AuthController) Save() {
 	}
 	this.InfoLog("添加登录认证 "+utils.Convert.IntToString(authId, 10)+" 成功")
 	this.jsonSuccess("添加登录认证成功", nil, "/system/auth/list")
-}
-
-func (this *AuthController) List() {
-
-	page, _ := this.GetInt("page", 1)
-	keyword := strings.TrimSpace(this.GetString("keyword", ""))
-
-	number := 20
-	limit := (page - 1) * number
-	var err error
-	var count int64
-	var auths []map[string]string
-	if keyword != "" {
-		count, err = models.AuthModel.CountAuthsByKeyword(keyword)
-		auths, err = models.AuthModel.GetAuthsByKeywordAndLimit(keyword, limit, number)
-	} else {
-		count, err = models.AuthModel.CountAuths()
-		auths, err = models.AuthModel.GetAuthsByLimit(limit, number)
-	}
-	if err != nil {
-		this.ErrorLog("获取登录认证列表失败: "+err.Error())
-		this.ViewError("获取登录认证列表失败", "/system/main/index")
-	}
-
-	this.Data["auths"] = auths
-	this.Data["keyword"] = keyword
-	this.SetPaginator(number, count)
-	this.viewLayout("auth/list", "auth")
 }
 
 func (this *AuthController) Edit() {

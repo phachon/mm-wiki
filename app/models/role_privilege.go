@@ -1,6 +1,9 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 var RolePrivilegeModel = RolePrivilege{}
 
@@ -56,6 +59,7 @@ func (rolePrivilege *RolePrivilege) GrantRolePrivileges(roleId string, privilege
 		rolePrivilege := map[string]interface{}{
 			"role_id": roleId,
 			"privilege_id": privilegeId,
+			"create_time": time.Now().Unix(),
 		}
 		rolePrivileges = append(rolePrivileges, rolePrivilege)
 	}

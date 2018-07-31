@@ -135,11 +135,11 @@ func createTable() (err error) {
 
 	installDir, _ := os.Getwd()
 	installDir = strings.Replace(installDir, "install", "", 1)
-	sqlBytes, err := ioutil.ReadFile(installDir+"docs/databases/table.sql");
+	sqlBytes, err := ioutil.ReadFile(installDir+"docs/databases/table.sql")
 	if err != nil {
 		return err
 	}
-	sqlTable := string(sqlBytes);
+	sqlTable := string(sqlBytes)
 	db, err := sql.Open("mysql", user+":"+pass+"@tcp("+host+":"+port+")/"+name+"?charset=utf8&multiStatements=true")
 	if err != nil {
 		return
@@ -167,12 +167,12 @@ func createAdmin() (err error)  {
 		return
 	}
 	defer db.Close()
-	stmt, err := db.Prepare("INSERT mw_user SET username=?,password=?,role_id=?, create_time=?,update_time=?")
+	stmt, err := db.Prepare("INSERT mw_user SET username=?,password=?,given_name=?,role_id=?, create_time=?,update_time=?")
 	if err != nil {
 		return
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(adminName, adminPass, 1, time.Now().Unix(), time.Now().Unix())
+	_, err = stmt.Exec(adminName, adminPass, adminName, 1, time.Now().Unix(), time.Now().Unix())
 	return
 }
 
