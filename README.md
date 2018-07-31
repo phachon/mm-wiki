@@ -2,10 +2,12 @@
 
 MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于快速构建企业 Wiki 和团队知识分享平台。部署方便，使用简单，帮助团队构建一个信息共享、文档管理的协作环境。
 
-[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/)
-[![license](https://img.shields.io/github/license/phachon/mm-wiki.svg?style=plastic)]()
-[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases)
-[![download](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases)
+[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/) 
+[![build](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg)](https://travis-ci.org/phachon/mm-wiki)
+[![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/phachon/mm-wiki/master/LICENSE)
+[![platforms](https://img.shields.io/badge/platform-All-yellow.svg?style=flat)]()
+[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
+[![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
 
 # 特点
 - 部署方便，基于 golang 编写，只需要下载对于平台下二进制文件执行即可。
@@ -71,16 +73,14 @@ server {
 ![install](/docs/guide_res/images/install.png)
 ### 2 登录
 ![login](/docs/guide_res/images/login.png)
-### 3 面板
-![login](/docs/guide_res/images/index.png)
-### 4 添加节点
-![login](/docs/guide_res/images/add-node.png)
-### 5 添加项目
-![login](/docs/guide_res/images/add-project.png)
-### 6 发布代码
-![login](/docs/guide_res/images/publish.png)
-### 7 节点进度
-![login](/docs/guide_res/images/task.png)
+### 3 系统
+![system](/docs/guide_res/images/index.png)
+### 4 空间文档
+![space](/docs/guide_res/images/add-node.png)
+### 5 编辑文档
+![edit](/docs/guide_res/images/add-project.png)
+### 6 文档分享
+![share](/docs/guide_res/images/publish.png)
 
 # 使用的一些插件
 
