@@ -1,0 +1,178 @@
+{
+	"ImportPath": "mm-wiki",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/StackExchange/wmi",
+			"Rev": "5d049714c4a64225c3c79a7cf7d02f7fb5b96338"
+		},
+		{
+			"ImportPath": "github.com/asaskevich/govalidator",
+			"Comment": "v6-23-g15028e8",
+			"Rev": "15028e809df8c71964e8efa6c11e81d5c0262302"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/config",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/context",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/context/param",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/grace",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/logs",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/session",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/toolbox",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/utils",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/validation",
+			"Comment": "v1.9.2",
+			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+		},
+		{
+			"ImportPath": "github.com/fatih/color",
+			"Comment": "v1.7.0-2-g2d68451",
+			"Rev": "2d684516a8861da43017284349b7e303e809ac21"
+		},
+		{
+			"ImportPath": "github.com/go-ole/go-ole",
+			"Comment": "v0.0.1-1-ga41e3c4",
+			"Rev": "a41e3c4b706f6ae8dfbff342b06e40fa4d2d0506"
+		},
+		{
+			"ImportPath": "github.com/go-ole/go-ole/oleutil",
+			"Comment": "v0.0.1-1-ga41e3c4",
+			"Rev": "a41e3c4b706f6ae8dfbff342b06e40fa4d2d0506"
+		},
+		{
+			"ImportPath": "github.com/go-ozzo/ozzo-validation",
+			"Comment": "v3.2-1-g2a0d4bd",
+			"Rev": "2a0d4bd2d6644eb9c5a0d9f41b9519d520e28d89"
+		},
+		{
+			"ImportPath": "github.com/go-ozzo/ozzo-validation/is",
+			"Comment": "v3.2-1-g2a0d4bd",
+			"Rev": "2a0d4bd2d6644eb9c5a0d9f41b9519d520e28d89"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3-31-g26471af",
+			"Rev": "26471af196a17ee75a22e6481b5a5897fb16b081"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Comment": "v0.0.9-13-g7dc3415",
+			"Rev": "7dc3415be66d7cc68bf0182f35c8d31f8d2ad8a7"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Comment": "v0.0.3-7-g6ca4dbf",
+			"Rev": "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c"
+		},
+		{
+			"ImportPath": "github.com/nu7hatch/gouuid",
+			"Rev": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3"
+		},
+		{
+			"ImportPath": "github.com/pkg/errors",
+			"Comment": "v0.8.0-11-g30136e2",
+			"Rev": "30136e27e2ac8d167177e8a583aa4c3fea5be833"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/cpu",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/disk",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/host",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/internal/common",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/mem",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/net",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/gopsutil/process",
+			"Comment": "v2.17.12-24-g4ac6b5b",
+			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+		},
+		{
+			"ImportPath": "github.com/shirou/w32",
+			"Rev": "bb4de0191aa41b5507caa14b0650cdbddcd9280b"
+		},
+		{
+			"ImportPath": "github.com/shurcooL/sanitized_anchor_name",
+			"Rev": "86672fcb3f950f35f2e675df2240550f2a50762f"
+		},
+		{
+			"ImportPath": "github.com/snail007/go-activerecord/mysql",
+			"Rev": "7d1523cc722ec3429f5817fd3c3780b7d5f1ad89"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "7dca6fe1f43775aa6d1334576870ff63f978f539"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/windows",
+			"Rev": "7dca6fe1f43775aa6d1334576870ff63f978f539"
+		},
+		{
+			"ImportPath": "gopkg.in/russross/blackfriday.v2",
+			"Comment": "v2.0.0",
+			"Rev": "cadec560ec52d93835bf2f15bd794700d3a2473b"
+		}
+	]
+}
