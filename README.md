@@ -39,9 +39,10 @@ $ ./install
 # Ctrl + C 停止 install 程序, 启动 MM-Wiki 系统
 $ cd ..
 $ ./mm-wiki --conf conf/mm-wiki.conf
+# 开始 MM-Wiki 的使用之旅吧！
 ```
 
-## 2. nginx 配置反向代理
+## 2. 如果需要，可用 nginx 配置反向代理
 ```
 upstream frontends {
     server 127.0.0.1:8088; # MM-Wiki 监听的ip:port
