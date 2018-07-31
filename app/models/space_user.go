@@ -129,6 +129,9 @@ func (s *SpaceUser) DeleteBySpaceIdAndUserId(spaceId string, userId string) (err
 
 // insert space_user
 func (s *SpaceUser) Insert(spaceUserValue map[string]interface{}) (id int64, err error) {
+
+	spaceUserValue["create_time"] = time.Now().Unix()
+	spaceUserValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_SpaceUser_Name, spaceUserValue))

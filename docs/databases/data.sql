@@ -128,18 +128,27 @@ INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_
 INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (7, 3, 7, unix_timestamp(now()));
 INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (8, 3, 8, unix_timestamp(now()));
 INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (9, 3, 9, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (10, 2, 37, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (11, 2, 38, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (12, 2, 39, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (13, 2, 40, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (14, 2, 41, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (15, 2, 42, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (16, 2, 43, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (17, 2, 44, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (18, 2, 45, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (19, 2, 46, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (20, 2, 47, unix_timestamp(now()));
-INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (21, 2, 48, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (10, 2, 1, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (11, 2, 2, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (12, 2, 3, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (13, 2, 4, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (14, 2, 5, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (15, 2, 6, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (16, 2, 7, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (17, 2, 8, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (18, 2, 9, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (19, 2, 37, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (20, 2, 38, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (21, 2, 39, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (22, 2, 40, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (23, 2, 41, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (24, 2, 42, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (25, 2, 43, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (26, 2, 44, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (27, 2, 45, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (28, 2, 46, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (29, 2, 47, unix_timestamp(now()));
+INSERT INTO mw_role_privilege (role_privilege_id, role_id, privilege_id, create_time) VALUES (30, 2, 48, unix_timestamp(now()));
 
 
 -- -------------------------------------------

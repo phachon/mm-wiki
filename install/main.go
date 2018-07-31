@@ -23,7 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	beego.BConfig.RunMode = "prod"
+	//beego.BConfig.RunMode = "prod"
 	beego.Run(":"+*port)
 }
 

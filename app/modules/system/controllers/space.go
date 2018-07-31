@@ -80,6 +80,20 @@ func (this *SpaceController) Save() {
 		this.jsonError("添加空间失败！")
 	}
 
+	// add space member
+	insertValue := map[string]interface{}{
+		"user_id": this.UserId,
+		"space_id": spaceId,
+		"privilege": models.SpaceUser_Privilege_Manager,
+	}
+	_, err = models.SpaceUserModel.Insert(insertValue)
+	if err != nil {
+		// delete space
+		models.SpaceModel.Delete(fmt.Sprintf("%d", spaceId))
+		this.ErrorLog("添加空间添加空间成员失败: " + err.Error())
+		this.jsonError("添加空间失败！")
+	}
+
 	this.InfoLog("添加空间 "+utils.Convert.IntToString(spaceId, 10)+" 成功")
 	this.jsonSuccess("添加空间成功", nil, "/system/space/list")
 }

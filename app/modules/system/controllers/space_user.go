@@ -50,8 +50,6 @@ func (this *Space_UserController) Save() {
 		"user_id": userId,
 		"space_id": spaceId,
 		"privilege": privilege,
-		"create_time": time.Now().Unix(),
-		"update_time": time.Now().Unix(),
 	}
 	_, err = models.SpaceUserModel.Insert(insertValue)
 	if err != nil {

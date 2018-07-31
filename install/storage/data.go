@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"time"
 	"mm-wiki/app/utils"
-	"os/exec"
 	"runtime"
 	"encoding/json"
 )
@@ -176,6 +175,33 @@ func createAdmin() (err error)  {
 	return
 }
 
+// write database install data
+func writeInstallData() (err error) {
+	host := Data.DatabaseConf["host"]
+	port := Data.DatabaseConf["port"]
+	user := Data.DatabaseConf["user"]
+	pass := Data.DatabaseConf["pass"]
+	name := Data.DatabaseConf["name"]
+
+	installDir, _ := os.Getwd()
+	installDir = strings.Replace(installDir, "install", "", 1)
+	sqlBytes, err := ioutil.ReadFile(installDir+"docs/databases/data.sql")
+	if err != nil {
+		return err
+	}
+	sqlTable := string(sqlBytes)
+	db, err := sql.Open("mysql", user+":"+pass+"@tcp("+host+":"+port+")/"+name+"?charset=utf8&multiStatements=true")
+	if err != nil {
+		return
+	}
+	defer db.Close()
+	_, err = db.Exec(sqlTable)
+	if err != nil {
+		return
+	}
+	return nil
+}
+
 // write conf
 func makeConf() (err error) {
 	installDir, _ := os.Getwd()
@@ -204,22 +230,6 @@ func makeConf() (err error) {
 	defer fileObject.Close();
 
 	_, err = fileObject.Write([]byte(templateConf));
-	return
-}
-
-// run mm-wiki command
-func runCodePub() (err error) {
-	var cmd *exec.Cmd
-	installDir, _ := os.Getwd()
-	installDir = strings.Replace(installDir, "install", "", 1)
-
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command(installDir+"mm-wiki.exe")
-	}else {
-		cmd = exec.Command("./"+installDir+"mm-wiki")
-	}
-	cmd.Dir = installDir
-	err = cmd.Start()
 	return
 }
 
@@ -298,6 +308,13 @@ func ListenInstall()  {
 					continue
 				}
 				log.Println("create admin user success")
+				// 写入安装数据
+				err = writeInstallData()
+				if err != nil {
+					installFailed("导入安装数据出错："+err.Error())
+					continue
+				}
+				log.Println("write install data success")
 				// 写入 conf 文件
 				err = makeConf()
 				if err != nil {

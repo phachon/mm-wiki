@@ -104,15 +104,26 @@ func (this *InstallController) Env() {
 		templateConfDir["result"] = "0"
 	}
 
-	docsDir := map[string]string{
+	databaseTable := map[string]string{
 		"path": "docs/databases/table.sql",
 		"require": "读/写",
 		"result": "1",
 	}
-	err = fileTool.IsWriterReadable(installDir+docsDir["path"])
+	err = fileTool.IsWriterReadable(installDir+databaseTable["path"])
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
-		docsDir["result"] = "0"
+		databaseTable["result"] = "0"
+	}
+
+	databaseData := map[string]string{
+		"path": "docs/databases/data.sql",
+		"require": "读/写",
+		"result": "1",
+	}
+	err = fileTool.IsWriterReadable(installDir+databaseData["path"])
+	if err != nil {
+		storage.Data.Env = storage.Env_NotAccess
+		databaseData["result"] = "0"
 	}
 
 	viewsDir := map[string]string{
@@ -120,7 +131,7 @@ func (this *InstallController) Env() {
 		"require": "存在且不为空",
 		"result": "1",
 	}
-	isEmpty := utils.NewFile().PathIsEmpty(installDir+viewsDir["path"])
+	isEmpty := utils.File.PathIsEmpty(installDir+viewsDir["path"])
 	if isEmpty == true {
 		storage.Data.Env = storage.Env_NotAccess
 		viewsDir["result"] = "0"
@@ -131,7 +142,7 @@ func (this *InstallController) Env() {
 		"require": "存在且不为空",
 		"result": "1",
 	}
-	isEmpty = utils.NewFile().PathIsEmpty(installDir+staticDir["path"])
+	isEmpty = utils.File.PathIsEmpty(installDir+staticDir["path"])
 	if isEmpty == true {
 		storage.Data.Env = storage.Env_NotAccess
 		staticDir["result"] = "0"
@@ -139,7 +150,8 @@ func (this *InstallController) Env() {
 
 	dirData := []map[string]string{}
 	dirData = append(dirData, templateConfDir)
-	dirData = append(dirData, docsDir)
+	dirData = append(dirData, databaseTable)
+	dirData = append(dirData, databaseData)
 	dirData = append(dirData, viewsDir)
 	dirData = append(dirData, staticDir)
 

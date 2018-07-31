@@ -65,7 +65,6 @@ func (p *Privilege) GetTypePrivilegesByUserId(userId string) (menus, controllers
 	}
 	roleId := user["role_id"]
 
-	fmt.Println(user)
 	if roleId == fmt.Sprintf("%d", Role_Root_Id) {
 		return PrivilegeModel.GetTypePrivileges()
 	}
