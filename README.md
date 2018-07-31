@@ -70,17 +70,17 @@ server {
 # 系统预览
 
 ### 1 安装
-![install](/docs/guide_res/images/install.png)
+![install](./static/images/preview/install.png)
 ### 2 登录
-![login](/docs/guide_res/images/login.png)
+![login](./static/images/preview/login.png)
 ### 3 系统
-![system](/docs/guide_res/images/index.png)
+![system](./static/images/preview/system.png)
 ### 4 空间文档
-![space](/docs/guide_res/images/add-node.png)
+![space](./static/images/preview/space.png)
 ### 5 编辑文档
-![edit](/docs/guide_res/images/add-project.png)
+![edit](./static/images/preview/edit.png)
 ### 6 文档分享
-![share](/docs/guide_res/images/publish.png)
+![share](./static/images/preview/share.png)
 
 # 使用的一些插件
 
@@ -110,9 +110,13 @@ $ cd mm-wiki
 $ go build ./
 ```
 
-# 反馈
+## 反馈
 
-欢迎提交意见和代码 https://github.com/phachon/mm-wiki/issues
+- 如果您喜欢该项目，请 [Start](https://github.com/phachon/mm-wiki/stargazers).
+- 如果在使用过程中有任何问题， 请提交 [Issue](https://github.com/phachon/mm-wiki/issues).
+- 如果您发现并解决了bug，请提交 [Pull Request](https://github.com/phachon/mm-wiki/pulls).
+- 如果您想二次开发，欢迎 [Fork](https://github.com/phachon/mm-wiki/network/members).
+- 如果你想交个朋友，欢迎发邮件给 [phachon@163.com](mailto:phachon@163.com).
 
 ## License
 

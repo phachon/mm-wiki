@@ -37,18 +37,18 @@
                         <div class="col-md-4 text-right">
                             <div class="btn-group" role="group" aria-label="...">
                                 {{if eq .is_editor true}}
-                                    <a class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                                    <a type="button" class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
                                 {{end}}
                                 {{if eq $collectionId "0"}}
-                                    <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                                    <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
                                 {{else}}
-                                    <a class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
+                                    <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
                                 {{end}}
                                 {{if eq $space.is_share "1"}}
-                                    <a class="btn btn-default" name="share" href="/page/display?document_id={{$document.document_id}}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</a>
+                                    <a type="button" class="btn btn-default" name="share" href="/page/display?document_id={{$document.document_id}}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</a>
                                 {{end}}
                                 {{if eq $space.is_export "1"}}
-                                    <button class="btn btn-default" data-toggle="web-popover" data-placement="bottom"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
+                                    <button type="button" class="btn btn-default" data-toggle="web-popover" data-placement="bottom"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
                                     <div class="webui-popover-content">
                                         <ul class="dropdown-menu webui-popover-menu">
                                             <li><a href="/page/export?document_id={{$document.document_id}}&output=markdown"><span class="fa fa-file-text"></span> Markdown</a></li>
