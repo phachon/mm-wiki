@@ -4,6 +4,11 @@
             <div class="page-header">
                 <h2>全部空间 <small><span class="badge">{{.count}}</span></small></h2>
             </div>
+            {{if eq .count 0}}
+                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
+                    <p><i class="glyphicon glyphicon-volume-up"></i> 暂时还没有空间！</p>
+                </div>
+            {{else}}
             <div class="row">
                 <form action="" method="get">
                     <div class="col-md-9">
@@ -64,6 +69,7 @@
                 {{end}}
                 </tbody>
             </table>
+            {{end}}
         </div>
         <div class="panel-footer">
         {{template "paginator/default.html" .}}

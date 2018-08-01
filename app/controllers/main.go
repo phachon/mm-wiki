@@ -30,9 +30,14 @@ func (this *MainController) Index() {
 	this.Data["count"] = len(documents)
 	this.viewLayout("main/index", "main")
 }
+
 func (this *MainController) Default() {
 
 	page, _ := this.GetInt("page", 1)
+	maxPage := 10
+	if page >= maxPage {
+		page = maxPage
+	}
 	number := 8
 	limit := (page - 1) * number
 
@@ -41,10 +46,14 @@ func (this *MainController) Default() {
 		this.ErrorLog("查找更新文档列表失败："+err.Error())
 		this.ViewError("查找更新文档列表失败！")
 	}
+
 	count, err := models.LogDocumentModel.CountLogDocuments()
 	if err != nil {
 		this.ErrorLog("查找更新文档总数失败："+err.Error())
 		this.ViewError("查找更新文档列表失败！")
+	}
+	if count >= int64(maxPage * number) {
+		count = int64(maxPage * number)
 	}
 
 	userIds := []string{}
