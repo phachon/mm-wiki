@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"mm-wiki/install/storage"
 	"mm-wiki/app/utils"
+	"path/filepath"
 )
 
 type InstallController struct {
@@ -180,6 +181,14 @@ func (this *InstallController) Config() {
 		}
 		if documentDir == "" {
 			this.jsonError("文档保存目录不能为空")
+		}
+		docAbsDir, err := filepath.Abs(documentDir)
+		if err != nil {
+			this.jsonError("文档保存目录错误!")
+		}
+		ok, _ := utils.File.PathIsExists(docAbsDir)
+		if !ok {
+			this.jsonError("文档保存目录不存在!")
 		}
 
 		storage.Data.SystemConf = map[string]string{
