@@ -6,11 +6,17 @@ var Role = {
 
 	isChecked : true,
 
-	defaults : function(defaults) {
+	defaults : function(defaults, disableds) {
 		console.log(defaults);
+		console.log(disableds);
 		$('[name="privilege_id"]').each(function() {
 			var checked = $.inArray(parseInt(this.value), defaults) > -1 ? true : false;
 			this.checked = checked;
+            var isDisabled = $.inArray(parseInt(this.value), disableds) > -1 ? true : false;
+            if (isDisabled) {
+            	this.checked = true;
+                this.disabled = true;
+            }
 		});
 	},
 

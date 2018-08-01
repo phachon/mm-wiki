@@ -222,6 +222,7 @@ func (this *RoleController) Privilege() {
 	this.Data["menus"] = menus
 	this.Data["controllers"] = controllers
 	this.Data["rolePrivileges"] = rolePrivileges
+	this.Data["disabledPrivilegeIds"] = models.Privilege_Default_Ids
 
 	this.viewLayout("role/privilege", "role")
 }
@@ -237,9 +238,11 @@ func (this *RoleController) GrantPrivilege() {
 	if roleId == "" {
 		this.jsonError("没有选择角色!")
 	}
-	if len(privilegeIds) == 0 {
-		this.jsonError("没有选择权限!")
-	}
+	//if len(privilegeIds) == 0 {
+	//	this.jsonError("没有选择权限!")
+	//}
+	// add default privileges
+	privilegeIds = append(privilegeIds, models.Privilege_Default_Ids...)
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {

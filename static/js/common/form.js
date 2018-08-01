@@ -57,6 +57,7 @@ var Form = {
             if (result.code == 1) {
                 successBox(result.message, result.data);
             }
+            $("body,html").animate({scrollTop:0},300);
             if (result.redirect.url) {
                 var sleepTime = result.redirect.sleep || 3000;
                 setTimeout(function() {

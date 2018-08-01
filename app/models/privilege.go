@@ -20,6 +20,8 @@ const (
 	Privilege_DisPlay_False = "0"
 )
 
+var Privilege_Default_Ids = []string{"1","2","3","4","5","6","7","8","9"}
+
 var PrivilegeModel = Privilege{}
 
 func (p *Privilege) GetTypePrivileges() (menus, controllers []map[string]string, err error) {

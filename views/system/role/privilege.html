@@ -11,7 +11,7 @@
                         <li class="list-group-item"><strong>{{$menu.name}}</strong> <span class="pull-right"><input name="privilege_id" type="checkbox" data-type="menu" value="{{$menu.privilege_id}}" onclick="Role.privilege(this)" /></span></li>
                         {{range $controller := $.controllers}}
                             {{if eq $controller.parent_id $menu.privilege_id}}
-                                <li class="list-group-item">{{$controller.name}}<span class="pull-right"><input name="privilege_id" type="checkbox" data-type="controller" value="{{$controller.privilege_id}}" onclick="Role.privilege(this)" /></li>
+                                <li class="list-group-item">{{$controller.name}}<span class="pull-right"><input name="privilege_id" type="checkbox" data-type="controller" value="{{$controller.privilege_id}}" onclick="Role.privilege(this)" /></span></li>
                             {{end}}
                         {{end}}
                     </ul>
@@ -32,6 +32,7 @@
     var menus = [];
     var controllers = [];
     var defaultPrivileges = [];
+    var disabledPrivilegeIds = [];
 
     {{range $menu := .menus }}
     menus.push({'privilegeId':'{{$menu.privilege_id}}', 'name':'{{$menu.name}}', 'parentId':'{{$menu.parent_id}}', 'type':'{{$menu.type}}'});
@@ -45,6 +46,10 @@
     defaultPrivileges.push(parseInt({{$rolePrivilege.privilege_id}}));
     {{end}}
 
-    Role.defaults(defaultPrivileges);
+    {{range $disabledPrivilegeId := .disabledPrivilegeIds}}
+    disabledPrivilegeIds.push(parseInt({{$disabledPrivilegeId}}));
+    {{end}}
+
+    Role.defaults(defaultPrivileges, disabledPrivilegeIds);
     //-->
 </script>
