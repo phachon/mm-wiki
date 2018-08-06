@@ -95,7 +95,7 @@ func (r *Role) GetRoleByName(name string) (role map[string]string, err error) {
 func (r *Role) Delete(roleId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Role_Name, map[string]interface{}{
-		"is_delete": Role_Delete_False,
+		"is_delete": Role_Delete_True,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"role_id": roleId,

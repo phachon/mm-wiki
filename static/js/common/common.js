@@ -26,7 +26,7 @@ var Common = {
 			dataType: "json",
 			success : function(response) {
 				if(response.code == 0) {
-					Layers.failedMsg(response.message, Common.redirect(response.redirect.url));
+					Layers.failedMsg(response.message, function () {});
 				} else {
 					Layers.successMsg(response.message, Common.redirect(response.redirect.url));
 				}

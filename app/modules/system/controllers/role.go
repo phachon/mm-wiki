@@ -305,17 +305,14 @@ func (this *RoleController) Delete() {
 		this.jsonError("不能删除角色，请先移除该角色下用户!")
 	}
 
-	// check role privilege
-	privileges, err := models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
+	// delete role privilege by role id
+	err = models.RolePrivilegeModel.DeleteByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.ErrorLog("删除角色 "+roleId+" 权限失败: "+err.Error())
 		this.jsonError("删除角色失败")
 	}
-	if len(privileges) > 0 {
-		this.jsonError("不能删除角色，请先移除该角色下权限!")
-	}
 
-	// delete role
+	// delete role by role id
 	err = models.RoleModel.Delete(roleId)
 	if err != nil {
 		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
