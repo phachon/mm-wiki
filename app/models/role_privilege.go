@@ -83,3 +83,16 @@ func (rolePrivilege *RolePrivilege) DeleteByRoleId(roleId string) (err error) {
 	}
 	return
 }
+
+// delete role privilege by privilege_id
+func (rolePrivilege *RolePrivilege) DeleteByPrivilegeId(privilegeId string) (err error) {
+
+	db := G.DB()
+	_, err = db.Exec(db.AR().Delete(Table_RolePrivilege_Name, map[string]interface{}{
+		"privilege_id": privilegeId,
+	}))
+	if err != nil {
+		return
+	}
+	return
+}

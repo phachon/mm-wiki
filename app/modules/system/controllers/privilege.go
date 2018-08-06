@@ -198,6 +198,15 @@ func (this *PrivilegeController) Delete() {
 	if len(privilege) == 0 {
 		this.jsonError("权限不存在")
 	}
+
+	// delete role_privilege by privilegeId
+	err = models.RolePrivilegeModel.DeleteByPrivilegeId(privilegeId)
+	if err != nil {
+		this.ErrorLog("删除角色权限 "+privilegeId+" 失败: "+err.Error())
+		this.jsonError("删除权限失败")
+	}
+
+	// delete privilege
 	err = models.PrivilegeModel.Delete(privilegeId)
 	if err != nil {
 		this.ErrorLog("删除权限 "+privilegeId+" 失败: "+err.Error())
