@@ -20,7 +20,7 @@ var (
 )
 
 var (
-	Version = "v0.1"
+	Version = "v0.1.1"
 	StartTime = int64(0)
 
 	ImageAbsDir = ""
