@@ -3,7 +3,6 @@ package process
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"runtime"
 	"time"
 
@@ -12,10 +11,11 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
-var (
-	invoke          common.Invoker = common.Invoke{}
-	ErrorNoChildren                = errors.New("process does not have children")
-)
+var invoke common.Invoker
+
+func init() {
+	invoke = common.Invoke{}
+}
 
 type Process struct {
 	Pid            int32 `json:"pid"`

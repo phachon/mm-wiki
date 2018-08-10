@@ -3,13 +3,12 @@
 package common
 
 import (
-	"context"
 	"os/exec"
 	"strconv"
 	"strings"
 )
 
-func CallLsofWithContext(ctx context.Context, invoke Invoker, pid int32, args ...string) ([]string, error) {
+func CallLsof(invoke Invoker, pid int32, args ...string) ([]string, error) {
 	var cmd []string
 	if pid == 0 { // will get from all processes.
 		cmd = []string{"-a", "-n", "-P"}
@@ -21,7 +20,7 @@ func CallLsofWithContext(ctx context.Context, invoke Invoker, pid int32, args ..
 	if err != nil {
 		return []string{}, err
 	}
-	out, err := invoke.CommandWithContext(ctx, lsof, cmd...)
+	out, err := invoke.Command(lsof, cmd...)
 	if err != nil {
 		// if no pid found, lsof returnes code 1.
 		if err.Error() == "exit status 1" && len(out) == 0 {
@@ -40,14 +39,14 @@ func CallLsofWithContext(ctx context.Context, invoke Invoker, pid int32, args ..
 	return ret, nil
 }
 
-func CallPgrepWithContext(ctx context.Context, invoke Invoker, pid int32) ([]int32, error) {
+func CallPgrep(invoke Invoker, pid int32) ([]int32, error) {
 	var cmd []string
 	cmd = []string{"-P", strconv.Itoa(int(pid))}
 	pgrep, err := exec.LookPath("pgrep")
 	if err != nil {
 		return []int32{}, err
 	}
-	out, err := invoke.CommandWithContext(ctx, pgrep, cmd...)
+	out, err := invoke.Command(pgrep, cmd...)
 	if err != nil {
 		return []int32{}, err
 	}

@@ -4,7 +4,6 @@ package disk
 
 import (
 	"context"
-	"strconv"
 
 	"golang.org/x/sys/unix"
 )
@@ -25,7 +24,7 @@ func UsageWithContext(ctx context.Context, path string) (*UsageStat, error) {
 	bsize := stat.Bsize
 
 	ret := &UsageStat{
-		Path:        unescapeFstab(path),
+		Path:        path,
 		Fstype:      getFsType(stat),
 		Total:       (uint64(stat.Blocks) * uint64(bsize)),
 		Free:        (uint64(stat.Bavail) * uint64(bsize)),
@@ -47,22 +46,11 @@ func UsageWithContext(ctx context.Context, path string) (*UsageStat, error) {
 		ret.InodesUsedPercent = (float64(ret.InodesUsed) / float64(ret.InodesTotal)) * 100.0
 	}
 
-	if (ret.Used + ret.Free) == 0 {
+	if ret.Total == 0 {
 		ret.UsedPercent = 0
 	} else {
-		// We don't use ret.Total to calculate percent.
-		// see https://github.com/shirou/gopsutil/issues/562
-		ret.UsedPercent = (float64(ret.Used) / float64(ret.Used+ret.Free)) * 100.0
+		ret.UsedPercent = (float64(ret.Used) / float64(ret.Total)) * 100.0
 	}
 
 	return ret, nil
-}
-
-// Unescape escaped octal chars (like space 040, ampersand 046 and backslash 134) to their real value in fstab fields issue#555
-func unescapeFstab(path string) string {
-	escaped, err := strconv.Unquote(`"` + path + `"`)
-	if err != nil {
-		return path
-	}
-	return escaped
 }
