@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -23,10 +22,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-var (
-	ErrorNoChildren = errors.New("process does not have children")
-	PageSize        = uint64(os.Getpagesize())
-)
+var PageSize = uint64(os.Getpagesize())
 
 const (
 	PrioProcess = 0   // linux/resource.h
@@ -235,10 +231,15 @@ func (p *Process) Terminal() (string, error) {
 }
 
 func (p *Process) TerminalWithContext(ctx context.Context) (string, error) {
-	terminal, _, _, _, _, _, err := p.fillFromStat()
+	t, _, _, _, _, _, err := p.fillFromStat()
 	if err != nil {
 		return "", err
 	}
+	termmap, err := getTerminalMap()
+	if err != nil {
+		return "", err
+	}
+	terminal := termmap[t]
 	return terminal, nil
 }
 
@@ -461,7 +462,7 @@ func (p *Process) Children() ([]*Process, error) {
 }
 
 func (p *Process) ChildrenWithContext(ctx context.Context) ([]*Process, error) {
-	pids, err := common.CallPgrep(invoke, p.Pid)
+	pids, err := common.CallPgrepWithContext(ctx, invoke, p.Pid)
 	if err != nil {
 		if pids == nil || len(pids) == 0 {
 			return nil, ErrorNoChildren
@@ -984,6 +985,8 @@ func (p *Process) fillFromStatusWithContext(ctx context.Context) error {
 					extendedName := filepath.Base(cmdlineSlice[0])
 					if strings.HasPrefix(extendedName, p.name) {
 						p.name = extendedName
+					} else {
+						p.name = cmdlineSlice[0]
 					}
 				}
 			}
@@ -1115,11 +1118,11 @@ func (p *Process) fillFromStatusWithContext(ctx context.Context) error {
 	return nil
 }
 
-func (p *Process) fillFromTIDStat(tid int32) (string, int32, *cpu.TimesStat, int64, uint32, int32, error) {
+func (p *Process) fillFromTIDStat(tid int32) (uint64, int32, *cpu.TimesStat, int64, uint32, int32, error) {
 	return p.fillFromTIDStatWithContext(context.Background(), tid)
 }
 
-func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (string, int32, *cpu.TimesStat, int64, uint32, int32, error) {
+func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (uint64, int32, *cpu.TimesStat, int64, uint32, int32, error) {
 	pid := p.Pid
 	var statPath string
 
@@ -1131,7 +1134,7 @@ func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (st
 
 	contents, err := ioutil.ReadFile(statPath)
 	if err != nil {
-		return "", 0, nil, 0, 0, 0, err
+		return 0, 0, nil, 0, 0, 0, err
 	}
 	fields := strings.Fields(string(contents))
 
@@ -1140,28 +1143,23 @@ func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (st
 		i++
 	}
 
-	termmap, err := getTerminalMap()
-	terminal := ""
-	if err == nil {
-		t, err := strconv.ParseUint(fields[i+5], 10, 64)
-		if err != nil {
-			return "", 0, nil, 0, 0, 0, err
-		}
-		terminal = termmap[t]
+	terminal, err := strconv.ParseUint(fields[i+5], 10, 64)
+	if err != nil {
+		return 0, 0, nil, 0, 0, 0, err
 	}
 
 	ppid, err := strconv.ParseInt(fields[i+2], 10, 32)
 	if err != nil {
-		return "", 0, nil, 0, 0, 0, err
+		return 0, 0, nil, 0, 0, 0, err
 	}
 	utime, err := strconv.ParseFloat(fields[i+12], 64)
 	if err != nil {
-		return "", 0, nil, 0, 0, 0, err
+		return 0, 0, nil, 0, 0, 0, err
 	}
 
 	stime, err := strconv.ParseFloat(fields[i+13], 64)
 	if err != nil {
-		return "", 0, nil, 0, 0, 0, err
+		return 0, 0, nil, 0, 0, 0, err
 	}
 
 	cpuTimes := &cpu.TimesStat{
@@ -1173,12 +1171,15 @@ func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (st
 	bootTime, _ := host.BootTime()
 	t, err := strconv.ParseUint(fields[i+20], 10, 64)
 	if err != nil {
-		return "", 0, nil, 0, 0, 0, err
+		return 0, 0, nil, 0, 0, 0, err
 	}
 	ctime := (t / uint64(ClockTicks)) + uint64(bootTime)
 	createTime := int64(ctime * 1000)
 
 	rtpriority, err := strconv.ParseInt(fields[i+16], 10, 32)
+	if err != nil {
+		return 0, 0, nil, 0, 0, 0, err
+	}
 	if rtpriority < 0 {
 		rtpriority = rtpriority*-1 - 1
 	} else {
@@ -1193,11 +1194,11 @@ func (p *Process) fillFromTIDStatWithContext(ctx context.Context, tid int32) (st
 	return terminal, int32(ppid), cpuTimes, createTime, uint32(rtpriority), nice, nil
 }
 
-func (p *Process) fillFromStat() (string, int32, *cpu.TimesStat, int64, uint32, int32, error) {
+func (p *Process) fillFromStat() (uint64, int32, *cpu.TimesStat, int64, uint32, int32, error) {
 	return p.fillFromStatWithContext(context.Background())
 }
 
-func (p *Process) fillFromStatWithContext(ctx context.Context) (string, int32, *cpu.TimesStat, int64, uint32, int32, error) {
+func (p *Process) fillFromStatWithContext(ctx context.Context) (uint64, int32, *cpu.TimesStat, int64, uint32, int32, error) {
 	return p.fillFromTIDStat(-1)
 }
 
