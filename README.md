@@ -27,8 +27,8 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 # 创建目录
 $ mkdir mm_wiki
 $ cd mm_wiki
-# 以 linux amd64 为例，下载版本 0.1 压缩包
-$ wget https://github.com/phachon/mm-wiki/releases/download/v0.1/mm-wiki-linux-amd64.tar.gz
+# 以 linux amd64 为例，下载最新版本压缩包
+# https://github.com/phachon/mm-wiki/releases 自行下载 wget http://
 # 解压到当前目录
 $ tar -zxvf mm-wiki-linux-amd64.tar.gz
 # 进入程序安装目录
