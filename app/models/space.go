@@ -4,6 +4,7 @@ import (
 	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
+	"fmt"
 )
 
 const (
@@ -102,7 +103,7 @@ func (s *Space) GetSpaceByName(name string) (space map[string]string, err error)
 func (s *Space) Delete(spaceId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Space_Name, map[string]interface{}{
-		"is_delete": Space_Delete_False,
+		"is_delete": Space_Delete_True,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"space_id": spaceId,
@@ -110,6 +111,12 @@ func (s *Space) Delete(spaceId string) (err error) {
 	if err != nil {
 		return
 	}
+
+	// delete collect space
+	go func() {
+		CollectionModel.DeleteByResourceIdType(spaceId, fmt.Sprintf("%d", Collection_Type_Space))
+	}()
+
 	return
 }
 

@@ -272,7 +272,7 @@ func (this *SpaceController) Delete() {
 		this.jsonError("没有选择空间！")
 	}
 
-	space, err := models.RoleModel.GetRoleByRoleId(spaceId)
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
 		this.jsonError("删除空间失败")
@@ -281,28 +281,43 @@ func (this *SpaceController) Delete() {
 		this.jsonError("空间不存在")
 	}
 
-	// check space user
-	spaceUsers, err := models.SpaceUserModel.GetSpaceUsersBySpaceId(spaceId)
-	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
-		this.jsonError("删除空间失败")
-	}
-	if len(spaceUsers) > 0 {
-		this.jsonError("不能删除空间，请先移除该空间下用户成员!")
-	}
-
 	// check space documents
 	documents, err := models.DocumentModel.GetDocumentsBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
 		this.jsonError("删除空间失败")
 	}
-	if len(documents) > 0 {
+	if len(documents) > 1 {
 		this.jsonError("不能删除空间，请先删除该空间下文档!")
+	}else if len(documents) == 1 {
+		if documents[0]["name"] != space["name"] {
+			this.jsonError("不能删除空间，请先删除该空间下文档!")
+		}else {
+			// delete space dir and documentId
+			_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(documents[0])
+			if err != nil {
+				this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+				this.jsonError("删除空间失败")
+			}
+			err = models.DocumentModel.DeleteDBAndFile(documents[0]["document_id"], this.UserId, pageFile, fmt.Sprintf("%d", models.Document_Type_Dir))
+		}
+	}else {
+		// delete space dir
+		err = utils.Document.DeleteSpace(space["name"])
+	}
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
 	}
 
-	// delete space
-	err = models.RoleModel.Delete(spaceId)
+	// delete space user
+	err = models.SpaceUserModel.DeleteBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.jsonError("删除空间失败")
+	}
+	// delete space and space document
+	err = models.SpaceModel.Delete(spaceId)
 	if err != nil {
 		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
 		this.jsonError("删除空间失败")

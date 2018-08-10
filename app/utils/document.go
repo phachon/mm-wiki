@@ -147,7 +147,22 @@ func (d *document) Delete(path string, docType int) error {
 	if docType == Document_Type_Page {
 		return os.Remove(absPageFile)
 	}
+
 	return os.RemoveAll(filepath.Dir(absPageFile))
+}
+
+func (d *document) DeleteSpace(name string) error {
+	d.lock.Lock()
+	defer d.lock.Unlock()
+
+	absSpaceDir := d.GetAbsPageFileByPageFile(name)
+
+	ok , _ := File.PathIsExists(absSpaceDir)
+	if !ok {
+		return nil
+	}
+
+	return os.RemoveAll(absSpaceDir)
 }
 
 func (d *document) Move(movePath string, targetPath string, docType int) error {
