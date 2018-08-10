@@ -6,7 +6,11 @@ import (
 	"github.com/shirou/gopsutil/internal/common"
 )
 
-var invoke common.Invoker = common.Invoke{}
+var invoke common.Invoker
+
+func init() {
+	invoke = common.Invoke{}
+}
 
 // A HostInfoStat describes the host status.
 // This is not in the psutil but it useful.

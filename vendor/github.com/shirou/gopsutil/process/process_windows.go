@@ -144,6 +144,8 @@ func GetWin32ProcWithContext(ctx context.Context, pid int32) ([]Win32_Process, e
 	var dst []Win32_Process
 	query := fmt.Sprintf("WHERE ProcessId = %d", pid)
 	q := wmi.CreateQuery(&dst, query)
+	ctx, cancel := context.WithTimeout(context.Background(), common.Timeout)
+	defer cancel()
 	err := common.WMIQueryWithContext(ctx, q, &dst)
 	if err != nil {
 		return []Win32_Process{}, fmt.Errorf("could not get win32Proc: %s", err)
@@ -236,12 +238,12 @@ func (p *Process) Parent() (*Process, error) {
 }
 
 func (p *Process) ParentWithContext(ctx context.Context) (*Process, error) {
-	ppid, err := p.PpidWithContext(ctx)
+	dst, err := GetWin32Proc(p.Pid)
 	if err != nil {
 		return nil, fmt.Errorf("could not get ParentProcessID: %s", err)
 	}
 
-	return NewProcess(ppid)
+	return NewProcess(int32(dst[0].ParentProcessID))
 }
 func (p *Process) Status() (string, error) {
 	return p.StatusWithContext(context.Background())
@@ -270,9 +272,6 @@ func (p *Process) UsernameWithContext(ctx context.Context) (string, error) {
 	}
 	defer token.Close()
 	tokenUser, err := token.GetTokenUser()
-	if err != nil {
-		return "", err
-	}
 
 	user, domain, _, err := tokenUser.User.Sid.LookupAccount("")
 	return domain + "\\" + user, err
@@ -303,7 +302,7 @@ func (p *Process) TerminalWithContext(ctx context.Context) (string, error) {
 	return "", common.ErrNotImplementedError
 }
 
-// Nice returns priority in Windows
+// Nice returnes priority in Windows
 func (p *Process) Nice() (int32, error) {
 	return p.NiceWithContext(context.Background())
 }
@@ -403,7 +402,7 @@ func (p *Process) TimesWithContext(ctx context.Context) (*cpu.TimesStat, error) 
 	}
 
 	// User and kernel times are represented as a FILETIME structure
-	// which contains a 64-bit value representing the number of
+	// wich contains a 64-bit value representing the number of
 	// 100-nanosecond intervals since January 1, 1601 (UTC):
 	// http://msdn.microsoft.com/en-us/library/ms724284(VS.85).aspx
 	// To convert it into a float representing the seconds that the
@@ -458,6 +457,8 @@ func (p *Process) Children() ([]*Process, error) {
 func (p *Process) ChildrenWithContext(ctx context.Context) ([]*Process, error) {
 	var dst []Win32_Process
 	query := wmi.CreateQuery(&dst, fmt.Sprintf("Where ParentProcessId = %d", p.Pid))
+	ctx, cancel := context.WithTimeout(context.Background(), common.Timeout)
+	defer cancel()
 	err := common.WMIQueryWithContext(ctx, query, &dst)
 	if err != nil {
 		return nil, err

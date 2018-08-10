@@ -5,7 +5,9 @@ package mem
 import (
 	"context"
 	"errors"
-	"unsafe"
+	"os/exec"
+	"strconv"
+	"strings"
 
 	"golang.org/x/sys/unix"
 )
@@ -39,7 +41,7 @@ func VirtualMemoryWithContext(ctx context.Context) (*VirtualMemoryStat, error) {
 	if err != nil {
 		return nil, err
 	}
-	buffers, err := unix.SysctlUint64("vfs.bufspace")
+	buffers, err := unix.SysctlUint32("vfs.bufspace")
 	if err != nil {
 		return nil, err
 	}
@@ -67,66 +69,53 @@ func VirtualMemoryWithContext(ctx context.Context) (*VirtualMemoryStat, error) {
 }
 
 // Return swapinfo
+// FreeBSD can have multiple swap devices. but use only first device
 func SwapMemory() (*SwapMemoryStat, error) {
 	return SwapMemoryWithContext(context.Background())
 }
 
-// Constants from vm/vm_param.h
-// nolint: golint
-const (
-	XSWDEV_VERSION = 1
-)
-
-// Types from vm/vm_param.h
-type xswdev struct {
-	Version uint32 // Version is the version
-	Dev     uint32 // Dev is the device identifier
-	Flags   int32  // Flags is the swap flags applied to the device
-	NBlks   int32  // NBlks is the total number of blocks
-	Used    int32  // Used is the number of blocks used
-}
-
 func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
-	// FreeBSD can have multiple swap devices so we total them up
-	i, err := unix.SysctlUint32("vm.nswapdev")
+	swapinfo, err := exec.LookPath("swapinfo")
 	if err != nil {
 		return nil, err
 	}
 
-	if i == 0 {
-		return nil, errors.New("no swap devices found")
-	}
-
-	c := int(i)
-
-	i, err = unix.SysctlUint32("vm.stats.vm.v_page_size")
+	out, err := invoke.Command(swapinfo)
 	if err != nil {
 		return nil, err
 	}
-	pageSize := uint64(i)
+	for _, line := range strings.Split(string(out), "\n") {
+		values := strings.Fields(line)
+		// skip title line
+		if len(values) == 0 || values[0] == "Device" {
+			continue
+		}
 
-	var buf []byte
-	s := &SwapMemoryStat{}
-	for n := 0; n < c; n++ {
-		buf, err = unix.SysctlRaw("vm.swap_info", n)
+		u := strings.Replace(values[4], "%", "", 1)
+		total_v, err := strconv.ParseUint(values[1], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		used_v, err := strconv.ParseUint(values[2], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		free_v, err := strconv.ParseUint(values[3], 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		up_v, err := strconv.ParseFloat(u, 64)
 		if err != nil {
 			return nil, err
 		}
 
-		xsw := (*xswdev)(unsafe.Pointer(&buf[0]))
-		if xsw.Version != XSWDEV_VERSION {
-			return nil, errors.New("xswdev version mismatch")
-		}
-		s.Total += uint64(xsw.NBlks)
-		s.Used += uint64(xsw.Used)
+		return &SwapMemoryStat{
+			Total:       total_v,
+			Used:        used_v,
+			Free:        free_v,
+			UsedPercent: up_v,
+		}, nil
 	}
 
-	if s.Total != 0 {
-		s.UsedPercent = float64(s.Used) / float64(s.Total) * 100
-	}
-	s.Total *= pageSize
-	s.Used *= pageSize
-	s.Free = s.Total - s.Used
-
-	return s, nil
+	return nil, errors.New("no swap devices found")
 }

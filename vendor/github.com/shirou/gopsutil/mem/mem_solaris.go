@@ -57,8 +57,7 @@ func zoneName() (string, error) {
 		return "", err
 	}
 
-	ctx := context.Background()
-	out, err := invoke.CommandWithContext(ctx, zonename)
+	out, err := invoke.Command(zonename)
 	if err != nil {
 		return "", err
 	}
@@ -74,8 +73,7 @@ func globalZoneMemoryCapacity() (uint64, error) {
 		return 0, err
 	}
 
-	ctx := context.Background()
-	out, err := invoke.CommandWithContext(ctx, prtconf)
+	out, err := invoke.Command(prtconf)
 	if err != nil {
 		return 0, err
 	}
@@ -101,8 +99,7 @@ func nonGlobalZoneMemoryCapacity() (uint64, error) {
 		return 0, err
 	}
 
-	ctx := context.Background()
-	out, err := invoke.CommandWithContext(ctx, kstat, "-p", "-c", "zone_memory_cap", "memory_cap:*:*:physcap")
+	out, err := invoke.Command(kstat, "-p", "-c", "zone_memory_cap", "memory_cap:*:*:physcap")
 	if err != nil {
 		return 0, err
 	}

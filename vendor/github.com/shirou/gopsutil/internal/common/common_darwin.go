@@ -3,7 +3,6 @@
 package common
 
 import (
-	"context"
 	"os"
 	"os/exec"
 	"strings"
@@ -12,12 +11,12 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func DoSysctrlWithContext(ctx context.Context, mib string) ([]string, error) {
+func DoSysctrl(mib string) ([]string, error) {
 	sysctl, err := exec.LookPath("/usr/sbin/sysctl")
 	if err != nil {
 		return []string{}, err
 	}
-	cmd := exec.CommandContext(ctx, sysctl, "-n", mib)
+	cmd := exec.Command(sysctl, "-n", mib)
 	cmd.Env = getSysctrlEnv(os.Environ())
 	out, err := cmd.Output()
 	if err != nil {
