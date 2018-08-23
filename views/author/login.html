@@ -23,16 +23,16 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="username"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input type="text" name="username" class="form-control" placeholder="请输入系统用户名" autocomplete="new-username">
+                                    <input type="text" name="username" class="form-control" placeholder="请输入系统用户名" autocomplete="new-username" onkeydown="KeyDown('#default_login')">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="password"><i class="glyphicon glyphicon-lock"></i></span>
-                                    <input type="password" name="password" class="form-control" placeholder="请输入密码" autocomplete="new-password">
+                                    <input type="password" name="password" class="form-control" placeholder="请输入密码" autocomplete="new-password" onkeydown="KeyDown('#default_login')">
                                 </div>
                             </div>
-                            <input name="submit" type="button" value="登录" class="btn btn-primary btn-block" onclick="Login.ajaxSubmit(this.form)">
+                            <input id="default_login" name="submit" type="button" value="登录" class="btn btn-primary btn-block" onclick="Login.ajaxSubmit(this.form)">
                         </fieldset>
                     </form>
                 </section>
@@ -42,16 +42,16 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="username"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input type="text" name="username" class="form-control" placeholder="请输入统一登录用户名" {{if ne .sso_open "1"}} disabled="disabled" {{end}} autocomplete="new-username">
+                                    <input type="text" name="username" class="form-control" placeholder="请输入统一登录用户名" {{if ne .sso_open "1"}} disabled="disabled" {{end}} onkeydown="KeyDown('#auth_login')" autocomplete="new-username">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="password"><i class="glyphicon glyphicon-lock"></i></span>
-                                    <input type="password" name="password" class="form-control" placeholder="请输入统一登录密码" {{if ne .sso_open "1"}} disabled="disabled" {{end}} autocomplete="new-password">
+                                    <input type="password" name="password" class="form-control" placeholder="请输入统一登录密码" {{if ne .sso_open "1"}} disabled="disabled" {{end}} onkeydown="KeyDown('#auth_login')" autocomplete="new-password">
                                 </div>
                             </div>
-                            <input name="submit" type="button" value="登录" class="btn btn-primary" {{if eq .sso_open "1"}} onclick="Login.ajaxSubmit(this.form)" {{else}} disabled="disabled" {{end}}>
+                            <input id="auth_login" name="submit" type="button" value="登录" class="btn btn-primary" {{if eq .sso_open "1"}} onclick="Login.ajaxSubmit(this.form)" {{else}} disabled="disabled" {{end}}>
                         </fieldset>
                     </form>
                 </section>
@@ -71,5 +71,12 @@
 <script type="text/javascript">
     if (self != top ) {
         parent.location.href = "/"
+    }
+    function KeyDown(element) {
+        if (event.keyCode == 13) {
+            event.returnValue = false;
+            event.cancel = true;
+            $(element).click();
+        }
     }
 </script>
