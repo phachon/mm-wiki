@@ -11,6 +11,7 @@ import (
 	"mm-wiki/install/storage"
 	"mm-wiki/app/utils"
 	"path/filepath"
+	"github.com/astaxie/beego/validation"
 )
 
 type InstallController struct {
@@ -246,7 +247,13 @@ func (this *InstallController) Database() {
 	}
 	if adminName == "" {
 		this.jsonError("超级管理员用户名不能为空！")
+	}else {
+		v := validation.Validation{}
+		if !v.AlphaNumeric(adminName, "admin_name").Ok {
+			this.jsonError("用户名格式不正确！")
+		}
 	}
+
 	if adminPass == "" {
 		this.jsonError("超级管理员密码不能为空！")
 	}
