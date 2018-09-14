@@ -52,7 +52,7 @@ func initRouter() {
 	beego.ErrorHandler("500", http_500)
 
 	// add template func
-	beego.AddFuncMap("dateFormat", utils.NewDate().Format)
+	beego.AddFuncMap("dateFormat", utils.Date.Format)
 }
 
 func http_404(rw http.ResponseWriter, req *http.Request) {

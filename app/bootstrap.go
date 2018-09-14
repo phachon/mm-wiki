@@ -60,7 +60,7 @@ func initConfig()  {
 		os.Exit(1)
 	}
 	ok, _ := utils.NewFile().PathIsExists(*confPath)
-	if ok == false{
+	if ok == false {
 		log.Println("conf file "+*confPath+" not exists!")
 		os.Exit(1)
 	}

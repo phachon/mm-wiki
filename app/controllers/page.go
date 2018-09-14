@@ -6,7 +6,7 @@ import (
 	"mm-wiki/app/utils"
 	"regexp"
 	"github.com/astaxie/beego/context"
-	"github.com/pkg/errors"
+	"errors"
 	"github.com/astaxie/beego"
 	"fmt"
 )
@@ -343,6 +343,7 @@ func (this *PageController) Display() {
 	this.viewLayout("page/display", "document_share")
 }
 
+// export file
 func (this *PageController) Export() {
 
 	documentId := this.GetString("document_id", "")
