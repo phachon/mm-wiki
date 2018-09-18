@@ -116,38 +116,38 @@
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/cpu",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/disk",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/host",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/internal/common",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/mem",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/net",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/gopsutil/process",
-			"Comment": "v2.17.12-24-g4ac6b5b",
-			"Rev": "4ac6b5b4d3d1a18a341018df3054f617bb6b89d4"
+			"Comment": "v2.18.07-20-g77e5abb",
+			"Rev": "77e5abb6f06f55ebb685c9af26bcd3c58082e702"
 		},
 		{
 			"ImportPath": "github.com/shirou/w32",

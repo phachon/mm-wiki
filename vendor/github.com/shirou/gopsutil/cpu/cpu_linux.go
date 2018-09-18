@@ -20,7 +20,7 @@ func init() {
 	if err != nil {
 		return
 	}
-	out, err := invoke.Command(getconf, "CLK_TCK")
+	out, err := invoke.CommandWithContext(context.Background(), getconf, "CLK_TCK")
 	// ignore errors
 	if err == nil {
 		i, err := strconv.ParseFloat(strings.TrimSpace(string(out)), 64)
@@ -212,7 +212,6 @@ func parseStatLine(line string) (*TimesStat, error) {
 	}
 
 	if strings.HasPrefix(fields[0], "cpu") == false {
-		//		return CPUTimesStat{}, e
 		return nil, errors.New("not contain cpu")
 	}
 
