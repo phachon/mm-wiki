@@ -65,7 +65,7 @@
 </div>
 <script type="text/javascript">
     if (self != top) {
-        parent.location.href = '/'
+        parent.location.href = window.location.href
     }
     function mainSearch(element, url) {
         var searchText = $(element).find("input[name='document_name']").val();

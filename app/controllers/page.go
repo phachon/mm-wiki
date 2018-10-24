@@ -261,13 +261,17 @@ func (this *PageController) Modify() {
 
 	// send email to follow user
 	if isNoticeUser == "1" {
-		go func(comment string, userId string, username string, ctx *context.Context) {
+		go func(comment string, userId string, username string, ctx context.Context) {
 			url := fmt.Sprintf("%s:%d/document/index?document_id=%s", ctx.Input.Site(), ctx.Input.Port(), documentId)
 			err := sendEmail(documentId, username, comment, url)
 			if err != nil {
-				models.LogModel.RecordLogByCtx(err.Error(), models.Log_Level_Error, userId, username, ctx)
+				beego.Error(err.Error())
+				_, err := models.LogModel.RecordLogByCtx(err.Error(), models.Log_Level_Error, userId, username, ctx)
+				if err != nil {
+					beego.Error(err.Error())
+				}
 			}
-		}(comment, this.UserId, this.User["username"], this.Ctx)
+		}(comment, this.UserId, this.User["username"], *this.Ctx)
 	}
 	// follow doc
 	if isFollowDoc == "1" {
