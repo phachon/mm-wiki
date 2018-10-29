@@ -15,9 +15,9 @@
                     <div class="form-group has-feedback">
                         {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
                         <div class="input-group input-group-sm">
-                            <input class="form-control input-sm" name="document_name" type="text" placeholder="输入文档名搜索..." style="width: 280px">
+                            <input class="form-control input-sm" name="document_name" type="text" onkeydown="KeyDown('#search_btn')" placeholder="输入文档名搜索..." style="width: 280px">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" name="search" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-primary" type="button" name="search" id="search_btn" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
                             </span>
                         </div>
                         {{/*<input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="padding-right: 28px;width: 280px">*/}}
@@ -66,6 +66,13 @@
 <script type="text/javascript">
     if (self != top) {
         parent.location.href = window.location.href
+    }
+    function KeyDown(element) {
+        if (event.keyCode == 13) {
+            event.returnValue = false;
+            event.cancel = true;
+            $(element).click();
+        }
     }
     function mainSearch(element, url) {
         var searchText = $(element).find("input[name='document_name']").val();

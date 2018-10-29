@@ -60,9 +60,11 @@
                         <input type="text" name="sender_title_prefix" class="form-control" placeholder="请输入邮件标题前缀" value="[MM-Wiki]">
                         {{end}}
                     </div>
+                    <input type="hidden" name="emails" value="" />
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="Email.testSend(this.form, '/system/email/test', true);" class="btn btn-success">测试</button>
                         <button type="button" onclick="Form.ajaxSubmit(this.form, true);" class="btn btn-primary">保存</button>
                     </div>
                 </div>

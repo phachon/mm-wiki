@@ -249,3 +249,69 @@ func (this *EmailController) Delete() {
 	this.InfoLog("删除邮件服务器 "+emailId+" 成功")
 	this.jsonSuccess("删除邮件服务器成功", nil, "/system/email/list")
 }
+
+func (this *EmailController) Test() {
+
+	if !this.IsPost() {
+		this.ViewError("请求方式有误！", "/system/email/list")
+	}
+	name := strings.TrimSpace(this.GetString("name", ""))
+	senderAddress := strings.TrimSpace(this.GetString("sender_address", ""))
+	senderName := strings.TrimSpace(this.GetString("sender_name", ""))
+	senderTitlePrefix := strings.TrimSpace(this.GetString("sender_title_prefix", ""))
+	host := strings.TrimSpace(this.GetString("host", ""))
+	port := strings.TrimSpace(this.GetString("port", "25"))
+	username := strings.TrimSpace(this.GetString("username", ""))
+	password := strings.TrimSpace(this.GetString("password", ""))
+	emails := strings.TrimSpace(this.GetString("emails", ""))
+
+	if name == "" {
+		this.jsonError("邮件服务器名称不能为空！")
+	}
+	if host == "" {
+		this.jsonError("邮件服务器主机不能为空！")
+	}
+	if validation.Validate(host, is.Host) != nil {
+		this.jsonError("邮件服务器主机格式不正确！")
+	}
+	if port == "" {
+		this.jsonError("邮件服务器端口不能为空！")
+	}
+	if validation.Validate(port, is.Port) != nil {
+		this.jsonError("邮件服务器端口格式不正确！")
+	}
+	if senderAddress == "" {
+		this.jsonError("发件人邮箱不能为空！")
+	}
+	if username == "" {
+		this.jsonError("发件用户名不能为空！")
+	}
+	if password == "" {
+		this.jsonError("发件人密码不能为空！")
+	}
+	if emails == "" {
+		this.jsonError("要发送的邮件地址不能为空！")
+	}
+
+	emailConfig := map[string]string{
+		"sender_address": senderAddress,
+		"port": port,
+		"password": password,
+		"host": host,
+		"sender_name": senderName,
+		"username": username,
+		"sender_title_prefix": senderTitlePrefix,
+	}
+
+	to := strings.Split(emails, ";")
+	body := "Welcome Use MM-Wiki!"
+
+	// start send email
+	err := utils.Email.SendByEmail(emailConfig, to, "文档更新通知", body ,"html")
+	if err != nil {
+		this.ErrorLog("发送测试邮件失败："+err.Error())
+		this.jsonError("发送测试邮件失败！")
+	}
+
+	this.jsonSuccess("发送测试邮件成功", nil)
+}
