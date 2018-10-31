@@ -43,6 +43,9 @@ func (l *Log) GetLogByLogId(logId string) (log map[string]string, err error) {
 
 // 插入
 func (l *Log) Insert(log map[string]interface{}) (id int64, err error) {
+
+	log["create_time"] = time.Now().Unix()
+
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Exec(db.AR().Insert(Table_Log_Name, log))
@@ -155,7 +158,7 @@ func (l *Log) CountLogsByKeyword(level, message, username string) (count int64, 
 	return
 }
 
-func (l *Log) RecordLogByCtx(message string, level int, userId string, username string, ctx context.Context) (id int64, err error){
+func (l *Log) RecordLog(message string, level int, userId string, username string, ctx context.Context) (id int64, err error){
 	userAgent := ctx.Request.UserAgent()
 	referer := ctx.Request.Referer()
 	getParams := ctx.Request.URL.String()

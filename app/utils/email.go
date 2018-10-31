@@ -6,6 +6,9 @@ import (
 	"time"
 	"gopkg.in/russross/blackfriday.v2"
 	"github.com/astaxie/beego"
+	"fmt"
+	"gopkg.in/gomail.v2"
+	"strconv"
 )
 
 var Email = NewEmail()
@@ -18,21 +21,39 @@ func NewEmail() *email {
 	return &email{}
 }
 
+func (e *email) Send(emailConf map[string]string, toList []string, subject string, body string) error {
+
+	from := emailConf["sender_address"]
+	if emailConf["sender_name"] != "" {
+		from = fmt.Sprintf("%s <%s>", emailConf["sender_name"], emailConf["sender_address"])
+	}
+	var tt []*gomail.Message
+	for _, toAddress := range toList {
+		m := gomail.NewMessage()
+		m.SetHeader("From", from)
+		m.SetHeader("To", toAddress)
+		m.SetHeader("Subject", emailConf["sender_title_prefix"]+subject)
+		m.SetBody("text/html", body)
+		tt = append(tt, m)
+	}
+	portInt, _ := strconv.Atoi(emailConf["port"])
+	d := gomail.NewDialer(emailConf["host"], portInt, emailConf["username"], emailConf["password"])
+	return d.DialAndSend(tt...)
+}
+
 func (e *email) SendByEmail(email map[string]string, to []string, subject string, body string, contentType string) error {
 
 	userEmail := email["sender_address"]
-	smtpPort := ":"+email["port"]
-	mailPassword := email["password"]
-	smtpHost := email["host"]
-	auth := smtp.PlainAuth("", userEmail, mailPassword, smtpHost)
-	nickname := email["sender_name"]
+	addr := fmt.Sprintf("%s:%s", email["host"], email["port"])
+	auth := smtp.PlainAuth("", userEmail, email["password"], email["host"])
 	user := email["username"]
-
+	nickname := email["sender_name"]
 	subject = email["sender_title_prefix"]+subject
-	contentType = "Content-Type: text/"+contentType+"; charset=UTF-8"
-	msg := []byte("To: " + strings.Join(to, ",") + "\r\nFrom: " + nickname +
-		"<" + user + ">\r\nSubject: " + subject + "\r\n" + contentType + "\r\n\r\n" + body)
-	err := smtp.SendMail(smtpHost+smtpPort, auth, user, to, msg)
+
+	msg := fmt.Sprintf("To: %s \r\nFrom: %s <%s>\r\nSubject: %s \r\nContent-Type: text/%s; charset=UTF-8\r\n\r\n%s",
+		strings.Join(to, ","), nickname, user, subject, contentType, body)
+
+	err := smtp.SendMail(addr, auth, user, to, []byte(msg))
 	return err
 }
 

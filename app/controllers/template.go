@@ -328,3 +328,28 @@ func (this *TemplateController) InfoLog(message string)  {
 func (this *TemplateController) DebugLog(message string)  {
 	this.RecordLog(message, models.Log_Level_Debug)
 }
+
+func (this *TemplateController) GetLogInfoByCtx() map[string]interface{} {
+	userAgent := this.Ctx.Request.UserAgent()
+	referer := this.Ctx.Request.Referer()
+	getParams := this.Ctx.Request.URL.String()
+	path := this.Ctx.Request.URL.Path
+	this.Ctx.Request.ParseForm()
+	postParamsMap := map[string][]string(this.Ctx.Request.PostForm)
+	postParams, _ := json.Marshal(postParamsMap)
+	user := this.GetSession("author").(map[string]string)
+	logValue := map[string]interface{}{
+		"level": models.Log_Level_Info,
+		"path": path,
+		"get": getParams,
+		"post": string(postParams),
+		"message": "",
+		"ip": this.GetClientIp(),
+		"user_agent": userAgent,
+		"referer": referer,
+		"user_id": user["user_id"],
+		"username": user["username"],
+		"create_time": time.Now().Unix(),
+	}
+	return logValue
+}

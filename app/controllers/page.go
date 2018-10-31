@@ -5,7 +5,6 @@ import (
 	"strings"
 	"mm-wiki/app/utils"
 	"regexp"
-	"github.com/astaxie/beego/context"
 	"errors"
 	"github.com/astaxie/beego"
 	"fmt"
@@ -261,17 +260,17 @@ func (this *PageController) Modify() {
 
 	// send email to follow user
 	if isNoticeUser == "1" {
-		go func(comment string, userId string, username string, ctx context.Context) {
-			url := fmt.Sprintf("%s:%d/document/index?document_id=%s", ctx.Input.Site(), ctx.Input.Port(), documentId)
+		logInfo := this.GetLogInfoByCtx()
+		url := fmt.Sprintf("%s:%d/document/index?document_id=%s", this.Ctx.Input.Site(), this.Ctx.Input.Port(), documentId)
+		go func(documentId string, username string, comment string, url string) {
 			err := sendEmail(documentId, username, comment, url)
 			if err != nil {
-				beego.Error(err.Error())
-				_, err := models.LogModel.RecordLogByCtx(err.Error(), models.Log_Level_Error, userId, username, ctx)
-				if err != nil {
-					beego.Error(err.Error())
-				}
+				logInfo["message"] = "更新文档时发送邮件通知失败："+err.Error()
+				logInfo["level"] = models.Log_Level_Error
+				models.LogModel.Insert(logInfo)
+				beego.Error("更新文档时发送邮件通知失败："+err.Error())
 			}
-		}(comment, this.UserId, this.User["username"], *this.Ctx)
+		}(documentId, this.User["username"], comment, url)
 	}
 	// follow doc
 	if isFollowDoc == "1" {
@@ -480,5 +479,5 @@ func sendEmail(documentId string, username string, comment string, url string) e
 		return errors.New("发送邮件生成模板失败："+err.Error())
 	}
 	// start send email
-	return utils.Email.SendByEmail(emailConfig, emails, "文档更新通知", body ,"html")
+	return utils.Email.Send(emailConfig, emails, "文档更新通知", body)
 }
