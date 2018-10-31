@@ -170,6 +170,11 @@
 			"Rev": "7dca6fe1f43775aa6d1334576870ff63f978f539"
 		},
 		{
+			"ImportPath": "gopkg.in/gomail.v2",
+			"Comment": "2.0.0-23-g81ebce5",
+			"Rev": "81ebce5c23dfd25c6c67194b37d3dd3f338c98b1"
+		},
+		{
 			"ImportPath": "gopkg.in/russross/blackfriday.v2",
 			"Comment": "v2.0.0",
 			"Rev": "cadec560ec52d93835bf2f15bd794700d3a2473b"
