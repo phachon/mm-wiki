@@ -202,7 +202,7 @@ func writeInstallData() (err error) {
 		return
 	}
 	// insert version
-	stmt, err := db.Prepare("INSERT mw_config SET name=?,key=?,value=?,create_time=?,update_time=?;")
+	stmt, err := db.Prepare("INSERT mw_config SET `name`=?,`key`=?,`value`=?,create_time=?,update_time=?;")
 	if err != nil {
 		return
 	}
