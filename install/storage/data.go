@@ -15,7 +15,7 @@ import (
 )
 
 var Data = NewData()
-
+var Version string
 var installChan = make(chan int, 1)
 
 const License_Disagree = 0 // 协议不同意
@@ -60,6 +60,7 @@ func NewData() *data {
 	return &data{
 		License: License_Disagree,
 		Env: Env_NotAccess,
+		Version: "",
 		System: Sys_NotAccess,
 		Database: Database_NotAccess,
 		SystemConf: defaultSystemConf,
@@ -73,6 +74,7 @@ func NewData() *data {
 type data struct {
 	License int
 	Env int
+	Version string
 	System int
 	Database int
 	SystemConf map[string]string
@@ -199,7 +201,14 @@ func writeInstallData() (err error) {
 	if err != nil {
 		return
 	}
-	return nil
+	// insert version
+	stmt, err := db.Prepare("INSERT mw_config SET name=?,key=?,value=?,create_time=?,update_time=?;")
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec("系统版本号", "system_version", Data.Version, time.Now().Unix(), time.Now().Unix())
+	return err
 }
 
 // write conf
@@ -223,13 +232,13 @@ func makeConf() (err error) {
 	templateConf = strings.Replace(templateConf, "#db.conn_max_idle#", Data.DatabaseConf["conn_max_idle"], 1)
 	templateConf = strings.Replace(templateConf, "#db.conn_max_connection#", Data.DatabaseConf["conn_max_connection"], 1)
 
-	fileObject, err := os.OpenFile(installDir+"conf/mm-wiki.conf", os.O_RDWR|os.O_CREATE, 0777);
+	fileObject, err := os.OpenFile(installDir+"conf/mm-wiki.conf", os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		return
 	}
-	defer fileObject.Close();
+	defer fileObject.Close()
 
-	_, err = fileObject.Write([]byte(templateConf));
+	_, err = fileObject.Write([]byte(templateConf))
 	return
 }
 

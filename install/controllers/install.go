@@ -12,6 +12,8 @@ import (
 	"mm-wiki/app/utils"
 	"path/filepath"
 	"github.com/astaxie/beego/validation"
+	"os/exec"
+	"bytes"
 )
 
 type InstallController struct {
@@ -63,6 +65,24 @@ func (this *InstallController) Env() {
 		"host": host,
 		"sys": osSys,
 		"install_dir": installDir,
+		"version": "",
+	}
+	// 获取安装版本号
+	var cmd *exec.Cmd
+	var out bytes.Buffer
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command(installDir+"mm-wiki.exe", "--version")
+	} else {
+		cmd = exec.Command(installDir+"mm-wiki", "--version")
+	}
+	cmd.Dir = installDir
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil || out.String() == "" {
+		storage.Data.Env = storage.Env_NotAccess
+	}else {
+		server["version"] = out.String()
+		storage.Data.Version = out.String()
 	}
 
 	// 环境检测
@@ -100,7 +120,7 @@ func (this *InstallController) Env() {
 		"require": "读/写",
 		"result": "1",
 	}
-	err := fileTool.IsWriterReadable(installDir+templateConfDir["path"])
+	err = fileTool.IsWriterReadable(installDir+templateConfDir["path"])
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
 		templateConfDir["result"] = "0"
