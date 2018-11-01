@@ -27,7 +27,7 @@ func (this *BaseController) Prepare() {
 		return
 	}
 	if storage.Data.Status == storage.Install_Start {
-		if (methodName == "ready" && this.isPost()) {
+		if methodName == "ready" && this.isPost() {
 			return
 		}
 		this.Redirect("/install/end", 302)
