@@ -17,21 +17,33 @@ import (
 
 var (
 	confPath = flag.String("conf", "conf/mm-wiki.conf", "please set mm-wiki conf path")
+	version = flag.Bool("version", false, "mm-wiki version")
 )
 
 var (
 	Version = "v0.1.1"
+
 	StartTime = int64(0)
 
 	ImageAbsDir = ""
 )
 
 func init() {
+	initFlag()
 	poster()
 	initConfig()
 	initDB()
 	initDocumentDir()
 	StartTime = time.Now().Unix()
+}
+
+// init flag
+func initFlag() {
+	flag.Parse()
+	if *version == true {
+		fmt.Printf(Version)
+		os.Exit(1)
+	}
 }
 
 // poster logo
@@ -52,8 +64,6 @@ func poster() {
 
 // init beego config
 func initConfig()  {
-
-	flag.Parse()
 
 	if *confPath == "" {
 		log.Println("conf file not empty!")
