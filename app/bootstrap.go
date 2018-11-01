@@ -17,11 +17,14 @@ import (
 
 var (
 	confPath = flag.String("conf", "conf/mm-wiki.conf", "please set mm-wiki conf path")
+
 	version = flag.Bool("version", false, "mm-wiki version")
+
+	upgrade = flag.Bool("upgrade", false, "mm-wiki upgrade")
 )
 
 var (
-	Version = "v0.1.1"
+	Version = "v0.1.2"
 
 	StartTime = int64(0)
 
@@ -33,6 +36,7 @@ func init() {
 	poster()
 	initConfig()
 	initDB()
+	checkUpgrade()
 	initDocumentDir()
 	StartTime = time.Now().Unix()
 }
@@ -40,6 +44,7 @@ func init() {
 // init flag
 func initFlag() {
 	flag.Parse()
+	// --version
 	if *version == true {
 		fmt.Printf(Version)
 		os.Exit(0)
@@ -63,7 +68,7 @@ func poster() {
 }
 
 // init beego config
-func initConfig()  {
+func initConfig() {
 
 	if *confPath == "" {
 		log.Println("conf file not empty!")
@@ -107,7 +112,7 @@ func initConfig()  {
 }
 
 //init db
-func initDB()  {
+func initDB() {
 	host := beego.AppConfig.String("db::host")
 	port, _ := beego.AppConfig.Int("db::port")
 	user := beego.AppConfig.String("db::user")
@@ -127,8 +132,10 @@ func initDB()  {
 		beego.Error(fmt.Errorf("database error:%s,with config : %v", err, cfg))
 		os.Exit(1)
 	}
+	models.Version = Version
 }
 
+// init document dir
 func initDocumentDir() {
 	docRootDir := beego.AppConfig.String("document::root_dir")
 	if docRootDir == "" {
@@ -172,4 +179,35 @@ func initDocumentDir() {
 	ImageAbsDir = imagesAbsDir
 
 	beego.SetStaticPath("/images/", ImageAbsDir)
+}
+
+// check upgrade
+func checkUpgrade() {
+	if *upgrade == true {
+		beego.Info("Start checking whether MM-Wiki needs upgrading.")
+		versionConf, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SystemVersion)
+		if err != nil {
+			beego.Error("Get database mm-wiki version error: "+err.Error())
+			os.Exit(1)
+		}
+		var versionDb = "v0.0.0"
+		if len(versionConf) != 0 && versionConf["value"] != "" {
+			versionDb = versionConf["value"]
+		}
+		beego.Info("MM-Wiki Database version：" +versionDb)
+		beego.Info("MM-Wiki Now version: "+Version)
+
+		if versionDb == Version {
+			beego.Info("MM-Wiki does not need updating.")
+		}else {
+			beego.Info("MM-Wiki start upgrading.")
+			err := models.UpgradeModel.Start(versionDb)
+			if err != nil {
+				beego.Error("MM-Wiki upgrade failed.")
+				os.Exit(1)
+			}
+			beego.Info("MM-Wiki upgrade finish.")
+		}
+		os.Exit(0)
+	}
 }
