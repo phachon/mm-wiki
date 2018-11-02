@@ -39,6 +39,10 @@ var Page = {
                 failed(result.message, result.data);
             }
             if (result.code == 1) {
+                // remove storage
+                var documentId = $("input[name='document_id']").val();
+                var storageId = "mm_wiki_doc_"+documentId;
+                Storage.remove(storageId);
                 successBox(result.message, result.data);
             }
             if (result.redirect.url) {
@@ -139,6 +143,9 @@ var Page = {
             btnAlign: 'c',
             title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
         }, function() {
+            var documentId = $("input[name='document_id']").val();
+            var storageId = "mm_wiki_doc_"+documentId;
+            Storage.remove(storageId);
             parent.location = url
         }, function() {
 

@@ -28,12 +28,13 @@
     if(parent.layoutClose) {
         parent.layoutClose();
     }
+    var storageId = "mm_wiki_doc_"+{{$document.document_id}}
     $(function() {
         editormd.katexURL = {
             js  : "/static/plugins/editor.md/lib/katex/katex.min",
             css : "/static/plugins/editor.md/lib/katex/katex.min"
         };
-        editormd("document_page_editor", {
+        var editor = editormd("document_page_editor", {
             width: "100%",
             height: 500,
             path : '/static/plugins/editor.md/lib/',
@@ -81,7 +82,19 @@
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
             imageUploadURL : "/image/upload",
             onload : function() {
-                console.log('onload', this);
+                var docStorage = Storage.get(storageId);
+                if (docStorage !== "") {
+                    layer.confirm("是否恢复为上次未提交的本地文档？", {
+                        btn: ['是','否'],
+                        skin: Layers.skin,
+                        btnAlign: 'c',
+                        title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
+                    }, function(index) {
+                        editor.setMarkdown(docStorage);
+                        layer.close(index)
+                    }, function() {});
+                }
+                // console.log('onload', this);
                 // this.fullscreen();
                 //this.unwatch();
                 //this.watch().fullscreen();
@@ -90,7 +103,11 @@
                 // this.width("100%");
                 // this.height(600);
                 //this.resize("100%", 640);
+            },
+            onchange : function() {
+                Storage.set(storageId, editor.getMarkdown());
             }
         });
     });
+
 </script>
