@@ -55,6 +55,12 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 				beego.Error("upgrade to "+upHandle.Version+" error: "+err.Error())
 				return errors.New("upgrade to "+upHandle.Version+" error: "+err.Error())
 			}
+			// update system database version
+			err = up.upgradeAfter(upHandle.Version)
+			if err != nil {
+				beego.Error("upgrade to database "+upHandle.Version+" error: "+err.Error())
+				return errors.New("upgrade to database "+upHandle.Version+" error: "+err.Error())
+			}
 			beego.Info("upgrade to "+upHandle.Version+" success")
 			// update version record
 			tmpVersion = upHandle.Version
@@ -111,4 +117,10 @@ func (up *Upgrade) v021ToV027() error {
 // upgrade v0.2.7 ~ v0.3.3
 func (up *Upgrade) v027ToV033() error {
 	return nil
+}
+
+func (up *Upgrade) upgradeAfter(version string) (err error) {
+	// update system version
+	_, err = ConfigModel.UpdateByKey(Config_Key_SystemVersion, version)
+	return
 }
