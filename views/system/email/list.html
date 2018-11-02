@@ -24,10 +24,9 @@
                 <tr>
                     <th class="w5p">ID</th>
                     <th>名称</th>
-                    <th class="w15p">smtp服务器主机</th>
-                    <th class="w15p">发件人邮箱</th>
-                    <th class="w15p">用户名</th>
-                    <th class="w15p">密码</th>
+                    <th class="w18p">smtp服务器主机</th>
+                    <th class="w18p">发件人邮箱</th>
+                    <th class="w18p">用户名</th>
                     <th class="w8p">是否启用</th>
                     <th class="w13p">操作</th>
                 </tr>
@@ -40,7 +39,6 @@
                     <td>{{$email.host}}</td>
                     <td>{{$email.sender_address}}</td>
                     <td>{{$email.username}}</td>
-                    <td>{{$email.password}}</td>
                     <td class="center">
                     {{if eq $email.is_used "1"}}
                     <span class="label label-success">是</span>
@@ -65,6 +63,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    Layers.bindIframe("button[name='add']", "添加邮件服务器", "530px", "900px");
-    Layers.bindIframe("[name='edit']", "修改邮件服务器", "530px", "900px");
+    Layers.bindIframe("button[name='add']", "添加邮件服务器", "560px", "970px");
+    Layers.bindIframe("[name='edit']", "修改邮件服务器", "560px", "970px");
 </script>

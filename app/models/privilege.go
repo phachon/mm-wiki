@@ -56,6 +56,21 @@ func (p *Privilege) GetPrivileges() (privileges []map[string]string, err error) 
 	return
 }
 
+func (p *Privilege) GetPrivilegeByTypeControllerAndAction(ty, controller, action string) (privilege map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
+		"type": ty,
+		"controller": controller,
+		"action": action,
+	}))
+	if err != nil {
+		return
+	}
+	privilege = rs.Row()
+	return
+}
+
 func (p *Privilege) GetTypePrivilegesByUserId(userId string) (menus, controllers []map[string]string, err error) {
 
 	user, err := UserModel.GetUserByUserId(userId)
@@ -196,6 +211,26 @@ func (p *Privilege) Insert(privilege map[string]interface{}) (id int64, err erro
 		return
 	}
 	id = rs.LastInsertId
+	return
+}
+
+func (p *Privilege) InsertNotExists(privilege map[string]interface{}) (id int64, err error) {
+
+	privilege["create_time"] = time.Now().Unix()
+	privilege["update_time"] = time.Now().Unix()
+	db := G.DB()
+	rs, err := db.Query(db.AR().From(Table_Privilege_Name).Where(map[string]interface{}{
+		"type": privilege["type"],
+		"controller": privilege["controller"],
+		"action": privilege["action"],
+	}))
+	if rs.Len() == 0 {
+		rs, err = db.Exec(db.AR().Insert(Table_Privilege_Name, privilege))
+		if err != nil {
+			return
+		}
+		id = rs.LastInsertId
+	}
 	return
 }
 

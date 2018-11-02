@@ -114,6 +114,8 @@ INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, actio
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (89, '系统监控', 84, 'controller', 'static', 'monitor', 'glyphicon-list', '', 1, 95, unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (90, 'ajax获取服务器状态', 84, 'controller', 'static', 'serverStatus', 'glyphicon-list', '', 0, 96, unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (91, 'ajax获取服务器时间', 84, 'controller', 'static', 'serverTime', 'glyphicon-list', '', 0, 97, unix_timestamp(now()), unix_timestamp(now()));
+INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (92, '测试邮件服务器', 53, 'controller', 'email', 'test', 'glyphicon-list', '', 0, 80, unix_timestamp(now()), unix_timestamp(now()));
+
 
 
 -- ---------------------------------------------
@@ -159,3 +161,4 @@ INSERT INTO `mw_config` VALUES ('2', '主页描述', 'main_description', '这是
 INSERT INTO `mw_config` VALUES ('3', '是否开启自动关注', 'auto_follow_doc_open', '', unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO `mw_config` VALUES ('4', '是否开启邮件通知', 'send_email_open', '', unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO `mw_config` VALUES ('5', '是否开启统一登录', 'sso_open', '', unix_timestamp(now()), unix_timestamp(now()));
+-- INSERT INTO `mw_config` VALUES ('6', '系统版本号', 'system_version', 'v0.0.0', unix_timestamp(now()), unix_timestamp(now()));

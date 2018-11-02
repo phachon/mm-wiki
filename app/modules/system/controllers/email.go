@@ -52,6 +52,7 @@ func (this *EmailController) Save() {
 	port := strings.TrimSpace(this.GetString("port", "25"))
 	username := strings.TrimSpace(this.GetString("username", ""))
 	password := strings.TrimSpace(this.GetString("password", ""))
+	isSsl := strings.TrimSpace(this.GetString("is_ssl", "0"))
 
 	if name == "" {
 		this.jsonError("邮件服务器名称不能为空！")
@@ -96,6 +97,7 @@ func (this *EmailController) Save() {
 		"port": port,
 		"username": username,
 		"password": password,
+		"is_ssl": isSsl,
 	})
 
 	if err != nil {
@@ -136,6 +138,7 @@ func (this *EmailController) Modify() {
 	port := strings.TrimSpace(this.GetString("port", ""))
 	username := strings.TrimSpace(this.GetString("username", ""))
 	password := strings.TrimSpace(this.GetString("password", ""))
+	isSsl := strings.TrimSpace(this.GetString("is_ssl", "0"))
 
 	if emailId == "" {
 		this.jsonError("邮件服务器不存在！")
@@ -187,6 +190,7 @@ func (this *EmailController) Modify() {
 		"port": port,
 		"username": username,
 		"password": password,
+		"is_ssl": isSsl,
 	})
 
 	if err != nil {
@@ -266,6 +270,7 @@ func (this *EmailController) Test() {
 	port := strings.TrimSpace(this.GetString("port", "25"))
 	username := strings.TrimSpace(this.GetString("username", ""))
 	password := strings.TrimSpace(this.GetString("password", ""))
+	isSsl := strings.TrimSpace(this.GetString("is_ssl", "0"))
 	emails := strings.TrimSpace(this.GetString("emails", ""))
 
 	if name == "" {
@@ -304,10 +309,10 @@ func (this *EmailController) Test() {
 		"sender_name": senderName,
 		"username": username,
 		"sender_title_prefix": senderTitlePrefix,
+		"is_ssl": isSsl,
 	}
 
 	to := strings.Split(emails, ";")
-
 	documentValue := map[string]string {
 		"name": "MM-Wiki测试邮件",
 		"username": this.User["username"],

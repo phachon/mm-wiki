@@ -16,6 +16,9 @@
                     <div class="col-sm-4">
                         <input type="text" name="host" class="form-control" placeholder="请输入 smtp 邮件服务器 host" value="{{$email.host}}">
                     </div>
+                    <div class="col-sm-4 form-comment">
+                        <span class="text-danger"> * 仅支持 smtp 服务器，例：smtp.163.com</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 服务器端口</label>
@@ -28,17 +31,32 @@
                     <div class="col-sm-4">
                         <input type="text" name="sender_address" class="form-control" placeholder="请输入发件人邮箱" value="{{$email.sender_address}}">
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件用户名</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="username" class="form-control" placeholder="请输入发件人邮箱用户名" value="{{$email.username}}">
+                    <div class="col-sm-4 form-comment">
+                        <span class="text-danger"> * 该邮箱将作为系统发件人来通知其他用户</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 发件人密码</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 邮箱用户名</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="username" class="form-control" placeholder="请输入发件人邮箱用户名" value="{{$email.username}}">
+                    </div>
+                    <div class="col-sm-4 form-comment">
+                        <span class="text-danger"> * 发件人邮箱用户名（xxx@163.com 或 xxx）</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 邮箱密码</label>
                     <div class="col-sm-4">
                         <input type="text" name="password" class="form-control" placeholder="请输入发件人邮箱密码" value="{{$email.password}}">
+                    </div>
+                    <div class="col-sm-4 form-comment">
+                        <span class="text-danger"> * 发件人邮箱密码（qq 邮箱此处填授权码）</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 是否使用SSL</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="is_ssl" value="1" {{if $email}} {{if eq $email.is_ssl "1"}} checked="checked" {{end}} {{else}} {{end}} placeholder="">
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,6 +67,9 @@
                         {{else}}
                         <input type="text" name="sender_name" class="form-control" placeholder="请输入发件人显示名" value="MM-Wiki">
                         {{end}}
+                    </div>
+                    <div class="col-sm-4 form-comment">
+                        <span class="text-danger"> * 发件人邮箱的昵称</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -72,3 +93,13 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        // is_display
+        $("input[type='checkbox']").bootstrapSwitch({
+            size: 'small',
+            onText: '是',
+            offText: '否'
+        });
+    });
+</script>

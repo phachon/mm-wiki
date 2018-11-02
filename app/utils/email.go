@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"gopkg.in/gomail.v2"
 	"strconv"
+	"crypto/tls"
 )
 
 var Email = NewEmail()
@@ -38,6 +39,9 @@ func (e *email) Send(emailConf map[string]string, toList []string, subject strin
 	}
 	portInt, _ := strconv.Atoi(emailConf["port"])
 	d := gomail.NewDialer(emailConf["host"], portInt, emailConf["username"], emailConf["password"])
+	if emailConf["is_ssl"] == "1" {
+		d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 	return d.DialAndSend(tt...)
 }
 

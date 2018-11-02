@@ -214,6 +214,7 @@ CREATE TABLE `mw_email` (
   `port` int(5) NOT NULL DEFAULT '25' COMMENT '服务器端口',
   `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(50) NOT NULL DEFAULT '' COMMENT '密码',
+  `is_ssl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用ssl， 0 默认不使用 1 使用',
   `is_used` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否被使用， 0 默认不使用 1 使用',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',

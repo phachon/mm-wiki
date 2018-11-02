@@ -64,15 +64,33 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 }
 
 // upgrade v0.0.0 ~ v0.1.2
-func (up *Upgrade) v0ToV012() error {
+func (up *Upgrade) v0ToV012() (err error) {
 
-	// 1. table mw_privilege add /email/test privilege
+	// 1. add privilege '/email/test'
+	// INSERT INTO mw_privilege (name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES ('测试邮件服务器', 53, 'controller', 'email', 'test', 'glyphicon-list', 0, 80, unix_timestamp(now()), unix_timestamp(now()));
+	privilege := map[string]interface{} {
+		"name": "测试邮件服务器",
+		"type": "controller",
+		"parent_id": 53,
+		"controller": "email",
+		"action": "test",
+		"target": "",
+		"icon":  "glyphicon-list",
+		"is_display": 0,
+		"sequence": 80,
+	}
+	_, err = PrivilegeModel.InsertNotExists(privilege)
+	if err != nil {
+		return
+	}
 
 	// 2. table mw_email add field 'is_ssl'
+	// alter table mw_email add `is_ssl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用ssl， 0 默认不使用 1 使用' after `password`
+	db := G.DB()
+	db.Exec(db.AR().Raw("alter table mw_email DROP COLUMN `is_ssl`"))
+	_, err = db.Exec(db.AR().Raw("alter table mw_email add `is_ssl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用ssl， 0 默认不使用 1 使用' after `password`"))
 
-	// 3. todo
-
-	return nil
+	return
 }
 
 // upgrade v0.1.2 ~ v0.1.8
