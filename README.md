@@ -9,7 +9,7 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 [![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
 [![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
 
->> Demo 网站：http://mm-wiki.phachon.com 账号：root 密码：123456
+>> Demo 网站：http://mm-wiki.phachon.com 账号：admin 密码：123456
 
 # 特点
 - 部署方便，基于 golang 编写，只需要下载对于平台下二进制文件执行即可。
