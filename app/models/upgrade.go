@@ -121,6 +121,20 @@ func (up *Upgrade) v027ToV033() error {
 
 func (up *Upgrade) upgradeAfter(version string) (err error) {
 	// update system version
-	_, err = ConfigModel.UpdateByKey(Config_Key_SystemVersion, version)
-	return
+	config, err := ConfigModel.GetConfigByKey(Config_Key_SystemVersion)
+	if err != nil {
+		return
+	}
+	if len(config) == 0 {
+		configValue := map[string]interface{}{
+			"name": "系统版本号",
+			"key": "system_version",
+			"value": version,
+		}
+		_, err = ConfigModel.Insert(configValue)
+	}else {
+		_, err = ConfigModel.UpdateByKey(Config_Key_SystemVersion, version)
+	}
+
+	return err
 }

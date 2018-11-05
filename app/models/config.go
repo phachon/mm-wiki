@@ -109,6 +109,21 @@ func (c *Config) InsertBatch(insertValues []map[string]interface{}) (id int64, e
 	return
 }
 
+// insert config
+func (c *Config) Insert(insertValue map[string]interface{}) (id int64, err error) {
+
+	insertValue["create_time"] = time.Now().Unix()
+	insertValue["update_time"] = time.Now().Unix()
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Exec(db.AR().Insert(Table_Config_Name, insertValue))
+	if err != nil {
+		return
+	}
+	id = rs.LastInsertId
+	return
+}
+
 // get config by config key
 func (c *Config) GetConfigByKey(key string) (config map[string]string, err error) {
 
