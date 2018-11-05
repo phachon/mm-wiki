@@ -91,11 +91,11 @@ func (this *InstallController) Env() {
 	cpuCount, _ := cpu.Counts(true)
 	memData := map[string]interface{}{
 		"name": "内存",
-		"require": "512M",
+		"require": "500M",
 		"value": strconv.FormatInt(int64(vmTotal), 10)+"M",
 		"result": "1",
 	}
-	if int(vmTotal) < 512 {
+	if int(vmTotal) < 500 {
 		storage.Data.Env = storage.Env_NotAccess
 		memData["result"] = "0"
 	}
