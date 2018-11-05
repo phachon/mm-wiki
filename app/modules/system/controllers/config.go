@@ -19,13 +19,13 @@ func (this *ConfigController) Global() {
 
 	var configValue = map[string]string{}
 	for _, config := range configs{
-		if config["key"] == "auto_follow_doc_open" && config["value"] != "1" {
+		if config["key"] == models.Config_Key_AutoFollowDoc && config["value"] != "1" {
 			config["value"] = "0"
 		}
-		if config["key"] == "send_email_open" && config["value"] != "1" {
+		if config["key"] == models.Config_Key_SendEmail && config["value"] != "1" {
 			config["value"] = "0"
 		}
-		if config["key"] == "sso_open" && config["value"] != "1" {
+		if config["key"] == models.Config_Key_AuthLogin && config["value"] != "1" {
 			config["value"] = "0"
 		}
 		configValue[config["key"]] = config["value"]
