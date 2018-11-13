@@ -28,6 +28,8 @@ var (
 
 	StartTime = int64(0)
 
+	RootDir = ""
+
 	ImageAbsDir = ""
 )
 
@@ -87,11 +89,18 @@ func initConfig() {
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
 	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
 
-	// set static path
-	beego.SetStaticPath("/static/", "static")
-
-	// views path
-	beego.BConfig.WebConfig.ViewsPath = "views/"
+	RootDir = filepath.Dir(os.Args[0])
+	if RootDir == "." {
+		// set static path
+		beego.SetStaticPath("/static/", "static")
+		// views path
+		beego.BConfig.WebConfig.ViewsPath = "views/"
+	}else {
+		// set static path
+		beego.SetStaticPath("/static/", RootDir+"/static")
+		// views path
+		beego.BConfig.WebConfig.ViewsPath = RootDir+"/views/"
+	}
 
 	// session
 	//beego.BConfig.WebConfig.Session.SessionProvider = "memory"
