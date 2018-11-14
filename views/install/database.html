@@ -26,76 +26,94 @@
                 <div class="row">{{$databaseConf := .databaseConf}}
                     <form class="form-horizontal" method="post" action="/install/database">
                         <div class="panel panel-default">
-                        <div class="panel-heading"><strong><i class="fa fa-database"></i> 数据库配置</strong></div>
-                        <div class="panel-body"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> host </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="host" class="form-control" value="{{$databaseConf.host}}" placeholder="请输入域名或ip" required>
+                            <div class="panel-heading"><strong><i class="fa fa-database"></i> 数据库配置</strong></div>
+                            <div class="panel-body">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#mysql" aria-controls="mysql" role="tab" data-toggle="tab">MySQL</a></li>
+                                    {{/*<li role="presentation"><a href="#sqlite" aria-controls="sqlite" role="tab" data-toggle="tab">SQLite</a></li>*/}}
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <br>
+                                    <div role="tabpanel" class="tab-pane active" id="mysql">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> MySQL Host </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="host" class="form-control" value="{{$databaseConf.host}}" placeholder="请输入域名或ip" required>
+                                            </div>
+                                            <div class="col-sm-4" style="margin-top: 7px;">
+                                                <span class="text-danger"> * 需自行安装 MySQL</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> MySQL 端口 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="port" class="form-control" value="{{$databaseConf.port}}" placeholder="请输入数据库端口" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="user" class="form-control" value="{{$databaseConf.user}}" placeholder="请输入数据库连接用户名" required>
+                                            </div>
+                                            <div class="col-sm-4" style="margin-top: 7px;">
+                                                <span class="text-danger"> * 须具备表操作权限</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="pass" class="form-control" value="{{$databaseConf.pass}}" placeholder="请输入数据库连接密码" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 数据库名 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="name" class="form-control" value="{{$databaseConf.name}}" placeholder="请输入数据库名" required>
+                                            </div>
+                                            <div class="col-sm-4" style="margin-top: 7px;">
+                                                <span class="text-danger"> * 不存在会自动创建</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 连接数 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="conn_max_idle" class="form-control" value="{{$databaseConf.conn_max_idle}}" placeholder="请输入数据库名" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 最大连接数 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="conn_max_connection" class="form-control" value="{{$databaseConf.conn_max_connection}}" placeholder="请输入数据库名" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="sqlite">
+                                    </div>
+                                </div>
                             </div>
+                            <div class="panel-footer"></div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 端口 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="port" class="form-control" value="{{$databaseConf.port}}" placeholder="请输入数据库端口" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="user" class="form-control" value="{{$databaseConf.user}}" placeholder="请输入数据库连接用户名" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="pass" class="form-control" value="{{$databaseConf.pass}}" placeholder="请输入数据库连接密码" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 数据库名 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="name" class="form-control" value="{{$databaseConf.name}}" placeholder="请输入数据库名" required>
-                            </div>
-                            <div class="col-sm-4" style="margin-top: 7px;">
-                                <span class="text-danger"> * 不存在会自动创建</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 连接数 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="conn_max_idle" class="form-control" value="{{$databaseConf.conn_max_idle}}" placeholder="请输入数据库名" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 最大连接数 </label>
-                            <div class="col-sm-4">
-                                <input type="text" name="conn_max_connection" class="form-control" value="{{$databaseConf.conn_max_connection}}" placeholder="请输入数据库名" required>
-                            </div>
-                        </div>
-                        <div class="panel-footer">
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
+                        <div class="panel panel-default">
                             <div class="panel-heading"><strong><i class="fa fa-user-circle-o"></i> 添加超级管理员</strong></div>
                             <div class="panel-body"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
-                                <div class="col-sm-4">
-                                    <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                    </div>
+                                    <div class="col-sm-6 form-comment">
+                                        <span class="text-danger"> * mm-wiki 系统的超级管理员，只能由数字和字母组成</span>
+                                    </div>
                                 </div>
-                                <div class="col-sm-6 form-comment">
-                                    <span class="text-danger"> * mm-wiki 系统的超级管理员，只能由数字和字母组成</span>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
-                                <div class="col-sm-4">
-                                    <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                            </div>
+                            <div class="panel-footer"></div>
                         </div>
                         <div class="col-md-offset-8 pull-right">
                             <a href="/install/config">

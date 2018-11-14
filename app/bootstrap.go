@@ -89,18 +89,12 @@ func initConfig() {
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
 	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
 
-	RootDir = filepath.Dir(os.Args[0])
-	if RootDir == "." {
-		// set static path
-		beego.SetStaticPath("/static/", "static")
-		// views path
-		beego.BConfig.WebConfig.ViewsPath = "views/"
-	}else {
-		// set static path
-		beego.SetStaticPath("/static/", RootDir+"/static")
-		// views path
-		beego.BConfig.WebConfig.ViewsPath = RootDir+"/views/"
-	}
+	RootDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+
+	// set static path
+	beego.SetStaticPath("/static/", filepath.Join(RootDir, "./static"))
+	// views path
+	beego.BConfig.WebConfig.ViewsPath = filepath.Join(RootDir, "./views/")
 
 	// session
 	//beego.BConfig.WebConfig.Session.SessionProvider = "memory"

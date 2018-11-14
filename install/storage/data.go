@@ -12,11 +12,14 @@ import (
 	"mm-wiki/app/utils"
 	"runtime"
 	"encoding/json"
+	"path/filepath"
 )
 
 var Data = NewData()
 var Version string
 var installChan = make(chan int, 1)
+var InstallDir string
+var RootDir string
 
 const License_Disagree = 0 // 协议不同意
 const License_Agree = 1 // 协议同意
@@ -134,9 +137,7 @@ func createTable() (err error) {
 	pass := Data.DatabaseConf["pass"]
 	name := Data.DatabaseConf["name"]
 
-	installDir, _ := os.Getwd()
-	installDir = strings.Replace(installDir, "install", "", 1)
-	sqlBytes, err := ioutil.ReadFile(installDir+"docs/databases/table.sql")
+	sqlBytes, err := ioutil.ReadFile(filepath.Join(RootDir, "docs/databases/table.sql"))
 	if err != nil {
 		return err
 	}
@@ -185,9 +186,7 @@ func writeInstallData() (err error) {
 	pass := Data.DatabaseConf["pass"]
 	name := Data.DatabaseConf["name"]
 
-	installDir, _ := os.Getwd()
-	installDir = strings.Replace(installDir, "install", "", 1)
-	sqlBytes, err := ioutil.ReadFile(installDir+"docs/databases/data.sql")
+	sqlBytes, err := ioutil.ReadFile(filepath.Join(RootDir, "docs/databases/data.sql"))
 	if err != nil {
 		return err
 	}
@@ -213,10 +212,8 @@ func writeInstallData() (err error) {
 
 // write conf
 func makeConf() (err error) {
-	installDir, _ := os.Getwd()
-	installDir = strings.Replace(installDir, "install", "", 1)
 
-	templateConf, err := utils.NewFile().GetFileContents(installDir+"conf/template.conf")
+	templateConf, err := utils.NewFile().GetFileContents(filepath.Join(RootDir, "conf/template.conf"))
 	if err != nil {
 		return
 	}
@@ -232,7 +229,10 @@ func makeConf() (err error) {
 	templateConf = strings.Replace(templateConf, "#db.conn_max_idle#", Data.DatabaseConf["conn_max_idle"], 1)
 	templateConf = strings.Replace(templateConf, "#db.conn_max_connection#", Data.DatabaseConf["conn_max_connection"], 1)
 
-	fileObject, err := os.OpenFile(installDir+"conf/mm-wiki.conf", os.O_RDWR|os.O_CREATE, 0777)
+	logFilename := strings.Replace(filepath.Join(RootDir, "logs/mm-wiki.log"), `\`, `/`, -1)
+	templateConf = strings.Replace(templateConf, "#log.filename#", logFilename, 1)
+
+	fileObject, err := os.OpenFile(filepath.Join(RootDir, "conf/mm-wiki.conf"), os.O_RDWR|os.O_CREATE, 0777)
 	if err != nil {
 		return
 	}
@@ -266,7 +266,7 @@ func installSuccess()  {
 	Data.Result = string(resByte)
 
 	// create install lock file
-	file, _ := os.Create("../install.lock")
+	file, _ := os.Create(filepath.Join(RootDir, "./install.lock"))
 	file.Close()
 }
 

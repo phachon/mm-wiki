@@ -3,7 +3,6 @@ package controllers
 import (
 	"io/ioutil"
 	"runtime"
-	"os"
 	"strings"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
@@ -36,7 +35,7 @@ func (this *InstallController) License() {
 		storage.Data.License = storage.License_Agree
 		this.jsonSuccess("", nil, "/install/env")
 	}else {
-		bytes, _ := ioutil.ReadFile("../LICENSE")
+		bytes, _ := ioutil.ReadFile(filepath.Join(storage.RootDir, "./LICENSE"))
 		license := string(bytes)
 		this.Data["license"] = license
 		this.Data["license_agree"] = storage.Data.License
@@ -59,23 +58,21 @@ func (this *InstallController) Env() {
 	//获取服务器信息
 	host := utils.Misc.GetLocalIp()
 	osSys := runtime.GOOS
-	installDir, _ := os.Getwd()
-	installDir = strings.Replace(installDir, "install", "", 1)
 	server := map[string]string{
 		"host": host,
 		"sys": osSys,
-		"install_dir": installDir,
+		"install_dir": storage.RootDir,
 		"version": "",
 	}
 	// 获取安装版本号
 	var cmd *exec.Cmd
 	var out bytes.Buffer
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command(installDir+"mm-wiki.exe", "--version")
+		cmd = exec.Command(filepath.Join(storage.RootDir, "./mm-wiki.exe"), "--version")
 	} else {
-		cmd = exec.Command(installDir+"mm-wiki", "--version")
+		cmd = exec.Command(filepath.Join(storage.RootDir, "./mm-wiki"), "--version")
 	}
-	cmd.Dir = installDir
+	cmd.Dir = storage.RootDir
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil || out.String() == "" {
@@ -120,7 +117,7 @@ func (this *InstallController) Env() {
 		"require": "读/写",
 		"result": "1",
 	}
-	err = fileTool.IsWriterReadable(installDir+templateConfDir["path"])
+	err = fileTool.IsWriterReadable(filepath.Join(storage.RootDir, templateConfDir["path"]))
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
 		templateConfDir["result"] = "0"
@@ -131,7 +128,7 @@ func (this *InstallController) Env() {
 		"require": "读/写",
 		"result": "1",
 	}
-	err = fileTool.IsWriterReadable(installDir+databaseTable["path"])
+	err = fileTool.IsWriterReadable(filepath.Join(storage.RootDir, databaseTable["path"]))
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
 		databaseTable["result"] = "0"
@@ -142,7 +139,7 @@ func (this *InstallController) Env() {
 		"require": "读/写",
 		"result": "1",
 	}
-	err = fileTool.IsWriterReadable(installDir+databaseData["path"])
+	err = fileTool.IsWriterReadable(filepath.Join(storage.RootDir, databaseData["path"]))
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
 		databaseData["result"] = "0"
@@ -153,7 +150,7 @@ func (this *InstallController) Env() {
 		"require": "存在且不为空",
 		"result": "1",
 	}
-	isEmpty := utils.File.PathIsEmpty(installDir+viewsDir["path"])
+	isEmpty := utils.File.PathIsEmpty(filepath.Join(storage.RootDir, viewsDir["path"]))
 	if isEmpty == true {
 		storage.Data.Env = storage.Env_NotAccess
 		viewsDir["result"] = "0"
@@ -164,7 +161,7 @@ func (this *InstallController) Env() {
 		"require": "存在且不为空",
 		"result": "1",
 	}
-	isEmpty = utils.File.PathIsEmpty(installDir+staticDir["path"])
+	isEmpty = utils.File.PathIsEmpty(filepath.Join(storage.RootDir, staticDir["path"]))
 	if isEmpty == true {
 		storage.Data.Env = storage.Env_NotAccess
 		staticDir["result"] = "0"
@@ -202,6 +199,9 @@ func (this *InstallController) Config() {
 		}
 		if documentDir == "" {
 			this.jsonError("文档保存目录不能为空")
+		}
+		if !filepath.IsAbs(documentDir) {
+			this.jsonError("文档保存目录不是绝对路径")
 		}
 		docAbsDir, err := filepath.Abs(documentDir)
 		if err != nil {
