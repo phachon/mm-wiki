@@ -1,3 +1,4 @@
+<br>
 <div class="container">
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
@@ -49,13 +50,13 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><span class="text-danger"> * </span> MySQL 端口 </label>
                                             <div class="col-sm-4">
-                                                <input type="text" name="port" class="form-control" value="{{$databaseConf.port}}" placeholder="请输入数据库端口" required>
+                                                <input type="text" name="port" class="form-control" value="{{$databaseConf.port}}" placeholder="请输入Mysql端口" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
                                             <div class="col-sm-4">
-                                                <input type="text" name="user" class="form-control" value="{{$databaseConf.user}}" placeholder="请输入数据库连接用户名" required>
+                                                <input type="text" name="user" class="form-control" value="{{$databaseConf.user}}" placeholder="请输入连接Mysql用户名" required>
                                             </div>
                                             <div class="col-sm-4" style="margin-top: 7px;">
                                                 <span class="text-danger"> * 须具备表操作权限</span>
@@ -64,7 +65,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
                                             <div class="col-sm-4">
-                                                <input type="text" name="pass" class="form-control" value="{{$databaseConf.pass}}" placeholder="请输入数据库连接密码" required>
+                                                <input type="text" name="pass" class="form-control" value="{{$databaseConf.pass}}" placeholder="请输入连接Mysql密码" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -77,15 +78,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 连接数 </label>
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 最大空闲连接数 </label>
                                             <div class="col-sm-4">
-                                                <input type="text" name="conn_max_idle" class="form-control" value="{{$databaseConf.conn_max_idle}}" placeholder="请输入数据库名" required>
+                                                <input type="text" name="conn_max_idle" class="form-control" value="{{$databaseConf.conn_max_idle}}" placeholder="请输入最大空闲连接数" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 最大连接数 </label>
                                             <div class="col-sm-4">
-                                                <input type="text" name="conn_max_connection" class="form-control" value="{{$databaseConf.conn_max_connection}}" placeholder="请输入数据库名" required>
+                                                <input type="text" name="conn_max_connection" class="form-control" value="{{$databaseConf.conn_max_connection}}" placeholder="请输入最大连接数" required>
                                             </div>
                                         </div>
                                     </div>

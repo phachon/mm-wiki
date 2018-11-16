@@ -24,7 +24,7 @@ var (
 )
 
 var (
-	Version = "v0.1.2"
+	Version = "v0.1.3"
 
 	StartTime = int64(0)
 

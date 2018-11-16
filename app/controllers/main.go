@@ -93,14 +93,14 @@ func (this *MainController) Default() {
 	// link
 	links, err := models.LinkModel.GetLinksOrderBySequence()
 	if err != nil {
-		this.ErrorLog("查找快速链接失败："+err.Error())
-		this.ViewError("查找快速链接失败！")
+		this.ErrorLog("查找快捷链接失败："+err.Error())
+		this.ViewError("查找快捷链接失败！")
 	}
 	// contacts
 	contacts, err := models.ContactModel.GetAllContact()
 	if err != nil {
-		this.ErrorLog("查找快速链接失败："+err.Error())
-		this.ViewError("查找快速链接失败！")
+		this.ErrorLog("查找快捷链接失败："+err.Error())
+		this.ViewError("查找快捷链接失败！")
 	}
 
 	// main title config

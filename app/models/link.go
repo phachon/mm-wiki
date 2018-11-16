@@ -171,7 +171,7 @@ func (l *Link) GetLinksOrderBySequence() (links []map[string]string, err error) 
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(
-		db.AR().From(Table_Link_Name).OrderBy("sequence", "DESC"))
+		db.AR().From(Table_Link_Name).OrderBy("sequence", "ASC"))
 	if err != nil {
 		return
 	}
