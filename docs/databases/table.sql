@@ -281,3 +281,19 @@ CREATE TABLE `mw_contact` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联系人表';
+
+-- --------------------------------
+-- 附件表
+-- --------------------------------
+DROP TABLE IF EXISTS `mw_attachment`;
+CREATE TABLE `mw_attachment` (
+  `attachment_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '附件 id',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户id',
+  `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '所属文档id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '附件名称',
+  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '附件地址或路径',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`attachment_id`),
+  KEY (`document_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件表';
