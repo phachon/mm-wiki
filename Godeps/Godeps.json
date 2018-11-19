@@ -17,53 +17,73 @@
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/config",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/context",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/context/param",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/grace",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/logs",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/session",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/session/memcache",
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/session/redis",
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/session/redis_cluster",
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/toolbox",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/utils",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/validation",
-			"Comment": "v1.9.2",
-			"Rev": "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+			"Comment": "v1.10.1",
+			"Rev": "053a075344c118a5cc41981b29ef612bb53d20ca"
+		},
+		{
+			"ImportPath": "github.com/bradfitz/gomemcache/memcache",
+			"Comment": "release.r60-46-g1952afa",
+			"Rev": "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
 		},
 		{
 			"ImportPath": "github.com/fatih/color",
@@ -91,9 +111,59 @@
 			"Rev": "2a0d4bd2d6644eb9c5a0d9f41b9519d520e28d89"
 		},
 		{
+			"ImportPath": "github.com/go-redis/redis",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/consistenthash",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/hashtag",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/pool",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/proto",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/singleflight",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/util",
+			"Comment": "v6.13.2-37-g6553366",
+			"Rev": "655336673b5549556800106e0dba86edc8a108c7"
+		},
+		{
 			"ImportPath": "github.com/go-sql-driver/mysql",
 			"Comment": "v1.3-31-g26471af",
 			"Rev": "26471af196a17ee75a22e6481b5a5897fb16b081"
+		},
+		{
+			"ImportPath": "github.com/gomodule/redigo/internal",
+			"Comment": "v2.0.0-2-g9352ab6",
+			"Rev": "9352ab68be133885e31a43661cc42a220cb8e821"
+		},
+		{
+			"ImportPath": "github.com/gomodule/redigo/redis",
+			"Comment": "v2.0.0-2-g9352ab6",
+			"Rev": "9352ab68be133885e31a43661cc42a220cb8e821"
 		},
 		{
 			"ImportPath": "github.com/mattn/go-colorable",
@@ -162,6 +232,14 @@
 			"Rev": "7d1523cc722ec3429f5817fd3c3780b7d5f1ad89"
 		},
 		{
+			"ImportPath": "golang.org/x/crypto/acme",
+			"Rev": "c7dcf104e3a7a1417abc0230cb0d5240d764159d"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/acme/autocert",
+			"Rev": "c7dcf104e3a7a1417abc0230cb0d5240d764159d"
+		},
+		{
 			"ImportPath": "golang.org/x/sys/unix",
 			"Rev": "7dca6fe1f43775aa6d1334576870ff63f978f539"
 		},
@@ -178,6 +256,11 @@
 			"ImportPath": "gopkg.in/russross/blackfriday.v2",
 			"Comment": "v2.0.0",
 			"Rev": "cadec560ec52d93835bf2f15bd794700d3a2473b"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Comment": "v2.1.1",
+			"Rev": "7f97868eec74b32b0982dd158a51a446d1da7eb5"
 		}
 	]
 }
