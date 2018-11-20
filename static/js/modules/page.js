@@ -164,9 +164,16 @@ var Page = {
             shade : 0.1,
             resize: false,
             maxmin: false,
-            area: ["600px", "300px"],
+            area: ["800px", "500px"],
             content: "/attachment/page",
             padding:"10px"
         });
+    },
+
+    /**
+     * uploader
+     */
+    attachUpload: function () {
+
     }
 };
