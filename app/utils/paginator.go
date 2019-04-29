@@ -22,13 +22,13 @@ import (
 )
 
 type Paginator struct {
-	Request     *http.Request
-	PerPageNums int
-	MaxPages    int
-	nums      int64
-	pageRange []int
-	pageNums  int
-	page      int
+	Request       *http.Request
+	PerPageNums   int
+	MaxPages      int
+	nums          int64
+	pageRange     []int
+	pageNums      int
+	page          int
 	pageParamName string
 }
 

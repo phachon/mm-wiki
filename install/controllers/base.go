@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"strings"
 	"github.com/astaxie/beego"
 	"mm-wiki/install/storage"
+	"strings"
 )
 
 type BaseController struct {
@@ -39,7 +39,7 @@ func (this *BaseController) Prepare() {
 			storage.Data.IsSuccess = storage.Install_Default
 			storage.Data.Status = storage.Install_Ready
 			storage.Data.Result = ""
-		}else {
+		} else {
 			this.StopRun()
 		}
 	}

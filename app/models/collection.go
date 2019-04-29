@@ -1,19 +1,18 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 )
 
 const (
-	Collection_Type_Doc = 1
+	Collection_Type_Doc   = 1
 	Collection_Type_Space = 2
 )
 
 const Table_Collection_Name = "collection"
 
 type Collection struct {
-
 }
 
 var CollectionModel = Collection{}
@@ -23,7 +22,7 @@ func (c *Collection) GetCollectionByCollectionId(collectionId string) (collectio
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
-		"collection_id":   collectionId,
+		"collection_id": collectionId,
 	}))
 	if err != nil {
 		return
@@ -37,7 +36,7 @@ func (c *Collection) GetCollectionsByUserId(userId string) (collections []map[st
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
-		"user_id":  userId,
+		"user_id": userId,
 	}))
 	if err != nil {
 		return
@@ -51,8 +50,8 @@ func (c *Collection) GetCollectionsByUserIdAndType(userId string, typeS int) (co
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
-		"user_id":  userId,
-		"type":  typeS,
+		"user_id": userId,
+		"type":    typeS,
 	}))
 	if err != nil {
 		return
@@ -66,8 +65,8 @@ func (c *Collection) GetCollectionByUserIdTypeAndResourceId(userId string, typeS
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
-		"user_id": userId,
-		"type": typeS,
+		"user_id":     userId,
+		"type":        typeS,
 		"resource_id": resId,
 	}).Limit(0, 1))
 	if err != nil {
@@ -93,7 +92,7 @@ func (c *Collection) Delete(collectionId string) (err error) {
 func (c *Collection) DeleteByResourceIdType(resourceId string, collectType string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_Collection_Name, map[string]interface{}{
-		"type": collectType,
+		"type":        collectType,
 		"resource_id": resourceId,
 	}))
 	if err != nil {
@@ -149,7 +148,7 @@ func (c *Collection) GetCollectionsByCollectionIds(collectionIds []string) (coll
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Collection_Name).Where(map[string]interface{}{
-		"collection_id":   collectionIds,
+		"collection_id": collectionIds,
 	}))
 	if err != nil {
 		return

@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/astaxie/beego"
+	"html/template"
 	"mm-wiki/app/controllers"
 	systemControllers "mm-wiki/app/modules/system/controllers"
 	"mm-wiki/app/utils"
 	"net/http"
-	"html/template"
 )
 
-func init()  {
+func init() {
 	initRouter()
 }
 
@@ -56,7 +56,7 @@ func initRouter() {
 }
 
 func http_404(rw http.ResponseWriter, req *http.Request) {
-	t,_:= template.New("404.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath+"/error/404.html")
+	t, _ := template.New("404.html").ParseFiles(beego.BConfig.WebConfig.ViewsPath + "/error/404.html")
 	data := make(map[string]interface{})
 	data["content"] = "page not found"
 	t.Execute(rw, data)

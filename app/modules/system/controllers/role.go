@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"strings"
+	"fmt"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
-	"fmt"
+	"strings"
 )
 
 type RoleController struct {
@@ -27,7 +27,7 @@ func (this *RoleController) Save() {
 
 	ok, err := models.RoleModel.HasRoleName(name)
 	if err != nil {
-		this.ErrorLog("添加角色失败："+err.Error())
+		this.ErrorLog("添加角色失败：" + err.Error())
 		this.jsonError("添加角色失败！")
 	}
 	if ok {
@@ -42,7 +42,7 @@ func (this *RoleController) Save() {
 		this.ErrorLog("添加角色失败：" + err.Error())
 		this.jsonError("添加角色失败")
 	}
-	this.InfoLog("添加角色 "+utils.Convert.IntToString(roleId, 10)+" 成功")
+	this.InfoLog("添加角色 " + utils.Convert.IntToString(roleId, 10) + " 成功")
 	this.jsonSuccess("添加角色成功", nil, "/system/role/list")
 }
 
@@ -64,7 +64,7 @@ func (this *RoleController) List() {
 		roles, err = models.RoleModel.GetRolesByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取角色列表失败: "+err.Error())
+		this.ErrorLog("获取角色列表失败: " + err.Error())
 		this.ViewError("获取角色列表失败", "/system/main/index")
 	}
 
@@ -86,7 +86,7 @@ func (this *RoleController) Edit() {
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("查找角色错误：" +err.Error())
+		this.ErrorLog("查找角色错误：" + err.Error())
 		this.ViewError("查找角色错误", "/system/role/list")
 	}
 	if len(role) == 0 {
@@ -105,7 +105,6 @@ func (this *RoleController) Modify() {
 	roleId := this.GetString("role_id", "")
 	name := strings.TrimSpace(this.GetString("name", ""))
 
-
 	if roleId == "" {
 		this.jsonError("角色不存在！")
 	}
@@ -118,7 +117,7 @@ func (this *RoleController) Modify() {
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("修改角色 "+roleId+" 失败: "+err.Error())
+		this.ErrorLog("修改角色 " + roleId + " 失败: " + err.Error())
 		this.jsonError("修改角色失败！")
 	}
 	if len(role) == 0 {
@@ -128,7 +127,7 @@ func (this *RoleController) Modify() {
 		this.jsonError("超级管理员角色不能修改！")
 	}
 
-	ok , _ := models.RoleModel.HasSameName(roleId, name)
+	ok, _ := models.RoleModel.HasSameName(roleId, name)
 	if ok {
 		this.jsonError("角色名已经存在！")
 	}
@@ -137,10 +136,10 @@ func (this *RoleController) Modify() {
 	})
 
 	if err != nil {
-		this.ErrorLog("修改角色 "+roleId+" 失败：" + err.Error())
-		this.jsonError("修改角色"+roleId+"失败")
+		this.ErrorLog("修改角色 " + roleId + " 失败：" + err.Error())
+		this.jsonError("修改角色" + roleId + "失败")
 	}
-	this.InfoLog("修改角色 "+roleId+" 成功")
+	this.InfoLog("修改角色 " + roleId + " 成功")
 	this.jsonSuccess("修改角色成功", nil, "/system/role/list")
 }
 
@@ -162,18 +161,18 @@ func (this *RoleController) User() {
 	var users []map[string]string
 	count, err = models.UserModel.CountUsersByKeywords(keywords)
 	if err != nil {
-		this.ErrorLog("获取角色用户列表失败: "+err.Error())
+		this.ErrorLog("获取角色用户列表失败: " + err.Error())
 		this.ViewError("获取角色用户列表失败！", "/system/role/list")
 	}
 	users, err = models.UserModel.GetUsersByKeywordsAndLimit(keywords, limit, number)
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ErrorLog("获取用户列表失败: " + err.Error())
 		this.ViewError("获取用户列表失败！", "/system/role/list")
 	}
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ErrorLog("获取用户列表失败: " + err.Error())
 		this.ViewError("获取角色用户列表失败！", "/system/main/index")
 	}
 	for _, user := range users {
@@ -195,7 +194,7 @@ func (this *RoleController) Privilege() {
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("查找角色权限失败："+err.Error())
+		this.ErrorLog("查找角色权限失败：" + err.Error())
 		this.ViewError("查看角色权限失败！", "/system/role/list")
 	}
 	if len(role) == 0 {
@@ -207,11 +206,10 @@ func (this *RoleController) Privilege() {
 		this.ViewError("查找角色权限失败！")
 	}
 
-
 	var rolePrivileges = []map[string]string{}
 	if role["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
 		rolePrivileges, err = models.RolePrivilegeModel.GetRootRolePrivileges()
-	}else {
+	} else {
 		rolePrivileges, err = models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
 	}
 	if err != nil {
@@ -246,7 +244,7 @@ func (this *RoleController) GrantPrivilege() {
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("角色 "+roleId+" 授权失败："+err.Error())
+		this.ErrorLog("角色 " + roleId + " 授权失败：" + err.Error())
 		this.jsonError("角色不存在")
 	}
 	if len(role) == 0 {
@@ -259,14 +257,14 @@ func (this *RoleController) GrantPrivilege() {
 
 	res, err := models.RolePrivilegeModel.GrantRolePrivileges(roleId, privilegeIds)
 	if err != nil {
-		this.ErrorLog("角色 "+roleId+" 授权失败："+err.Error())
+		this.ErrorLog("角色 " + roleId + " 授权失败：" + err.Error())
 		this.jsonError("角色授权失败！")
 	}
 	if !res {
 		this.jsonError("角色授权失败")
 	}
 
-	this.InfoLog("角色 "+roleId+" 授权成功")
+	this.InfoLog("角色 " + roleId + " 授权成功")
 	this.jsonSuccess("角色授权成功", nil, "/system/role/list")
 }
 
@@ -285,7 +283,7 @@ func (this *RoleController) Delete() {
 
 	role, err := models.RoleModel.GetRoleByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.ErrorLog("删除角色 " + roleId + " 失败: " + err.Error())
 		this.jsonError("删除角色失败")
 	}
 	if len(role) == 0 {
@@ -298,7 +296,7 @@ func (this *RoleController) Delete() {
 	// check role user
 	users, err := models.UserModel.GetUsersByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.ErrorLog("删除角色 " + roleId + " 失败: " + err.Error())
 		this.jsonError("删除角色失败")
 	}
 	if len(users) > 0 {
@@ -308,18 +306,18 @@ func (this *RoleController) Delete() {
 	// delete role privilege by role id
 	err = models.RolePrivilegeModel.DeleteByRoleId(roleId)
 	if err != nil {
-		this.ErrorLog("删除角色 "+roleId+" 权限失败: "+err.Error())
+		this.ErrorLog("删除角色 " + roleId + " 权限失败: " + err.Error())
 		this.jsonError("删除角色失败")
 	}
 
 	// delete role by role id
 	err = models.RoleModel.Delete(roleId)
 	if err != nil {
-		this.ErrorLog("删除角色 "+roleId+" 失败: "+err.Error())
+		this.ErrorLog("删除角色 " + roleId + " 失败: " + err.Error())
 		this.jsonError("删除角色失败")
 	}
 
-	this.InfoLog("删除角色 "+roleId+" 成功")
+	this.InfoLog("删除角色 " + roleId + " 成功")
 	this.jsonSuccess("删除角色成功", nil, "/system/role/list")
 }
 
@@ -339,7 +337,7 @@ func (this *RoleController) ResetUser() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("重置用户 "+userId+" 角色失败: "+err.Error())
+		this.ErrorLog("重置用户 " + userId + " 角色失败: " + err.Error())
 		this.jsonError("重置用户角色失败")
 	}
 	if len(user) == 0 {
@@ -350,10 +348,10 @@ func (this *RoleController) ResetUser() {
 		"role_id": models.Role_Default_Id,
 	})
 	if err != nil {
-		this.ErrorLog("重置用户 "+userId+" 角色失败: "+err.Error())
+		this.ErrorLog("重置用户 " + userId + " 角色失败: " + err.Error())
 		this.jsonError("重置用户角色失败")
 	}
 
-	this.InfoLog("重置用户 "+userId+" 角色成功")
+	this.InfoLog("重置用户 " + userId + " 角色成功")
 	this.jsonSuccess("重置用户角色成功", nil, "/system/role/list")
 }

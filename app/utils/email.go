@@ -1,21 +1,20 @@
 package utils
 
 import (
-	"strings"
-	"net/smtp"
-	"time"
-	"gopkg.in/russross/blackfriday.v2"
-	"github.com/astaxie/beego"
-	"fmt"
-	"gopkg.in/gomail.v2"
-	"strconv"
 	"crypto/tls"
+	"fmt"
+	"github.com/astaxie/beego"
+	"gopkg.in/gomail.v2"
+	"gopkg.in/russross/blackfriday.v2"
+	"net/smtp"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var Email = NewEmail()
 
 type email struct {
-
 }
 
 func NewEmail() *email {
@@ -52,7 +51,7 @@ func (e *email) SendByEmail(email map[string]string, to []string, subject string
 	auth := smtp.PlainAuth("", userEmail, email["password"], email["host"])
 	user := email["username"]
 	nickname := email["sender_name"]
-	subject = email["sender_title_prefix"]+subject
+	subject = email["sender_title_prefix"] + subject
 
 	msg := fmt.Sprintf("To: %s \r\nFrom: %s <%s>\r\nSubject: %s \r\nContent-Type: text/%s; charset=UTF-8\r\n\r\n%s",
 		strings.Join(to, ","), nickname, user, subject, contentType, body)

@@ -1,9 +1,11 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
 	"time"
+
+	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+
 )
 
 type CollectionController struct {
@@ -36,9 +38,9 @@ func (this *CollectionController) Add() {
 		this.jsonError("您已收藏过，不能重复收藏！")
 	}
 	insertCollection := map[string]interface{}{
-		"user_id": this.UserId,
+		"user_id":     this.UserId,
 		"resource_id": resourceId,
-		"type": colType,
+		"type":        colType,
 		"create_time": time.Now().Unix(),
 	}
 	collectId, err := models.CollectionModel.Insert(insertCollection)
@@ -47,7 +49,7 @@ func (this *CollectionController) Add() {
 		this.jsonError("添加收藏失败！")
 	}
 
-	this.InfoLog("添加收藏 "+utils.Convert.IntToString(collectId, 10)+" 成功")
+	this.InfoLog("添加收藏 " + utils.Convert.IntToString(collectId, 10) + " 成功")
 	this.jsonSuccess("收藏成功！", nil, redirect)
 }
 
@@ -65,7 +67,7 @@ func (this *CollectionController) Cancel() {
 
 	collection, err := models.CollectionModel.GetCollectionByCollectionId(collectionId)
 	if err != nil {
-		this.ErrorLog("取消收藏 "+collectionId+" 失败：" + err.Error())
+		this.ErrorLog("取消收藏 " + collectionId + " 失败：" + err.Error())
 		this.jsonError("取消收藏失败！")
 	}
 	if len(collection) == 0 {
@@ -77,10 +79,10 @@ func (this *CollectionController) Cancel() {
 
 	err = models.CollectionModel.Delete(collectionId)
 	if err != nil {
-		this.ErrorLog("取消收藏 "+collectionId+" 失败：" + err.Error())
+		this.ErrorLog("取消收藏 " + collectionId + " 失败：" + err.Error())
 		this.jsonError("取消收藏失败！")
 	}
 
-	this.InfoLog("取消收藏 "+collectionId+" 成功")
+	this.InfoLog("取消收藏 " + collectionId + " 成功")
 	this.jsonSuccess("已取消收藏！", nil, redirect)
 }

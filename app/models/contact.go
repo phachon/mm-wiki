@@ -1,8 +1,8 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 )
 
 const Table_Contact_Name = "contact"

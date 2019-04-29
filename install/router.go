@@ -1,19 +1,19 @@
 package main
 
 import (
-	"mm-wiki/install/controllers"
-	"net/http"
-	"mm-wiki/app/utils"
 	"github.com/astaxie/beego"
-	"path/filepath"
-	"os"
+	"mm-wiki/app/utils"
+	"mm-wiki/install/controllers"
 	"mm-wiki/install/storage"
+	"net/http"
+	"os"
+	"path/filepath"
 )
 
 func init() {
 
 	storage.InstallDir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	storage.RootDir =  filepath.Join(storage.InstallDir, "../")
+	storage.RootDir = filepath.Join(storage.InstallDir, "../")
 
 	beego.AppConfig.Set("sys.name", "mm-wiki-installer")
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")

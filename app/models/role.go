@@ -1,27 +1,26 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 	"time"
 )
 
 const (
-	Role_Delete_True = 1
+	Role_Delete_True  = 1
 	Role_Delete_False = 0
 
-	Role_Type_System = 1
+	Role_Type_System  = 1
 	Role_Type_Default = 0
 
-	Role_Root_Id = 1
-	Role_Admin_Id = 2
+	Role_Root_Id    = 1
+	Role_Admin_Id   = 2
 	Role_Default_Id = 3
 )
 
 const Table_Role_Name = "role"
 
 type Role struct {
-
 }
 
 var RoleModel = Role{}
@@ -47,7 +46,7 @@ func (r *Role) HasSameName(roleId, name string) (has bool, err error) {
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
 		"role_id <>": roleId,
-		"name":   name,
+		"name":       name,
 		"is_delete":  Role_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -64,7 +63,7 @@ func (r *Role) HasRoleName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name":      name,
 		"is_delete": Role_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -81,7 +80,7 @@ func (r *Role) GetRoleByName(name string) (role map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name":      name,
 		"is_delete": Role_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -95,7 +94,7 @@ func (r *Role) GetRoleByName(name string) (role map[string]string, err error) {
 func (r *Role) Delete(roleId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Role_Name, map[string]interface{}{
-		"is_delete": Role_Delete_True,
+		"is_delete":   Role_Delete_True,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"role_id": roleId,
@@ -109,8 +108,8 @@ func (r *Role) Delete(roleId string) (err error) {
 // insert role
 func (r *Role) Insert(roleValue map[string]interface{}) (id int64, err error) {
 
-	roleValue["create_time"] =  time.Now().Unix()
-	roleValue["update_time"] =  time.Now().Unix()
+	roleValue["create_time"] = time.Now().Unix()
+	roleValue["update_time"] = time.Now().Unix()
 	db := G.DB()
 	tx, err := db.Begin(db.Config)
 	if err != nil {
@@ -128,9 +127,9 @@ func (r *Role) Insert(roleValue map[string]interface{}) (id int64, err error) {
 	rolePrivileges := []map[string]interface{}{}
 	for _, privilegeId := range Privilege_Default_Ids {
 		rolePrivilege := map[string]interface{}{
-			"role_id": id,
+			"role_id":      id,
 			"privilege_id": privilegeId,
-			"create_time": time.Now().Unix(),
+			"create_time":  time.Now().Unix(),
 		}
 		rolePrivileges = append(rolePrivileges, rolePrivilege)
 	}
@@ -150,7 +149,7 @@ func (r *Role) Insert(roleValue map[string]interface{}) (id int64, err error) {
 func (r *Role) Update(roleId string, roleValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	roleValue["update_time"] =  time.Now().Unix()
+	roleValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Role_Name, roleValue, map[string]interface{}{
 		"role_id":   roleId,
 		"is_delete": Role_Delete_False,
@@ -169,7 +168,7 @@ func (r *Role) GetRolesByKeywordAndLimit(keyword string, limit int, number int) 
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
 		"name LIKE": "%" + keyword + "%",
-		"is_delete":     Role_Delete_False,
+		"is_delete": Role_Delete_False,
 	}).Limit(limit, number).OrderBy("role_id", "DESC"))
 	if err != nil {
 		return
@@ -290,7 +289,7 @@ func (r *Role) UpdateRoleByName(role map[string]interface{}) (affect int64, err 
 	var rs *mysql.ResultSet
 	role["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Role_Name, role, map[string]interface{}{
-		"name": role["name"],
+		"name":      role["name"],
 		"is_delete": Role_Delete_False,
 	}))
 	if err != nil {

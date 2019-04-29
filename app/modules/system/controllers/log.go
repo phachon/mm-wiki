@@ -29,7 +29,7 @@ func (this *LogController) System() {
 		logs, err = models.LogModel.GetLogsByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("查找系统日志出错："+err.Error())
+		this.ErrorLog("查找系统日志出错：" + err.Error())
 		this.ViewError("查找系统日志出错", "/system/main/index")
 	}
 
@@ -71,18 +71,18 @@ func (this *LogController) Document() {
 	if keyword != "" && userId != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdKeywordAndLimit(userId, keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserIdAndKeyword(userId, keyword)
-	}else if userId != "" {
+	} else if userId != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(userId, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserId(userId)
-	}else if keyword != "" {
+	} else if keyword != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByKeywordAndLimit(keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByKeyword(userId)
-	}else {
+	} else {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
 		count, err = models.LogDocumentModel.CountLogDocuments()
 	}
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 
@@ -94,12 +94,12 @@ func (this *LogController) Document() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	for _, logDocument := range logDocuments {
@@ -122,7 +122,7 @@ func (this *LogController) Document() {
 
 	users, err = models.UserModel.GetUsers()
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	this.Data["logDocuments"] = logDocuments

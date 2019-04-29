@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"strings"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
 	"fmt"
 	"github.com/astaxie/beego/validation"
+	"mm-wiki/app/models"
+	"mm-wiki/app/utils"
+	"strings"
 )
 
 type UserController struct {
@@ -16,7 +16,7 @@ func (this *UserController) Add() {
 
 	roles, err := models.RoleModel.GetRoles()
 	if err != nil {
-		this.ErrorLog("获取用户角色失败："+err.Error())
+		this.ErrorLog("获取用户角色失败：" + err.Error())
 		this.ViewError("获取用户角色失败！")
 	}
 	this.Data["roles"] = roles
@@ -73,16 +73,16 @@ func (this *UserController) Save() {
 		this.jsonError("电话格式不正确！")
 	}
 
-	ok , err := models.UserModel.HasUsername(username)
+	ok, err := models.UserModel.HasUsername(username)
 	if err != nil {
-		this.ErrorLog("添加用户失败："+err.Error())
+		this.ErrorLog("添加用户失败：" + err.Error())
 		this.jsonError("添加用户失败！")
 	}
 	if ok {
 		this.jsonError("用户名已经存在！")
 	}
 	userId, err := models.UserModel.Insert(map[string]interface{}{
-		"username": username,
+		"username":   username,
 		"given_name": givenName,
 		"password":   models.UserModel.EncodePassword(password),
 		"email":      email,
@@ -99,7 +99,7 @@ func (this *UserController) Save() {
 		this.ErrorLog("添加用户失败：" + err.Error())
 		this.jsonError("添加用户失败")
 	}
-	this.InfoLog("添加用户 "+utils.Convert.IntToString(userId, 10)+" 成功")
+	this.InfoLog("添加用户 " + utils.Convert.IntToString(userId, 10) + " 成功")
 	this.jsonSuccess("添加用户成功", nil, "/system/user/list")
 }
 
@@ -129,21 +129,21 @@ func (this *UserController) List() {
 		users, err = models.UserModel.GetUsersByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ErrorLog("获取用户列表失败: " + err.Error())
 		this.ViewError("获取用户列表失败", "/system/main/index")
 	}
 
 	var roleIds = []string{}
 	if roleId != "" {
 		roleIds = append(roleIds, roleId)
-	}else {
+	} else {
 		for _, user := range users {
 			roleIds = append(roleIds, user["role_id"])
 		}
 	}
 	roles, err := models.RoleModel.GetRoleByRoleIds(roleIds)
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ErrorLog("获取用户列表失败: " + err.Error())
 		this.ViewError("获取用户列表失败!", "/system/main/index")
 	}
 	var roleUsers = []map[string]string{}
@@ -160,7 +160,7 @@ func (this *UserController) List() {
 
 	allRoles, err := models.RoleModel.GetRoles()
 	if err != nil {
-		this.ErrorLog("获取用户列表失败: "+err.Error())
+		this.ErrorLog("获取用户列表失败: " + err.Error())
 		this.ViewError("获取用户列表失败！", "/system/main/index")
 	}
 	this.Data["users"] = roleUsers
@@ -180,7 +180,7 @@ func (this *UserController) Edit() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("查找用户出错："+err.Error())
+		this.ErrorLog("查找用户出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/system/user/list")
 	}
 	if len(user) == 0 {
@@ -189,7 +189,7 @@ func (this *UserController) Edit() {
 
 	roles, err := models.RoleModel.GetRoles()
 	if err != nil {
-		this.ErrorLog("获取用户角色失败："+err.Error())
+		this.ErrorLog("获取用户角色失败：" + err.Error())
 		this.ViewError("获取用户角色失败！")
 	}
 
@@ -239,7 +239,7 @@ func (this *UserController) Modify() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("修改用户 "+userId+" 失败："+err.Error())
+		this.ErrorLog("修改用户 " + userId + " 失败：" + err.Error())
 		this.ViewError("修改用户出错！", "/system/user/list")
 	}
 	if len(user) == 0 {
@@ -262,10 +262,10 @@ func (this *UserController) Modify() {
 	})
 
 	if err != nil {
-		this.ErrorLog("修改用户 "+userId+" 失败：" + err.Error())
+		this.ErrorLog("修改用户 " + userId + " 失败：" + err.Error())
 		this.jsonError("修改用户失败")
 	}
-	this.InfoLog("修改用户 "+userId+" 成功")
+	this.InfoLog("修改用户 " + userId + " 成功")
 	this.jsonSuccess("修改用户成功", nil, "/system/user/list")
 }
 
@@ -281,7 +281,7 @@ func (this *UserController) Forbidden() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("屏蔽用户 " + userId + " 失败: " + err.Error())
 		this.jsonError("屏蔽用户失败")
 	}
 	if len(user) == 0 {
@@ -294,11 +294,11 @@ func (this *UserController) Forbidden() {
 		"is_forbidden": models.User_Forbidden_True,
 	})
 	if err != nil {
-		this.ErrorLog("屏蔽用户 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("屏蔽用户 " + userId + " 失败: " + err.Error())
 		this.jsonError("屏蔽用户失败")
 	}
 
-	this.InfoLog("屏蔽用户 "+userId+" 成功")
+	this.InfoLog("屏蔽用户 " + userId + " 成功")
 	this.jsonSuccess("屏蔽用户成功", nil, "/system/user/list")
 }
 
@@ -314,7 +314,7 @@ func (this *UserController) Recover() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("恢复用户 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("恢复用户 " + userId + " 失败: " + err.Error())
 		this.jsonError("恢复用户失败")
 	}
 	if len(user) == 0 {
@@ -327,11 +327,11 @@ func (this *UserController) Recover() {
 		"is_forbidden": models.User_Is_Forbidden_False,
 	})
 	if err != nil {
-		this.ErrorLog("恢复用户 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("恢复用户 " + userId + " 失败: " + err.Error())
 		this.jsonError("恢复用户失败")
 	}
 
-	this.InfoLog("恢复用户 "+userId+" 成功")
+	this.InfoLog("恢复用户 " + userId + " 成功")
 	this.jsonSuccess("恢复用户成功", nil, "/system/user/list")
 }
 
@@ -344,7 +344,7 @@ func (this *UserController) Info() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("查找用户出错："+err.Error())
+		this.ErrorLog("查找用户出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/system/user/list")
 	}
 	if len(user) == 0 {
@@ -352,7 +352,7 @@ func (this *UserController) Info() {
 	}
 	role, err := models.RoleModel.GetRoleByRoleId(user["role_id"])
 	if err != nil {
-		this.ErrorLog("查找用户角色出错："+err.Error())
+		this.ErrorLog("查找用户角色出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/system/user/list")
 	}
 	this.Data["user"] = user

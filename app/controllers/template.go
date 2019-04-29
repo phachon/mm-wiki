@@ -2,21 +2,24 @@ package controllers
 
 import (
 	"encoding/json"
-	"strings"
-	"github.com/astaxie/beego"
-	"mm-wiki/app/utils"
-	"time"
-	"mm-wiki/app/models"
-	"mm-wiki/app"
 	"fmt"
+	"strings"
+	"time"
+
+	"mm-wiki/app"
+	"mm-wiki/app/models"
+	"mm-wiki/app/utils"
+
+	"github.com/astaxie/beego"
+
 )
 
 type TemplateController struct {
 	beego.Controller
-	UserId string
-	User   map[string]string
+	UserId         string
+	User           map[string]string
 	controllerName string
-	actionName string
+	actionName     string
 }
 
 type JsonResponse struct {
@@ -41,7 +44,7 @@ func (this *TemplateController) Prepare() {
 	if !this.isLogin() {
 		if this.IsAjax() {
 			this.JsonError("未登录或登录已失效！", nil, "/author/index")
-		}else {
+		} else {
 			this.Redirect("/author/index", 302)
 		}
 		this.StopRun()
@@ -50,7 +53,7 @@ func (this *TemplateController) Prepare() {
 	if !this.checkAccess() {
 		if this.IsPost() {
 			this.JsonError("抱歉，您没有权限操作！", nil, "/system/main/index")
-		}else {
+		} else {
 			this.ViewError("您没有权限访问该页面！", "/system/main/index")
 		}
 		this.StopRun()
@@ -95,7 +98,7 @@ func (this *TemplateController) isLogin() bool {
 	// flush session
 	newUser, err := models.UserModel.GetUserByUserId(userValue["user_id"])
 	if err != nil {
-		this.ErrorLog("登录成功 flush session 失败："+err.Error())
+		this.ErrorLog("登录成功 flush session 失败：" + err.Error())
 		return false
 	}
 	// flush session
@@ -127,7 +130,7 @@ func (this *TemplateController) checkAccess() bool {
 		}
 		_, controllers, err := models.PrivilegeModel.GetTypePrivilegesByUserId(this.UserId)
 		if err != nil {
-			this.ErrorLog("获取用户 "+this.UserId+" 权限失败："+err.Error())
+			this.ErrorLog("获取用户 " + this.UserId + " 权限失败：" + err.Error())
 			return false
 		}
 		for _, controller := range controllers {
@@ -151,7 +154,7 @@ func (this *TemplateController) ViewLayout(viewName, layout string) {
 }
 
 // view layout
-func (this *TemplateController) ViewError(content string, redirect... string) {
+func (this *TemplateController) ViewError(content string, redirect ...string) {
 	this.Layout = "error/default.html"
 	this.TplName = "layouts/default.html"
 	var url = ""
@@ -268,11 +271,11 @@ func (this *TemplateController) GetDocumentPrivilege(space map[string]string) (i
 	if this.IsRoot() {
 		return true, true, true
 	}
-	spaceUser, _  := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(space["space_id"], this.UserId)
+	spaceUser, _ := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(space["space_id"], this.UserId)
 	if len(spaceUser) == 0 {
 		if space["visit_level"] == models.Space_VisitLevel_Private {
 			return false, false, false
-		}else {
+		} else {
 			return true, false, false
 		}
 	}
@@ -297,35 +300,35 @@ func (this *TemplateController) RecordLog(message string, level int) {
 	user := this.GetSession("author").(map[string]string)
 
 	logValue := map[string]interface{}{
-		"level": level,
-		"path": path,
-		"get": getParams,
-		"post": string(postParams),
-		"message": message,
-		"ip": this.GetClientIp(),
-		"user_agent": userAgent,
-		"referer": referer,
-		"user_id": user["user_id"],
-		"username": user["username"],
+		"level":       level,
+		"path":        path,
+		"get":         getParams,
+		"post":        string(postParams),
+		"message":     message,
+		"ip":          this.GetClientIp(),
+		"user_agent":  userAgent,
+		"referer":     referer,
+		"user_id":     user["user_id"],
+		"username":    user["username"],
 		"create_time": time.Now().Unix(),
 	}
 
 	models.LogModel.Insert(logValue)
 }
 
-func (this *TemplateController) ErrorLog(message string)  {
+func (this *TemplateController) ErrorLog(message string) {
 	this.RecordLog(message, models.Log_Level_Error)
 }
 
-func (this *TemplateController) WarningLog(message string)  {
+func (this *TemplateController) WarningLog(message string) {
 	this.RecordLog(message, models.Log_Level_Warning)
 }
 
-func (this *TemplateController) InfoLog(message string)  {
+func (this *TemplateController) InfoLog(message string) {
 	this.RecordLog(message, models.Log_Level_Info)
 }
 
-func (this *TemplateController) DebugLog(message string)  {
+func (this *TemplateController) DebugLog(message string) {
 	this.RecordLog(message, models.Log_Level_Debug)
 }
 
@@ -339,16 +342,16 @@ func (this *TemplateController) GetLogInfoByCtx() map[string]interface{} {
 	postParams, _ := json.Marshal(postParamsMap)
 	user := this.GetSession("author").(map[string]string)
 	logValue := map[string]interface{}{
-		"level": models.Log_Level_Info,
-		"path": path,
-		"get": getParams,
-		"post": string(postParams),
-		"message": "",
-		"ip": this.GetClientIp(),
-		"user_agent": userAgent,
-		"referer": referer,
-		"user_id": user["user_id"],
-		"username": user["username"],
+		"level":       models.Log_Level_Info,
+		"path":        path,
+		"get":         getParams,
+		"post":        string(postParams),
+		"message":     "",
+		"ip":          this.GetClientIp(),
+		"user_agent":  userAgent,
+		"referer":     referer,
+		"user_id":     user["user_id"],
+		"username":    user["username"],
 		"create_time": time.Now().Unix(),
 	}
 	return logValue

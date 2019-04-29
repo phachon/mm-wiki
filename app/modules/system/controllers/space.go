@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"strings"
+	"fmt"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
-	"fmt"
-	"regexp"
 	"os"
+	"regexp"
+	"strings"
 )
 
 type SpaceController struct {
@@ -41,7 +41,7 @@ func (this *SpaceController) Save() {
 	}
 	ok, err := models.SpaceModel.HasSpaceName(name)
 	if err != nil {
-		this.ErrorLog("添加空间失败："+err.Error())
+		this.ErrorLog("添加空间失败：" + err.Error())
 		this.jsonError("添加空间失败！")
 	}
 	if ok {
@@ -50,12 +50,12 @@ func (this *SpaceController) Save() {
 
 	// create space database
 	spaceId, err := models.SpaceModel.Insert(map[string]interface{}{
-		"name": name,
+		"name":        name,
 		"description": description,
-		"tags": tags,
+		"tags":        tags,
 		"visit_level": strings.ToLower(visitLevel),
-		"is_share": isShare,
-		"is_export": isExport,
+		"is_share":    isShare,
+		"is_export":   isExport,
 	})
 	if err != nil {
 		this.ErrorLog("添加空间失败：" + err.Error())
@@ -64,26 +64,26 @@ func (this *SpaceController) Save() {
 
 	// create space document
 	spaceDocument := map[string]interface{}{
-		"space_id": fmt.Sprintf("%d", spaceId),
-		"parent_id": "0",
-		"name": name,
-		"type": models.Document_Type_Dir,
-		"path": "0",
+		"space_id":       fmt.Sprintf("%d", spaceId),
+		"parent_id":      "0",
+		"name":           name,
+		"type":           models.Document_Type_Dir,
+		"path":           "0",
 		"create_user_id": this.UserId,
-		"edit_user_id": this.UserId,
+		"edit_user_id":   this.UserId,
 	}
 	_, err = models.DocumentModel.Insert(spaceDocument)
 	if err != nil {
 		// delete space
 		models.SpaceModel.Delete(fmt.Sprintf("%d", spaceId))
-		this.ErrorLog("添加空间文档失败："+err.Error())
+		this.ErrorLog("添加空间文档失败：" + err.Error())
 		this.jsonError("添加空间失败！")
 	}
 
 	// add space member
 	insertValue := map[string]interface{}{
-		"user_id": this.UserId,
-		"space_id": spaceId,
+		"user_id":   this.UserId,
+		"space_id":  spaceId,
 		"privilege": models.SpaceUser_Privilege_Manager,
 	}
 	_, err = models.SpaceUserModel.Insert(insertValue)
@@ -94,7 +94,7 @@ func (this *SpaceController) Save() {
 		this.jsonError("添加空间失败！")
 	}
 
-	this.InfoLog("添加空间 "+utils.Convert.IntToString(spaceId, 10)+" 成功")
+	this.InfoLog("添加空间 " + utils.Convert.IntToString(spaceId, 10) + " 成功")
 	this.jsonSuccess("添加空间成功", nil, "/system/space/list")
 }
 
@@ -116,7 +116,7 @@ func (this *SpaceController) List() {
 		spaces, err = models.SpaceModel.GetSpacesByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取空间列表失败: "+err.Error())
+		this.ErrorLog("获取空间列表失败: " + err.Error())
 		this.ViewError("获取空间列表失败", "/system/main/index")
 	}
 
@@ -135,7 +135,7 @@ func (this *SpaceController) Edit() {
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("查找空间失败: "+err.Error())
+		this.ErrorLog("查找空间失败: " + err.Error())
 		this.ViewError("查找空间失败", "/system/space/list")
 	}
 	if len(space) == 0 {
@@ -175,31 +175,31 @@ func (this *SpaceController) Modify() {
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("修改空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("修改空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("修改空间失败！")
 	}
 	if len(space) == 0 {
 		this.jsonError("空间不存在！")
 	}
 
-	ok , _ := models.SpaceModel.HasSameName(spaceId, name)
+	ok, _ := models.SpaceModel.HasSameName(spaceId, name)
 	if ok {
 		this.jsonError("空间名已经存在！")
 	}
 	_, err = models.SpaceModel.Update(spaceId, map[string]interface{}{
-		"name": name,
+		"name":        name,
 		"description": description,
-		"tags": tags,
+		"tags":        tags,
 		"visit_level": visitLevel,
-		"is_share": isShare,
-		"is_export": isExport,
+		"is_share":    isShare,
+		"is_export":   isExport,
 	})
 
 	if err != nil {
-		this.ErrorLog("修改空间 "+spaceId+" 失败：" + err.Error())
+		this.ErrorLog("修改空间 " + spaceId + " 失败：" + err.Error())
 		this.jsonError("修改空间失败")
 	}
-	this.InfoLog("修改空间 "+spaceId+" 成功")
+	this.InfoLog("修改空间 " + spaceId + " 成功")
 	this.jsonSuccess("修改空间成功", nil, "/system/space/list")
 }
 
@@ -217,12 +217,12 @@ func (this *SpaceController) Member() {
 
 	count, err := models.SpaceUserModel.CountSpaceUsersBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/space/list")
 	}
 	spaceUsers, err := models.SpaceUserModel.GetSpaceUsersBySpaceIdAndLimit(spaceId, limit, number)
 	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/space/list")
 	}
 
@@ -232,7 +232,7 @@ func (this *SpaceController) Member() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/main/index")
 	}
 	for _, user := range users {
@@ -247,11 +247,11 @@ func (this *SpaceController) Member() {
 	var otherUsers = []map[string]string{}
 	if len(userIds) > 0 {
 		otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)
-	}else {
+	} else {
 		otherUsers, err = models.UserModel.GetUsers()
 	}
 	if err != nil {
-		this.ErrorLog("获取空间 "+spaceId+" 成员列表失败: "+err.Error())
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
 		this.ViewError("获取空间成员列表失败！", "/system/main/index")
 	}
 
@@ -274,7 +274,7 @@ func (this *SpaceController) Delete() {
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("删除空间失败")
 	}
 	if len(space) == 0 {
@@ -284,46 +284,46 @@ func (this *SpaceController) Delete() {
 	// check space documents
 	documents, err := models.DocumentModel.GetDocumentsBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("删除空间失败")
 	}
 	if len(documents) > 1 {
 		this.jsonError("不能删除空间，请先删除该空间下文档!")
-	}else if len(documents) == 1 {
+	} else if len(documents) == 1 {
 		if documents[0]["name"] != space["name"] {
 			this.jsonError("不能删除空间，请先删除该空间下文档!")
-		}else {
+		} else {
 			// delete space dir and documentId
 			_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(documents[0])
 			if err != nil {
-				this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+				this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 				this.jsonError("删除空间失败")
 			}
 			err = models.DocumentModel.DeleteDBAndFile(documents[0]["document_id"], this.UserId, pageFile, fmt.Sprintf("%d", models.Document_Type_Dir))
 		}
-	}else {
+	} else {
 		// delete space dir
 		err = utils.Document.DeleteSpace(space["name"])
 	}
 	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("删除空间失败")
 	}
 
 	// delete space user
 	err = models.SpaceUserModel.DeleteBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("删除空间失败")
 	}
 	// delete space and space document
 	err = models.SpaceModel.Delete(spaceId)
 	if err != nil {
-		this.ErrorLog("删除空间 "+spaceId+" 失败: "+err.Error())
+		this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
 		this.jsonError("删除空间失败")
 	}
 
-	this.InfoLog("删除空间 "+spaceId+" 成功")
+	this.InfoLog("删除空间 " + spaceId + " 成功")
 	this.jsonSuccess("删除空间成功", nil, "/system/space/list")
 }
 
@@ -336,7 +336,7 @@ func (this *SpaceController) Download() {
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("查找空间失败: "+err.Error())
+		this.ErrorLog("查找空间失败: " + err.Error())
 		this.ViewError("查找空间失败", "/system/space/list")
 	}
 	if len(space) == 0 {
@@ -348,21 +348,21 @@ func (this *SpaceController) Download() {
 
 	f3, err := os.Open(spacePath)
 	if err != nil {
-		this.ErrorLog("下载空间 "+spaceId+" 打开空间目录失败："+err.Error())
+		this.ErrorLog("下载空间 " + spaceId + " 打开空间目录失败：" + err.Error())
 		this.ViewError("下载空间文档失败")
 	}
 	defer f3.Close()
 	var files = []*os.File{f3}
 
-	tempDir := os.TempDir()+"/"+"mmwiki"
+	tempDir := os.TempDir() + "/" + "mmwiki"
 	os.RemoveAll(tempDir)
 	os.Mkdir(tempDir, 0777)
-	var dest = tempDir+"/"+spaceName+".zip"
+	var dest = tempDir + "/" + spaceName + ".zip"
 
 	fmt.Println(dest)
 	err = utils.Zipx.Compress(files, dest)
 	if err != nil {
-		this.ErrorLog("下载空间 "+spaceId+" 压缩文档失败："+err.Error())
+		this.ErrorLog("下载空间 " + spaceId + " 压缩文档失败：" + err.Error())
 		this.ViewError("空间文档压缩失败")
 	}
 
