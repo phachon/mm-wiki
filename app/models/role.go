@@ -215,6 +215,23 @@ func (r *Role) GetRoles() (roles []map[string]string, err error) {
 	return
 }
 
+// get all roles not contain root
+func (r *Role) GetRolesNotContainRoot() (roles []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Role_Name).Where(map[string]interface{}{
+			"role_id !=": Role_Root_Id,
+			"is_delete": Role_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	roles = rs.Rows()
+	return
+}
+
 // get role count
 func (r *Role) CountRoles() (count int64, err error) {
 

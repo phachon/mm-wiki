@@ -14,7 +14,14 @@ type UserController struct {
 
 func (this *UserController) Add() {
 
-	roles, err := models.RoleModel.GetRoles()
+	roles := []map[string]string{}
+	var err error
+
+	if this.IsRoot() {
+		roles, err = models.RoleModel.GetRoles()
+	} else {
+		roles, err = models.RoleModel.GetRolesNotContainRoot()
+	}
 	if err != nil {
 		this.ErrorLog("获取用户角色失败：" + err.Error())
 		this.ViewError("获取用户角色失败！")
@@ -81,6 +88,11 @@ func (this *UserController) Save() {
 	if ok {
 		this.jsonError("用户名已经存在！")
 	}
+
+	if !this.IsRoot() && roleId == fmt.Sprintf("%d", models.Role_Root_Id) {
+		this.jsonError("没有权限添加超级管理员！")
+	}
+
 	userId, err := models.UserModel.Insert(map[string]interface{}{
 		"username":   username,
 		"given_name": givenName,
@@ -187,7 +199,12 @@ func (this *UserController) Edit() {
 		this.ViewError("用户不存在！", "/system/user/list")
 	}
 
-	roles, err := models.RoleModel.GetRoles()
+	roles := []map[string]string{}
+	if this.IsRoot() {
+		roles, err = models.RoleModel.GetRoles()
+	} else {
+		roles, err = models.RoleModel.GetRolesNotContainRoot()
+	}
 	if err != nil {
 		this.ErrorLog("获取用户角色失败：" + err.Error())
 		this.ViewError("获取用户角色失败！")
