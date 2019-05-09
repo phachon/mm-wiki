@@ -36,6 +36,7 @@ func (this *TemplateController) Prepare() {
 	this.actionName = strings.ToLower(action)
 	this.Data["navName"] = this.controllerName
 	this.Data["version"] = app.Version
+	this.Data["copyright"] = app.CopyRight
 
 	if this.controllerName == "author" {
 		return
@@ -150,6 +151,7 @@ func (this *TemplateController) ViewLayout(viewName, layout string) {
 	this.Layout = layout + ".html"
 	this.TplName = viewName + ".html"
 	this.Data["title"] = "MM-Wiki"
+	this.Data["copyright"] = app.CopyRight
 	this.Render()
 }
 
@@ -171,6 +173,7 @@ func (this *TemplateController) ViewError(content string, redirect ...string) {
 	this.Data["content"] = content
 	this.Data["url"] = url
 	this.Data["sleep"] = sleep
+	this.Data["copyright"] = app.CopyRight
 	this.Render()
 }
 

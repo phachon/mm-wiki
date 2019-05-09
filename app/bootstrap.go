@@ -29,6 +29,8 @@ var (
 var (
 	Version = "v0.1.3"
 
+	CopyRight = beego.Str2html("2018 - 2019 phachon")
+
 	StartTime = int64(0)
 
 	RootDir = ""

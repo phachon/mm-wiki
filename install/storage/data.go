@@ -15,11 +15,20 @@ import (
 	"time"
 )
 
-var Data = NewData()
-var Version string
-var installChan = make(chan int, 1)
-var InstallDir string
-var RootDir string
+var (
+	Data = NewData()
+
+	Version string = ""
+
+	installChan = make(chan int, 1)
+
+	InstallDir string = ""
+
+	RootDir string = ""
+
+	CopyRight string = "2018 - 2019 phachon"
+)
+
 
 const License_Disagree = 0 // 协议不同意
 const License_Agree = 1    // 协议同意
