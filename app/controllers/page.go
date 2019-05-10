@@ -314,8 +314,8 @@ func (this *PageController) Display() {
 	}
 
 	// check space is allow display
-	if space["is_share"] == fmt.Sprintf("%d", models.Space_Share_False) {
-		this.ViewError("该文档未被分享！")
+	if space["is_share"] != fmt.Sprintf("%d", models.Space_Share_True) {
+		this.ViewError("该文档不能被分享！")
 	}
 
 	// get parent documents by document
@@ -395,6 +395,11 @@ func (this *PageController) Export() {
 	isVisit, _, _ := this.GetDocumentPrivilege(space)
 	if !isVisit {
 		this.jsonError("您没有权限导出该空间下文档！")
+	}
+
+	// check space is allow export
+	if space["is_export"] != fmt.Sprintf("%d", models.Space_Download_True) {
+		this.ViewError("该文档不允许被导出！")
 	}
 
 	// get parent documents by document
