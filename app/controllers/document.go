@@ -97,7 +97,7 @@ func (this *DocumentController) Add() {
 	// check space document privilege
 	_, isEditor, _ := this.GetDocumentPrivilege(space)
 	if !isEditor {
-		this.ViewError("您没有权限创建该空间下的文档！")
+		this.ViewError("您没有权限在该空间下创建文档！")
 	}
 
 	parentDocument, err := models.DocumentModel.GetDocumentByDocumentId(parentId)

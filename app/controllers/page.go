@@ -172,7 +172,7 @@ func (this *PageController) Edit() {
 	this.viewLayout("page/edit", "document_page")
 }
 
-// page edit
+// page modify
 func (this *PageController) Modify() {
 
 	if !this.IsPost() {
@@ -300,6 +300,22 @@ func (this *PageController) Display() {
 	}
 	if len(document) == 0 {
 		this.ViewError("文档不存在！")
+	}
+
+	// get document space
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("分享文档 " + documentId + " 失败：" + err.Error())
+		this.ViewError("保存文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+
+	// check space is allow display
+	if space["is_share"] == fmt.Sprintf("%d", models.Space_Share_False) {
+		this.ViewError("该文档未被分享！")
 	}
 
 	// get parent documents by document
