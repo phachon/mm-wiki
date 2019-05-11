@@ -1,28 +1,25 @@
-<div class="container-fluid">
+<div class="container-fluid" style="height: 100%">
+    <form id="page_form" action="/page/modify" method="post" style="height: 98%" onsubmit="return false">
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <form id="page_form" action="/page/modify" method="post">
-                <div class="panel-body" style="padding: 10px">
-                        <input type="hidden" name="document_id" value="{{$document.document_id}}">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}" {{if eq $document.parent_id "0"}} readonly="readonly" {{end}}>
-                        </div>
-                        <div class="col-md-2 text-center" >
-                            <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form, {{.sendEmail}}, {{.autoFollowDoc}})"><i class="fa fa-save"></i> 保存</button>
-                            <button type="button" class="btn btn-default" onclick="Page.cancelSave('确定要放弃此次修改吗?', '/document/index?document_id={{$document.document_id}}')"><i class="fa fa-mail-reply"></i> 取消</button>
-                        </div>
-                    </div>
+            <input type="hidden" name="document_id" value="{{$document.document_id}}">
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}" {{if eq $document.parent_id "0"}} readonly="readonly" {{end}}>
                 </div>
-                <div id="document_page_editor"></div>
-                </form>
-                <div class="panel-footer">
-                    <div class="text-right"><span class="text-info">最后修改时间：{{dateFormat $document.update_time "Y-m-d H:i:s"}}</span></div>
+                <div class="col-md-2 text-center" >
+                    <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form, {{.sendEmail}}, {{.autoFollowDoc}})"><i class="fa fa-save"></i> 保存</button>
+                    <button type="button" class="btn btn-default" onclick="Page.cancelSave('确定要放弃此次修改吗?', '/document/index?document_id={{$document.document_id}}')"><i class="fa fa-mail-reply"></i> 取消</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row" style="height: 98%; padding-top: 8px">
+        <div class="col-md-12" style="height: 98%">
+            <div id="document_page_editor" style="height: 98%"></div>
+        </div>
+    </div>
+    </form>
 </div>
 <script type="text/javascript">
     if(parent.layoutClose) {
@@ -36,7 +33,7 @@
         };
         var editor = editormd("document_page_editor", {
             width: "100%",
-            height: 500,
+            // height: height,
             path : '/static/plugins/editor.md/lib/',
             toolbarIcons : function() {
                 // Using "||" set icons align right.
@@ -60,6 +57,7 @@
             editorTheme : "default",
             markdown : {{$pageContent}},
             codeFold : true,
+            placeholder: "欢迎使用 MM-Wiki，请使用 Markdown 规范编写！",
             //syncScrolling : false,
             saveHTMLToTextarea: false,    // 保存 HTML 到 Textarea
             searchReplace: true,

@@ -446,3 +446,13 @@ ul.countdown li p {
 .view-page-time {
     font-size: 12px;
 }
+
+
+/**
+ * .editormd
+ */
+
+.editormd {
+    border-radius: 4px;
+    border-bottom: 0;
+}
