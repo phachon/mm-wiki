@@ -98,6 +98,11 @@ var Common = {
 		$(element).show();
 	},
 
+	/**
+	 * 时间格式化
+	 * @param s
+	 * @returns {{s: (string|*), d: (string|*), h: (string|*), m: (string|*)}}
+	 */
     secondsFormat: function (s) {
 		var day = Math.floor( s/ (24*3600) ); // Math.floor()向下取整
 		var hour = Math.floor( (s - day*24*3600) / 3600);
@@ -122,5 +127,27 @@ var Common = {
 		};
 
 		return timeRes
+	},
+
+	/**
+	 * 判断是否是移动端
+	 * @returns {boolean}
+	 * @constructor
+	 */
+	isMobile: function() {
+		var sUserAgent = navigator.userAgent.toLowerCase();
+		var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+		var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+		var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+		var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+		var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+		var bIsAndroid = sUserAgent.match(/android/i) == "android";
+		var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+		var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+		if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 };

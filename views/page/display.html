@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1" id="display_section">
             <div class="share-popup center">
                 <label> 分享到 <i class="fa fa-wechat"></i> <i class="fa fa-qq"></i></label>
                 <div id="document-qrcode"></div>
@@ -45,6 +45,10 @@
 </div>
 <script type="text/javascript">
     $(function() {
+        if (Common.isMobile()) {
+            $("#display_section").hide()
+        }
+
         editormd.katexURL = {
             js  : "/static/plugins/editor.md/lib/katex/katex.min",
             css : "/static/plugins/editor.md/lib/katex/katex.min"
