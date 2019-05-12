@@ -1,72 +1,67 @@
 <div class="container-fluid">
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}{{$parentDocuments := .parent_documents}}
-        <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}{{$collectionId := .collection_id}}
-            <div class="panel panel-default">{{$space := .space}}
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h3 class="view-page-title">{{$document.name}}</h3>
-                            <p class="view-page-path">
-                                <i class="fa fa-folder fa-fw"></i>
-                                {{range $parentDocument := $parentDocuments}}
+        <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}{{$collectionId := .collection_id}}{{$space := .space}}
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="view-page-title">{{$document.name}}</h3>
+                        <p class="view-page-path">
+                            <i class="fa fa-folder fa-fw"></i>
+                            {{range $parentDocument := $parentDocuments}}
                                 {{if eq $parentDocument.parent_id "0"}}
                                     <strong><a class="text text-info" target="_parent" href="/document/index?document_id={{$parentDocument.document_id}}">{{$parentDocument.name}}</a></strong>
                                 {{else}}
                                     <strong> / <a target="_parent" href="/document/index?document_id={{$parentDocument.document_id}}">{{$parentDocument.name}}</a></strong>
                                 {{end}}
-                                {{end}}
-                            </p>
-                            <p class="view-page-time">
-                                <i class="fa fa-calendar fa-fw"></i>
-                                被
-                                {{if eq $createUser.user_id $.login_user_id}}
-                                    <a class="text text-info" href="/system/main/index" target="_parent">{{$createUser.username}}（{{$createUser.given_name}}）</a>
-                                {{else}}
-                                    <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}}（{{$createUser.given_name}}） </a>
-                                {{end}}
-                                创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ， 被
-                                {{if eq $editUser.user_id $.login_user_id}}
-                                    <a class="text text-info" href="/system/main/index" target="_parent">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
-                                {{else}}
-                                    <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
-                                {{end}}
-                                最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
-                                <a name="history" data-link="/document/history?document_id={{$document.document_id}}">(查看修改历史)</a>
-                            </p>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <div class="btn-group" role="group" aria-label="...">
-                                {{if eq .is_editor true}}
-                                    <a type="button" class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
-                                {{end}}
-                                {{if eq $collectionId "0"}}
-                                    <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
-                                {{else}}
-                                    <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
-                                {{end}}
-                                {{if eq $space.is_share "1"}}
-                                    <a type="button" class="btn btn-default" name="share" href="/page/display?document_id={{$document.document_id}}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</a>
-                                {{end}}
-                                {{if eq $space.is_export "1"}}
-                                    <button type="button" class="btn btn-default" data-toggle="web-popover" data-placement="bottom"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
-                                    <div class="webui-popover-content">
-                                        <ul class="dropdown-menu webui-popover-menu">
-                                            <li><a href="/page/export?document_id={{$document.document_id}}&output=markdown"><span class="fa fa-file-text"></span> Markdown</a></li>
-                                        </ul>
-                                    </div>
-                                {{end}}
-                            </div>
+                            {{end}}
+                        </p>
+                        <p class="view-page-time">
+                            <i class="fa fa-calendar fa-fw"></i>
+                            被
+                            {{if eq $createUser.user_id $.login_user_id}}
+                                <a class="text text-info" href="/system/main/index" target="_parent">{{$createUser.username}}（{{$createUser.given_name}}）</a>
+                            {{else}}
+                                <a class="text text-info" href="/user/info?user_id={{$createUser.user_id}}"> {{$createUser.username}}（{{$createUser.given_name}}） </a>
+                            {{end}}
+                            创建于 {{dateFormat $document.create_time "Y/m/d H:i:s"}} ， 被
+                            {{if eq $editUser.user_id $.login_user_id}}
+                                <a class="text text-info" href="/system/main/index" target="_parent">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
+                            {{else}}
+                                <a class="text text-info" href="/user/info?user_id={{$editUser.user_id}}">{{$editUser.username}}（{{$editUser.given_name}}）<span class="text text-primary"></span> </a>
+                            {{end}}
+                            最后更新于 {{dateFormat $document.update_time "Y/m/d H:i:s"}}
+                            <a name="history" data-link="/document/history?document_id={{$document.document_id}}">(查看修改历史)</a>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <div class="btn-group" role="group" aria-label="...">
+                            {{if eq .is_editor true}}
+                                <a type="button" class="btn btn-default" href="/page/edit?document_id={{$document.document_id}}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>
+                            {{end}}
+                            {{if eq $collectionId "0"}}
+                                <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/add?type=1&resource_id={{$document.document_id}}')"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;收藏</a>
+                            {{else}}
+                                <a type="button" class="btn btn-default" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$collectionId}}')"><i class="glyphicon glyphicon-star"></i>&nbsp;取消</a>
+                            {{end}}
+                            {{if eq $space.is_share "1"}}
+                                <a type="button" class="btn btn-default" name="share" href="/page/display?document_id={{$document.document_id}}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i>&nbsp;分享</a>
+                            {{end}}
+                            {{if eq $space.is_export "1"}}
+                                <button type="button" class="btn btn-default" data-toggle="web-popover" data-placement="bottom"><i class="glyphicon glyphicon-export"></i>&nbsp;导出</button>
+                                <div class="webui-popover-content">
+                                    <ul class="dropdown-menu webui-popover-menu">
+                                        <li><a href="/page/export?document_id={{$document.document_id}}&output=markdown"><span class="fa fa-file-text"></span> Markdown</a></li>
+                                    </ul>
+                                </div>
+                            {{end}}
                         </div>
                     </div>
-                    <hr style="margin: 0">
                 </div>
-                <div class="panel-body">
-                    <div id="document_page_view">
-                        <textarea style="display:none;">{{$pageContent}}</textarea>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="text-right"><span class="text-info">最后修改时间：{{dateFormat $document.update_time "Y-m-d H:i:s"}}</span></div>
+                <hr style="margin: 0">
+            </div>
+            <div class="panel-body">
+                <div id="document_page_view">
+                    <textarea style="display:none;">{{$pageContent}}</textarea>
                 </div>
             </div>
         </div>

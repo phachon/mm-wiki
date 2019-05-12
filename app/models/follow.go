@@ -1,20 +1,19 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 	"time"
 )
 
 const (
-	Follow_Type_Doc = 1
+	Follow_Type_Doc  = 1
 	Follow_Type_User = 2
 )
 
 const Table_Follow_Name = "follow"
 
 type Follow struct {
-
 }
 
 var FollowModel = Follow{}
@@ -24,7 +23,7 @@ func (f *Follow) GetFollowByFollowId(followId string) (follow map[string]string,
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"follow_id":   followId,
+		"follow_id": followId,
 	}))
 	if err != nil {
 		return
@@ -38,8 +37,8 @@ func (f *Follow) GetFollowsByUserIdAndType(userId string, followType int) (follo
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"user_id":  userId,
-		"type":  followType,
+		"user_id": userId,
+		"type":    followType,
 	}))
 	if err != nil {
 		return
@@ -53,8 +52,8 @@ func (f *Follow) GetFollowsByUserIdTypeAndLimit(userId string, followType int, l
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"user_id":  userId,
-		"type":  followType,
+		"user_id": userId,
+		"type":    followType,
 	}).Limit(limit, number).OrderBy("follow_id", "DESC"))
 	if err != nil {
 		return
@@ -68,8 +67,8 @@ func (f *Follow) GetFollowsByObjectIdAndType(objectId string, followType int) (f
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"object_id":  objectId,
-		"type":  followType,
+		"object_id": objectId,
+		"type":      followType,
 	}))
 	if err != nil {
 		return
@@ -83,9 +82,9 @@ func (f *Follow) GetFollowByUserIdAndTypeAndObjectId(userId string, followType i
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"user_id": userId,
-		"type":  followType,
-		"object_id":  objectId,
+		"user_id":   userId,
+		"type":      followType,
+		"object_id": objectId,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -110,7 +109,7 @@ func (f *Follow) Delete(followId string) (err error) {
 func (f *Follow) DeleteByObjectIdType(objectId string, followType string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_Follow_Name, map[string]interface{}{
-		"type": followType,
+		"type":      followType,
 		"object_id": objectId,
 	}))
 	if err != nil {
@@ -122,9 +121,9 @@ func (f *Follow) DeleteByObjectIdType(objectId string, followType string) (err e
 // insert follow user
 func (f *Follow) Insert(userId string, fType int, objectId string) (id int64, err error) {
 	followValue := map[string]interface{}{
-		"user_id": userId,
-		"type": fType,
-		"object_id": objectId,
+		"user_id":     userId,
+		"type":        fType,
+		"object_id":   objectId,
 		"create_time": time.Now().Unix(),
 	}
 	db := G.DB()
@@ -174,7 +173,7 @@ func (f *Follow) CountFollowsByUserIdAndType(userId string, followType int) (cou
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_Follow_Name).Where(map[string]interface{}{
 		"user_id": userId,
-		"type": followType,
+		"type":    followType,
 	}))
 	if err != nil {
 		return
@@ -188,7 +187,7 @@ func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Follow_Name).Where(map[string]interface{}{
-		"follow_id":   followIds,
+		"follow_id": followIds,
 	}))
 	if err != nil {
 		return

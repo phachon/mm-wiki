@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"strings"
+
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+
 	"github.com/astaxie/beego/validation"
 	valid "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+
 )
 
 type AuthController struct {
@@ -31,7 +34,7 @@ func (this *AuthController) List() {
 		auths, err = models.AuthModel.GetAuthsByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取登录认证列表失败: "+err.Error())
+		this.ErrorLog("获取登录认证列表失败: " + err.Error())
 		this.ViewError("获取登录认证列表失败", "/system/main/index")
 	}
 
@@ -74,7 +77,7 @@ func (this *AuthController) Save() {
 
 	ok, err := models.AuthModel.HasAuthName(name)
 	if err != nil {
-		this.ErrorLog("添加登录认证失败："+err.Error())
+		this.ErrorLog("添加登录认证失败：" + err.Error())
 		this.jsonError("添加登录认证失败！")
 	}
 	if ok {
@@ -83,7 +86,7 @@ func (this *AuthController) Save() {
 
 	ok, err = models.AuthModel.HasAuthUsernamePrefix(usernamePrefix)
 	if err != nil {
-		this.ErrorLog("添加登录认证失败："+err.Error())
+		this.ErrorLog("添加登录认证失败：" + err.Error())
 		this.jsonError("添加登录认证失败！")
 	}
 	if ok {
@@ -91,17 +94,17 @@ func (this *AuthController) Save() {
 	}
 
 	authId, err := models.AuthModel.Insert(map[string]interface{}{
-		"name": name,
-		"url": url,
+		"name":            name,
+		"url":             url,
 		"username_prefix": usernamePrefix,
-		"ext_data": extData,
+		"ext_data":        extData,
 	})
 
 	if err != nil {
 		this.ErrorLog("添加登录认证失败：" + err.Error())
 		this.jsonError("添加登录认证失败")
 	}
-	this.InfoLog("添加登录认证 "+utils.Convert.IntToString(authId, 10)+" 成功")
+	this.InfoLog("添加登录认证 " + utils.Convert.IntToString(authId, 10) + " 成功")
 	this.jsonSuccess("添加登录认证成功", nil, "/system/auth/list")
 }
 
@@ -154,34 +157,34 @@ func (this *AuthController) Modify() {
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)
 	if err != nil {
-		this.ErrorLog("修改登录认证 "+authId+" 失败: "+err.Error())
+		this.ErrorLog("修改登录认证 " + authId + " 失败: " + err.Error())
 		this.jsonError("修改登录认证失败！")
 	}
 	if len(auth) == 0 {
 		this.jsonError("登录认证不存在！")
 	}
 
-	ok , _ := models.AuthModel.HasSameName(authId, name)
+	ok, _ := models.AuthModel.HasSameName(authId, name)
 	if ok {
 		this.jsonError("登录认证名称已经存在！")
 	}
-	ok , _ = models.AuthModel.HasSameUsernamePrefix(authId, usernamePrefix)
+	ok, _ = models.AuthModel.HasSameUsernamePrefix(authId, usernamePrefix)
 	if ok {
 		this.jsonError("用户名前缀已经存在！")
 	}
 
 	_, err = models.AuthModel.Update(authId, map[string]interface{}{
-		"name": name,
-		"url": url,
+		"name":            name,
+		"url":             url,
 		"username_prefix": usernamePrefix,
-		"ext_data": extData,
+		"ext_data":        extData,
 	})
 
 	if err != nil {
-		this.ErrorLog("修改登录认证 "+authId+" 失败：" + err.Error())
+		this.ErrorLog("修改登录认证 " + authId + " 失败：" + err.Error())
 		this.jsonError("修改登录认证失败")
 	}
-	this.InfoLog("修改登录认证 "+authId+" 成功")
+	this.InfoLog("修改登录认证 " + authId + " 成功")
 	this.jsonSuccess("修改登录认证成功", nil, "/system/auth/list")
 }
 
@@ -197,7 +200,7 @@ func (this *AuthController) Delete() {
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)
 	if err != nil {
-		this.ErrorLog("删除登录认证 "+authId+" 失败: "+err.Error())
+		this.ErrorLog("删除登录认证 " + authId + " 失败: " + err.Error())
 		this.jsonError("删除登录认证失败")
 	}
 	if len(auth) == 0 {
@@ -206,11 +209,11 @@ func (this *AuthController) Delete() {
 
 	err = models.AuthModel.Delete(authId)
 	if err != nil {
-		this.ErrorLog("删除登录认证 "+authId+" 失败: "+err.Error())
+		this.ErrorLog("删除登录认证 " + authId + " 失败: " + err.Error())
 		this.jsonError("删除登录认证失败")
 	}
 
-	this.InfoLog("删除登录认证 "+authId+" 成功")
+	this.InfoLog("删除登录认证 " + authId + " 成功")
 	this.jsonSuccess("删除登录认证成功", nil, "/system/auth/list")
 }
 
@@ -226,7 +229,7 @@ func (this *AuthController) Used() {
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)
 	if err != nil {
-		this.ErrorLog("登录认证 "+authId+" 启用失败: "+err.Error())
+		this.ErrorLog("登录认证 " + authId + " 启用失败: " + err.Error())
 		this.jsonError("登录认证启用失败")
 	}
 	if len(auth) == 0 {
@@ -234,11 +237,11 @@ func (this *AuthController) Used() {
 	}
 	_, err = models.AuthModel.SetAuthUsed(authId)
 	if err != nil {
-		this.ErrorLog("登录认证 "+authId+" 启用失败: "+err.Error())
+		this.ErrorLog("登录认证 " + authId + " 启用失败: " + err.Error())
 		this.jsonError("登录认证启用失败")
 	}
 
-	this.InfoLog("启用登录认证 "+authId+" 成功")
+	this.InfoLog("启用登录认证 " + authId + " 成功")
 	this.jsonSuccess("启用登录认证成功", nil, "/system/auth/list")
 }
 

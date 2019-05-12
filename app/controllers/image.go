@@ -3,15 +3,17 @@ package controllers
 import (
 	"encoding/json"
 	"path"
-	"mm-wiki/app"
-	"github.com/nu7hatch/gouuid"
 	"strings"
+
+	"mm-wiki/app"
+
+	"github.com/nu7hatch/gouuid"
 )
 
-type UploadResponse struct{
-	Success int `json:"success"`
+type UploadResponse struct {
+	Success int    `json:"success"`
 	Message string `json:"message"`
-	Url string `json:"url"`
+	Url     string `json:"url"`
 }
 
 type ImageController struct {
@@ -22,7 +24,7 @@ func (this *ImageController) Upload() {
 
 	f, h, err := this.GetFile("editormd-image-file")
 	if err != nil {
-		this.ErrorLog("上传图片错误: "+err.Error())
+		this.ErrorLog("上传图片错误: " + err.Error())
 		this.jsonError("上传出错")
 	}
 	f.Close()
@@ -33,7 +35,7 @@ func (this *ImageController) Upload() {
 	uploadFile := path.Join(app.ImageAbsDir, uuId.String()+ext)
 	err = this.SaveToFile("editormd-image-file", uploadFile)
 	if err != nil {
-		this.ErrorLog("上传图片错误: "+err.Error())
+		this.ErrorLog("上传图片错误: " + err.Error())
 		this.jsonError("上传出错")
 	}
 
@@ -45,7 +47,7 @@ func (this *ImageController) jsonError(message string) {
 	uploadRes := UploadResponse{
 		Success: 0,
 		Message: message,
-		Url: "",
+		Url:     "",
 	}
 
 	j, err := json.Marshal(uploadRes)
@@ -62,7 +64,7 @@ func (this *ImageController) jsonSuccess(message string, url string) {
 	uploadRes := UploadResponse{
 		Success: 1,
 		Message: message,
-		Url: url,
+		Url:     url,
 	}
 
 	j, err := json.Marshal(uploadRes)

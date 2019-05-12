@@ -1,8 +1,8 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 	"time"
 )
 
@@ -10,12 +10,11 @@ const Table_SpaceUser_Name = "space_user"
 
 const (
 	SpaceUser_Privilege_Visitor = 0
-	SpaceUser_Privilege_Editor = 1
+	SpaceUser_Privilege_Editor  = 1
 	SpaceUser_Privilege_Manager = 2
 )
 
 type SpaceUser struct {
-
 }
 
 var SpaceUserModel = SpaceUser{}
@@ -25,7 +24,7 @@ func (s *SpaceUser) GetSpaceUserBySpaceUserId(spaceUserId string) (spaceUser map
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
-		"space_user_id":   spaceUserId,
+		"space_user_id": spaceUserId,
 	}))
 	if err != nil {
 		return
@@ -39,7 +38,7 @@ func (s *SpaceUser) GetSpaceUsersByUserId(userId string) (spaceUsers []map[strin
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
-		"user_id":  userId,
+		"user_id": userId,
 	}))
 	if err != nil {
 		return
@@ -53,7 +52,7 @@ func (s *SpaceUser) GetSpaceUsersBySpaceId(spaceId string) (spaceUsers []map[str
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
-		"space_id":  spaceId,
+		"space_id": spaceId,
 	}))
 	if err != nil {
 		return
@@ -69,7 +68,7 @@ func (s *SpaceUser) GetSpaceUserBySpaceIdAndUserId(spaceId string, userId string
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
 		"space_id": spaceId,
-		"user_id": userId,
+		"user_id":  userId,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -119,7 +118,7 @@ func (s *SpaceUser) DeleteBySpaceIdAndUserId(spaceId string, userId string) (err
 	db := G.DB()
 	_, err = db.Exec(db.AR().Delete(Table_SpaceUser_Name, map[string]interface{}{
 		"space_id": spaceId,
-		"user_id": userId,
+		"user_id":  userId,
 	}))
 	if err != nil {
 		return
@@ -146,9 +145,9 @@ func (s *SpaceUser) Insert(spaceUserValue map[string]interface{}) (id int64, err
 func (s *SpaceUser) Update(spaceUserId string, spaceUserValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	spaceUserValue["update_time"] =  time.Now().Unix()
+	spaceUserValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_SpaceUser_Name, spaceUserValue, map[string]interface{}{
-		"space_user_id":   spaceUserId,
+		"space_user_id": spaceUserId,
 	}))
 	if err != nil {
 		return
@@ -210,7 +209,7 @@ func (s *SpaceUser) GetSpaceUsersBySpaceUserIds(spaceUserIds []string) (spaceUse
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_SpaceUser_Name).Where(map[string]interface{}{
-		"space_user_id":   spaceUserIds,
+		"space_user_id": spaceUserIds,
 	}))
 	if err != nil {
 		return
@@ -224,7 +223,7 @@ func (s *SpaceUser) HasSpaceUser(spaceId string, userId string) (has bool, err e
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Role_Name).Where(map[string]interface{}{
-		"space_id":  spaceId,
+		"space_id": spaceId,
 		"user_id":  userId,
 	}).Limit(0, 1))
 	if err != nil {

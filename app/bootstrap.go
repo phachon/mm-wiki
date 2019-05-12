@@ -1,18 +1,21 @@
 package app
 
 import (
-	"os"
-	"log"
-	"fmt"
 	"flag"
-	"mm-wiki/app/utils"
-	"github.com/astaxie/beego"
-	"github.com/snail007/go-activerecord/mysql"
-	"github.com/fatih/color"
-	"mm-wiki/app/models"
+	"fmt"
+	"log"
+	"os"
+	"path"
 	"path/filepath"
 	"time"
-	"path"
+
+	"mm-wiki/app/models"
+	"mm-wiki/app/utils"
+
+	"github.com/astaxie/beego"
+	"github.com/fatih/color"
+	"github.com/snail007/go-activerecord/mysql"
+
 )
 
 var (
@@ -25,6 +28,8 @@ var (
 
 var (
 	Version = "v0.1.3"
+
+	CopyRight = beego.Str2html("2018 - 2019 phachon")
 
 	StartTime = int64(0)
 
@@ -62,10 +67,10 @@ func poster() {
 | '_ ' _ \  | '_ ' _ \   _____  \ \ /\ / / | | | |/ / | |
 | | | | | | | | | | | | |_____|  \ V  V /  | | |   <  | |
 |_| |_| |_| |_| |_| |_|           \_/\_/   |_| |_|\_\ |_|
-`+
-"Author: phachon\r\n"+
-"Version: "+Version+"\r\n"+
-"Link: https://github.com/phachon/mm-wiki"
+` +
+		"Author: phachon\r\n" +
+		"Version: " + Version + "\r\n" +
+		"Link: https://github.com/phachon/mm-wiki"
 	fg.Println(logo)
 }
 
@@ -78,7 +83,7 @@ func initConfig() {
 	}
 	ok, _ := utils.NewFile().PathIsExists(*confPath)
 	if ok == false {
-		log.Println("conf file "+*confPath+" not exists!")
+		log.Println("conf file " + *confPath + " not exists!")
 		os.Exit(1)
 	}
 	//init config file
@@ -142,18 +147,18 @@ func initDB() {
 func initDocumentDir() {
 	docRootDir := beego.AppConfig.String("document::root_dir")
 	if docRootDir == "" {
-		beego.Error("document root dir "+docRootDir+" is not empty!")
+		beego.Error("document root dir " + docRootDir + " is not empty!")
 		os.Exit(1)
 	}
 	ok, _ := utils.File.PathIsExists(docRootDir)
 	if !ok {
-		beego.Error("document root dir "+docRootDir+" is not exists!")
+		beego.Error("document root dir " + docRootDir + " is not exists!")
 		os.Exit(1)
 	}
 
 	rootAbsDir, err := filepath.Abs(docRootDir)
 	if err != nil {
-		beego.Error("document root dir "+docRootDir+" is error!")
+		beego.Error("document root dir " + docRootDir + " is error!")
 		os.Exit(1)
 	}
 
@@ -164,7 +169,7 @@ func initDocumentDir() {
 	if !ok {
 		err := os.Mkdir(markDownAbsDir, 0777)
 		if err != nil {
-			beego.Error("create document markdown dir "+markDownAbsDir+" error!")
+			beego.Error("create document markdown dir " + markDownAbsDir + " error!")
 			os.Exit(1)
 		}
 	}
@@ -173,7 +178,7 @@ func initDocumentDir() {
 	if !ok {
 		err := os.Mkdir(imagesAbsDir, 0777)
 		if err != nil {
-			beego.Error("create document image dir "+imagesAbsDir+" error!")
+			beego.Error("create document image dir " + imagesAbsDir + " error!")
 			os.Exit(1)
 		}
 	}
@@ -190,19 +195,19 @@ func checkUpgrade() {
 		beego.Info("Start checking whether MM-Wiki needs upgrading.")
 		versionConf, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SystemVersion)
 		if err != nil {
-			beego.Error("Get database mm-wiki version error: "+err.Error())
+			beego.Error("Get database mm-wiki version error: " + err.Error())
 			os.Exit(1)
 		}
 		var versionDb = "v0.0.0"
 		if len(versionConf) != 0 && versionConf["value"] != "" {
 			versionDb = versionConf["value"]
 		}
-		beego.Info("MM-Wiki Database version：" +versionDb)
-		beego.Info("MM-Wiki Now version: "+Version)
+		beego.Info("MM-Wiki Database version：" + versionDb)
+		beego.Info("MM-Wiki Now version: " + Version)
 
 		if versionDb == Version {
 			beego.Info("MM-Wiki does not need updating.")
-		}else {
+		} else {
 			beego.Info("MM-Wiki start upgrading.")
 			err := models.UpgradeModel.Start(versionDb)
 			if err != nil {

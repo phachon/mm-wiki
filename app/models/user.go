@@ -1,27 +1,26 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"strings"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
+	"strings"
 	"time"
 )
 
 const (
-	User_Delete_True = 1
+	User_Delete_True  = 1
 	User_Delete_False = 0
 
-	User_Forbidden_True = 1
+	User_Forbidden_True     = 1
 	User_Is_Forbidden_False = 0
 )
 
 const Table_User_Name = "user"
 
 type User struct {
-
 }
 
 var UserModel = User{}
@@ -95,7 +94,7 @@ func (u *User) GetUserByUsername(username string) (user map[string]string, err e
 func (u *User) Delete(userId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_User_Name, map[string]interface{}{
-		"is_delete": User_Delete_False,
+		"is_delete":   User_Delete_False,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"user_id": userId,
@@ -125,7 +124,7 @@ func (u *User) Insert(userValue map[string]interface{}) (id int64, err error) {
 func (u *User) Update(userId string, userValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	userValue["update_time"] =  time.Now().Unix()
+	userValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_User_Name, userValue, map[string]interface{}{
 		"user_id":   userId,
 		"is_delete": User_Delete_False,
@@ -148,7 +147,7 @@ func (u *User) ChangePassword(userId, newPassword, oldPassword string) (err erro
 		return
 	}
 	_, err = db.Exec(db.AR().Update(Table_User_Name, map[string]interface{}{
-		"password": u.EncodePassword(newPassword),
+		"password":    u.EncodePassword(newPassword),
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"user_id":   userId,
@@ -174,7 +173,7 @@ func (u *User) GetUsersByKeywordsAndLimit(keywords map[string]string, limit int,
 	db := G.DB()
 	var rs *mysql.ResultSet
 	var whereValue = map[string]interface{}{
-		"is_delete":     User_Delete_False,
+		"is_delete": User_Delete_False,
 	}
 	username, ok := keywords["username"]
 	if ok && username != "" {
@@ -244,9 +243,9 @@ func (u *User) CountUsersByLastTime(lastTime int64) (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_User_Name).
 			Where(map[string]interface{}{
-			"last_time >=": lastTime,
-			"is_delete": User_Delete_False,
-		}))
+				"last_time >=": lastTime,
+				"is_delete":    User_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -264,9 +263,9 @@ func (u *User) CountNormalUsers() (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_User_Name).
 			Where(map[string]interface{}{
-			"is_forbidden": User_Is_Forbidden_False,
-			"is_delete": User_Delete_False,
-		}))
+				"is_forbidden": User_Is_Forbidden_False,
+				"is_delete":    User_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -284,9 +283,9 @@ func (u *User) CountForbiddenUsers() (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_User_Name).
 			Where(map[string]interface{}{
-			"is_forbidden": User_Forbidden_True,
-			"is_delete": User_Delete_False,
-		}))
+				"is_forbidden": User_Forbidden_True,
+				"is_delete":    User_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -300,7 +299,7 @@ func (u *User) CountUsersByKeywords(keywords map[string]string) (count int64, er
 	db := G.DB()
 	var rs *mysql.ResultSet
 	var whereValue = map[string]interface{}{
-		"is_delete":     User_Delete_False,
+		"is_delete": User_Delete_False,
 	}
 	username, ok := keywords["username"]
 	if ok && username != "" {
@@ -364,14 +363,13 @@ func (u *User) GetUsersByRoleId(roleId string) (users []map[string]string, err e
 	return
 }
 
-
 // get user by not in user_ids
 func (u *User) GetUserByNotUserIds(userIds []string) (users []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_User_Name).Where(map[string]interface{}{
-		"user_id NOT":   userIds,
-		"is_delete": User_Delete_False,
+		"user_id NOT": userIds,
+		"is_delete":   User_Delete_False,
 	}))
 	if err != nil {
 		return

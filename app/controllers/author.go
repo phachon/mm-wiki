@@ -1,13 +1,15 @@
 package controllers
 
 import (
-	"strings"
-	"mm-wiki/app/models"
-	"github.com/astaxie/beego"
-	"mm-wiki/app/utils"
-	"fmt"
-	"time"
 	"encoding/json"
+	"fmt"
+	"strings"
+	"time"
+
+	"mm-wiki/app/models"
+	"mm-wiki/app/utils"
+
+	"github.com/astaxie/beego"
 )
 
 type AuthorController struct {
@@ -29,7 +31,7 @@ func (this *AuthorController) Index() {
 }
 
 // login
-func (this *AuthorController) Login()  {
+func (this *AuthorController) Login() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！")
@@ -67,7 +69,7 @@ func (this *AuthorController) Login()  {
 	// update last_ip and last_login_time
 	updateValue := map[string]interface{}{
 		"last_time": time.Now().Unix(),
-		"last_ip": this.GetClientIp(),
+		"last_ip":   this.GetClientIp(),
 	}
 	_, err = models.UserModel.Update(user["user_id"], updateValue)
 	if err != nil {
@@ -90,7 +92,7 @@ func (this *AuthorController) Login()  {
 }
 
 // auth login
-func (this *AuthorController) AuthLogin()  {
+func (this *AuthorController) AuthLogin() {
 
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！")
@@ -122,39 +124,39 @@ func (this *AuthorController) AuthLogin()  {
 		"ext_data": authLogin["ext_data"],
 	}
 	// request auth login api
-	body, code, err := utils.Request.HttpPost(authLogin["url"], queryValue, nil, )
+	body, code, err := utils.Request.HttpPost(authLogin["url"], queryValue, nil)
 	if err != nil {
-		this.jsonError("登录认证失败："+err.Error())
+		this.jsonError("登录认证失败：" + err.Error())
 	}
 	if len(body) == 0 {
-		this.jsonError("登录认证失败："+fmt.Sprintf("%d", code))
+		this.jsonError("登录认证失败：" + fmt.Sprintf("%d", code))
 	}
 	v := map[string]interface{}{}
 	err = json.Unmarshal(body, &v)
 	if err != nil {
-		this.jsonError("登录认证失败!"+err.Error())
+		this.jsonError("登录认证失败!" + err.Error())
 	}
 
 	if v["message"].(string) != "" {
-		this.jsonError("登录失败："+v["message"].(string))
+		this.jsonError("登录失败：" + v["message"].(string))
 	}
 	authData := v["data"].(map[string]interface{})
 
-	realUsername := authLogin["username_prefix"]+"_"+username
+	realUsername := authLogin["username_prefix"] + "_" + username
 	passwordEncode := models.UserModel.EncodePassword(password)
 	userValue := map[string]interface{}{
-		"username" : realUsername,
-		"given_name" : authData["given_name"],
-		"password" :   passwordEncode,
-		"email" :      authData["email"],
-		"mobile" :     authData["mobile"],
-		"phone" :      authData["phone"],
-		"department" : authData["department"],
-		"position" :   authData["position"],
-		"location" :   authData["location"],
-		"im" :         authData["im"],
-		"last_time": time.Now().Unix(),
-		"last_ip": this.GetClientIp(),
+		"username":   realUsername,
+		"given_name": authData["given_name"],
+		"password":   passwordEncode,
+		"email":      authData["email"],
+		"mobile":     authData["mobile"],
+		"phone":      authData["phone"],
+		"department": authData["department"],
+		"position":   authData["position"],
+		"location":   authData["location"],
+		"im":         authData["im"],
+		"last_time":  time.Now().Unix(),
+		"last_ip":    this.GetClientIp(),
 	}
 	ok, err := models.UserModel.HasUsername(realUsername)
 	if err != nil {
@@ -163,19 +165,19 @@ func (this *AuthorController) AuthLogin()  {
 	if ok {
 		// update user info
 		_, err = models.UserModel.UpdateUserByUsername(userValue)
-	}else {
+	} else {
 		// insert user info
 		userValue["role_id"] = models.Role_Default_Id
 		_, err = models.UserModel.Insert(userValue)
 	}
 	if err != nil {
-		this.jsonError("登录失败！"+err.Error())
+		this.jsonError("登录失败！" + err.Error())
 	}
 
 	// get user by username
 	user, err := models.UserModel.GetUserByUsername(realUsername)
 	if err != nil {
-		this.jsonError("登录失败："+err.Error())
+		this.jsonError("登录失败：" + err.Error())
 	}
 	if len(user) == 0 {
 		this.jsonError("登录失败!")
@@ -196,9 +198,8 @@ func (this *AuthorController) AuthLogin()  {
 	this.jsonSuccess("登录成功！", nil, "/main/index")
 }
 
-
 //logout
-func (this *AuthorController) Logout(){
+func (this *AuthorController) Logout() {
 	this.InfoLog("退出成功")
 	passport := beego.AppConfig.String("author::passport")
 	this.Ctx.SetCookie(passport, "")

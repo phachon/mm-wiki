@@ -1,23 +1,22 @@
 package utils
 
 import (
-	"os"
 	"archive/zip"
 	"io"
+	"os"
 	"strings"
 )
 
 var Zipx = NewZipx()
 
 type zipx struct {
-
 }
 
 func NewZipx() *zipx {
 	return &zipx{}
 }
 
-func (z *zipx) Compress(files []*os.File, dest string) error  {
+func (z *zipx) Compress(files []*os.File, dest string) error {
 	d, _ := os.Create(dest)
 	defer d.Close()
 	w := zip.NewWriter(d)
@@ -31,7 +30,7 @@ func (z *zipx) Compress(files []*os.File, dest string) error  {
 	return nil
 }
 
-func (z *zipx)compress(file *os.File, prefix string, zw *zip.Writer) error {
+func (z *zipx) compress(file *os.File, prefix string, zw *zip.Writer) error {
 	info, err := file.Stat()
 	if err != nil {
 		return err
@@ -104,11 +103,11 @@ func (z *zipx) DeCompress(zipFile, dest string) error {
 	return nil
 }
 
-func (z *zipx)getDir(path string) string {
+func (z *zipx) getDir(path string) string {
 	return z.subString(path, 0, strings.LastIndex(path, "/"))
 }
 
-func (z *zipx)subString(str string, start, end int) string {
+func (z *zipx) subString(str string, start, end int) string {
 	rs := []rune(str)
 	length := len(rs)
 

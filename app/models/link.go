@@ -1,15 +1,14 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 	"time"
 )
 
 const Table_Link_Name = "link"
 
 type Link struct {
-
 }
 
 var LinkModel = Link{}
@@ -19,7 +18,7 @@ func (l *Link) GetLinkByLinkId(linkId string) (link map[string]string, err error
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
-		"link_id":   linkId,
+		"link_id": linkId,
 	}))
 	if err != nil {
 		return
@@ -34,7 +33,7 @@ func (l *Link) HasSameName(linkId, name string) (has bool, err error) {
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
 		"link_id <>": linkId,
-		"name":   name,
+		"name":       name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -50,7 +49,7 @@ func (l *Link) HasLinkName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name": name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -66,7 +65,7 @@ func (l *Link) GetLinkByName(name string) (link map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name": name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -106,9 +105,9 @@ func (l *Link) Insert(linkValue map[string]interface{}) (id int64, err error) {
 func (l *Link) Update(linkId string, linkValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	linkValue["update_time"] =  time.Now().Unix()
+	linkValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Link_Name, linkValue, map[string]interface{}{
-		"link_id":   linkId,
+		"link_id": linkId,
 	}))
 	if err != nil {
 		return
@@ -232,7 +231,7 @@ func (l *Link) GetLinkByLinkIds(linkIds []string) (links []map[string]string, er
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Link_Name).Where(map[string]interface{}{
-		"link_id":   linkIds,
+		"link_id": linkIds,
 	}))
 	if err != nil {
 		return

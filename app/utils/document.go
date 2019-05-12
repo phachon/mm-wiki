@@ -1,23 +1,23 @@
 package utils
 
 import (
-	"path/filepath"
-	"os"
-	"io/ioutil"
-	"sync"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"sync"
 )
 
 var Document = NewDocument("./data")
 
 const (
 	Document_Default_FileName = "README"
-	Document_Page_Suffix = ".md"
+	Document_Page_Suffix      = ".md"
 )
 
 const (
 	Document_Type_Page = 1
-	Document_Type_Dir = 2
+	Document_Type_Dir  = 2
 )
 
 func NewDocument(rootAbsDir string) *document {
@@ -28,14 +28,14 @@ func NewDocument(rootAbsDir string) *document {
 
 type document struct {
 	RootAbsDir string
-	lock sync.Mutex
+	lock       sync.Mutex
 }
 
 // get document page file by parentPath
-func (d *document) GetPageFileByParentPath(name string, docType int, parentPath string) (pageFile string){
+func (d *document) GetPageFileByParentPath(name string, docType int, parentPath string) (pageFile string) {
 	if docType == Document_Type_Page {
 		pageFile = fmt.Sprintf("%s/%s%s", parentPath, name, Document_Page_Suffix)
-	}else {
+	} else {
 		pageFile = fmt.Sprintf("%s/%s/%s%s", parentPath, name, Document_Default_FileName, Document_Page_Suffix)
 	}
 	return
@@ -48,11 +48,11 @@ func (d *document) GetDefaultPageFileBySpaceName(name string) string {
 
 // get document abs pageFile
 func (d *document) GetAbsPageFileByPageFile(pageFile string) string {
-	return d.RootAbsDir + "/" +pageFile
+	return d.RootAbsDir + "/" + pageFile
 }
 
 // get document content by pageFile
-func (d *document) GetContentByPageFile(pageFile string) (content string , err error){
+func (d *document) GetContentByPageFile(pageFile string) (content string, err error) {
 	return File.GetFileContents(d.GetAbsPageFileByPageFile(pageFile))
 }
 
@@ -122,7 +122,7 @@ func (d *document) Update(oldPageFile string, name string, content string, docTy
 	if nameIsChange {
 		filePath := filepath.Dir(absOldPageFile)
 		if docType == Document_Type_Page {
-			err = os.Rename(absOldPageFile, filePath +"/"+name+Document_Page_Suffix)
+			err = os.Rename(absOldPageFile, filePath+"/"+name+Document_Page_Suffix)
 		} else {
 			err = os.Rename(filePath, filepath.Dir(filePath)+"/"+name)
 		}
@@ -140,7 +140,7 @@ func (d *document) Delete(path string, docType int) error {
 
 	absPageFile := d.GetAbsPageFileByPageFile(path)
 
-	ok , _ := File.PathIsExists(absPageFile)
+	ok, _ := File.PathIsExists(absPageFile)
 	if !ok {
 		return nil
 	}
@@ -157,7 +157,7 @@ func (d *document) DeleteSpace(name string) error {
 
 	absSpaceDir := d.GetAbsPageFileByPageFile(name)
 
-	ok , _ := File.PathIsExists(absSpaceDir)
+	ok, _ := File.PathIsExists(absSpaceDir)
 	if !ok {
 		return nil
 	}
