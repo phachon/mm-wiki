@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div class="row" style="height: 98%; padding-top: 8px">
+    <div class="row" style="height: 98%; padding-top: 8px;">
         <div class="col-md-12" style="height: 98%">
             <div id="document_page_editor" style="height: 98%"></div>
         </div>
@@ -24,6 +24,9 @@
 <script type="text/javascript">
     if(parent.layoutClose) {
         parent.layoutClose();
+    }
+    if(parent.hiddenScrollY) {
+        parent.hiddenScrollY();
     }
     var storageId = "mm_wiki_doc_"+{{$document.document_id}}
     $(function() {

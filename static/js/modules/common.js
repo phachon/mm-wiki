@@ -62,3 +62,7 @@ function layoutToggle() {
     sliderLayout.toggle("west");
 }
 
+function hiddenScrollY() {
+    // $("#mainFrame").attr("overflow-y", "hidden");
+    $("#mainFrame").attr("scrolling", "no");
+}
