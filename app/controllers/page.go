@@ -331,7 +331,7 @@ func (this *PageController) Display() {
 	// get document content
 	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
 	if err != nil {
-		this.ErrorLog("查找文档 " + documentId + " 失败：" + err.Error())
+		this.ErrorLog("查找文档 " + documentId + " 内容失败：" + err.Error())
 		this.ViewError("文档不存在！")
 	}
 
@@ -394,7 +394,7 @@ func (this *PageController) Export() {
 	// check space document privilege
 	isVisit, _, _ := this.GetDocumentPrivilege(space)
 	if !isVisit {
-		this.jsonError("您没有权限导出该空间下文档！")
+		this.ViewError("您没有权限导出该空间下文档！")
 	}
 
 	// check space is allow export
