@@ -456,3 +456,16 @@ ul.countdown li p {
     border-radius: 4px;
     border-bottom: 0;
 }
+
+/**
+ * 分页选择框
+ */
+.pagination-select {
+    padding: 2px;
+}
+
+#page_select {
+    /*-webkit-appearance: none;*/
+    /*border-width: 0;*/
+    border-radius: 0;
+}
