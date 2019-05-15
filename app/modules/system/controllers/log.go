@@ -12,11 +12,11 @@ type LogController struct {
 func (this *LogController) System() {
 
 	page, _ := this.GetInt("page", 1)
+	number, _ := this.GetInt("number", 15)
 	level := strings.TrimSpace(this.GetString("level", ""))
 	message := strings.TrimSpace(this.GetString("message", ""))
 	username := strings.TrimSpace(this.GetString("username", ""))
 
-	number := 15
 	limit := (page - 1) * number
 	var err error
 	var count int64
@@ -60,7 +60,7 @@ func (this *LogController) Info() {
 func (this *LogController) Document() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 12
+	number, _ := this.GetInt("number", 15)
 	limit := (page - 1) * number
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
 	userId := strings.TrimSpace(this.GetString("user_id", ""))

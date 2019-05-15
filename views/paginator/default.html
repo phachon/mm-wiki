@@ -1,16 +1,15 @@
-{{if gt .paginator.PageNums 1 }}
+{{/*{{if gt .paginator.PageNums 1 }}*/}}
 <ul class="pagination pagination-sm">
     <li><span>共 {{.paginator.Nums}} 条数据 </span></li>
-{{/*    <li><span style="padding: 0;border-width: 0">*/}}
-{{/*    <select id="page_select" class="form-control input-sm">*/}}
-{{/*        <option value="20">20条/页</option>*/}}
-{{/*        <option value="30">30条/页</option>*/}}
-{{/*        <option>20条/页</option>*/}}
-{{/*        <option>20条/页</option>*/}}
-{{/*        <option>20条/页</option>*/}}
-{{/*    </select>*/}}
-{{/*    </span>*/}}
-{{/*    </li>*/}}
+    <li class="pagination-select">
+        <span>
+        <select class="pagination-select-xs">
+            {{range $index, $numSelect := .paginator.PerPageNumsSelect}}
+                <option value="10" {{if eq $.paginator.PerPageNums $numSelect}} selected="selected" {{end}}>{{$numSelect}}条/页</option>
+            {{end}}
+        </select>
+    </span>
+    </li>
     {{if .paginator.HasPrev}}
     <li><a href="{{.paginator.PageLinkFirst}}">首页</a></li>
     <li><a href="{{.paginator.PageLinkPrev}}"><span><i class="glyphicon glyphicon-backward"></i></span></a></li>
@@ -31,4 +30,4 @@
     <li class="disabled"><a>尾页</a></li>
     {{end}}
 </ul>
-{{end}}
+{{/*{{end}}*/}}

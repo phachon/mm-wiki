@@ -460,12 +460,20 @@ ul.countdown li p {
 /**
  * 分页选择框
  */
-.pagination-select {
-    padding: 2px;
+.pagination > .pagination-select > span {
+    padding: 0;
 }
 
-#page_select {
-    /*-webkit-appearance: none;*/
-    /*border-width: 0;*/
+select.pagination-select-xs {
+    height: 28px;
+    line-height: 28px;
+    border-width: 0;
     border-radius: 0;
+    background-color: #fff;
+    border-color: #fff;
+}
+
+select.pagination-select-xs:hover {
+    color: #23527c;
+    background-color: #eee;
 }
