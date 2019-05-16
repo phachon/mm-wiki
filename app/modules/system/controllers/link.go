@@ -62,9 +62,9 @@ func (this *LinkController) List() {
 
 	page, _ := this.GetInt("page", 1)
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
-
-	number := 20
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	limit := (page - 1) * number
+
 	var err error
 	var count int64
 	var links []map[string]string

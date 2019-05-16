@@ -18,12 +18,12 @@ func (this *UserController) List() {
 
 	keywords := map[string]string{}
 	page, _ := this.GetInt("page", 1)
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	username := strings.TrimSpace(this.GetString("username", ""))
 	if username != "" {
 		keywords["username"] = username
 	}
 
-	number := 20
 	limit := (page - 1) * number
 	var err error
 	var count int64

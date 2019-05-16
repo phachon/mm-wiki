@@ -221,7 +221,7 @@ func (this *DocumentController) History() {
 
 	page, _ := this.GetInt("page", 1)
 	documentId := this.GetString("document_id", "0")
-	number := 8
+	number, _ := this.GetRangeInt("number", 10, 10, 100)
 	limit := (page - 1) * number
 
 	if documentId == "0" {

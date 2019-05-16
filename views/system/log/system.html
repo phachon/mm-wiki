@@ -79,6 +79,6 @@
 <script type="text/javascript">
     $(function () {
         Layers.bindIframe("[name='info']", "日志详细信息", "400px", "800px");
-        $("select").val({{.level}})
+        $("select[name='level']").val({{.level}})
     });
 </script>

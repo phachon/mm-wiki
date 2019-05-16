@@ -121,6 +121,8 @@ func (this *UserController) List() {
 	page, _ := this.GetInt("page", 1)
 	username := strings.TrimSpace(this.GetString("username", ""))
 	roleId := strings.TrimSpace(this.GetString("role_id", ""))
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
+
 	if username != "" {
 		keywords["username"] = username
 	}
@@ -128,7 +130,6 @@ func (this *UserController) List() {
 		keywords["role_id"] = roleId
 	}
 
-	number := 20
 	limit := (page - 1) * number
 	var err error
 	var count int64

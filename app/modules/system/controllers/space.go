@@ -102,9 +102,9 @@ func (this *SpaceController) List() {
 
 	page, _ := this.GetInt("page", 1)
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
-
-	number := 20
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	limit := (page - 1) * number
+
 	var err error
 	var count int64
 	var spaces []map[string]string
@@ -207,12 +207,12 @@ func (this *SpaceController) Member() {
 
 	page, _ := this.GetInt("page", 1)
 	spaceId := strings.TrimSpace(this.GetString("space_id", ""))
+	number, _ := this.GetRangeInt("number", 15, 10, 100)
 
 	if spaceId == "" {
 		this.ViewError("没有选择空间！")
 	}
 
-	number := 20
 	limit := (page - 1) * number
 
 	count, err := models.SpaceUserModel.CountSpaceUsersBySpaceId(spaceId)

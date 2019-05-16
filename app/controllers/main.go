@@ -140,8 +140,7 @@ func (this *MainController) Search() {
 
 	page, _ := this.GetInt("page", 1)
 	documentName := this.GetString("document_name", "")
-
-	number := 15
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	limit := (page - 1) * number
 
 	var documents = []map[string]string{}
