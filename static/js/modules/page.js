@@ -150,6 +150,30 @@ var Page = {
         }, function() {
 
         });
-    }
+    },
 
+    /**
+     * upload attachment
+     */
+    attachment: function () {
+        layer.open({
+            type: 2,
+            skin: Layers.skin,
+            title: '<strong>上传附件</strong>',
+            shadeClose: true,
+            shade : 0.1,
+            resize: false,
+            maxmin: false,
+            area: ["800px", "500px"],
+            content: "/attachment/page",
+            padding:"10px"
+        });
+    },
+
+    /**
+     * uploader
+     */
+    attachUpload: function () {
+
+    }
 };

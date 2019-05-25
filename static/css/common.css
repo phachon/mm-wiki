@@ -477,3 +477,11 @@ select.pagination-select-xs:hover {
     color: #23527c;
     background-color: #eee;
 }
+
+#attach_row .file-drop-zone {
+    margin: 3px;
+}
+
+#attach_row .file-other-icon {
+    font-size: 1.4em;
+}

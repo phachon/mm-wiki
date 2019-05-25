@@ -35,17 +35,19 @@
             css : "/static/plugins/editor.md/lib/katex/katex.min"
         };
         var editor = editormd("document_page_editor", {
+            placeholder: "欢迎使用 MM-Wiki, 支持 Markdown 语法",
             width: "100%",
             // height: height,
             path : '/static/plugins/editor.md/lib/',
             toolbarIcons : function() {
                 // Using "||" set icons align right.
                 return [
-                    "sidebar", "save", "|", "undo", "redo", "|",
+                    "sidebar", "save", "|",
+                    "undo", "redo", "|",
                     "bold", "del", "italic", "quote", "|",
                     "h1", "h2", "h3", "h4", "h5", "h6", "|",
                     "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+                    "link", "reference-link", "image", "attachment", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
                     "goto-line", "watch", "preview", "search", "|",
                     "help"
                 ]
@@ -53,7 +55,8 @@
             // 增加自定义工具栏
             toolbarCustomIcons : {
                 sidebar   : '<a onclick="parent.layoutToggle()" title="展开关闭侧边栏"><i class="fa fa-columns item"></i></a>',
-                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>"
+                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>",
+                attachment : '<a onclick="Page.attachment()" title="上传附件"><i class="fa fa-paperclip item"></i></a>'
             },
             theme : "default",
             previewTheme : "default",
