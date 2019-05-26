@@ -34,6 +34,10 @@ var (
 
 	RootDir = ""
 
+	DocumentAbsDir = ""
+
+	MarkdownAbsDir = ""
+
 	ImageAbsDir = ""
 
 	AttachmentAbsDir = ""
@@ -163,6 +167,8 @@ func initDocumentDir() {
 		os.Exit(1)
 	}
 
+	DocumentAbsDir = rootAbsDir
+
 	// markdown save dir
 	markDownAbsDir := path.Join(rootAbsDir, "markdowns")
 	// image save dir
@@ -199,10 +205,13 @@ func initDocumentDir() {
 	}
 
 	utils.Document.RootAbsDir = markDownAbsDir
+	MarkdownAbsDir = markDownAbsDir
 	ImageAbsDir = imagesAbsDir
 	AttachmentAbsDir = attachmentAbsDir
 
 	beego.SetStaticPath("/images/", ImageAbsDir)
+	// todo
+	beego.SetStaticPath("/images/:space_id/:document_id/", ImageAbsDir)
 }
 
 // check upgrade

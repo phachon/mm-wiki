@@ -1,12 +1,17 @@
 package models
 
 import (
+	"fmt"
 	"github.com/snail007/go-activerecord/mysql"
-	"mm-wiki/app/utils"
 	"time"
 )
 
 const Table_Attachment_Name = "attachment"
+
+const (
+	Attachment_Source_Default = 0
+	Attachment_Source_Image = 1
+)
 
 type Attachment struct {
 }
@@ -75,11 +80,12 @@ func (a *Attachment) GetAttachmentByName(name string) (attachment map[string]str
 }
 
 // get attachments by document
-func (a *Attachment) GetAttachmentsByDocumentId(documentId string) (attachments []map[string]string, err error) {
+func (a *Attachment) GetAttachmentsByDocumentIdAndSource(documentId string, source int) (attachments []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Attachment_Name).Where(map[string]interface{}{
 		"document_id": documentId,
+		"source": source,
 	}).OrderBy("attachment_id", "desc"))
 	if err != nil {
 		return
@@ -116,42 +122,13 @@ func (a *Attachment) Insert(attachmentValue map[string]interface{}) (id int64, e
 
 	// create document log
 	go func() {
+		comment := fmt.Sprintf("上传了附件 %s", attachmentValue["name"].(string))
+		if attachmentValue["source"].(int) == Attachment_Source_Image {
+			comment = fmt.Sprintf("上传了图片 %s", attachmentValue["name"].(string))
+		}
 		_, _ = LogDocumentModel.UpdateAction(attachmentValue["user_id"].(string),
-			attachmentValue["document_id"].(string), "上传了附件 "+attachmentValue["name"].(string))
+			attachmentValue["document_id"].(string), comment)
 	}()
-
-	return
-}
-
-// update attachment by attachment_id
-func (a *Attachment) Update(attachmentId string, attachmentValue map[string]interface{}) (id int64, err error) {
-	db := G.DB()
-	var rs *mysql.ResultSet
-	attachmentValue["update_time"] = time.Now().Unix()
-	rs, err = db.Exec(db.AR().Update(Table_Attachment_Name, attachmentValue, map[string]interface{}{
-		"attachment_id": attachmentId,
-	}))
-	if err != nil {
-		return
-	}
-	id = rs.LastInsertId
-	return
-}
-
-// get limit attachments
-func (a *Attachment) GetAttachmentsByLimit(limit int, number int) (attachments []map[string]string, err error) {
-
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(
-		db.AR().
-			From(Table_Attachment_Name).
-			Limit(limit, number).
-			OrderBy("attachment_id", "DESC"))
-	if err != nil {
-		return
-	}
-	attachments = rs.Rows()
 
 	return
 }
@@ -167,54 +144,6 @@ func (a *Attachment) GetAttachments() (attachments []map[string]string, err erro
 		return
 	}
 	attachments = rs.Rows()
-	return
-}
-
-// get all attachments by sequence
-func (a *Attachment) GetAttachmentsOrderBySequence() (attachments []map[string]string, err error) {
-
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(
-		db.AR().From(Table_Attachment_Name).OrderBy("sequence", "ASC"))
-	if err != nil {
-		return
-	}
-	attachments = rs.Rows()
-	return
-}
-
-// get attachment count
-func (a *Attachment) CountAttachments() (count int64, err error) {
-
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(
-		db.AR().
-			Select("count(*) as total").
-			From(Table_Attachment_Name))
-	if err != nil {
-		return
-	}
-	count = utils.NewConvert().StringToInt64(rs.Value("total"))
-	return
-}
-
-// get attachment count by keyword
-func (a *Attachment) CountAttachmentsByKeyword(keyword string) (count int64, err error) {
-
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().
-		Select("count(*) as total").
-		From(Table_Attachment_Name).
-		Where(map[string]interface{}{
-			"name LIKE": "%" + keyword + "%",
-		}))
-	if err != nil {
-		return
-	}
-	count = utils.NewConvert().StringToInt64(rs.Value("total"))
 	return
 }
 

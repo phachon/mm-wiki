@@ -1,15 +1,22 @@
 <div class="container-fluid">{{$attachments := .attachments}}{{$documentId := .document_id}}
-    <div id="failedBox" style="margin: 0 0 6px 0"></div>
-    <div class="panel panel-default">{{$isDelete := .is_delete}}{{$isUpload := .is_upload}}
-        {{if eq $isUpload true}}
+    <div id="failedBox" style="margin: 0 0 6px 0"></div>{{$isDelete := .is_delete}}{{$isUpload := .is_upload}}
+    <div class="panel panel-default">
         <div class="panel-body">
+            <div class="row">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="/attachment/page?document_id={{$documentId}}">附件</a></li>
+                    <li><a href="/attachment/image?document_id={{$documentId}}">图片</a></li>
+                </ul>
+            </div>
+        </div>
+        {{if eq $isUpload true}}
+        <div class="panel-body" style="padding-bottom: 10px">
             <div class="row">
                 <div class="col-md-12" id="attach_section">
                     <input id="attach_upload" name="attachment" type="file">
                 </div>
             </div>
         </div>
-        <hr style="margin: 0 5px">
         {{end}}
         <div class="panel-body">
             <table class="table">

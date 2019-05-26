@@ -44,7 +44,7 @@ func (this *AttachmentController) Page() {
 	}
 
 	// get document attachments
-	attachments, err := models.AttachmentModel.GetAttachmentsByDocumentId(documentId)
+	attachments, err := models.AttachmentModel.GetAttachmentsByDocumentIdAndSource(documentId, models.Attachment_Source_Default)
 	if err != nil {
 		this.ErrorLog("查找文档 " + documentId + " 附件失败：" + err.Error())
 		this.ViewError("查找文档附件失败！")
@@ -153,7 +153,8 @@ func (this *AttachmentController) Upload() {
 		"user_id":     this.UserId,
 		"document_id": documentId,
 		"name":        h.Filename,
-		"path":        attachmentFile,
+		"path":        fmt.Sprintf("attachment/%s/%s/%s", spaceId, documentId, h.Filename),
+		"source":      models.Attachment_Source_Default,
 	}
 	_, err = models.AttachmentModel.Insert(attachment)
 	if err != nil {
@@ -162,6 +163,7 @@ func (this *AttachmentController) Upload() {
 		this.uploadJsonError("附件信息保存失败")
 	}
 
+	this.InfoLog(fmt.Sprintf("文档 %s 上传附件 %s 成功", documentId, h.Filename))
 	this.jsonSuccess("附件上传成功", "", "/attachment/page?document_id="+documentId)
 }
 
@@ -208,7 +210,7 @@ func (this *AttachmentController) Delete() {
 	if !isManager {
 		this.jsonError("您没有权限删除该空间下的文档！")
 	}
-	attachmentFilePath := attachment["path"]
+	attachmentFilePath := path.Join(app.DocumentAbsDir, attachment["path"])
 	attachmentName := attachment["name"]
 
 	// delete db
@@ -272,8 +274,69 @@ func (this *AttachmentController) Download() {
 	if !isVisit {
 		this.ViewError("您没有权限访问或下载该空间下的资料！")
 	}
-	attachmentFilePath := attachment["path"]
+	attachmentFilePath := path.Join(app.DocumentAbsDir, attachment["path"])
 	attachmentName := attachment["name"]
 
 	this.Ctx.Output.Download(attachmentFilePath, attachmentName)
+}
+
+func (this *AttachmentController) Image() {
+
+	documentId := this.GetString("document_id", "")
+	if documentId == "" {
+		this.ViewError("页面参数错误！", "/space/index")
+	}
+
+	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找空间文档 " + documentId + " 失败：" + err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(document) == 0 {
+		this.ViewError("文档不存在！")
+	}
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		this.ErrorLog("查找文档 " + documentId + " 所在空间失败：" + err.Error())
+		this.ViewError("查找文档失败！")
+	}
+	if len(space) == 0 {
+		this.ViewError("文档所在空间不存在！")
+	}
+	// check space visit_level
+	isVisit, isEditor, _ := this.GetDocumentPrivilege(space)
+	if !isVisit {
+		this.ViewError("您没有权限访问该空间下的文档！")
+	}
+
+	// get document attachment images
+	attachments, err := models.AttachmentModel.GetAttachmentsByDocumentIdAndSource(documentId, models.Attachment_Source_Image)
+	if err != nil {
+		this.ErrorLog("查找文档 " + documentId + " 图片失败：" + err.Error())
+		this.ViewError("查找文档图片失败！")
+	}
+
+	// get username
+	userIds := []string{}
+	for _, attachment := range attachments {
+		userIds = append(userIds, attachment["user_id"])
+	}
+	users, err := models.UserModel.GetUsersByUserIds(userIds)
+	if err != nil {
+		this.ErrorLog("查找文档 " + documentId + " 图片失败：" + err.Error())
+		this.ViewError("查找文档图片失败！")
+	}
+	usernameMap := make(map[string]string)
+	for _, user := range users {
+		usernameMap[user["user_id"]] = user["username"]
+	}
+	for _, attachment := range attachments {
+		attachment["username"] = usernameMap[attachment["user_id"]]
+	}
+
+	this.Data["attachments"] = attachments
+	this.Data["document_id"] = documentId
+	this.Data["is_delete"] = isEditor
+	this.viewLayout("attachment/image", "attachment")
 }
