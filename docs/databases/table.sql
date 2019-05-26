@@ -291,7 +291,7 @@ CREATE TABLE `mw_attachment` (
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户id',
   `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '所属文档id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '附件名称',
-  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '附件地址或路径',
+  `path` varchar(100) NOT NULL DEFAULT '' COMMENT '附件路径',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`attachment_id`),

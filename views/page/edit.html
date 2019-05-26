@@ -56,7 +56,7 @@
             toolbarCustomIcons : {
                 sidebar   : '<a onclick="parent.layoutToggle()" title="展开关闭侧边栏"><i class="fa fa-columns item"></i></a>',
                 save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>",
-                attachment : '<a onclick="Page.attachment()" title="上传附件"><i class="fa fa-paperclip item"></i></a>'
+                attachment : '<a onclick="Page.attachment({{$document.document_id}})" title="上传附件"><i class="fa fa-paperclip item"></i></a>'
             },
             theme : "default",
             previewTheme : "default",
