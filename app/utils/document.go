@@ -135,6 +135,17 @@ func (d *document) Update(oldPageFile string, name string, content string, docTy
 	return nil
 }
 
+func (d *document) UpdateSpaceName(oldSpaceName string, newName string) error {
+
+	d.lock.Lock()
+	defer d.lock.Unlock()
+
+	spaceOldDir := d.GetAbsPageFileByPageFile(oldSpaceName)
+	spaceNewDir := d.GetAbsPageFileByPageFile(newName)
+	err := os.Rename(spaceOldDir, spaceNewDir)
+	return err
+}
+
 // delete document
 func (d *document) Delete(path string, docType int) error {
 	d.lock.Lock()

@@ -188,15 +188,17 @@ func (this *SpaceController) Modify() {
 	if ok {
 		this.jsonError("空间名已经存在！")
 	}
-	_, err = models.SpaceModel.Update(spaceId, map[string]interface{}{
+
+	spaceValue := map[string]interface{}{
 		"name":        name,
 		"description": description,
 		"tags":        tags,
 		"visit_level": visitLevel,
 		"is_share":    isShare,
 		"is_export":   isExport,
-	})
-
+	}
+	// update space document dir name if name update
+	_, err = models.SpaceModel.UpdateDBAndSpaceFileName(spaceId, spaceValue, space["name"])
 	if err != nil {
 		this.ErrorLog("修改空间 " + spaceId + " 失败：" + err.Error())
 		this.jsonError("修改空间失败")

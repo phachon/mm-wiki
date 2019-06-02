@@ -102,6 +102,23 @@ func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId str
 	return
 }
 
+// get document by name and spaceId
+func (d *Document) GetDocumentByParentIdAndSpaceId(parentId string, spaceId string, docType int) (document map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"space_id":  spaceId,
+		"parent_id": parentId,
+		"type":      docType,
+		"is_delete": Document_Delete_False,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	document = rs.Row()
+	return
+}
+
 // delete document by document_id
 func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile string, docType string) (err error) {
 	db := G.DB()

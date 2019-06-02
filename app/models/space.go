@@ -149,6 +149,62 @@ func (s *Space) Update(spaceId string, spaceValue map[string]interface{}) (id in
 	return
 }
 
+// update space db and file name by space_id
+func (s *Space) UpdateDBAndSpaceFileName(spaceId string, spaceValue map[string]interface{}, oldName string) (id int64, err error) {
+	// begin update
+	db := G.DB()
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+	var rs *mysql.ResultSet
+
+	// get real old space name (v0.1.2 #53 bug)
+	defaultDocument, err := DocumentModel.GetDocumentByParentIdAndSpaceId("0", spaceId, Document_Type_Dir)
+	if err != nil {
+		return
+	}
+	if oldName != defaultDocument["name"] {
+		oldName = defaultDocument["name"]
+	}
+
+	// update space db
+	spaceValue["update_time"] = time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Update(Table_Space_Name, spaceValue, map[string]interface{}{
+		"space_id":  spaceId,
+		"is_delete": Space_Delete_False,
+	}),tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	documentValue := map[string]interface{}{
+		"name": spaceValue["name"],
+		"update_time": time.Now().Unix(),
+	}
+	// update space document name
+	_, err = db.ExecTx(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
+		"space_id": spaceId,
+		"parent_id": 0,
+		"type": Document_Type_Dir,
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	// update space name
+	err = utils.Document.UpdateSpaceName(oldName, spaceValue["name"].(string))
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Commit()
+
+	return
+}
+
 // get limit spaces by search keyword
 func (s *Space) GetSpacesByKeywordAndLimit(keyword string, limit int, number int) (spaces []map[string]string, err error) {
 
