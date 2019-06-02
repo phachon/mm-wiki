@@ -30,7 +30,7 @@ func NewDocument(documentAbsDir string, markdownAbsDir string) *document {
 type document struct {
 	DocumentAbsDir string
 	MarkdownAbsDir string
-	lock       sync.Mutex
+	lock           sync.Mutex
 }
 
 // get document page file by parentPath

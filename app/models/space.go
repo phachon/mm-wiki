@@ -173,7 +173,7 @@ func (s *Space) UpdateDBAndSpaceFileName(spaceId string, spaceValue map[string]i
 	rs, err = db.ExecTx(db.AR().Update(Table_Space_Name, spaceValue, map[string]interface{}{
 		"space_id":  spaceId,
 		"is_delete": Space_Delete_False,
-	}),tx)
+	}), tx)
 	if err != nil {
 		tx.Rollback()
 		return
@@ -181,14 +181,14 @@ func (s *Space) UpdateDBAndSpaceFileName(spaceId string, spaceValue map[string]i
 	id = rs.LastInsertId
 
 	documentValue := map[string]interface{}{
-		"name": spaceValue["name"],
+		"name":        spaceValue["name"],
 		"update_time": time.Now().Unix(),
 	}
 	// update space document name
 	_, err = db.ExecTx(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
-		"space_id": spaceId,
+		"space_id":  spaceId,
 		"parent_id": 0,
-		"type": Document_Type_Dir,
+		"type":      Document_Type_Dir,
 	}), tx)
 	if err != nil {
 		tx.Rollback()

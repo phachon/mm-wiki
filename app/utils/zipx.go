@@ -20,9 +20,9 @@ func NewZipx() *zipx {
 }
 
 type CompressFileInfo struct {
-	File string
+	File       string
 	PrefixPath string
-	osFile *os.File
+	osFile     *os.File
 }
 
 func (z *zipx) PackFile(files []*CompressFileInfo, dest string) error {
@@ -182,7 +182,7 @@ func (z *zipx) subString(str string, start, end int) string {
 }
 
 // srcFile could be a single file or a directory
-func (z *zipx)Zip(srcFile string, destZip string) error {
+func (z *zipx) Zip(srcFile string, destZip string) error {
 	zipfile, err := os.Create(destZip)
 	if err != nil {
 		return err
@@ -202,8 +202,7 @@ func (z *zipx)Zip(srcFile string, destZip string) error {
 			return err
 		}
 
-
-		header.Name = strings.TrimPrefix(path, filepath.Dir(srcFile) + "/")
+		header.Name = strings.TrimPrefix(path, filepath.Dir(srcFile)+"/")
 		// header.Name = path
 		if info.IsDir() {
 			header.Name += "/"

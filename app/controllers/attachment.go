@@ -230,7 +230,7 @@ func (this *AttachmentController) Delete() {
 		redirect = fmt.Sprintf("/attachment/image?document_id=%s", documentId)
 	}
 
-	this.InfoLog("删除文档 "+documentId+" 附件 " + attachmentName + " 成功")
+	this.InfoLog("删除文档 " + documentId + " 附件 " + attachmentName + " 成功")
 	this.jsonSuccess("删除成功", nil, redirect)
 }
 

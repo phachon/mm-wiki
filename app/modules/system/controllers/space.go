@@ -356,7 +356,7 @@ func (this *SpaceController) Download() {
 
 	// pack space all markdown file
 	packFiles = append(packFiles, &utils.CompressFileInfo{
-		File: spacePath,
+		File:       spacePath,
 		PrefixPath: "",
 	})
 
@@ -373,7 +373,7 @@ func (this *SpaceController) Download() {
 		path := attachment["path"]
 		attachmentFile := filepath.Join(app.DocumentAbsDir, path)
 		packFile := &utils.CompressFileInfo{
-			File: attachmentFile,
+			File:       attachmentFile,
 			PrefixPath: filepath.Dir(path),
 		}
 		packFiles = append(packFiles, packFile)

@@ -11,7 +11,7 @@ const Table_Attachment_Name = "attachment"
 
 const (
 	Attachment_Source_Default = 0
-	Attachment_Source_Image = 1
+	Attachment_Source_Image   = 1
 )
 
 type Attachment struct {
@@ -86,7 +86,7 @@ func (a *Attachment) GetAttachmentsByDocumentIdAndSource(documentId string, sour
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Attachment_Name).Where(map[string]interface{}{
 		"document_id": documentId,
-		"source": source,
+		"source":      source,
 	}).OrderBy("attachment_id", "desc"))
 	if err != nil {
 		return
