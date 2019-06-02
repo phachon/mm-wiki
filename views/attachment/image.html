@@ -1,0 +1,43 @@
+<div class="container-fluid">{{$attachments := .attachments}}{{$documentId := .document_id}}
+    <div id="failedBox" style="margin: 0 0 6px 0"></div>{{$isDelete := .is_delete}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <ul class="nav nav-tabs">
+                    <li><a href="/attachment/page?document_id={{$documentId}}">附件</a></li>
+                    <li class="active"><a href="/attachment/image?document_id={{$documentId}}">图片</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <td class="text-left"><strong>图片</strong></td>
+                    <td class="w15p text-left"><strong>上传用户</strong></td>
+                    <td class="w20p text-left"><strong>上传时间</strong></td>
+                    <td class="w11p center"><strong>操作</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $attachment := $attachments}}
+                    <tr>
+                        <td>
+                            <a target="_blank" href="/{{$attachment.path}}" class="thumbnail" style="width: 100px;height: 80px;margin-bottom: 0">
+                                <img src="/{{$attachment.path}}">
+                            </a>
+                        </td>
+                        <td>{{$attachment.username}}</td>
+                        <td>{{dateFormat $attachment.create_time "Y-m-d H:i:s"}}</td>
+                        <td class="center">
+                            {{if eq $isDelete true}}
+                            <a onclick="Layers.confirm('确定删除图片吗？', '/attachment/delete?attachment_id={{$attachment.attachment_id}}');"><i class="glyphicon glyphicon-trash"></i></a>
+                            {{end}}
+                        </td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

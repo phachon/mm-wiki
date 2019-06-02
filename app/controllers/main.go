@@ -34,11 +34,12 @@ func (this *MainController) Index() {
 func (this *MainController) Default() {
 
 	page, _ := this.GetInt("page", 1)
+	number, _ := this.GetInt("number", 10)
 	maxPage := 10
 	if page >= maxPage {
 		page = maxPage
 	}
-	number := 8
+	//number := 8
 	limit := (page - 1) * number
 
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
@@ -140,8 +141,7 @@ func (this *MainController) Search() {
 
 	page, _ := this.GetInt("page", 1)
 	documentName := this.GetString("document_name", "")
-
-	number := 15
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	limit := (page - 1) * number
 
 	var documents = []map[string]string{}

@@ -15,7 +15,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/fatih/color"
 	"github.com/snail007/go-activerecord/mysql"
-
 )
 
 var (
@@ -35,7 +34,13 @@ var (
 
 	RootDir = ""
 
+	DocumentAbsDir = ""
+
+	MarkdownAbsDir = ""
+
 	ImageAbsDir = ""
+
+	AttachmentAbsDir = ""
 )
 
 func init() {
@@ -94,7 +99,11 @@ func initConfig() {
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
 	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
 
-	RootDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	RootDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Println("init config error: "+err.Error())
+		os.Exit(1)
+	}
 
 	// set static path
 	beego.SetStaticPath("/static/", filepath.Join(RootDir, "./static"))
@@ -156,15 +165,26 @@ func initDocumentDir() {
 		os.Exit(1)
 	}
 
-	rootAbsDir, err := filepath.Abs(docRootDir)
+	documentAbsDir, err := filepath.Abs(docRootDir)
 	if err != nil {
 		beego.Error("document root dir " + docRootDir + " is error!")
 		os.Exit(1)
 	}
 
-	markDownAbsDir := path.Join(rootAbsDir, "markdowns")
-	imagesAbsDir := path.Join(rootAbsDir, "images")
+	DocumentAbsDir = documentAbsDir
 
+	// markdown save dir
+	markDownAbsDir := path.Join(documentAbsDir, "markdowns")
+	// image save dir
+	imagesAbsDir := path.Join(documentAbsDir, "images")
+	// attachment save dir
+	attachmentAbsDir := path.Join(documentAbsDir, "attachment")
+
+	MarkdownAbsDir = markDownAbsDir
+	ImageAbsDir = imagesAbsDir
+	AttachmentAbsDir = attachmentAbsDir
+
+	// create markdown dir
 	ok, _ = utils.File.PathIsExists(markDownAbsDir)
 	if !ok {
 		err := os.Mkdir(markDownAbsDir, 0777)
@@ -173,7 +193,7 @@ func initDocumentDir() {
 			os.Exit(1)
 		}
 	}
-
+	// create image dir
 	ok, _ = utils.File.PathIsExists(imagesAbsDir)
 	if !ok {
 		err := os.Mkdir(imagesAbsDir, 0777)
@@ -182,11 +202,23 @@ func initDocumentDir() {
 			os.Exit(1)
 		}
 	}
+	// create attachment dir
+	ok, _ = utils.File.PathIsExists(attachmentAbsDir)
+	if !ok {
+		err := os.Mkdir(attachmentAbsDir, 0777)
+		if err != nil {
+			beego.Error("create document attachment dir " + attachmentAbsDir + " error!")
+			os.Exit(1)
+		}
+	}
 
-	utils.Document.RootAbsDir = markDownAbsDir
-	ImageAbsDir = imagesAbsDir
+	// utils document
+	utils.Document.MarkdownAbsDir = markDownAbsDir
+	utils.Document.DocumentAbsDir = documentAbsDir
 
 	beego.SetStaticPath("/images/", ImageAbsDir)
+	// todo
+	beego.SetStaticPath("/images/:space_id/:document_id/", ImageAbsDir)
 }
 
 // check upgrade

@@ -169,7 +169,7 @@ func (this *ProfileController) FollowUser() {
 func (this *ProfileController) FollowDoc() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 10
+	number, _ := this.GetRangeInt("number", 10, 10, 100)
 	limit := (page - 1) * number
 
 	// follow docs limit
@@ -221,7 +221,7 @@ func (this *ProfileController) FollowDoc() {
 func (this *ProfileController) Activity() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 12
+	number, _ := this.GetRangeInt("number", 15, 10, 100)
 	limit := (page - 1) * number
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
 

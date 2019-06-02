@@ -221,7 +221,7 @@ func (this *DocumentController) History() {
 
 	page, _ := this.GetInt("page", 1)
 	documentId := this.GetString("document_id", "0")
-	number := 8
+	number, _ := this.GetRangeInt("number", 10, 10, 100)
 	limit := (page - 1) * number
 
 	if documentId == "0" {
@@ -427,6 +427,12 @@ func (this *DocumentController) Delete() {
 	if err != nil {
 		this.ErrorLog("删除文档 " + documentId + " 失败：" + err.Error())
 		this.jsonError("删除文档失败！")
+	}
+
+	// delete attachment
+	err = models.AttachmentModel.DeleteAttachmentsDBFileByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("删除文档 " + documentId + " 附件失败：" + err.Error())
 	}
 
 	this.InfoLog("删除文档 " + documentId + " 成功")

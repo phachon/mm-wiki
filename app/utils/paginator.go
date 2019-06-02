@@ -21,15 +21,20 @@ import (
 	"strconv"
 )
 
+// 默认的每页条数的选择范围
+var defaultPerPageNumsSelect = []int{10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100}
+
 type Paginator struct {
-	Request       *http.Request
-	PerPageNums   int
-	MaxPages      int
-	nums          int64
-	pageRange     []int
-	pageNums      int
-	page          int
-	pageParamName string
+	Request             *http.Request
+	PerPageNums         int
+	PerPageNumsSelect   []int
+	MaxPages            int
+	nums                int64
+	pageRange           []int
+	pageNums            int
+	page                int
+	pageParamName       string
+	perPageNumParamName string
 }
 
 func (p *Paginator) PageNums() int {
@@ -50,6 +55,21 @@ func (p *Paginator) Nums() int64 {
 
 func (p *Paginator) SetNums(nums interface{}) {
 	p.nums, _ = NewConvert().ToInt64(nums)
+}
+
+func (p *Paginator) SetPrePageNumsSelect(selectNums []int) {
+	p.PerPageNumsSelect = selectNums
+}
+
+func (p *Paginator) SetPerPageNums(perPageNums int) {
+
+	if perPageNums < p.PerPageNumsSelect[0] {
+		perPageNums = p.PerPageNumsSelect[0]
+	}
+	if perPageNums > p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1] {
+		perPageNums = p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1]
+	}
+	p.PerPageNums = perPageNums
 }
 
 func (p *Paginator) Page() int {
@@ -106,6 +126,29 @@ func (p *Paginator) PageLink(page int) string {
 	} else {
 		values.Set(p.pageParamName, strconv.Itoa(page))
 	}
+
+	if p.PerPageNums < p.PerPageNumsSelect[0] {
+		p.PerPageNums = p.PerPageNumsSelect[0]
+	}
+	if p.PerPageNums > p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1] {
+		p.PerPageNums = p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1]
+	}
+	values.Set(p.perPageNumParamName, strconv.Itoa(p.PerPageNums))
+	link.RawQuery = values.Encode()
+	return link.String()
+}
+
+func (p *Paginator) PrePageNumLink(perPageNum int) string {
+	link, _ := url.ParseRequestURI(p.Request.RequestURI)
+	values := link.Query()
+
+	if perPageNum < p.PerPageNumsSelect[0] {
+		perPageNum = p.PerPageNumsSelect[0]
+	}
+	if perPageNum > p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1] {
+		perPageNum = p.PerPageNumsSelect[len(p.PerPageNumsSelect)-1]
+	}
+	values.Set(p.perPageNumParamName, strconv.Itoa(perPageNum))
 	link.RawQuery = values.Encode()
 	return link.String()
 }
@@ -157,10 +200,13 @@ func NewPaginator(req *http.Request, per int, nums interface{}) *Paginator {
 	p.Request = req
 	// 翻页参数名，默认为 page
 	p.pageParamName = "page"
+	// 每页条数参数名，默认为 "number"
+	p.perPageNumParamName = "number"
 	if per <= 0 {
 		per = 10
 	}
-	p.PerPageNums = per
+	p.SetPrePageNumsSelect(defaultPerPageNumsSelect)
+	p.SetPerPageNums(per)
 	p.SetNums(nums)
 	return &p
 }

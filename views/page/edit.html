@@ -35,17 +35,19 @@
             css : "/static/plugins/editor.md/lib/katex/katex.min"
         };
         var editor = editormd("document_page_editor", {
+            placeholder: "欢迎使用 MM-Wiki, 支持 Markdown 语法",
             width: "100%",
             // height: height,
             path : '/static/plugins/editor.md/lib/',
             toolbarIcons : function() {
                 // Using "||" set icons align right.
                 return [
-                    "sidebar", "save", "|", "undo", "redo", "|",
+                    "sidebar", "save", "|",
+                    "undo", "redo", "|",
                     "bold", "del", "italic", "quote", "|",
                     "h1", "h2", "h3", "h4", "h5", "h6", "|",
                     "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+                    "link", "reference-link", "image", "attachment", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
                     "goto-line", "watch", "preview", "search", "|",
                     "help"
                 ]
@@ -53,7 +55,8 @@
             // 增加自定义工具栏
             toolbarCustomIcons : {
                 sidebar   : '<a onclick="parent.layoutToggle()" title="展开关闭侧边栏"><i class="fa fa-columns item"></i></a>',
-                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>"
+                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>",
+                attachment : '<a onclick="Page.attachment({{$document.document_id}})" title="上传附件"><i class="fa fa-paperclip item"></i></a>'
             },
             theme : "default",
             previewTheme : "default",
@@ -65,7 +68,8 @@
             saveHTMLToTextarea: false,    // 保存 HTML 到 Textarea
             searchReplace: true,
             //watch : false,                // 关闭实时预览
-            htmlDecode : "style,script,iframe|on*",  // 开启 HTML 标签解析，为了安全性，默认不开启
+            // htmlDecode : "style,script,iframe|on*,alert",  // 开启 HTML 标签解析，为了安全性，默认不开启
+            htmlDecode : "style,script,iframe,sub,sup,embed,img|on*",  // 开启 HTML 标签解析，为了安全性，默认不开启
             //toolbar  : false,             //关闭工具栏
             //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
             emoji : false,
@@ -81,7 +85,7 @@
             //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
             imageUpload : true,
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/image/upload",
+            imageUploadURL : "/image/upload?document_id={{$document.document_id}}",
             onload : function() {
                 var docStorage = Storage.get(storageId);
                 if (docStorage !== "") {

@@ -269,6 +269,20 @@ func (this *TemplateController) IsRoot() bool {
 	return this.User["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id)
 }
 
+func (this *TemplateController) GetRangeInt(key string, def int, min int, max int) (n int, err error) {
+	n, err = this.GetInt(key, def)
+	if err != nil {
+		return
+	}
+	if n < min {
+		n = min
+	}
+	if n > max {
+		n = max
+	}
+	return n, nil
+}
+
 func (this *TemplateController) GetDocumentPrivilege(space map[string]string) (isVisit, isEditor, isManager bool) {
 
 	if this.IsRoot() {

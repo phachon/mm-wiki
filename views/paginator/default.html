@@ -1,6 +1,15 @@
-{{if gt .paginator.PageNums 1 }}
+{{if gt .paginator.Nums 0 }}
 <ul class="pagination pagination-sm">
     <li><span>共 {{.paginator.Nums}} 条数据 </span></li>
+    <li class="pagination-select">
+        <span>
+        <select class="pagination-select-xs" onchange="window.location=this.value">
+            {{range $index, $numSelect := .paginator.PerPageNumsSelect}}
+                <option value="{{$.paginator.PrePageNumLink $numSelect}}" {{if eq $.paginator.PerPageNums $numSelect}} selected="selected" {{end}}>{{$numSelect}}条/页</option>
+            {{end}}
+        </select>
+    </span>
+    </li>
     {{if .paginator.HasPrev}}
     <li><a href="{{.paginator.PageLinkFirst}}">首页</a></li>
     <li><a href="{{.paginator.PageLinkPrev}}"><span><i class="glyphicon glyphicon-backward"></i></span></a></li>

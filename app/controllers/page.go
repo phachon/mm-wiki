@@ -3,11 +3,13 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"regexp"
-	"strings"
-
+	"mm-wiki/app"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
 
 	"github.com/astaxie/beego"
 )
@@ -331,7 +333,7 @@ func (this *PageController) Display() {
 	// get document content
 	documentContent, err := utils.Document.GetContentByPageFile(pageFile)
 	if err != nil {
-		this.ErrorLog("查找文档 " + documentId + " 失败：" + err.Error())
+		this.ErrorLog("查找文档 " + documentId + " 内容失败：" + err.Error())
 		this.ViewError("文档不存在！")
 	}
 
@@ -394,7 +396,7 @@ func (this *PageController) Export() {
 	// check space document privilege
 	isVisit, _, _ := this.GetDocumentPrivilege(space)
 	if !isVisit {
-		this.jsonError("您没有权限导出该空间下文档！")
+		this.ViewError("您没有权限导出该空间下文档！")
 	}
 
 	// check space is allow export
@@ -412,9 +414,41 @@ func (this *PageController) Export() {
 		this.ViewError("父文档不存在！")
 	}
 
-	// get document file
+	packFiles := []*utils.CompressFileInfo{}
+
 	absPageFile := utils.Document.GetAbsPageFileByPageFile(pageFile)
-	this.Ctx.Output.Download(absPageFile, document["name"]+utils.Document_Page_Suffix)
+	// pack document file
+	packFiles = append(packFiles, &utils.CompressFileInfo{
+		File: absPageFile,
+		PrefixPath: "",
+	})
+
+	// get document attachments
+	attachments, err := models.AttachmentModel.GetAttachmentsByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("查找文档附件失败：" + err.Error())
+		this.ViewError("查找文档附件失败！")
+	}
+	for _, attachment := range attachments {
+		if attachment["path"] == "" {
+			continue
+		}
+		path := attachment["path"]
+		attachmentFile := filepath.Join(app.DocumentAbsDir, path)
+		packFile := &utils.CompressFileInfo{
+			File: attachmentFile,
+			PrefixPath: filepath.Dir(path),
+		}
+		packFiles = append(packFiles, packFile)
+	}
+	var dest = fmt.Sprintf("%s/mm_wiki/%s.zip", os.TempDir(), document["name"])
+	err = utils.Zipx.PackFile(packFiles, dest)
+	if err != nil {
+		this.ErrorLog("导出文档附件失败：" + err.Error())
+		this.ViewError("导出文档失败！")
+	}
+
+	this.Ctx.Output.Download(dest, document["name"] + ".zip")
 }
 
 func sendEmail(documentId string, username string, comment string, url string) error {
