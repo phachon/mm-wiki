@@ -32,6 +32,8 @@ var (
 
 	StartTime = int64(0)
 
+	RootDir = ""
+
 	DocumentAbsDir = ""
 
 	MarkdownAbsDir = ""
@@ -97,7 +99,11 @@ func initConfig() {
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
 	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
 
-	RootDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	RootDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Println("init config error: "+err.Error())
+		os.Exit(1)
+	}
 
 	// set static path
 	beego.SetStaticPath("/static/", filepath.Join(RootDir, "./static"))
