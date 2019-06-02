@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"fmt"
+	"mm-wiki/app"
 	"mm-wiki/app/models"
 	"mm-wiki/app/utils"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -296,10 +298,12 @@ func (this *SpaceController) Delete() {
 			// delete space dir and documentId
 			_, pageFile, err := models.DocumentModel.GetParentDocumentsByDocument(documents[0])
 			if err != nil {
-				this.ErrorLog("删除空间 " + spaceId + " 失败: " + err.Error())
+				this.ErrorLog("删除空间 " + spaceId + " 获取空间文件失败: " + err.Error())
 				this.jsonError("删除空间失败")
 			}
 			err = models.DocumentModel.DeleteDBAndFile(documents[0]["document_id"], this.UserId, pageFile, fmt.Sprintf("%d", models.Document_Type_Dir))
+			// delete space document attachments
+			_ = models.AttachmentModel.DeleteAttachmentsDBFileByDocumentId(documents[0]["document_id"])
 		}
 	} else {
 		// delete space dir
@@ -346,23 +350,37 @@ func (this *SpaceController) Download() {
 	spaceName := space["name"]
 	spacePath := utils.Document.GetAbsPageFileByPageFile(spaceName)
 
-	f3, err := os.Open(spacePath)
+	packFiles := []*utils.CompressFileInfo{}
+
+	// pack space all markdown file
+	packFiles = append(packFiles, &utils.CompressFileInfo{
+		File: spacePath,
+		PrefixPath: "",
+	})
+
+	// get space all document attachments
+	attachments, err := models.AttachmentModel.GetAttachmentsBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("下载空间 " + spaceId + " 打开空间目录失败：" + err.Error())
-		this.ViewError("下载空间文档失败")
+		this.ErrorLog("查找空间文档附件失败：" + err.Error())
+		this.ViewError("查找空间文档附件失败！")
 	}
-	defer f3.Close()
-	var files = []*os.File{f3}
-
-	tempDir := os.TempDir() + "/" + "mmwiki"
-	os.RemoveAll(tempDir)
-	os.Mkdir(tempDir, 0777)
-	var dest = tempDir + "/" + spaceName + ".zip"
-
-	err = utils.Zipx.Compress(files, dest)
+	for _, attachment := range attachments {
+		if attachment["path"] == "" {
+			continue
+		}
+		path := attachment["path"]
+		attachmentFile := filepath.Join(app.DocumentAbsDir, path)
+		packFile := &utils.CompressFileInfo{
+			File: attachmentFile,
+			PrefixPath: filepath.Dir(path),
+		}
+		packFiles = append(packFiles, packFile)
+	}
+	var dest = fmt.Sprintf("%s/mm_wiki/%s.zip", os.TempDir(), spaceName)
+	err = utils.Zipx.PackFile(packFiles, dest)
 	if err != nil {
-		this.ErrorLog("下载空间 " + spaceId + " 压缩文档失败：" + err.Error())
-		this.ViewError("空间文档压缩失败")
+		this.ErrorLog("下载空间文档失败：" + err.Error())
+		this.ViewError("下载空间文档失败！")
 	}
 
 	this.Ctx.Output.Download(dest, spaceName+".zip")

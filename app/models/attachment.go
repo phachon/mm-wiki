@@ -109,6 +109,34 @@ func (a *Attachment) GetAttachmentsByDocumentId(documentId string) (attachments 
 	return
 }
 
+// get attachments by document_id
+func (a *Attachment) GetAttachmentsByDocumentIds(documentIds []string) (attachments []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Attachment_Name).Where(map[string]interface{}{
+		"document_id": documentIds,
+	}))
+	if err != nil {
+		return
+	}
+	attachments = rs.Rows()
+	return
+}
+
+// get attachments by space_id
+func (a *Attachment) GetAttachmentsBySpaceId(spaceId string) (attachments []map[string]string, err error) {
+	documents, err := DocumentModel.GetDocumentsBySpaceId(spaceId)
+	if err != nil {
+		return
+	}
+	documentIds := []string{}
+	for _, document := range documents {
+		documentIds = append(documentIds, document["document_id"])
+	}
+
+	return a.GetAttachmentsByDocumentIds(documentIds)
+}
+
 // delete attachment by attachment_id
 func (a *Attachment) Delete(attachmentId string) (err error) {
 	db := G.DB()
