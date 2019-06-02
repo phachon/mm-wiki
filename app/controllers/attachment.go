@@ -210,19 +210,14 @@ func (this *AttachmentController) Delete() {
 	if !isManager {
 		this.jsonError("您没有权限删除该空间下的文档！")
 	}
-	attachmentFilePath := path.Join(app.DocumentAbsDir, attachment["path"])
 	attachmentName := attachment["name"]
+	attachmentSource := attachment["source"]
 
 	// delete db
-	err = models.AttachmentModel.Delete(attachmentId)
+	err = models.AttachmentModel.DeleteAttachmentDBFile(attachmentId)
 	if err != nil {
 		this.ErrorLog("删除附件 " + attachmentId + " 失败: " + err.Error())
 		this.jsonError("删除附件失败")
-	}
-	// delete file
-	err = os.Remove(attachmentFilePath)
-	if err != nil {
-		this.WarningLog("删除附件 " + attachmentFilePath + " 失败: " + err.Error())
 	}
 
 	// update document log
@@ -230,8 +225,13 @@ func (this *AttachmentController) Delete() {
 		_, _ = models.LogDocumentModel.UpdateAction(this.UserId, documentId, "删除了附件 "+attachmentName)
 	}()
 
-	this.InfoLog("删除附件 " + attachmentId + " 成功")
-	this.jsonSuccess("删除附件成功", nil, "/attachment/page?document_id="+documentId)
+	redirect := fmt.Sprintf("/attachment/page?document_id=%s", documentId)
+	if attachmentSource == fmt.Sprintf("%d", models.Attachment_Source_Image) {
+		redirect = fmt.Sprintf("/attachment/image?document_id=%s", documentId)
+	}
+
+	this.InfoLog("删除文档 "+documentId+" 附件 " + attachmentName + " 成功")
+	this.jsonSuccess("删除成功", nil, redirect)
 }
 
 func (this *AttachmentController) Download() {

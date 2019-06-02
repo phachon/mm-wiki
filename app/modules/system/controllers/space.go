@@ -359,7 +359,6 @@ func (this *SpaceController) Download() {
 	os.Mkdir(tempDir, 0777)
 	var dest = tempDir + "/" + spaceName + ".zip"
 
-	fmt.Println(dest)
 	err = utils.Zipx.Compress(files, dest)
 	if err != nil {
 		this.ErrorLog("下载空间 " + spaceId + " 压缩文档失败：" + err.Error())

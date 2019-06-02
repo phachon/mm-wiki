@@ -4,16 +4,75 @@ import (
 	"archive/zip"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
+	"sync"
 )
 
 var Zipx = NewZipx()
 
 type zipx struct {
+	lock sync.Mutex
 }
 
 func NewZipx() *zipx {
 	return &zipx{}
+}
+
+type CompressFileInfo struct {
+	File string
+	PrefixPath string
+	osFile *os.File
+}
+
+func (z *zipx) PackFile(files []*CompressFileInfo, dest string) error {
+
+	z.lock.Lock()
+	defer z.lock.Unlock()
+
+	// create dest file
+	destDir := filepath.Dir(dest)
+	err := os.RemoveAll(destDir)
+	if err != nil {
+		return err
+	}
+	err = os.MkdirAll(destDir, 0777)
+	if err != nil {
+		return err
+	}
+	d, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+
+	// file handle
+	for _, f := range files {
+		f3, err := os.Open(f.File)
+		if err != nil {
+			continue
+		}
+		f.osFile = f3
+	}
+	defer func() {
+		for _, f := range files {
+			if f.osFile == nil {
+				continue
+			}
+			_ = f.osFile.Close()
+		}
+	}()
+
+	// zip writer
+	w := zip.NewWriter(d)
+	defer w.Close()
+	for _, file := range files {
+		err := z.compress(file.osFile, file.PrefixPath, w)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (z *zipx) Compress(files []*os.File, dest string) error {
@@ -22,7 +81,7 @@ func (z *zipx) Compress(files []*os.File, dest string) error {
 	w := zip.NewWriter(d)
 	defer w.Close()
 	for _, file := range files {
-		err := z.compress(file, "", w)
+		err := z.compress(file, "images/1/4", w)
 		if err != nil {
 			return err
 		}
@@ -120,4 +179,53 @@ func (z *zipx) subString(str string, start, end int) string {
 	}
 
 	return string(rs[start:end])
+}
+
+// srcFile could be a single file or a directory
+func (z *zipx)Zip(srcFile string, destZip string) error {
+	zipfile, err := os.Create(destZip)
+	if err != nil {
+		return err
+	}
+	defer zipfile.Close()
+
+	archive := zip.NewWriter(zipfile)
+	defer archive.Close()
+
+	_ = filepath.Walk(srcFile, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+
+
+		header.Name = strings.TrimPrefix(path, filepath.Dir(srcFile) + "/")
+		// header.Name = path
+		if info.IsDir() {
+			header.Name += "/"
+		} else {
+			header.Method = zip.Deflate
+		}
+
+		writer, err := archive.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			file, err := os.Open(path)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+			_, err = io.Copy(writer, file)
+		}
+		return err
+	})
+
+	return err
 }

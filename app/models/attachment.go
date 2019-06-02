@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/snail007/go-activerecord/mysql"
+	"mm-wiki/app/utils"
 	"time"
 )
 
@@ -79,7 +80,7 @@ func (a *Attachment) GetAttachmentByName(name string) (attachment map[string]str
 	return
 }
 
-// get attachments by document
+// get attachments by document and source
 func (a *Attachment) GetAttachmentsByDocumentIdAndSource(documentId string, source int) (attachments []map[string]string, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
@@ -87,6 +88,20 @@ func (a *Attachment) GetAttachmentsByDocumentIdAndSource(documentId string, sour
 		"document_id": documentId,
 		"source": source,
 	}).OrderBy("attachment_id", "desc"))
+	if err != nil {
+		return
+	}
+	attachments = rs.Rows()
+	return
+}
+
+// get attachments by document_id
+func (a *Attachment) GetAttachmentsByDocumentId(documentId string) (attachments []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Attachment_Name).Where(map[string]interface{}{
+		"document_id": documentId,
+	}))
 	if err != nil {
 		return
 	}
@@ -173,4 +188,50 @@ func (a *Attachment) GetAttachmentByAttachmentIds(attachmentIds []string) (attac
 	}
 	attachments = rs.Rows()
 	return
+}
+
+func (a *Attachment) DeleteAttachmentsDBFileByDocumentId(documentId string) (err error) {
+	db := G.DB()
+	attachments, err := a.GetAttachmentsByDocumentId(documentId)
+	if err != nil {
+		return
+	}
+
+	// delete attachment file
+	err = utils.Document.DeleteAttachment(attachments)
+	if err != nil {
+		return err
+	}
+
+	// delete db attachment
+	_, err = db.Exec(db.AR().Delete(Table_Attachment_Name, map[string]interface{}{
+		"document_id": documentId,
+	}))
+	if err != nil {
+		return
+	}
+	return nil
+}
+
+func (a *Attachment) DeleteAttachmentDBFile(attachmentId string) (err error) {
+	db := G.DB()
+	attachment, err := a.GetAttachmentByAttachmentId(attachmentId)
+	if err != nil {
+		return
+	}
+
+	// delete attachment file
+	err = utils.Document.DeleteAttachment([]map[string]string{attachment})
+	if err != nil {
+		return err
+	}
+
+	// delete db attachment
+	_, err = db.Exec(db.AR().Delete(Table_Attachment_Name, map[string]interface{}{
+		"attachment_id": attachmentId,
+	}))
+	if err != nil {
+		return
+	}
+	return nil
 }

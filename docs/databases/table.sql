@@ -188,7 +188,7 @@ CREATE TABLE `mw_log_document` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mw_log`;
 CREATE TABLE `mw_log` (
-  `log_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '系统操作日志 id',
+  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '系统操作日志 id',
   `level` tinyint(3) NOT NULL DEFAULT '6' COMMENT '日志级别',
   `path` char(100) NOT NULL DEFAULT '' COMMENT '请求路径',
   `get` text NOT NULL COMMENT 'get参数',

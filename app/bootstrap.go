@@ -32,8 +32,6 @@ var (
 
 	StartTime = int64(0)
 
-	RootDir = ""
-
 	DocumentAbsDir = ""
 
 	MarkdownAbsDir = ""
@@ -161,20 +159,24 @@ func initDocumentDir() {
 		os.Exit(1)
 	}
 
-	rootAbsDir, err := filepath.Abs(docRootDir)
+	documentAbsDir, err := filepath.Abs(docRootDir)
 	if err != nil {
 		beego.Error("document root dir " + docRootDir + " is error!")
 		os.Exit(1)
 	}
 
-	DocumentAbsDir = rootAbsDir
+	DocumentAbsDir = documentAbsDir
 
 	// markdown save dir
-	markDownAbsDir := path.Join(rootAbsDir, "markdowns")
+	markDownAbsDir := path.Join(documentAbsDir, "markdowns")
 	// image save dir
-	imagesAbsDir := path.Join(rootAbsDir, "images")
+	imagesAbsDir := path.Join(documentAbsDir, "images")
 	// attachment save dir
-	attachmentAbsDir := path.Join(rootAbsDir, "attachment")
+	attachmentAbsDir := path.Join(documentAbsDir, "attachment")
+
+	MarkdownAbsDir = markDownAbsDir
+	ImageAbsDir = imagesAbsDir
+	AttachmentAbsDir = attachmentAbsDir
 
 	// create markdown dir
 	ok, _ = utils.File.PathIsExists(markDownAbsDir)
@@ -204,10 +206,9 @@ func initDocumentDir() {
 		}
 	}
 
-	utils.Document.RootAbsDir = markDownAbsDir
-	MarkdownAbsDir = markDownAbsDir
-	ImageAbsDir = imagesAbsDir
-	AttachmentAbsDir = attachmentAbsDir
+	// utils document
+	utils.Document.MarkdownAbsDir = markDownAbsDir
+	utils.Document.DocumentAbsDir = documentAbsDir
 
 	beego.SetStaticPath("/images/", ImageAbsDir)
 	// todo

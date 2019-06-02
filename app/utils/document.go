@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-var Document = NewDocument("./data")
+var Document = NewDocument("./data", "./data/markdowns")
 
 const (
 	Document_Default_FileName = "README"
@@ -20,14 +20,16 @@ const (
 	Document_Type_Dir  = 2
 )
 
-func NewDocument(rootAbsDir string) *document {
+func NewDocument(documentAbsDir string, markdownAbsDir string) *document {
 	return &document{
-		RootAbsDir: rootAbsDir,
+		DocumentAbsDir: documentAbsDir,
+		MarkdownAbsDir: markdownAbsDir,
 	}
 }
 
 type document struct {
-	RootAbsDir string
+	DocumentAbsDir string
+	MarkdownAbsDir string
 	lock       sync.Mutex
 }
 
@@ -48,7 +50,7 @@ func (d *document) GetDefaultPageFileBySpaceName(name string) string {
 
 // get document abs pageFile
 func (d *document) GetAbsPageFileByPageFile(pageFile string) string {
-	return d.RootAbsDir + "/" + pageFile
+	return d.MarkdownAbsDir + "/" + pageFile
 }
 
 // get document content by pageFile
@@ -176,4 +178,23 @@ func (d *document) Move(movePath string, targetPath string, docType int) error {
 		return os.Rename(absOldPageFile, absTargetPageFile)
 	}
 	return os.Rename(filepath.Dir(absOldPageFile), filepath.Dir(absTargetPageFile))
+}
+
+// delete document attachment
+func (d *document) DeleteAttachment(attachments []map[string]string) error {
+	d.lock.Lock()
+	defer d.lock.Unlock()
+
+	if len(attachments) == 0 {
+		return nil
+	}
+	// delete attachment file
+	for _, attachment := range attachments {
+		if len(attachment) == 0 || attachment["path"] == "" {
+			continue
+		}
+		file := filepath.Join(d.DocumentAbsDir, attachment["path"])
+		_ = os.Remove(file)
+	}
+	return nil
 }

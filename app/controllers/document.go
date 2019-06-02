@@ -429,6 +429,12 @@ func (this *DocumentController) Delete() {
 		this.jsonError("删除文档失败！")
 	}
 
+	// delete attachment
+	err = models.AttachmentModel.DeleteAttachmentsDBFileByDocumentId(documentId)
+	if err != nil {
+		this.ErrorLog("删除文档 " + documentId + " 附件失败：" + err.Error())
+	}
+
 	this.InfoLog("删除文档 " + documentId + " 成功")
 	this.jsonSuccess("删除文档成功", "", "/document/index?document_id="+document["parent_id"])
 }
