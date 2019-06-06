@@ -130,8 +130,12 @@ $ cd mm-wiki
 $ go build ./
 ```
 
-## 喝杯饮料
+## 支持
+请作者喝杯茶吧！
 
+![wechat](./static/images/preview/wechat_1.png) 
+
+![alipay](./static/images/preview/alipay_2.png)
 
 ## 反馈
 - 官方 QQ 交流群：853467682
@@ -147,11 +151,5 @@ MIT
 
 谢谢
 ---
-请作者喝杯茶吧
-
-![wechat](./static/images/preview/wechat_1.png) 
-
-![alipay](./static/images/preview/alipay_2.png)
-
 
 Create By phachon
