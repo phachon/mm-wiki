@@ -325,7 +325,7 @@ func (this *EmailController) Test() {
 		"content":      "欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
 	}
 
-	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "system/email/template_test.html"
+	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template_test.html"
 	body, err := utils.Email.MakeDocumentHtmlBody(documentValue, emailTemplate)
 	if err != nil {
 		this.ErrorLog("发送测试邮件失败：" + err.Error())
