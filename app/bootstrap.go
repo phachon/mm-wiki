@@ -26,7 +26,7 @@ var (
 )
 
 var (
-	Version = "v0.1.3"
+	Version = "v0.1.4"
 
 	CopyRight = beego.Str2html("2018 - 2019 phachon")
 
