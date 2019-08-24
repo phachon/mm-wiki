@@ -41,19 +41,17 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
     # Enjoy using MM-wiki!
     ```
 - Windows
-  ```
-    # Take linux amd64 as an example: download the latest release of the software.
-    # Downloading address: https://github.com/phachon/mm-wiki/releases 
-    # Unzip the file to a directory that you set before.
-    # Enter into install directory.
-    # Double click install.exe. 
-    # Visit http://ip:8090 in a browser and now you should see the installation interface. Follow the instruction to finish installations.
-    # Close the installation window.
-    # Use command line（cmd.exe）to enter into the root directory.
-    $ execute mm-wiki.exe --conf conf/mm-wiki.conf
-    # Now you can visit the ip address with the port the system is listening.
-    # Enjoy using MM-wiki!
-    ```
+
+    1.Take linux amd64 as an example: [download](https://github.com/phachon/mm-wiki/releases) the latest release of the software.<br />
+    2.Unzip the file to a directory that you set before.<br />
+    3.Click into the install directory.<br />
+    4.Double click install.exe. <br />
+    5.Visit http://ip:8090 in a browser and now you should see the installation interface. Follow instructions to finish installations.<br />
+    6.Close the installation window.<br />
+    7.Use command line（cmd.exe）to enter into the root directory.<br />
+    `$ execute mm-wiki.exe --conf conf/mm-wiki.conf`<br />
+    8.Now you can visit the ip address with the port the system is listening. Enjoy using MM-wiki!<br />
+   
 
 ## Install with Nginx reverse proxy
 ```
@@ -73,7 +71,7 @@ server {
     }
     # static resources managed by nginx
     location /static {
-        root        /www/mm-wiki; # MM-Wiki 的根目录
+        root        /www/mm-wiki; # MM-Wiki root directory
         expires     1d;
         add_header  Cache-Control public;
         access_log  off;
