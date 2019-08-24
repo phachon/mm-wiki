@@ -1,6 +1,6 @@
 ![brand](./static/images/logo_sm.png)
 
-MM-Wiki is a light software that enables companies for internal knowledge sharing and better collaboration. It serves as a platform for information sharing and wiki building within as well as among teams.
+MM-Wiki is a light software that enables companies for internal knowledge sharing and for better collaboration. It serves as a platform for information sharing and wiki creating within as well as among teams.
 
 [![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/) 
 [![build](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg)](https://travis-ci.org/phachon/mm-wiki)
@@ -12,11 +12,11 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
 # Features
 - Easy deployment. It’s built with [Go](https://golang.org/doc/). You only need to download the package based on your system and execute the binary file.
 - Quick installation. It has a clean and concise installing interface that guides you through the process. 
-- Private space for every team or department. By setting permissions, other teams/departments can read, edit files.
+- Private space for each team and department. By setting permissions, other teams/departments can read, edit files.
 - Flexible system administration setting. Each user has different roles with various aspects of permissions accordingly.
-- The system allows users to log in with certified external system, such as the company’s LDAP log in method.
+- This app allows users to log in through certified external system such as the company’s LDAP log in system.
 - Stay synced with your team. You’ll receive email notifications when the file you're following is updated.
-- Share and download the file. For now you can only download file as Markdown plain text.
+- Share and download the file. For now you can only download files in the form of Markdown plain text.
 
 # Installation
 ## Install by downloading it.
@@ -51,6 +51,8 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
     7.Use command line（cmd.exe）to enter into the root directory.<br />
     `$ execute mm-wiki.exe --conf conf/mm-wiki.conf`<br />
     8.Now you can visit the ip address with the port the system is listening. Enjoy using MM-wiki!<br />
+ 
+**Note**: If the there's 502 error in the browser when you should see the installation guide instead, change a browser and try it again.<br />
    
 
 ## Install with Nginx reverse proxy
@@ -78,3 +80,69 @@ server {
     }
 }
 ```
+# A quick look
+
+### 1 Installing
+![install](./static/images/preview/install.png)
+### 2 Log in
+![login](./static/images/preview/login.png)
+### 3 The system
+![system](./static/images/preview/system.png)
+### 4 The interface
+![space](./static/images/preview/space.png)
+### 5 Files editing
+![edit](./static/images/preview/edit.png)
+### 6 Files sharing
+![share](./static/images/preview/share.png)
+
+# Plugins that are used in this app
+
+MM-Wiki is built with many great plugins. Many thanks to developers of these plugins: 
+
+- [bootstrap](https://github.com/twbs/bootstrap)
+- [awesome-bootstrap-checkbox](https://github.com/flatlogic/awesome-bootstrap-checkbox)
+- [bootstrap-iconpicker](https://victor-valencia.github.com/bootstrap-iconpicker)
+- [bootstrap-select](http://silviomoreto.github.io/bootstrap-select)
+- [bootstrap-switch](https://bttstrp.github.io/bootstrap-switch)
+- [bootstrap-tagsinput](https://github.com/bootstrap-tagsinput/bootstrap-tagsinput)
+- [editor.md](https://github.com/pandao/editor.md)
+- [layout](http://jquery-dev.com)
+- [layer](http://layer.layui.com/)
+- [metisMenu](https://github.com/onokumus/metisMenu)
+- [morris](http://morrisjs.github.com/morris.js/)
+- [popover](https://github.com/sandywalker/webui-popover)
+- [scrollup](http://markgoodyear.com/labs/scrollup/)
+- [zTreev3](http://treejs.cn/)
+
+# Contributing
+
+Requirement：go 1.8
+```
+$ git clone https://github.com/phachon/mm-wiki.git
+$ cd mm-wiki
+$ go build ./
+```
+
+## Supporting
+If you want to buy me a coffee :)
+
+![wechat](./static/images/preview/wechat_1.png) 
+
+![alipay](./static/images/preview/alipay_2.png)
+
+## Feedback
+- Official QQ group number：853467682
+- If you like this app, please [Star](https://github.com/phachon/mm-wiki/stargazers) it.
+- If there're issues while you're using it, submit a [issue](https://github.com/phachon/mm-wiki/issues).
+- If you find a bug and solve it, make a [pull request](https://github.com/phachon/mm-wiki/pulls).
+- If you want to contribute to it, please [fork](https://github.com/phachon/mm-wiki/network/members) it.
+- If you want to make friends with me,shoot me an email at [phachon@163.com](mailto:phachon@163.com).
+
+## License
+
+MIT
+
+Many thanks!
+---
+
+Created By [phachon](https://github.com/phachon)
