@@ -3,11 +3,11 @@ package controllers
 import (
 	"bytes"
 	"github.com/astaxie/beego/validation"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/install/storage"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"io/ioutil"
-	"mm-wiki/app/utils"
-	"mm-wiki/install/storage"
 	"os/exec"
 	"path/filepath"
 	"runtime"

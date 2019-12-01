@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/controllers"
+	systemControllers "github.com/phachon/mm-wiki/app/modules/system/controllers"
+	"github.com/phachon/mm-wiki/app/utils"
 	"html/template"
-	"mm-wiki/app"
-	"mm-wiki/app/controllers"
-	systemControllers "mm-wiki/app/modules/system/controllers"
-	"mm-wiki/app/utils"
 	"net/http"
 )
 
