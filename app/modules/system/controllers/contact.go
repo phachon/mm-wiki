@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego/validation"
 )

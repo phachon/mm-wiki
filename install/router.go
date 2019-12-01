@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"mm-wiki/app/utils"
-	"mm-wiki/install/controllers"
-	"mm-wiki/install/storage"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/install/controllers"
+	"github.com/phachon/mm-wiki/install/storage"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -32,7 +32,6 @@ func init() {
 	beego.BConfig.WebConfig.AutoRender = false
 	beego.BConfig.RouterCaseSensitive = false
 
-	// todo add router..
 	beego.AutoRouter(&controllers.InstallController{})
 	beego.Router("/", &controllers.InstallController{}, "*:Index")
 	beego.ErrorHandler("404", http_404)

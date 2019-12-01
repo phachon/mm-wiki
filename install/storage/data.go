@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/phachon/mm-wiki/app/utils"
 	"io/ioutil"
 	"log"
-	"mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,7 +28,6 @@ var (
 
 	CopyRight string = "2018 - 2019 phachon"
 )
-
 
 const License_Disagree = 0 // 协议不同意
 const License_Agree = 1    // 协议同意

@@ -4,8 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
-	"mm-wiki/app/utils"
 	"strings"
 	"time"
 )
