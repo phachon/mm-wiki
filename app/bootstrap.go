@@ -3,23 +3,25 @@ package app
 import (
 	"flag"
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/fatih/color"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/snail007/go-activerecord/mysql"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"time"
-
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
-
-	"github.com/astaxie/beego"
-	"github.com/fatih/color"
-	"github.com/snail007/go-activerecord/mysql"
-	"github.com/astaxie/beego/logs"
 )
 
 var (
-	confPath = flag.String("conf", "conf/mm-wiki.conf", "please set mm-wiki conf path")
+
+	defaultConf = "conf/mm-wiki.conf"
+
+	confPath = flag.String("conf", "", "please set mm-wiki conf path")
 
 	version = flag.Bool("version", false, "mm-wiki version")
 
@@ -27,9 +29,9 @@ var (
 )
 
 var (
-	Version = "v0.1.4"
+	Version = global.SYSTEM_VERSION
 
-	CopyRight = beego.Str2html("2018 - 2019 phachon")
+	CopyRight = beego.Str2html(global.SYSTEM_COPYRIGHT)
 
 	StartTime = int64(0)
 
@@ -83,28 +85,27 @@ func poster() {
 // init beego config
 func initConfig() {
 
-	if *confPath == "" {
-		log.Println("conf file not empty!")
-		os.Exit(1)
-	}
-	ok, _ := utils.NewFile().PathIsExists(*confPath)
-	if ok == false {
-		log.Println("conf file " + *confPath + " not exists!")
-		os.Exit(1)
-	}
-	//init config file
-	beego.LoadAppConfig("ini", *confPath)
-
-	// init name
-	beego.AppConfig.Set("sys.name", "mm-wiki")
-	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
-	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
-
 	RootDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Println("init config error: " + err.Error())
 		os.Exit(1)
 	}
+	confFile := *confPath
+	if *confPath == "" {
+		confFile = filepath.Join(RootDir, defaultConf)
+	}
+	ok, _ := utils.NewFile().PathIsExists(confFile)
+	if ok == false {
+		log.Println("conf file " + confFile + " not exists!")
+		os.Exit(1)
+	}
+	// init config file
+	beego.LoadAppConfig("ini", confFile)
+
+	// init name
+	beego.AppConfig.Set("sys.name", "mm-wiki")
+	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
+	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
 
 	// set static path
 	beego.SetStaticPath("/static/", filepath.Join(RootDir, "./static"))
@@ -190,7 +191,7 @@ func initDocumentDir() {
 	if !ok {
 		err := os.Mkdir(markDownAbsDir, 0777)
 		if err != nil {
-			beego.Error("create document markdown dir " + markDownAbsDir + " error!")
+			logs.Error("create document markdown dir " + markDownAbsDir + " error!")
 			os.Exit(1)
 		}
 	}
@@ -199,7 +200,7 @@ func initDocumentDir() {
 	if !ok {
 		err := os.Mkdir(imagesAbsDir, 0777)
 		if err != nil {
-			beego.Error("create document image dir " + imagesAbsDir + " error!")
+			logs.Error("create document image dir " + imagesAbsDir + " error!")
 			os.Exit(1)
 		}
 	}
@@ -208,7 +209,7 @@ func initDocumentDir() {
 	if !ok {
 		err := os.Mkdir(attachmentAbsDir, 0777)
 		if err != nil {
-			beego.Error("create document attachment dir " + attachmentAbsDir + " error!")
+			logs.Error("create document attachment dir " + attachmentAbsDir + " error!")
 			os.Exit(1)
 		}
 	}
@@ -228,7 +229,7 @@ func checkUpgrade() {
 		logs.Info("Start checking whether MM-Wiki needs upgrading.")
 		versionConf, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SystemVersion)
 		if err != nil {
-			beego.Error("Get database mm-wiki version error: " + err.Error())
+			logs.Error("Get database mm-wiki version error: " + err.Error())
 			os.Exit(1)
 		}
 		var versionDb = "v0.0.0"
