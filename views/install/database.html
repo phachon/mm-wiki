@@ -25,19 +25,82 @@
             <div class="panel-body">
                 <!-- 系统配置 -->
                 <div class="row">{{$databaseConf := .databaseConf}}
-                    <form class="form-horizontal" method="post" action="/install/database">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong><i class="fa fa-database"></i> 数据库配置</strong></div>
-                            <div class="panel-body">
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs" role="tablist">
-                                    <li role="presentation" class="active"><a href="#mysql" aria-controls="mysql" role="tab" data-toggle="tab">MySQL</a></li>
-                                    {{/*<li role="presentation"><a href="#sqlite" aria-controls="sqlite" role="tab" data-toggle="tab">SQLite</a></li>*/}}
-                                </ul>
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <br>
-                                    <div role="tabpanel" class="tab-pane active" id="mysql">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#sqlite" aria-controls="sqlite" role="tab" data-toggle="tab">SQLite</a></li>
+                        <li role="presentation"><a href="#mysql" aria-controls="mysql" role="tab" data-toggle="tab">MySQL</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <br>
+                        <div role="tabpanel" class="tab-pane active" id="sqlite">
+                            <form class="form-horizontal" method="post" action="/install/database">
+                                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 10px">
+                                    <h4><i class="glyphicon glyphicon-volume-up"></i>数据库是用来存放 MM-Wiki 系统的一些基础数据</h4>
+                                    <p>
+                                        SQLite 是非常小的，轻量级的数据库，SQLite 不需要配置，这意味着不需要安装或管理。如果您的使用场景数据量少，建议选择使用此数据库类型。
+                                    </p>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong><i class="fa fa-database"></i> SQLite 配置</strong></div>
+                                    <div class="panel-body">
+                                        <input type="hidden" name="db_type" value="sqlite">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span class="text-danger"> * </span> SQLite文件位置 </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" name="sqlite_file" class="form-control" value="" placeholder="SQLite 数据库文件存储地址，必须是决对路径" required>
+                                            </div>
+                                            <div class="col-sm-4" style="margin-top: 7px;">
+                                                <span class="text-danger"> * SQLite文件位置</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer"></div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong><i class="fa fa-user-circle-o"></i> 添加超级管理员</strong>（超级管理员是 MM-Wiki 的最高级别的用户，安装完成后第一次登录使用该用户名和密码登录）</div>
+                                    <div class="panel-body"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                                        <div class="col-sm-4">
+                                            <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                        </div>
+                                        <div class="col-sm-6 form-comment">
+                                            <span class="text-danger"> * 只能由数字和字母组成</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                                        <div class="col-sm-4">
+                                            <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
+                                        </div>
+                                        <div class="col-sm-6 form-comment">
+                                            <span class="text-danger"> * 请记住密码用于登录</span>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer"></div>
+                                </div>
+                                <div class="col-md-offset-8 pull-right">
+                                    <a href="/install/config">
+                                        <button type="button" class="btn btn-warning">上一步</button>
+                                    </a>
+                                    <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">下一步
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="mysql">
+                            <form class="form-horizontal" method="post" action="/install/database">
+                                <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 10px">
+                                    <h4><i class="glyphicon glyphicon-volume-up"></i>数据库是用来存放 MM-Wiki 系统的一些基础数据</h4>
+                                    <p>
+                                        MySQL 是最流行的，开源的，可处理拥有上千万条记录的大型关系型数据库管理系统，MySQL 需要下载并安装才能使用。如果您熟悉 MySQL，存储数据量较大，建议使用该类型的数据库。
+                                    </p>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong><i class="fa fa-database"></i> MySQL 配置</strong></div>
+                                    <div class="panel-body">
+                                        <input type="hidden" name="db_type" value="mysql">
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label"><span class="text-danger"> * </span> MySQL Host </label>
                                             <div class="col-sm-4">
@@ -90,40 +153,41 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane" id="sqlite">
-                                    </div>
+                                    <div class="panel-footer"></div>
                                 </div>
-                            </div>
-                            <div class="panel-footer"></div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong><i class="fa fa-user-circle-o"></i> 添加超级管理员</strong></div>
-                            <div class="panel-body"></div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
-                                    <div class="col-sm-4">
-                                        <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong><i class="fa fa-user-circle-o"></i> 添加超级管理员</strong>（超级管理员是 MM-Wiki 的最高级别的用户，安装完成后第一次登录使用该用户名和密码登录）</div>
+                                    <div class="panel-body"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 用户名 </label>
+                                        <div class="col-sm-4">
+                                            <input type="text" name="admin_name" class="form-control" value="{{$databaseConf.admin_name}}" placeholder="请输入超级管理员用户名" required>
+                                        </div>
+                                        <div class="col-sm-6 form-comment">
+                                            <span class="text-danger"> * 只能由数字和字母组成</span>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-6 form-comment">
-                                        <span class="text-danger"> * mm-wiki 系统的超级管理员，只能由数字和字母组成</span>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
+                                        <div class="col-sm-4">
+                                            <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
+                                        </div>
+                                        <div class="col-sm-6 form-comment">
+                                            <span class="text-danger"> * 请记住密码用于登录</span>
+                                        </div>
                                     </div>
+                                    <div class="panel-footer"></div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 密码 </label>
-                                    <div class="col-sm-4">
-                                        <input type="text" name="admin_pass" class="form-control" value="{{$databaseConf.admin_pass}}" placeholder="请输入超级管理员密码" required>
-                                    </div>
+                                <div class="col-md-offset-8 pull-right">
+                                    <a href="/install/config">
+                                        <button type="button" class="btn btn-warning">上一步</button>
+                                    </a>
+                                    <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">下一步
+                                    </button>
                                 </div>
-                            <div class="panel-footer"></div>
+                            </form>
                         </div>
-                        <div class="col-md-offset-8 pull-right">
-                            <a href="/install/config">
-                                <button type="button" class="btn btn-warning">上一步</button>
-                            </a>
-                            <button type="button" onclick="Install.Submit(this.form, $(this))" class="btn btn-primary">下一步
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

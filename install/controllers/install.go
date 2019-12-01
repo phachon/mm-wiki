@@ -233,6 +233,45 @@ func (this *InstallController) Database() {
 		this.Data["databaseConf"] = storage.Data.DatabaseConf
 		this.viewLayoutTitle("mm-wiki-安装-数据库配置", "install/database", "install")
 	}
+	dbType := strings.TrimSpace(this.GetString("db_type", ""))
+	if dbType == "" {
+		this.jsonError("请选择数据库类型！")
+	}
+
+	switch dbType {
+	case storage.Database_Type_Mysql:
+		this.mysql()
+	case storage.Database_Type_Sqlite:
+		this.sqLite()
+	default:
+		this.jsonError("数据库类型错误！")
+	}
+
+	adminName := strings.TrimSpace(this.GetString("admin_name", ""))
+	adminPass := strings.TrimSpace(this.GetString("admin_pass", ""))
+
+	if adminName == "" {
+		this.jsonError("超级管理员用户名不能为空！")
+	} else {
+		v := validation.Validation{}
+		if !v.AlphaNumeric(adminName, "admin_name").Ok {
+			this.jsonError("用户名格式不正确！")
+		}
+	}
+
+	if adminPass == "" {
+		this.jsonError("超级管理员密码不能为空！")
+	}
+
+	storage.Data.DatabaseConf = map[string]string{
+		"admin_name":          adminName,
+		"admin_pass":          adminPass,
+	}
+	storage.Data.Database = storage.Database_Access
+	this.jsonSuccess("", nil, "/install/ready")
+}
+
+func (this *InstallController) mysql()  {
 
 	host := strings.TrimSpace(this.GetString("host", ""))
 	port := strings.TrimSpace(this.GetString("port", ""))
@@ -286,6 +325,36 @@ func (this *InstallController) Database() {
 		"pass":                pass,
 		"conn_max_idle":       connMaxIdle,
 		"conn_max_connection": connMaxConn,
+		"admin_name":          adminName,
+		"admin_pass":          adminPass,
+	}
+	storage.Data.Database = storage.Database_Access
+	this.jsonSuccess("", nil, "/install/ready")
+}
+
+func (this *InstallController) sqLite()  {
+	sqliteFile := strings.TrimSpace(this.GetString("sqlite_file", ""))
+	adminName := strings.TrimSpace(this.GetString("admin_name", ""))
+	adminPass := strings.TrimSpace(this.GetString("admin_pass", ""))
+
+	if sqliteFile == "" {
+		this.jsonError("数据库 host 不能为空！")
+	}
+	if adminName == "" {
+		this.jsonError("超级管理员用户名不能为空！")
+	} else {
+		v := validation.Validation{}
+		if !v.AlphaNumeric(adminName, "admin_name").Ok {
+			this.jsonError("用户名格式不正确！")
+		}
+	}
+
+	if adminPass == "" {
+		this.jsonError("超级管理员密码不能为空！")
+	}
+
+	storage.Data.DatabaseConf = map[string]string{
+
 		"admin_name":          adminName,
 		"admin_pass":          adminPass,
 	}
