@@ -3,13 +3,12 @@ package controllers
 import (
 	"strings"
 
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego/validation"
 	valid "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
-
 )
 
 type AuthController struct {

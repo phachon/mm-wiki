@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
-	"mm-wiki/app/utils"
+	"github.com/astaxie/beego/logs"
+	"github.com/phachon/mm-wiki/app/utils"
 )
 
 type Upgrade struct {
@@ -53,16 +54,16 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 			// upgrade handle
 			err = upHandle.Func()
 			if err != nil {
-				beego.Error("upgrade to " + upHandle.Version + " error: " + err.Error())
+				logs.Error("upgrade to " + upHandle.Version + " error: " + err.Error())
 				return errors.New("upgrade to " + upHandle.Version + " error: " + err.Error())
 			}
 			// update system database version
 			err = up.upgradeAfter(upHandle.Version)
 			if err != nil {
-				beego.Error("upgrade to database " + upHandle.Version + " error: " + err.Error())
+				logs.Error("upgrade to database " + upHandle.Version + " error: " + err.Error())
 				return errors.New("upgrade to database " + upHandle.Version + " error: " + err.Error())
 			}
-			beego.Info("upgrade to " + upHandle.Version + " success")
+			logs.Info("upgrade to " + upHandle.Version + " success")
 			// update version record
 			tmpVersion = upHandle.Version
 		}

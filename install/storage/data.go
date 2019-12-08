@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
 	"io/ioutil"
 	"log"
-	"mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -18,17 +19,14 @@ import (
 var (
 	Data = NewData()
 
-	Version string = ""
-
 	installChan = make(chan int, 1)
 
-	InstallDir string = ""
+	InstallDir = ""
 
-	RootDir string = ""
+	RootDir = ""
 
-	CopyRight string = "2018 - 2019 phachon"
+	CopyRight = global.SYSTEM_COPYRIGHT
 )
-
 
 const License_Disagree = 0 // 协议不同意
 const License_Agree = 1    // 协议同意

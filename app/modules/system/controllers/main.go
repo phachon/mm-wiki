@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/models"
 )
 
 type MainController struct {
