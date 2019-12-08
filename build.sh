@@ -39,7 +39,7 @@ build_app() {
 
     go build -o ${PROJECT_NAME} ./
 
-    if [[ -f "${ROOT_DIR}/${PROJECT_NAME}"  ]]; then
+    if [ -f "${ROOT_DIR}/${PROJECT_NAME}"  ]; then
         mv ${ROOT_DIR}/${PROJECT_NAME} ${ROOT_DIR}/${BUILD_DIR}/
     fi
     return
@@ -52,7 +52,7 @@ build_install() {
     go build -o ${INSTALL_NAME} ./
     chmod -R 755 ${ROOT_DIR}/${BUILD_DIR}/install/
 
-    if [[ -f "${ROOT_DIR}/install/${INSTALL_NAME}"  ]]; then
+    if [ -f "${ROOT_DIR}/install/${INSTALL_NAME}"  ]; then
         mv ${ROOT_DIR}/install/${INSTALL_NAME} ${ROOT_DIR}/${BUILD_DIR}/install
     fi
 
