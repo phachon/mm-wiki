@@ -70,15 +70,15 @@ func (this *UserController) Save() {
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
-	if !v.Mobile(mobile, "mobile").Ok {
-		this.jsonError("手机号格式不正确！")
-	}
+	//if !v.Mobile(mobile, "mobile").Ok {
+	//	this.jsonError("手机号格式不正确！")
+	//}
 	if roleId == "" {
 		this.jsonError("没有选择角色！")
 	}
-	if phone != "" && !v.Phone(phone, "phone").Ok {
-		this.jsonError("电话格式不正确！")
-	}
+	//if phone != "" && !v.Phone(phone, "phone").Ok {
+	//	this.jsonError("电话格式不正确！")
+	//}
 
 	ok, err := models.UserModel.HasUsername(username)
 	if err != nil {
@@ -245,15 +245,15 @@ func (this *UserController) Modify() {
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
-	if !v.Mobile(mobile, "mobile").Ok {
-		this.jsonError("手机号格式不正确！")
-	}
+	//if !v.Mobile(mobile, "mobile").Ok {
+	//	this.jsonError("手机号格式不正确！")
+	//}
 	if roleId == "" {
 		this.jsonError("没有选择角色！")
 	}
-	if phone != "" && !v.Phone(phone, "phone").Ok {
-		this.jsonError("电话格式不正确！")
-	}
+	//if phone != "" && !v.Phone(phone, "phone").Ok {
+	//	this.jsonError("电话格式不正确！")
+	//}
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
