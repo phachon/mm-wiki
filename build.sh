@@ -11,7 +11,7 @@ BUILD_DIR="release"
 ROOT_DIR=`pwd`
 
 # windows .exe
-if [ "${GOOS}" == "windows" ]; then
+if [ "${GOOS}" = "windows" ]; then
     PROJECT_NAME=${PROJECT_NAME}".exe"
     INSTALL_NAME=${INSTALL_NAME}".exe"
 fi
