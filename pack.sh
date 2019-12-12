@@ -18,7 +18,6 @@ tar -czvf "${RELEASE}/mm-wiki-${VER}-windows-386.tar.gz" -C release .
 
 echo 'Start pack linux amd64'
 GOOS=linux GOARCH=amd64 ./build.sh
-./build.sh
 tar -czvf "${RELEASE}/mm-wiki-${VER}-linux-amd64.tar.gz" -C release .
 
 echo 'Start pack linux 386'
