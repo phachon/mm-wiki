@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
@@ -249,14 +250,32 @@ func (this *StaticController) Monitor() {
 }
 
 func (this *StaticController) ServerStatus() {
-	vm, _ := mem.VirtualMemory()
+	memoryUsedPercent := 0
+	cpuUsedPercent := 0
+	diskUsedPercent := 0
+	vm, err := mem.VirtualMemory()
+	if err != nil {
+		logs.Error("get memory err=%s", err.Error())
+	}
+	if vm != nil {
+		memoryUsedPercent = int(vm.UsedPercent)
+	}
 	cpuPercent, _ := cpu.Percent(0, false)
-	d, _ := disk.Usage("/")
+	if len(cpuPercent) > 0 {
+		cpuUsedPercent = int(cpuPercent[0])
+	}
+	d, err := disk.Usage("/")
+	if err != nil {
+		logs.Error("get disk err=%s", err.Error())
+	}
+	if d != nil {
+		diskUsedPercent = int(d.UsedPercent)
+	}
 
 	data := map[string]interface{}{
-		"memory_used_percent": int(vm.UsedPercent),
-		"cpu_used_percent":    int(cpuPercent[0]),
-		"disk_used_percent":   int(d.UsedPercent),
+		"memory_used_percent": memoryUsedPercent,
+		"cpu_used_percent":    cpuUsedPercent,
+		"disk_used_percent":   diskUsedPercent,
 	}
 
 	this.jsonSuccess("ok", data)
