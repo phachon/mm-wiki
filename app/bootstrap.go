@@ -151,7 +151,6 @@ func initDB() {
 		logs.Error(fmt.Errorf("database error:%s,with config : %v", err, cfg))
 		os.Exit(1)
 	}
-	models.Version = Version
 }
 
 // init document dir

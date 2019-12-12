@@ -5,5 +5,3 @@ import (
 )
 
 var G *mysql.DBGroup
-
-var Version string

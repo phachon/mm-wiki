@@ -5,7 +5,25 @@
 ### Fix Bug & Add Feature
 #### 修复bug
 1. 邮箱配置发送测试失败问题
+2. 去掉手机号验证
+3. 修复版本号不存在问题
+4. 修复空间修改bug
 
+#### 新增功能
+1. 项目改成 go mod 部署
+2. 代码优化
+
+### Upgrade
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki --upgrade
+```
+3. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki
+```
 
 ## v0.1.3（2019-05）
 ### Fix Bug & Add Feature

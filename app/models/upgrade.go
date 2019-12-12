@@ -7,6 +7,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
 )
 
 type Upgrade struct {
@@ -46,7 +47,7 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 	var tmpVersion = dbVersion
 	for _, upHandle := range upgradeMap {
 		// upgrade now version, exit
-		if tmpVersion == Version {
+		if tmpVersion == global.SYSTEM_VERSION {
 			break
 		}
 		// tmpVersion < upHandle.version
@@ -68,6 +69,14 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 			tmpVersion = upHandle.Version
 		}
 	}
+	// last update current version
+	err = up.upgradeAfter(global.SYSTEM_VERSION)
+	if err != nil {
+		logs.Error("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
+		return errors.New("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
+	}
+	logs.Info("upgrade finish, version: "+global.SYSTEM_VERSION)
+
 	return nil
 }
 
