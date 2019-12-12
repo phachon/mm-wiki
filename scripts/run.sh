@@ -23,7 +23,7 @@ function check_pid() {
         pid=`cat ${PID_FILE}`
         if [[ -n ${pid} ]]; then
             res=`ps -p ${pid}|grep -v "PID TTY" |wc -l`
-            return res
+            return `echo ${res}`
         fi
     fi
     return 0
@@ -38,7 +38,7 @@ function start() {
         return 1
     fi
 	chmod +x ${APP_FILE}
-    nohup ${APP_FILE}  &> ${PID_FILE} &
+    nohup ${APP_FILE}  &> ${LOG_FILE} &
     echo $! > ${PID_FILE}
     echo "${APP_NAME} start running, pid=$!"
 }
@@ -51,7 +51,8 @@ function stop() {
 
 function restart() {
     pid=`cat ${PID_FILE}`
-    kill -USR2 ${pid}
+    stop
+    start
 }
 
 function status() {
