@@ -1,8 +1,8 @@
 package models
 
 import (
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
-	"mm-wiki/app/utils"
 	"time"
 )
 
@@ -223,7 +223,7 @@ func (r *Role) GetRolesNotContainRoot() (roles []map[string]string, err error) {
 	rs, err = db.Query(
 		db.AR().From(Table_Role_Name).Where(map[string]interface{}{
 			"role_id !=": Role_Root_Id,
-			"is_delete": Role_Delete_False,
+			"is_delete":  Role_Delete_False,
 		}))
 	if err != nil {
 		return

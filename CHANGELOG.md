@@ -1,6 +1,32 @@
 # 更新日志：
 
-## v0.1.3 （2019-05）
+## v0.1.4（2019-11）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 邮箱配置发送测试失败问题
+2. 去掉手机号验证
+3. 修复版本号不存在问题
+4. 修复空间修改bug
+
+#### 新增功能
+1. 项目改成 go mod 部署
+2. 代码优化
+3. linux 下增加启动脚本 run.sh
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.1.4-mac-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+3. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+
+## v0.1.3（2019-05）
 ### Fix Bug & Add Feature
 #### 修复bug
 1. 修复启动命令不支持绝对路径问题
@@ -28,11 +54,11 @@
 2. 覆盖解压
 3. 执行升级命令
 ```
-./mm-wiki --conf conf/mm-wiki --upgrade
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
 ```
 3. 重新启动
 ```
-./mm-wiki --conf conf/mm-wiki
+./mm-wiki --conf conf/mm-wiki.conf
 ```
 
 ## v0.1.2 （2018-11）
@@ -53,19 +79,19 @@
 2. 覆盖解压
 3. 执行升级命令
 ```
-./mm-wiki --conf conf/mm-wiki --upgrade
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
 ```
 3. 重新启动
 ```
-./mm-wiki --conf conf/mm-wiki
+./mm-wiki --conf conf/mm-wiki.conf
 ```
 
 
 ## v0.1.1（2018-08-08）
 ### Fix Bug & Add Feature
-1. #3 添加角色不能删除
+1. 添加角色不能删除 #3
 2. 权限删除问题
-3. #12 空间不能删除问题
+3. 空间不能删除问题 #12
 4. js 优化
 
 ### Upgrade

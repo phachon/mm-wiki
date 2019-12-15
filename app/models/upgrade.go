@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
-	"mm-wiki/app/utils"
+	"github.com/astaxie/beego/logs"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
 )
 
 type Upgrade struct {
@@ -45,7 +47,7 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 	var tmpVersion = dbVersion
 	for _, upHandle := range upgradeMap {
 		// upgrade now version, exit
-		if tmpVersion == Version {
+		if tmpVersion == global.SYSTEM_VERSION {
 			break
 		}
 		// tmpVersion < upHandle.version
@@ -53,20 +55,28 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 			// upgrade handle
 			err = upHandle.Func()
 			if err != nil {
-				beego.Error("upgrade to " + upHandle.Version + " error: " + err.Error())
+				logs.Error("upgrade to " + upHandle.Version + " error: " + err.Error())
 				return errors.New("upgrade to " + upHandle.Version + " error: " + err.Error())
 			}
 			// update system database version
 			err = up.upgradeAfter(upHandle.Version)
 			if err != nil {
-				beego.Error("upgrade to database " + upHandle.Version + " error: " + err.Error())
+				logs.Error("upgrade to database " + upHandle.Version + " error: " + err.Error())
 				return errors.New("upgrade to database " + upHandle.Version + " error: " + err.Error())
 			}
-			beego.Info("upgrade to " + upHandle.Version + " success")
+			logs.Info("upgrade to " + upHandle.Version + " success")
 			// update version record
 			tmpVersion = upHandle.Version
 		}
 	}
+	// last update current version
+	err = up.upgradeAfter(global.SYSTEM_VERSION)
+	if err != nil {
+		logs.Error("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
+		return errors.New("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
+	}
+	logs.Info("upgrade finish, version: "+global.SYSTEM_VERSION)
+
 	return nil
 }
 

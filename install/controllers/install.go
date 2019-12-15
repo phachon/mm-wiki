@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"bytes"
 	"github.com/astaxie/beego/validation"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/phachon/mm-wiki/install/storage"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"io/ioutil"
-	"mm-wiki/app/utils"
-	"mm-wiki/install/storage"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -62,24 +61,7 @@ func (this *InstallController) Env() {
 		"host":        host,
 		"sys":         osSys,
 		"install_dir": storage.RootDir,
-		"version":     "",
-	}
-	// 获取安装版本号
-	var cmd *exec.Cmd
-	var out bytes.Buffer
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command(filepath.Join(storage.RootDir, "./mm-wiki.exe"), "--version")
-	} else {
-		cmd = exec.Command(filepath.Join(storage.RootDir, "./mm-wiki"), "--version")
-	}
-	cmd.Dir = storage.RootDir
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil || out.String() == "" {
-		storage.Data.Env = storage.Env_NotAccess
-	} else {
-		server["version"] = out.String()
-		storage.Data.Version = out.String()
+		"version":     global.SYSTEM_VERSION,
 	}
 
 	// 环境检测
@@ -117,7 +99,7 @@ func (this *InstallController) Env() {
 		"require": "读/写",
 		"result":  "1",
 	}
-	err = fileTool.IsWriterReadable(filepath.Join(storage.RootDir, templateConfDir["path"]))
+	err := fileTool.IsWriterReadable(filepath.Join(storage.RootDir, templateConfDir["path"]))
 	if err != nil {
 		storage.Data.Env = storage.Env_NotAccess
 		templateConfDir["result"] = "0"
@@ -232,6 +214,7 @@ func (this *InstallController) Database() {
 	if !this.isPost() {
 		this.Data["databaseConf"] = storage.Data.DatabaseConf
 		this.viewLayoutTitle("mm-wiki-安装-数据库配置", "install/database", "install")
+		return
 	}
 
 	host := strings.TrimSpace(this.GetString("host", ""))

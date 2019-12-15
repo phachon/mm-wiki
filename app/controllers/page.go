@@ -3,9 +3,9 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"mm-wiki/app"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -419,7 +419,7 @@ func (this *PageController) Export() {
 	absPageFile := utils.Document.GetAbsPageFileByPageFile(pageFile)
 	// pack document file
 	packFiles = append(packFiles, &utils.CompressFileInfo{
-		File: absPageFile,
+		File:       absPageFile,
 		PrefixPath: "",
 	})
 
@@ -436,7 +436,7 @@ func (this *PageController) Export() {
 		path := attachment["path"]
 		attachmentFile := filepath.Join(app.DocumentAbsDir, path)
 		packFile := &utils.CompressFileInfo{
-			File: attachmentFile,
+			File:       attachmentFile,
 			PrefixPath: filepath.Dir(path),
 		}
 		packFiles = append(packFiles, packFile)
@@ -448,7 +448,7 @@ func (this *PageController) Export() {
 		this.ViewError("导出文档失败！")
 	}
 
-	this.Ctx.Output.Download(dest, document["name"] + ".zip")
+	this.Ctx.Output.Download(dest, document["name"]+".zip")
 }
 
 func sendEmail(documentId string, username string, comment string, url string) error {

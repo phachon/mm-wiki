@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"mm-wiki/app"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 	"os"
 	"path"
 )
