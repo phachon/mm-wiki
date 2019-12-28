@@ -199,6 +199,10 @@ func (this *UserController) Edit() {
 	if len(user) == 0 {
 		this.ViewError("用户不存在！", "/system/user/list")
 	}
+	// 登录非 root 用户不能修改 root 用户信息
+	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) && !this.IsRoot() {
+		this.ViewError("没有权限修改！", "/system/user/list")
+	}
 
 	roles := []map[string]string{}
 	if this.IsRoot() {
@@ -231,6 +235,8 @@ func (this *UserController) Modify() {
 	position := strings.TrimSpace(this.GetString("position", ""))
 	location := strings.TrimSpace(this.GetString("location", ""))
 	im := strings.TrimSpace(this.GetString("im", ""))
+	password := strings.TrimSpace(this.GetString("password", ""))
+	this.Ctx.Request.PostForm.Del("password")
 
 	v := validation.Validation{}
 	if givenName == "" {
@@ -248,9 +254,9 @@ func (this *UserController) Modify() {
 	//if !v.Mobile(mobile, "mobile").Ok {
 	//	this.jsonError("手机号格式不正确！")
 	//}
-	if roleId == "" {
-		this.jsonError("没有选择角色！")
-	}
+	//if roleId == "" {
+	//	this.jsonError("没有选择角色！")
+	//}
 	//if phone != "" && !v.Phone(phone, "phone").Ok {
 	//	this.jsonError("电话格式不正确！")
 	//}
@@ -258,27 +264,37 @@ func (this *UserController) Modify() {
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
 		this.ErrorLog("修改用户 " + userId + " 失败：" + err.Error())
-		this.ViewError("修改用户出错！", "/system/user/list")
+		this.jsonError("修改用户出错！")
 	}
 	if len(user) == 0 {
-		this.ViewError("用户不存在！", "/system/user/list")
+		this.jsonError("用户不存在！")
 	}
 	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) {
 		roleId = fmt.Sprintf("%d", models.Role_Root_Id)
 	}
+	// 登录非 root 用户不能修改 root 用户信息
+	if user["role_id"] == fmt.Sprintf("%d", models.Role_Root_Id) && !this.IsRoot() {
+		this.jsonError("没有权限修改！")
+	}
 
-	_, err = models.UserModel.Update(userId, map[string]interface{}{
+	updateUser := map[string]interface{}{
 		"given_name": givenName,
 		"email":      email,
 		"mobile":     mobile,
-		"role_id":    roleId,
 		"phone":      phone,
 		"department": department,
 		"position":   position,
 		"location":   location,
 		"im":         im,
-	})
-
+	}
+	// 超级管理员才可以修改其他用户密码
+	if password != "" && this.IsRoot() {
+		updateUser["password"] = models.UserModel.EncodePassword(password)
+	}
+	if roleId != "" {
+		updateUser["role_id"] = roleId
+	}
+	_, err = models.UserModel.Update(userId, updateUser)
 	if err != nil {
 		this.ErrorLog("修改用户 " + userId + " 失败：" + err.Error())
 		this.jsonError("修改用户失败")

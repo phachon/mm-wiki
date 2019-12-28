@@ -5,9 +5,11 @@
 ### Fix Bug & Add Feature
 #### 修复bug
 1. 修复空间修改报错
+2. 修复用户管理修改用户bug
 
 #### 新增功能
-无
+1. 超级管理员可以重置用户密码
+
 ### 升级（Upgrade）
 1. 下载新版本到部署该项目的根目录
 2. 覆盖解压 (tar -zxvf mm-wiki-v0.1.5-mac-amd64.tar.gz)

@@ -60,6 +60,17 @@
                         </div>
                         </div>
                     </div>
+                    <!-- 超级管理员才能修改用户密码 -->
+                    {{if eq $.login_role_id "1"}}
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-sm-3 control-label"><span class="text-danger"></span> 密码</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="password" class="form-control" placeholder="注意：输入新密码后将重置该用户密码" value="" autocomplete="new-password">
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-offset-3">

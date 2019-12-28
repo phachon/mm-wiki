@@ -89,12 +89,12 @@ func (this *ProfileController) Modify() {
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
-	if !v.Mobile(mobile, "mobile").Ok {
-		this.jsonError("手机号格式不正确！")
-	}
-	if phone != "" && !v.Phone(phone, "phone").Ok {
-		this.jsonError("电话格式不正确！")
-	}
+	//if !v.Mobile(mobile, "mobile").Ok {
+	//	this.jsonError("手机号格式不正确！")
+	//}
+	//if phone != "" && !v.Phone(phone, "phone").Ok {
+	//	this.jsonError("电话格式不正确！")
+	//}
 
 	_, err := models.UserModel.Update(this.UserId, map[string]interface{}{
 		"given_name": givenName,
