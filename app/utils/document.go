@@ -142,6 +142,9 @@ func (d *document) UpdateSpaceName(oldSpaceName string, newName string) error {
 
 	spaceOldDir := d.GetAbsPageFileByPageFile(oldSpaceName)
 	spaceNewDir := d.GetAbsPageFileByPageFile(newName)
+	if spaceNewDir == spaceOldDir {
+		return nil
+	}
 	err := os.Rename(spaceOldDir, spaceNewDir)
 	return err
 }
