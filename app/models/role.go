@@ -13,9 +13,9 @@ const (
 	Role_Type_System  = 1
 	Role_Type_Default = 0
 
-	Role_Root_Id    = 1
-	Role_Admin_Id   = 2
-	Role_Default_Id = 3
+	Role_Root_Id    = 1 // 超级管理员
+	Role_Admin_Id   = 2 // 管理员
+	Role_Default_Id = 3 // 普通用户
 )
 
 const Table_Role_Name = "role"
