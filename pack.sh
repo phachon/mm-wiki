@@ -1,31 +1,35 @@
 #!/bin/bash
-VER=$1
-if [ "$VER" = "" ]; then
-    echo 'please input pack version!'
-    exit 1
-fi
+VER="$(grep "SYSTEM_VERSION" global/system.go | tr '"' ' ' | awk '{print $3}')"
 RELEASE="release-${VER}"
-rm -rf ${RELEASE}
-mkdir ${RELEASE}
 
-echo 'Start pack windows amd64...'
-GOOS=windows GOARCH=amd64 ./build.sh
-tar -czvf "${RELEASE}/mm-wiki-${VER}-windows-amd64.tar.gz" -C release .
+rm -rf "${RELEASE}"
+mkdir "${RELEASE}"
 
-echo 'Start pack windows X386...'
-GOOS=windows GOARCH=386 ./build.sh
-tar -czvf "${RELEASE}/mm-wiki-${VER}-windows-386.tar.gz" -C release .
+function build_pack() {
+  echo "Start pack $1 $2..."
+  GOOS=$1 GOARCH=$2 ./build.sh
+  tar -czf "${RELEASE}/mm-wiki-${VER}-$1-$2.tar.gz" -C release .
+}
 
-echo 'Start pack linux amd64'
-GOOS=linux GOARCH=amd64 ./build.sh
-tar -czvf "${RELEASE}/mm-wiki-${VER}-linux-amd64.tar.gz" -C release .
+OS=$(echo $1 | tr '[:upper:]' '[:lower:]')
+ARCH=$(echo $2 | tr '[:upper:]' '[:lower:]')
 
-echo 'Start pack linux 386'
-GOOS=linux GOARCH=386 ./build.sh
-tar -czvf "${RELEASE}/mm-wiki-${VER}-linux-386.tar.gz" -C release .
+if [ "$OS" = "all" ]; then
+  build_pack windows 386
+  build_pack windows amd64
 
-echo 'Start pack mac amd64'
-GOOS=darwin GOARCH=amd64 ./build.sh
-tar -czvf "${RELEASE}/mm-wiki-${VER}-mac-amd64.tar.gz" -C release .
+  build_pack linux 386
+  build_pack linux amd64
+
+  build_pack darwin amd64
+elif [ "$OS" != "" ]; then
+  if [ "$ARCH" != "" ]; then
+    build_pack $OS $ARCH
+  else
+    build_pack $OS amd64
+  fi
+else
+  build_pack linux amd64
+fi
 
 echo 'END'
