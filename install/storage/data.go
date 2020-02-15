@@ -70,7 +70,6 @@ func NewData() *data {
 	return &data{
 		License:      License_Disagree,
 		Env:          Env_NotAccess,
-		Version:      "",
 		System:       Sys_NotAccess,
 		Database:     Database_NotAccess,
 		SystemConf:   defaultSystemConf,
@@ -84,7 +83,6 @@ func NewData() *data {
 type data struct {
 	License      int
 	Env          int
-	Version      string
 	System       int
 	Database     int
 	SystemConf   map[string]string
@@ -213,7 +211,7 @@ func writeInstallData() (err error) {
 		return
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec("系统版本号", "system_version", Data.Version, time.Now().Unix(), time.Now().Unix())
+	_, err = stmt.Exec("系统版本号", "system_version", global.SYSTEM_VERSION, time.Now().Unix(), time.Now().Unix())
 	return err
 }
 
