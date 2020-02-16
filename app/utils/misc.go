@@ -150,3 +150,62 @@ func (m *misc) Page(total, page, pagesize int, url string, args ...interface{}) 
 	}
 	return ""
 }
+
+// 获取字符串子串的位置
+func (m *misc) GetStrUnicodeIndex(str string, substr string) int {
+	// 子串在字符串的字节位置
+	result := strings.Index(str, substr)
+	if result >= 0 {
+		return m.GetStrUnicodeIndexByByteIndex(str, result)
+	}
+	return -1
+}
+
+// 根据字符串字节位置获取字符串位置
+func (m *misc) GetStrUnicodeIndexByByteIndex(str string, subStrByteIndex int) int {
+	if subStrByteIndex > len(str)-1 {
+		return -1
+	}
+	// 获得子串之前的字符串并转换成[]byte
+	prefix := []byte(str)[0:subStrByteIndex]
+	// 将子串之前的字符串转换成[]rune
+	rs := []rune(string(prefix))
+	// 获得子串之前的字符串的长度，便是子串在字符串的字符位置
+	result := len(rs)
+	return result
+}
+
+// 截取包含子字符串的一段字符串，前后截取
+func (m *misc) SubStrUnicode(str string, subStr string, preLen int, sufLen int) string {
+	subStrRune := []rune(subStr)
+	strRune := []rune(str)
+	count := len(strRune)
+	subStrUnicodeIndex := m.GetStrUnicodeIndex(str, subStr)
+	startIndex := 0
+	endIndex := count - 1
+	if subStrUnicodeIndex-preLen > 0 {
+		startIndex = subStrUnicodeIndex - preLen
+	}
+	if subStrUnicodeIndex+len(subStrRune)+sufLen < count-1 {
+		endIndex = subStrUnicodeIndex + len(subStrRune) + sufLen
+	}
+	return string(strRune[startIndex:endIndex])
+}
+
+// 截取包含子字符串的一段字符串，前后截取
+// subStrIndex 已只子串的字节位置
+func (m *misc) SubStrUnicodeBySubStrIndex(str string, subStr string, subStrIndex int, preLen int, sufLen int) string {
+	subStrRune := []rune(subStr)
+	strRune := []rune(str)
+	count := len(strRune)
+	subStrUnicodeIndex := m.GetStrUnicodeIndexByByteIndex(str, subStrIndex)
+	startIndex := 0
+	endIndex := count - 1
+	if subStrUnicodeIndex-preLen > 0 {
+		startIndex = subStrUnicodeIndex - preLen
+	}
+	if subStrUnicodeIndex+len(subStrRune)+sufLen < count-1 {
+		endIndex = subStrUnicodeIndex + len(subStrRune) + sufLen
+	}
+	return string(strRune[startIndex:endIndex])
+}

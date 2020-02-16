@@ -15,7 +15,7 @@
                     <div class="form-group has-feedback">
                         {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
                         <div class="input-group input-group-sm">
-                            <input class="form-control input-sm" name="document_name" type="text" onkeydown="KeyDown('#search_btn')" placeholder="输入文档名搜索..." style="width: 280px">
+                            <input class="form-control input-sm" name="keyword" type="text" onkeydown="KeyDown('#search_btn')" placeholder="请输入关键字搜索..." style="width: 280px">
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" type="button" name="search" id="search_btn" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
                             </span>
@@ -75,8 +75,8 @@
         }
     }
     function mainSearch(element, url) {
-        var searchText = $(element).find("input[name='document_name']").val();
-        url = url + "?document_name="+searchText;
+        var searchText = $(element).find("input[name='keyword']").val();
+        url = url + "?keyword="+searchText;
         layer.open({
             type: 2,
             skin: Layers.skin,
