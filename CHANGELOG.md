@@ -1,5 +1,34 @@
 # 更新日志：
 
+## v0.1.6（2020-02）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 修复新安装版本号不存在问题
+
+#### 新增功能
+1. 完善 pack 打包脚本
+2. 修复  Windows 下 build 脚本编译问题
+3. 搜索支持全文搜索功能
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.1.5-mac-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+3. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+4. 配置文件新增搜索相关配置（增加到自己的配置文件中）
+```
+# 搜索配置
+[search]
+interval_time=30
+```
+
 ## v0.1.5（2019-12）
 
 ### Fix Bug & Add Feature

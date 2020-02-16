@@ -17,6 +17,7 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
 - This app allows users to log in through certified external system such as the company’s LDAP log in system.
 - Stay synced with your team. You’ll receive email notifications when the file you're following is updated.
 - Share and download the file. For now you can only download files in the form of Markdown plain text.
+- Support full text search.
 
 # Installation
 ## Install by downloading it.
