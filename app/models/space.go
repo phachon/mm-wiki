@@ -264,6 +264,23 @@ func (s *Space) GetSpaces() (spaces []map[string]string, err error) {
 	return
 }
 
+// get spaces by visitLevel
+func (s *Space) GetSpacesByVisitLevel(visitLevel string) (spaces []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Space_Name).Where(map[string]interface{}{
+			"visit_level": visitLevel,
+			"is_delete":   Space_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	spaces = rs.Rows()
+	return
+}
+
 // get space count
 func (s *Space) CountSpaces() (count int64, err error) {
 

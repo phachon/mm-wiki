@@ -488,3 +488,11 @@ select.pagination-select-xs:hover {
     font-size:10px;
     line-height:14px;
 }
+
+mark {
+    padding: 1px 2px;
+    margin: 0 -2px;
+    background-color: #fff34d;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}

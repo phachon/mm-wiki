@@ -528,6 +528,19 @@ func (d *Document) GetAllDocumentsByDocumentIds(documentIds []string) (documents
 	return
 }
 
+func (d *Document) GetAllDocuments() (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete": Document_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
 func (d *Document) GetParentDocumentsByDocument(document map[string]string) (parentDocuments []map[string]string, pageFile string, err error) {
 
 	if document["parent_id"] == "0" {
@@ -628,4 +641,19 @@ func (d *Document) GetDocumentGroupEditUserId() (documents []map[string]string, 
 	}
 	documents = rs.Rows()
 	return
+}
+
+// 根据文档信息获取文档内容和文件地址
+func (d *Document) GetDocumentContentByDocument(doc map[string]string) (content string, pageFile string, err error) {
+	// get document page file
+	_, pageFile, err = DocumentModel.GetParentDocumentsByDocument(doc)
+	if err != nil {
+		return content, pageFile, err
+	}
+	// get document content
+	content, err = utils.Document.GetContentByPageFile(pageFile)
+	if err != nil {
+		return content, pageFile, err
+	}
+	return content, pageFile, nil
 }

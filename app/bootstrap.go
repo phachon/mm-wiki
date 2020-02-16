@@ -6,8 +6,10 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/fatih/color"
+	"github.com/go-ego/riot/types"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/work"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/snail007/go-activerecord/mysql"
 	"log"
@@ -18,7 +20,6 @@ import (
 )
 
 var (
-
 	defaultConf = "conf/mm-wiki.conf"
 
 	confPath = flag.String("conf", "", "please set mm-wiki conf path")
@@ -44,6 +45,8 @@ var (
 	ImageAbsDir = ""
 
 	AttachmentAbsDir = ""
+
+	SearchIndexAbsDir = ""
 )
 
 func init() {
@@ -53,6 +56,8 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
+	initSearch()
+	initWork()
 	StartTime = time.Now().Unix()
 }
 
@@ -180,36 +185,24 @@ func initDocumentDir() {
 	imagesAbsDir := path.Join(documentAbsDir, "images")
 	// attachment save dir
 	attachmentAbsDir := path.Join(documentAbsDir, "attachment")
+	// search index dir
+	searchIndexAbsDir := path.Join(documentAbsDir, "search-index")
 
 	MarkdownAbsDir = markDownAbsDir
 	ImageAbsDir = imagesAbsDir
 	AttachmentAbsDir = attachmentAbsDir
+	SearchIndexAbsDir = searchIndexAbsDir
 
-	// create markdown dir
-	ok, _ = utils.File.PathIsExists(markDownAbsDir)
-	if !ok {
-		err := os.Mkdir(markDownAbsDir, 0777)
-		if err != nil {
-			logs.Error("create document markdown dir " + markDownAbsDir + " error!")
-			os.Exit(1)
-		}
-	}
-	// create image dir
-	ok, _ = utils.File.PathIsExists(imagesAbsDir)
-	if !ok {
-		err := os.Mkdir(imagesAbsDir, 0777)
-		if err != nil {
-			logs.Error("create document image dir " + imagesAbsDir + " error!")
-			os.Exit(1)
-		}
-	}
-	// create attachment dir
-	ok, _ = utils.File.PathIsExists(attachmentAbsDir)
-	if !ok {
-		err := os.Mkdir(attachmentAbsDir, 0777)
-		if err != nil {
-			logs.Error("create document attachment dir " + attachmentAbsDir + " error!")
-			os.Exit(1)
+	dirList := []string{MarkdownAbsDir, ImageAbsDir, AttachmentAbsDir, SearchIndexAbsDir}
+	// create dir
+	for _, dir := range dirList {
+		ok, _ = utils.File.PathIsExists(dir)
+		if !ok {
+			err := os.Mkdir(dir, 0777)
+			if err != nil {
+				logs.Error("create document dir "+dir+" error=%s", err.Error())
+				os.Exit(1)
+			}
 		}
 	}
 
@@ -251,4 +244,40 @@ func checkUpgrade() {
 		}
 		os.Exit(0)
 	}
+}
+
+func initSearch() {
+
+	gseFile := filepath.Join(RootDir, "docs/search_dict/dictionary.txt")
+	stopFile := filepath.Join(RootDir, "docs/search_dict/stop_tokens.txt")
+	ok, _ := utils.File.PathIsExists(gseFile)
+	if !ok {
+		logs.Error("search dict file " + gseFile + " is not exists!")
+		os.Exit(1)
+	}
+	ok, _ = utils.File.PathIsExists(stopFile)
+	if !ok {
+		logs.Error("search stop dict file " + stopFile + " is not exists!")
+		os.Exit(1)
+	}
+	global.DocSearcher.Init(types.EngineOpts{
+		UseStore:    true,
+		StoreFolder: SearchIndexAbsDir,
+		Using:       3,
+		//GseDict:       "zh",
+		GseDict:       gseFile,
+		StopTokenFile: stopFile,
+		IndexerOpts: &types.IndexerOpts{
+			IndexType: types.LocsIndex,
+		},
+	})
+}
+
+func initWork() {
+	// 搜索索引 work
+	intervalTime, _ := beego.AppConfig.Int64("search::interval_time")
+	if intervalTime == 0 {
+		intervalTime = 30
+	}
+	work.InitDocSearchIndexWork(time.Duration(intervalTime) * time.Second)
 }
