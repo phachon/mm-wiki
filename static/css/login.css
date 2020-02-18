@@ -347,13 +347,6 @@ input[type=submit], input[type=button] {
     fill: #428BFF;
 }
 
-@media (max-width: 600px) {
-
-    .tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label {
-        background: rgba(0, 0, 0, 0.08);
-    }
-}
-
 .tabs input[name="tab-control"]:nth-of-type(2):checked ~ .slider {
     -webkit-transform: translateX(100%);
     transform: translateX(100%);
