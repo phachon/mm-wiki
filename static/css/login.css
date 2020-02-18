@@ -5,7 +5,6 @@
     font: 13px/1.5 '微软雅黑';
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -box-sizing: border-box;
     padding: 0;
     margin: 0;
     list-style: none;
@@ -14,13 +13,10 @@
 
 body, html {
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-body {
-    background: #2b5d7a;
-    background-size: cover;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 a {
@@ -34,17 +30,22 @@ img {
 }
 
 .login_box {
-    width: 1100px;
-    margin: 120px auto 0;
+    display: flex;
+    height: 90rem;
+    width: 100%;
+    max-width: 100rem;
+    max-height: 90rem;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around;
 }
 
 .login_box .login_l_img {
-    float: left;
+    padding-top: 1rem;
     text-align: center;
-    width: 500px;
-    height: 310px;
-    margin-top: 45px;
-    /*margin-left: 50px;*/
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .login_box .login_l_img img {
@@ -64,15 +65,15 @@ img {
 
 .login {
     height: 360px;
-    width: 400px;
+    width: 100%;
+    min-width: 28rem;
+    max-width: 40rem;
     padding: 40px 40px 10px 40px;
     background-color: #ffffff;
     border-radius: 6px;
     box-sizing: border-box;
-    float: right;
-    margin-right: 50px;
     position: relative;
-    margin-top: 50px;
+    margin: 0 10px;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
@@ -117,14 +118,13 @@ input[type=text], input[type=file], input[type=password], input[type=email], sel
     border-radius: 3px;
     /*height: 50px;*/
     height: 40px;
-    padding: 0px 16px;
+    padding: 0 16px;
     font-size: 14px;
     color: #555555;
     outline: none;
     width: 100%;
     margin-bottom: 15px;
     line-height: 50px;
-    color: #888;
 }
 
 input[type=text]:focus, input[type=file]:focus, input[type=password]:focus, input[type=email]:focus, select:focus {
@@ -135,12 +135,11 @@ input[type=submit], input[type=button] {
     display: inline-block;
     vertical-align: middle;
     padding: 12px 24px;
-    margin: 0px;
+    margin: 0;
     font-size: 16px;
     line-height: 24px;
     text-align: center;
     white-space: nowrap;
-    vertical-align: middle;
     cursor: pointer;
     color: #ffffff;
     background-color: #337ab7;
@@ -153,12 +152,12 @@ input[type=submit], input[type=button] {
 
 .copyright {
     font-size: 14px;
-    color: #fff;
+    color: gray;
     display: block;
     width: 100%;
     float: left;
     text-align: center;
-    margin-top: 80px;
+    margin-top: 2rem;
 }
 
 #password_text {
@@ -176,24 +175,9 @@ input[type=submit], input[type=button] {
     line-height: 50px;
 }
 
-
-/* tabs */
-.tabs {
-    /*left: 50%;*/
-    /*-webkit-transform: translateX(-50%);*/
-    /*transform: translateX(-50%);*/
-    /*position: relative;*/
-    /*background: white;*/
-    /*padding: 50px;*/
-    /*padding-bottom: 80px;*/
-    /*width: 70%;*/
-    /*height: 250px;*/
-    /*box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);*/
-    /*border-radius: 5px;*/
-    /*min-width: 240px;*/
+.tabs input[name="tab-control"] {
+    display: none;
 }
-
-.tabs input[name="tab-control"] { display: none; }
 
 .tabs .content section h2, .tabs ul li label {
     font-weight: bold;
@@ -245,16 +229,14 @@ input[type=submit], input[type=button] {
 }
 
 .tabs ul li label {
-    -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     color: #929daf;
-    padding: 5px auto;
+    padding: 5px 0;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
     cursor: pointer;
     -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
     white-space: nowrap;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -263,7 +245,9 @@ input[type=submit], input[type=button] {
     user-select: none;
 }
 
-.tabs ul li label br { display: none; }
+.tabs ul li label br {
+    display: none;
+}
 
 .tabs ul li label svg {
     fill: #929daf;
@@ -279,7 +263,9 @@ input[type=submit], input[type=button] {
     color: #bec5cf;
 }
 
-.tabs ul li label:hover svg, .tabs ul li label:focus svg, .tabs ul li label:active svg { fill: #bec5cf; }
+.tabs ul li label:hover svg, .tabs ul li label:focus svg, .tabs ul li label:active svg {
+    fill: #bec5cf;
+}
 
 .tabs .slider {
     position: relative;
@@ -299,7 +285,9 @@ input[type=submit], input[type=button] {
     border-radius: 1px;
 }
 
-.tabs .content { margin-top: 30px; }
+.tabs .content {
+    margin-top: 30px;
+}
 
 .tabs .content section {
     display: none;
@@ -337,10 +325,8 @@ input[type=submit], input[type=button] {
     color: #428BFF;
 }
 
-.tabs input[name="tab-control"]:nth-of-type(1):checked ~ ul > li:nth-child(1) > label svg { fill: #428BFF; }
-@media (max-width: 600px) {
-
-    .tabs input[name="tab-control"]:nth-of-type(1):checked ~ ul > li:nth-child(1) > label { background: rgba(0, 0, 0, 0.08); }
+.tabs input[name="tab-control"]:nth-of-type(1):checked ~ ul > li:nth-child(1) > label svg {
+    fill: #428BFF;
 }
 
 .tabs input[name="tab-control"]:nth-of-type(1):checked ~ .slider {
@@ -348,17 +334,24 @@ input[type=submit], input[type=button] {
     transform: translateX(0%);
 }
 
-.tabs input[name="tab-control"]:nth-of-type(1):checked ~ .content > section:nth-child(1) { display: block; }
+.tabs input[name="tab-control"]:nth-of-type(1):checked ~ .content > section:nth-child(1) {
+    display: block;
+}
 
 .tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label {
     cursor: default;
     color: #428BFF;
 }
 
-.tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label svg { fill: #428BFF; }
+.tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label svg {
+    fill: #428BFF;
+}
+
 @media (max-width: 600px) {
 
-    .tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label { background: rgba(0, 0, 0, 0.08); }
+    .tabs input[name="tab-control"]:nth-of-type(2):checked ~ ul > li:nth-child(2) > label {
+        background: rgba(0, 0, 0, 0.08);
+    }
 }
 
 .tabs input[name="tab-control"]:nth-of-type(2):checked ~ .slider {
@@ -366,17 +359,24 @@ input[type=submit], input[type=button] {
     transform: translateX(100%);
 }
 
-.tabs input[name="tab-control"]:nth-of-type(2):checked ~ .content > section:nth-child(2) { display: block; }
+.tabs input[name="tab-control"]:nth-of-type(2):checked ~ .content > section:nth-child(2) {
+    display: block;
+}
 
 .tabs input[name="tab-control"]:nth-of-type(3):checked ~ ul > li:nth-child(3) > label {
     cursor: default;
     color: #428BFF;
 }
 
-.tabs input[name="tab-control"]:nth-of-type(3):checked ~ ul > li:nth-child(3) > label svg { fill: #428BFF; }
+.tabs input[name="tab-control"]:nth-of-type(3):checked ~ ul > li:nth-child(3) > label svg {
+    fill: #428BFF;
+}
+
 @media (max-width: 600px) {
 
-    .tabs input[name="tab-control"]:nth-of-type(3):checked ~ ul > li:nth-child(3) > label { background: rgba(0, 0, 0, 0.08); }
+    .tabs input[name="tab-control"]:nth-of-type(3):checked ~ ul > li:nth-child(3) > label {
+        background: rgba(0, 0, 0, 0.08);
+    }
 }
 
 .tabs input[name="tab-control"]:nth-of-type(3):checked ~ .slider {
@@ -384,17 +384,24 @@ input[type=submit], input[type=button] {
     transform: translateX(200%);
 }
 
-.tabs input[name="tab-control"]:nth-of-type(3):checked ~ .content > section:nth-child(3) { display: block; }
+.tabs input[name="tab-control"]:nth-of-type(3):checked ~ .content > section:nth-child(3) {
+    display: block;
+}
 
 .tabs input[name="tab-control"]:nth-of-type(4):checked ~ ul > li:nth-child(4) > label {
     cursor: default;
     color: #428BFF;
 }
 
-.tabs input[name="tab-control"]:nth-of-type(4):checked ~ ul > li:nth-child(4) > label svg { fill: #428BFF; }
+.tabs input[name="tab-control"]:nth-of-type(4):checked ~ ul > li:nth-child(4) > label svg {
+    fill: #428BFF;
+}
+
 @media (max-width: 600px) {
 
-    .tabs input[name="tab-control"]:nth-of-type(4):checked ~ ul > li:nth-child(4) > label { background: rgba(0, 0, 0, 0.08); }
+    .tabs input[name="tab-control"]:nth-of-type(4):checked ~ ul > li:nth-child(4) > label {
+        background: rgba(0, 0, 0, 0.08);
+    }
 }
 
 .tabs input[name="tab-control"]:nth-of-type(4):checked ~ .slider {
@@ -402,13 +409,16 @@ input[type=submit], input[type=button] {
     transform: translateX(300%);
 }
 
-.tabs input[name="tab-control"]:nth-of-type(4):checked ~ .content > section:nth-child(4) { display: block; }
-@-webkit-keyframes
-content {  from {
-    opacity: 0;
-    -webkit-transform: translateY(5%);
-    transform: translateY(5%);
+.tabs input[name="tab-control"]:nth-of-type(4):checked ~ .content > section:nth-child(4) {
+    display: block;
 }
+
+@-webkit-keyframes content {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(5%);
+        transform: translateY(5%);
+    }
 
     to {
         opacity: 1;
@@ -416,12 +426,13 @@ content {  from {
         transform: translateY(0%);
     }
 }
-@keyframes
-content {  from {
-    opacity: 0;
-    -webkit-transform: translateY(5%);
-    transform: translateY(5%);
-}
+
+@keyframes content {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(5%);
+        transform: translateY(5%);
+    }
 
     to {
         opacity: 1;
@@ -429,26 +440,14 @@ content {  from {
         transform: translateY(0%);
     }
 }
-@media (max-width: 1000px) {
 
-    .tabs ul li label { white-space: initial; }
-
-    .tabs ul li label br { display: initial; }
-
-    .tabs ul li label svg { height: 1.5em; }
-}
-@media (max-width: 600px) {
-
-    .tabs ul li label {
-        padding: 5px;
-        border-radius: 5px;
+/*宽屏模式*/
+@media (min-width: 860px) {
+    body {
+        align-items: center;
     }
 
-    .tabs ul li label span { display: none; }
-
-    .tabs .slider { display: none; }
-
-    .tabs .content { margin-top: 20px; }
-
-    .tabs .content section h2 { display: block; }
+    .login_box {
+        max-height: 49rem;
+    }
 }
