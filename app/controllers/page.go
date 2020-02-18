@@ -530,7 +530,7 @@ func sendEmail(documentId string, username string, comment string, url string) e
 	documentValue["comment"] = comment
 	documentValue["url"] = url
 
-	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "system/email/template.html"
+	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template.html"
 	body, err := utils.Email.MakeDocumentHtmlBody(documentValue, emailTemplate)
 	if err != nil {
 		return errors.New("发送邮件生成模板失败：" + err.Error())
