@@ -17,6 +17,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background-color: #F5F5F5;
 }
 
 a {
@@ -50,8 +51,8 @@ img {
 
 .login_box .login_l_img img {
     margin-top: 10px;
-    width: 420px;
-    height: 310px;
+    max-width: 420px;
+    width: 100%;
 }
 
 .login_box .login_l_img span {
