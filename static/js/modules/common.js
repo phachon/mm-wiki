@@ -66,3 +66,14 @@ function hiddenScrollY() {
     // $("#mainFrame").attr("overflow-y", "hidden");
     $("#mainFrame").attr("scrolling", "no");
 }
+
+function windowResized() {
+    if ($(window).width() < 768) {
+        layoutClose()
+    }else{
+        layoutOpen()
+    }
+}
+
+$(windowResized);
+$(window).resize(windowResized);
