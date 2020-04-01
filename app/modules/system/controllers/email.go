@@ -1,14 +1,16 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"time"
+
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
+
+	"github.com/astaxie/beego"
 	"github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
-	"github.com/astaxie/beego"
-	"time"
-	"fmt"
 )
 
 type EmailController struct {
@@ -26,7 +28,7 @@ func (this *EmailController) List() {
 		emails, err = models.EmailModel.GetEmails()
 	}
 	if err != nil {
-		this.ErrorLog("获取邮件服务器列表失败: "+err.Error())
+		this.ErrorLog("获取邮件服务器列表失败: " + err.Error())
 		this.ViewError("获取邮件服务器列表失败", "/system/main/index")
 	}
 
@@ -81,7 +83,7 @@ func (this *EmailController) Save() {
 
 	ok, err := models.EmailModel.HasEmailName(name)
 	if err != nil {
-		this.ErrorLog("添加邮件服务器失败："+err.Error())
+		this.ErrorLog("添加邮件服务器失败：" + err.Error())
 		this.jsonError("添加邮件服务器失败！")
 	}
 	if ok {
@@ -89,22 +91,22 @@ func (this *EmailController) Save() {
 	}
 
 	emailId, err := models.EmailModel.Insert(map[string]interface{}{
-		"name": name,
-		"sender_address": senderAddress,
-		"sender_name": senderName,
+		"name":                name,
+		"sender_address":      senderAddress,
+		"sender_name":         senderName,
 		"sender_title_prefix": senderTitlePrefix,
-		"host": host,
-		"port": port,
-		"username": username,
-		"password": password,
-		"is_ssl": isSsl,
+		"host":                host,
+		"port":                port,
+		"username":            username,
+		"password":            password,
+		"is_ssl":              isSsl,
 	})
 
 	if err != nil {
 		this.ErrorLog("添加邮件服务器失败：" + err.Error())
 		this.jsonError("添加邮件服务器失败")
 	}
-	this.InfoLog("添加邮件服务器 "+utils.Convert.IntToString(emailId, 10)+" 成功")
+	this.InfoLog("添加邮件服务器 " + utils.Convert.IntToString(emailId, 10) + " 成功")
 	this.jsonSuccess("添加邮件服务器成功", nil, "/system/email/list")
 }
 
@@ -170,34 +172,34 @@ func (this *EmailController) Modify() {
 
 	email, err := models.EmailModel.GetEmailByEmailId(emailId)
 	if err != nil {
-		this.ErrorLog("修改邮件服务器 "+emailId+" 失败: "+err.Error())
+		this.ErrorLog("修改邮件服务器 " + emailId + " 失败: " + err.Error())
 		this.jsonError("修改邮件服务器失败！")
 	}
 	if len(email) == 0 {
 		this.jsonError("邮件服务器不存在！")
 	}
 
-	ok , _ := models.EmailModel.HasSameName(emailId, name)
+	ok, _ := models.EmailModel.HasSameName(emailId, name)
 	if ok {
 		this.jsonError("邮件服务器名称已经存在！")
 	}
 	_, err = models.EmailModel.Update(emailId, map[string]interface{}{
-		"name": name,
-		"sender_address": senderAddress,
-		"sender_name": senderName,
+		"name":                name,
+		"sender_address":      senderAddress,
+		"sender_name":         senderName,
 		"sender_title_prefix": senderTitlePrefix,
-		"host": host,
-		"port": port,
-		"username": username,
-		"password": password,
-		"is_ssl": isSsl,
+		"host":                host,
+		"port":                port,
+		"username":            username,
+		"password":            password,
+		"is_ssl":              isSsl,
 	})
 
 	if err != nil {
-		this.ErrorLog("修改邮件服务器 "+emailId+" 失败：" + err.Error())
+		this.ErrorLog("修改邮件服务器 " + emailId + " 失败：" + err.Error())
 		this.jsonError("修改邮件服务器失败")
 	}
-	this.InfoLog("修改邮件服务器 "+emailId+" 成功")
+	this.InfoLog("修改邮件服务器 " + emailId + " 成功")
 	this.jsonSuccess("修改邮件服务器成功", nil, "/system/email/list")
 }
 
@@ -213,7 +215,7 @@ func (this *EmailController) Used() {
 
 	email, err := models.EmailModel.GetEmailByEmailId(emailId)
 	if err != nil {
-		this.ErrorLog("邮件服务器 "+emailId+" 启用失败: "+err.Error())
+		this.ErrorLog("邮件服务器 " + emailId + " 启用失败: " + err.Error())
 		this.jsonError("邮件服务器启用失败")
 	}
 	if len(email) == 0 {
@@ -221,11 +223,11 @@ func (this *EmailController) Used() {
 	}
 	_, err = models.EmailModel.SetEmailUsed(emailId)
 	if err != nil {
-		this.ErrorLog("邮件服务器 "+emailId+" 启用失败: "+err.Error())
+		this.ErrorLog("邮件服务器 " + emailId + " 启用失败: " + err.Error())
 		this.jsonError("邮件服务器启用失败")
 	}
 
-	this.InfoLog("启用邮件服务器 "+emailId+" 成功")
+	this.InfoLog("启用邮件服务器 " + emailId + " 成功")
 	this.jsonSuccess("启用邮件服务器成功", nil, "/system/email/list")
 }
 
@@ -241,7 +243,7 @@ func (this *EmailController) Delete() {
 
 	email, err := models.EmailModel.GetEmailByEmailId(emailId)
 	if err != nil {
-		this.ErrorLog("删除邮件服务器 "+emailId+" 失败: "+err.Error())
+		this.ErrorLog("删除邮件服务器 " + emailId + " 失败: " + err.Error())
 		this.jsonError("删除邮件服务器失败")
 	}
 	if len(email) == 0 {
@@ -249,11 +251,11 @@ func (this *EmailController) Delete() {
 	}
 	err = models.EmailModel.Delete(emailId)
 	if err != nil {
-		this.ErrorLog("删除邮件服务器 "+emailId+" 失败: "+err.Error())
+		this.ErrorLog("删除邮件服务器 " + emailId + " 失败: " + err.Error())
 		this.jsonError("删除邮件服务器失败")
 	}
 
-	this.InfoLog("删除邮件服务器 "+emailId+" 成功")
+	this.InfoLog("删除邮件服务器 " + emailId + " 成功")
 	this.jsonSuccess("删除邮件服务器成功", nil, "/system/email/list")
 }
 
@@ -302,36 +304,36 @@ func (this *EmailController) Test() {
 	}
 
 	emailConfig := map[string]string{
-		"sender_address": senderAddress,
-		"port": port,
-		"password": password,
-		"host": host,
-		"sender_name": senderName,
-		"username": username,
+		"sender_address":      senderAddress,
+		"port":                port,
+		"password":            password,
+		"host":                host,
+		"sender_name":         senderName,
+		"username":            username,
 		"sender_title_prefix": senderTitlePrefix,
-		"is_ssl": isSsl,
+		"is_ssl":              isSsl,
 	}
 
 	to := strings.Split(emails, ";")
-	documentValue := map[string]string {
-		"name": "MM-Wiki测试邮件",
-		"username": this.User["username"],
-		"update_time": fmt.Sprintf("%d", time.Now().Unix()),
-		"comment": "",
+	documentValue := map[string]string{
+		"name":         "MM-Wiki测试邮件",
+		"username":     this.User["username"],
+		"update_time":  fmt.Sprintf("%d", time.Now().Unix()),
+		"comment":      "",
 		"document_url": "",
-		"content": "欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
+		"content":      "欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
 	}
 
-	emailTemplate := beego.BConfig.WebConfig.ViewsPath+"system/email/template_test.html"
+	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template_test.html"
 	body, err := utils.Email.MakeDocumentHtmlBody(documentValue, emailTemplate)
 	if err != nil {
-		this.ErrorLog("发送测试邮件失败："+err.Error())
+		this.ErrorLog("发送测试邮件失败：" + err.Error())
 		this.jsonError("发送测试邮件失败！")
 	}
 	// start send email
 	err = utils.Email.Send(emailConfig, to, "测试邮件", body)
 	if err != nil {
-		this.ErrorLog("发送测试邮件失败："+err.Error())
+		this.ErrorLog("发送测试邮件失败：" + err.Error())
 		this.jsonError("发送测试邮件失败！")
 	}
 

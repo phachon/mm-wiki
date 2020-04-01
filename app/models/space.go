@@ -1,35 +1,33 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
+	"fmt"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
-	"fmt"
 )
 
 const (
-
 	Space_Share_False = 0
-	Space_Share_True = 1
+	Space_Share_True  = 1
 
 	Space_Download_False = 0
-	Space_Download_True = 1
+	Space_Download_True  = 1
 
-	Space_Delete_True = 1
+	Space_Delete_True  = 1
 	Space_Delete_False = 0
 
-	Space_Root_Id = 1
-	Space_Admin_Id = 2
+	Space_Root_Id    = 1
+	Space_Admin_Id   = 2
 	Space_Default_Id = 3
 
-	Space_VisitLevel_Public = "public"
+	Space_VisitLevel_Public  = "public"
 	Space_VisitLevel_Private = "private"
 )
 
 const Table_Space_Name = "space"
 
 type Space struct {
-
 }
 
 var SpaceModel = Space{}
@@ -39,7 +37,7 @@ func (s *Space) GetSpaceBySpaceId(spaceId string) (space map[string]string, err 
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
-		"space_id":   spaceId,
+		"space_id":  spaceId,
 		"is_delete": Space_Delete_False,
 	}))
 	if err != nil {
@@ -55,8 +53,8 @@ func (s *Space) HasSameName(spaceId, name string) (has bool, err error) {
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
 		"space_id <>": spaceId,
-		"name":   name,
-		"is_delete":  Space_Delete_False,
+		"name":        name,
+		"is_delete":   Space_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -72,7 +70,7 @@ func (s *Space) HasSpaceName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name":      name,
 		"is_delete": Space_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -89,7 +87,7 @@ func (s *Space) GetSpaceByName(name string) (space map[string]string, err error)
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name":      name,
 		"is_delete": Space_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -103,7 +101,7 @@ func (s *Space) GetSpaceByName(name string) (space map[string]string, err error)
 func (s *Space) Delete(spaceId string) (err error) {
 	db := G.DB()
 	_, err = db.Exec(db.AR().Update(Table_Space_Name, map[string]interface{}{
-		"is_delete": Space_Delete_True,
+		"is_delete":   Space_Delete_True,
 		"update_time": time.Now().Unix(),
 	}, map[string]interface{}{
 		"space_id": spaceId,
@@ -139,9 +137,9 @@ func (s *Space) Insert(spaceValue map[string]interface{}) (id int64, err error) 
 func (s *Space) Update(spaceId string, spaceValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	spaceValue["update_time"] =  time.Now().Unix()
+	spaceValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Space_Name, spaceValue, map[string]interface{}{
-		"space_id":   spaceId,
+		"space_id":  spaceId,
 		"is_delete": Space_Delete_False,
 	}))
 	if err != nil {
@@ -151,13 +149,69 @@ func (s *Space) Update(spaceId string, spaceValue map[string]interface{}) (id in
 	return
 }
 
+// update space db and file name by space_id
+func (s *Space) UpdateDBAndSpaceFileName(spaceId string, spaceValue map[string]interface{}, oldName string) (id int64, err error) {
+	// begin update
+	db := G.DB()
+	tx, err := db.Begin(db.Config)
+	if err != nil {
+		return
+	}
+	var rs *mysql.ResultSet
+
+	// get real old space name (v0.1.2 #53 bug)
+	defaultDocument, err := DocumentModel.GetDocumentByParentIdAndSpaceId("0", spaceId, Document_Type_Dir)
+	if err != nil {
+		return
+	}
+	if oldName != defaultDocument["name"] {
+		oldName = defaultDocument["name"]
+	}
+
+	// update space db
+	spaceValue["update_time"] = time.Now().Unix()
+	rs, err = db.ExecTx(db.AR().Update(Table_Space_Name, spaceValue, map[string]interface{}{
+		"space_id":  spaceId,
+		"is_delete": Space_Delete_False,
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	id = rs.LastInsertId
+
+	documentValue := map[string]interface{}{
+		"name":        spaceValue["name"],
+		"update_time": time.Now().Unix(),
+	}
+	// update space document name
+	_, err = db.ExecTx(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
+		"space_id":  spaceId,
+		"parent_id": 0,
+		"type":      Document_Type_Dir,
+	}), tx)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	// update space name
+	err = utils.Document.UpdateSpaceName(oldName, spaceValue["name"].(string))
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = tx.Commit()
+
+	return
+}
+
 // get limit spaces by search keyword
 func (s *Space) GetSpacesByKeywordAndLimit(keyword string, limit int, number int) (spaces []map[string]string, err error) {
 
 	db := G.DB()
 	var rs *mysql.ResultSet
 	sql := db.AR().From(Table_Space_Name).Where(map[string]interface{}{
-		"is_delete":  Space_Delete_False,
+		"is_delete": Space_Delete_False,
 	}).WhereWrap(map[string]interface{}{
 		"name LIKE": "%" + keyword + "%",
 	}, "AND (", "").WhereWrap(map[string]interface{}{
@@ -210,6 +264,23 @@ func (s *Space) GetSpaces() (spaces []map[string]string, err error) {
 	return
 }
 
+// get spaces by visitLevel
+func (s *Space) GetSpacesByVisitLevel(visitLevel string) (spaces []map[string]string, err error) {
+
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Space_Name).Where(map[string]interface{}{
+			"visit_level": visitLevel,
+			"is_delete":   Space_Delete_False,
+		}))
+	if err != nil {
+		return
+	}
+	spaces = rs.Rows()
+	return
+}
+
 // get space count
 func (s *Space) CountSpaces() (count int64, err error) {
 
@@ -239,9 +310,9 @@ func (s *Space) CountSpacesByTags(tag string) (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_Space_Name).
 			Where(map[string]interface{}{
-			"tags LIKE": "%" + tag + "%",
-			"is_delete": Space_Delete_False,
-		}))
+				"tags LIKE": "%" + tag + "%",
+				"is_delete": Space_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -255,7 +326,7 @@ func (s *Space) CountSpacesByKeyword(keyword string) (count int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	sql := db.AR().Select("count(*) as total").From(Table_Space_Name).
-		Where(map[string]interface{}{"is_delete":  Space_Delete_False}).
+		Where(map[string]interface{}{"is_delete": Space_Delete_False}).
 		WhereWrap(map[string]interface{}{"name LIKE": "%" + keyword + "%"}, "AND (", "").
 		WhereWrap(map[string]interface{}{"description LIKE": "%" + keyword + "%"}, "OR", ")")
 	rs, err = db.Query(sql)
@@ -289,7 +360,7 @@ func (s *Space) GetSpaceByLikeName(name string) (spaces []map[string]string, err
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
 		"name Like": "%" + name + "%",
-		"is_delete":     Space_Delete_False,
+		"is_delete": Space_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -303,7 +374,7 @@ func (s *Space) GetSpaceBySpaceIds(spaceIds []string) (spaces []map[string]strin
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Space_Name).Where(map[string]interface{}{
-		"space_id":   spaceIds,
+		"space_id":  spaceIds,
 		"is_delete": Space_Delete_False,
 	}))
 	if err != nil {

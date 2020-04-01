@@ -1,25 +1,24 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
-	"github.com/snail007/go-activerecord/mysql"
-	"time"
-	"strings"
 	"fmt"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/snail007/go-activerecord/mysql"
+	"strings"
+	"time"
 )
 
 const (
-	Document_Delete_True = 1
+	Document_Delete_True  = 1
 	Document_Delete_False = 0
 
 	Document_Type_Page = 1
-	Document_Type_Dir = 2
+	Document_Type_Dir  = 2
 )
 
 const Table_Document_Name = "document"
 
 type Document struct {
-
 }
 
 var DocumentModel = Document{}
@@ -29,8 +28,8 @@ func (d *Document) GetDocumentByDocumentId(documentId string) (document map[stri
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"document_id":   documentId,
-		"is_delete": Document_Delete_False,
+		"document_id": documentId,
+		"is_delete":   Document_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -59,7 +58,7 @@ func (d *Document) GetDocumentsByName(name string) (documents []map[string]strin
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"name": name,
+		"name":      name,
 		"is_delete": Document_Delete_False,
 	}))
 	if err != nil {
@@ -74,8 +73,8 @@ func (d *Document) GetDocumentByNameAndSpaceId(name string, spaceId string) (doc
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"name": name,
-		"space_id": spaceId,
+		"name":      name,
+		"space_id":  spaceId,
 		"is_delete": Document_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -90,10 +89,27 @@ func (d *Document) GetDocumentByNameParentIdAndSpaceId(name string, parentId str
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-		"name": name,
-		"space_id": spaceId,
+		"name":      name,
+		"space_id":  spaceId,
 		"parent_id": parentId,
-		"type": docType,
+		"type":      docType,
+		"is_delete": Document_Delete_False,
+	}).Limit(0, 1))
+	if err != nil {
+		return
+	}
+	document = rs.Row()
+	return
+}
+
+// get document by name and spaceId
+func (d *Document) GetDocumentByParentIdAndSpaceId(parentId string, spaceId string, docType int) (document map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"space_id":  spaceId,
+		"parent_id": parentId,
+		"type":      docType,
 		"is_delete": Document_Delete_False,
 	}).Limit(0, 1))
 	if err != nil {
@@ -111,8 +127,8 @@ func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile st
 		return
 	}
 	_, err = db.ExecTx(db.AR().Update(Table_Document_Name, map[string]interface{}{
-		"is_delete": Document_Delete_True,
-		"update_time": time.Now().Unix(),
+		"is_delete":    Document_Delete_True,
+		"update_time":  time.Now().Unix(),
 		"edit_user_id": userId,
 	}, map[string]interface{}{
 		"document_id": documentId,
@@ -174,11 +190,11 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 
 	// create document page file
 	document := map[string]string{
-		"space_id": documentValue["space_id"].(string),
+		"space_id":  documentValue["space_id"].(string),
 		"parent_id": documentValue["parent_id"].(string),
-		"name": documentValue["name"].(string),
-		"type": fmt.Sprintf("%d", documentValue["type"].(int)),
-		"path": documentValue["path"].(string),
+		"name":      documentValue["name"].(string),
+		"type":      fmt.Sprintf("%d", documentValue["type"].(int)),
+		"path":      documentValue["path"].(string),
 	}
 	_, pageFile, err := d.GetParentDocumentsByDocument(document)
 	err = utils.Document.Create(pageFile)
@@ -207,10 +223,10 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 func (d *Document) Update(documentId string, documentValue map[string]interface{}, comment string) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	documentValue["update_time"] =  time.Now().Unix()
+	documentValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Document_Name, documentValue, map[string]interface{}{
-		"document_id":   documentId,
-		"is_delete": Document_Delete_False,
+		"document_id": documentId,
+		"is_delete":   Document_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -238,10 +254,10 @@ func (d *Document) MoveDBAndFile(documentId string, updateValue map[string]inter
 		return
 	}
 	var rs *mysql.ResultSet
-	updateValue["update_time"] =  time.Now().Unix()
+	updateValue["update_time"] = time.Now().Unix()
 	rs, err = db.ExecTx(db.AR().Update(Table_Document_Name, updateValue, map[string]interface{}{
-		"document_id":   documentId,
-		"is_delete": Document_Delete_False,
+		"document_id": documentId,
+		"is_delete":   Document_Delete_False,
 	}), tx)
 	if err != nil {
 		tx.Rollback()
@@ -282,10 +298,10 @@ func (d *Document) UpdateDBAndFile(documentId string, document map[string]string
 		return
 	}
 	var rs *mysql.ResultSet
-	updateValue["update_time"] =  time.Now().Unix()
+	updateValue["update_time"] = time.Now().Unix()
 	rs, err = db.ExecTx(db.AR().Update(Table_Document_Name, updateValue, map[string]interface{}{
-		"document_id":   documentId,
-		"is_delete": Document_Delete_False,
+		"document_id": documentId,
+		"is_delete":   Document_Delete_False,
 	}), tx)
 	if err != nil {
 		tx.Rollback()
@@ -331,7 +347,7 @@ func (d *Document) GetDocumentsBySpaceId(spaceId string) (documents []map[string
 	var rs *mysql.ResultSet
 	rs, err = db.Query(
 		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"space_id": spaceId,
+			"space_id":  spaceId,
 			"is_delete": Document_Delete_False,
 		}))
 	if err != nil {
@@ -348,7 +364,7 @@ func (d *Document) GetDocumentsBySpaceIdAndParentId(spaceId string, parentId str
 	var rs *mysql.ResultSet
 	rs, err = db.Query(
 		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"space_id": spaceId,
+			"space_id":  spaceId,
 			"parent_id": parentId,
 			"is_delete": Document_Delete_False,
 		}))
@@ -366,7 +382,7 @@ func (d *Document) GetSpaceDefaultDocument(spaceId string) (document map[string]
 	var rs *mysql.ResultSet
 	rs, err = db.Query(
 		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"space_id": spaceId,
+			"space_id":  spaceId,
 			"parent_id": "0",
 			"is_delete": Document_Delete_False,
 		}).Limit(0, 1))
@@ -384,9 +400,9 @@ func (d *Document) GetAllSpaceDocuments(spaceId string) (documents []map[string]
 	var rs *mysql.ResultSet
 	rs, err = db.Query(
 		db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"space_id": spaceId,
+			"space_id":    spaceId,
 			"parent_id >": "0",
-			"is_delete": Document_Delete_False,
+			"is_delete":   Document_Delete_False,
 		}))
 	if err != nil {
 		return
@@ -405,7 +421,7 @@ func (d *Document) CountDocumentsBySpaceId(spaceId string) (count int64, err err
 			Select("count(*) as total").
 			From(Table_Document_Name).
 			Where(map[string]interface{}{
-				"space_id": spaceId,
+				"space_id":  spaceId,
 				"is_delete": Document_Delete_False,
 			}))
 	if err != nil {
@@ -425,8 +441,8 @@ func (d *Document) CountDocuments() (count int64, err error) {
 			Select("count(*) as total").
 			From(Table_Document_Name).
 			Where(map[string]interface{}{
-			"is_delete": Document_Delete_False,
-		}))
+				"is_delete": Document_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -440,7 +456,7 @@ func (d *Document) GetDocumentsByLikeName(name string) (documents []map[string]s
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
 		"name Like": "%" + name + "%",
-		"is_delete":     Document_Delete_False,
+		"is_delete": Document_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -455,7 +471,7 @@ func (d *Document) GetDocumentsByLikeNameAndLimit(name string, limit int, number
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
 		"name Like": "%" + name + "%",
-		"is_delete":     Document_Delete_False,
+		"is_delete": Document_Delete_False,
 	}).Limit(limit, number))
 	if err != nil {
 		return
@@ -474,9 +490,9 @@ func (d *Document) CountDocumentsLikeName(name string) (count int64, err error) 
 			Select("count(*) as total").
 			From(Table_Document_Name).
 			Where(map[string]interface{}{
-			"name Like": "%" + name + "%",
-			"is_delete": Document_Delete_False,
-		}))
+				"name Like": "%" + name + "%",
+				"is_delete": Document_Delete_False,
+			}))
 	if err != nil {
 		return
 	}
@@ -490,7 +506,7 @@ func (d *Document) GetDocumentsByDocumentIds(documentIds []string) (documents []
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
 		"document_id": documentIds,
-		"is_delete": Document_Delete_False,
+		"is_delete":   Document_Delete_False,
 	}))
 	if err != nil {
 		return
@@ -512,12 +528,25 @@ func (d *Document) GetAllDocumentsByDocumentIds(documentIds []string) (documents
 	return
 }
 
+func (d *Document) GetAllDocuments() (documents []map[string]string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete": Document_Delete_False,
+	}))
+	if err != nil {
+		return
+	}
+	documents = rs.Rows()
+	return
+}
+
 func (d *Document) GetParentDocumentsByDocument(document map[string]string) (parentDocuments []map[string]string, pageFile string, err error) {
 
 	if document["parent_id"] == "0" {
 		parentDocuments = append(parentDocuments, document)
 		pageFile = utils.Document.GetDefaultPageFileBySpaceName(document["name"])
-	}else {
+	} else {
 		documentsIds := strings.Split(document["path"], ",")
 		parentDocuments, err = d.GetDocumentsByDocumentIds(documentsIds)
 		if err != nil {
@@ -525,7 +554,7 @@ func (d *Document) GetParentDocumentsByDocument(document map[string]string) (par
 		}
 		var parentPath = ""
 		for _, parentDocument := range parentDocuments {
-			parentPath += parentDocument["name"]+"/"
+			parentPath += parentDocument["name"] + "/"
 		}
 		parentPath = strings.TrimRight(parentPath, "/")
 		pageFile = utils.Document.GetPageFileByParentPath(document["name"], utils.Convert.StringToInt(document["type"]), parentPath)
@@ -547,8 +576,8 @@ func (d *Document) GetSpaceIdsOrderByCountDocumentLimit(limit int) (documents []
 	var rs *mysql.ResultSet
 	sql := db.AR().Select("space_id, count('space_id') as total").
 		From(Table_Document_Name).Where(map[string]interface{}{
-			"is_delete": Document_Delete_False,
-		}).
+		"is_delete": Document_Delete_False,
+	}).
 		GroupBy("space_id").
 		OrderBy("total", "DESC").
 		Limit(0, limit)
@@ -571,7 +600,7 @@ func (d *Document) GetCountGroupByCreateTime(startTime int64) (documents []map[s
 	var rs *mysql.ResultSet
 	sql := db.AR().Select("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d') as date, count('date') as total").
 		From(Table_Document_Name).Where(map[string]interface{}{
-		"is_delete": Document_Delete_False,
+		"is_delete":      Document_Delete_False,
 		"create_time >=": startTime,
 	}).GroupBy("DATE_FORMAT(FROM_UNIXTIME(create_time),'%Y-%m-%d')")
 	rs, err = db.Query(sql)
@@ -612,4 +641,19 @@ func (d *Document) GetDocumentGroupEditUserId() (documents []map[string]string, 
 	}
 	documents = rs.Rows()
 	return
+}
+
+// 根据文档信息获取文档内容和文件地址
+func (d *Document) GetDocumentContentByDocument(doc map[string]string) (content string, pageFile string, err error) {
+	// get document page file
+	_, pageFile, err = DocumentModel.GetParentDocumentsByDocument(doc)
+	if err != nil {
+		return content, pageFile, err
+	}
+	// get document content
+	content, err = utils.Document.GetContentByPageFile(pageFile)
+	if err != nil {
+		return content, pageFile, err
+	}
+	return content, pageFile, nil
 }

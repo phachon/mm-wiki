@@ -1,0 +1,97 @@
+<div class="container-fluid">{{$attachments := .attachments}}{{$documentId := .document_id}}
+    <div id="failedBox" style="margin: 0 0 6px 0"></div>{{$isDelete := .is_delete}}{{$isUpload := .is_upload}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="/attachment/page?document_id={{$documentId}}">附件</a></li>
+                    <li><a href="/attachment/image?document_id={{$documentId}}">图片</a></li>
+                </ul>
+            </div>
+        </div>
+        {{if eq $isUpload true}}
+        <div class="panel-body" style="padding-bottom: 10px">
+            <div class="row">
+                <div class="col-md-12" id="attach_section">
+                    <input id="attach_upload" name="attachment" type="file">
+                </div>
+            </div>
+        </div>
+        {{end}}
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <td class="text-left"><strong>文件名</strong></td>
+                    <td class="w15p text-left"><strong>上传用户</strong></td>
+                    <td class="w20p text-left"><strong>上传时间</strong></td>
+                    <td class="w11p center"><strong>操作</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $attachment := $attachments}}
+                    <tr>
+                        <td>{{$attachment.name}}</td>
+                        <td>{{$attachment.username}}</td>
+                        <td>{{dateFormat $attachment.create_time "Y-m-d H:i:s"}}</td>
+                        <td class="center">
+                            {{if eq $isDelete true}}
+                            <a onclick="Layers.confirm('确定删除附件吗？', '/attachment/delete?attachment_id={{$attachment.attachment_id}}');"><i class="glyphicon glyphicon-trash"></i></a>
+                            {{end}}
+                            <a href="/attachment/download?attachment_id={{$attachment.attachment_id}}"><i class="glyphicon glyphicon-download"></i></a>
+                        </td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    {{if eq $isUpload true}}
+    var attachmentOption = {
+        language: "zh",
+        multiple: false,
+        uploadUrl: "/attachment/upload",
+        enctype: 'multipart/form-data',
+        showPreview: false,
+        maxFileSize: 1024 * 500,
+        // allowedFileTypes: ['image'],
+        // allowedFileExtensions: ['jpg', 'gif', 'png'],
+        uploadExtraData: {
+            document_id: "{{$documentId}}",
+        },
+        msgUploadEnd: "上传完成",
+        elErrorContainer: "#failedBox"
+    };
+    var attachmentObj = $("#attach_upload").fileinput(attachmentOption);
+    attachmentObj.on('fileuploaded', function(event, data) {
+        console.log('fileuploaded');
+        if(data.response.code) {
+            Layers.successMsg(data.response.message);
+            Common.redirect(data.response.redirect.url)
+        } else {
+            // process danger
+            // var progress = $("#attach_section").find("[role='progressbar']");
+            // progress.removeClass("bg-success");
+            // progress.removeClass("progress-bar-success");
+            // progress.addClass("progress-bar-danger");
+            // progress.addClass("bg-danger");
+            // Page.uploadErrorBox("#failedBox", data.response.message);
+        }
+    });
+    attachmentObj.on('fileuploaderror', function(event, data) {
+        console.log('fileuploaderror');
+        var progress = $("#attach_section").find("[role='progressbar']");
+        progress.removeClass("bg-success");
+        progress.removeClass("progress-bar-success");
+        progress.addClass("progress-bar-danger");
+        progress.addClass("bg-danger");
+        Page.uploadErrorBox("#failedBox", data.response.error);
+        // Page.notFound();
+    });
+    attachmentObj.on('filebatchuploadcomplete',function (event, files) {
+        console.log('filebatchuploadcomplete', event, files);
+    });
+    {{end}}
+</script>

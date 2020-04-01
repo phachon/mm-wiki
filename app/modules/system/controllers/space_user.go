@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
-	"time"
+	"github.com/phachon/mm-wiki/app/models"
 	"strings"
+	"time"
 )
 
 type Space_UserController struct {
@@ -30,7 +30,7 @@ func (this *Space_UserController) Save() {
 	}
 	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
-		this.ErrorLog("添加空间 "+spaceId+" 成员 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("添加空间 " + spaceId + " 成员 " + userId + " 失败: " + err.Error())
 		this.jsonError("添加空间成员失败！")
 	}
 	if len(space) == 0 {
@@ -39,7 +39,7 @@ func (this *Space_UserController) Save() {
 
 	spaceUser, err := models.SpaceUserModel.GetSpaceUserBySpaceIdAndUserId(spaceId, userId)
 	if err != nil {
-		this.ErrorLog("添加空间 "+spaceId+" 成员 "+userId+" 失败: "+err.Error())
+		this.ErrorLog("添加空间 " + spaceId + " 成员 " + userId + " 失败: " + err.Error())
 		this.jsonError("添加空间成员失败！")
 	}
 	if len(spaceUser) > 0 {
@@ -47,17 +47,17 @@ func (this *Space_UserController) Save() {
 	}
 
 	insertValue := map[string]interface{}{
-		"user_id": userId,
-		"space_id": spaceId,
+		"user_id":   userId,
+		"space_id":  spaceId,
 		"privilege": privilege,
 	}
 	_, err = models.SpaceUserModel.Insert(insertValue)
 	if err != nil {
-		this.ErrorLog("空间 "+spaceId+" 添加成员 "+userId+" 失败: " + err.Error())
+		this.ErrorLog("空间 " + spaceId + " 添加成员 " + userId + " 失败: " + err.Error())
 		this.jsonError("添加成员失败！")
 	}
 
-	this.InfoLog("空间 "+spaceId+" 添加成员 "+userId+" 成功" )
+	this.InfoLog("空间 " + spaceId + " 添加成员 " + userId + " 成功")
 	this.jsonSuccess("添加成员成功！", nil, "/system/space/member?space_id="+spaceId)
 }
 
@@ -82,11 +82,11 @@ func (this *Space_UserController) Remove() {
 
 	err := models.SpaceUserModel.Delete(spaceUserId)
 	if err != nil {
-		this.ErrorLog("移除空间 "+spaceId+" 下成员 "+userId+" 失败：" + err.Error())
+		this.ErrorLog("移除空间 " + spaceId + " 下成员 " + userId + " 失败：" + err.Error())
 		this.jsonError("移除成员失败！")
 	}
 
-	this.InfoLog("移除空间 "+spaceId+" 下成员 "+userId+" 成功" )
+	this.InfoLog("移除空间 " + spaceId + " 下成员 " + userId + " 成功")
 	this.jsonSuccess("移除成员成功！", nil, "/system/space/member?space_id="+spaceId)
 }
 
@@ -108,14 +108,14 @@ func (this *Space_UserController) Modify() {
 	}
 
 	_, err := models.SpaceUserModel.Update(spaceUserId, map[string]interface{}{
-		"privilege": privilege,
+		"privilege":   privilege,
 		"update_time": time.Now().Unix(),
 	})
 	if err != nil {
-		this.ErrorLog("更新空间 "+spaceId+" 下成员 "+userId+" 权限失败：" + err.Error())
+		this.ErrorLog("更新空间 " + spaceId + " 下成员 " + userId + " 权限失败：" + err.Error())
 		this.jsonError("更新权限失败！")
 	}
 
-	this.InfoLog("更新空间 "+spaceId+" 下成员 "+userId+" 权限成功")
+	this.InfoLog("更新空间 " + spaceId + " 下成员 " + userId + " 权限成功")
 	this.jsonSuccess("更新权限成功！", nil)
 }

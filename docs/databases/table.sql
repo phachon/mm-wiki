@@ -75,7 +75,9 @@ CREATE TABLE `mw_role_privilege` (
   `role_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '角色id',
   `privilege_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限id',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`role_privilege_id`)
+  PRIMARY KEY (`role_privilege_id`),
+  KEY (`role_id`),
+  KEY (`privilege_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统角色权限对应关系表';
 
 -- --------------------------------
@@ -177,7 +179,8 @@ CREATE TABLE `mw_log_document` (
   `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 创建 2 修改 3 删除',
   `comment` varchar(255) NOT NULL DEFAULT '' COMMENT '备注信息',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`log_document_id`)
+  PRIMARY KEY (`log_document_id`),
+  KEY (`document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档日志表';
 
 -- --------------------------------
@@ -185,7 +188,7 @@ CREATE TABLE `mw_log_document` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mw_log`;
 CREATE TABLE `mw_log` (
-  `log_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '系统操作日志 id',
+  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '系统操作日志 id',
   `level` tinyint(3) NOT NULL DEFAULT '6' COMMENT '日志级别',
   `path` char(100) NOT NULL DEFAULT '' COMMENT '请求路径',
   `get` text NOT NULL COMMENT 'get参数',
@@ -197,7 +200,8 @@ CREATE TABLE `mw_log` (
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
   `username` char(100) NOT NULL DEFAULT '' COMMENT '用户名',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`log_id`)
+  PRIMARY KEY (`log_id`),
+  KEY (`level`, `username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统操作日志表';
 
 -- --------------------------------
@@ -281,3 +285,20 @@ CREATE TABLE `mw_contact` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联系人表';
+
+-- --------------------------------
+-- 附件信息表
+-- --------------------------------
+DROP TABLE IF EXISTS `mw_attachment`;
+CREATE TABLE `mw_attachment` (
+  `attachment_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '附件 id',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户id',
+  `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '所属文档id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '附件名称',
+  `path` varchar(100) NOT NULL DEFAULT '' COMMENT '附件路径',
+  `source` tinyint(1) NOT NULL DEFAULT '0' COMMENT '附件来源， 0 默认是附件 1 图片',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`attachment_id`),
+  KEY (`document_id`, `source`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件信息表';

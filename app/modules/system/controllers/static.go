@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
+	"fmt"
+	"github.com/astaxie/beego/logs"
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/mem"
 	"time"
-	"github.com/shirou/gopsutil/host"
-	"mm-wiki/app/utils"
-	"mm-wiki/app"
-	"fmt"
 )
 
 type StaticController struct {
@@ -20,25 +21,25 @@ func (this *StaticController) Default() {
 
 	normalUserCount, err := models.UserModel.CountNormalUsers()
 	if err != nil {
-		this.ErrorLog("查找正常用户数出错："+err.Error())
+		this.ErrorLog("查找正常用户数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
 	forbiddenUserCount, err := models.UserModel.CountForbiddenUsers()
 	if err != nil {
-		this.ErrorLog("查找屏蔽用户数出错："+err.Error())
+		this.ErrorLog("查找屏蔽用户数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
 	spaceCount, err := models.SpaceModel.CountSpaces()
 	if err != nil {
-		this.ErrorLog("查找空间总数出错："+err.Error())
+		this.ErrorLog("查找空间总数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
 	documentCount, err := models.DocumentModel.CountDocuments()
 	if err != nil {
-		this.ErrorLog("查找文档总数出错："+err.Error())
+		this.ErrorLog("查找文档总数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
@@ -46,14 +47,14 @@ func (this *StaticController) Default() {
 	today := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 0, 0, 0, 0, time.Local).Unix()
 	todayLoginUserCount, err := models.UserModel.CountUsersByLastTime(today)
 	if err != nil {
-		this.ErrorLog("查找今日登录用户数出错："+err.Error())
+		this.ErrorLog("查找今日登录用户数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
 	createUserId := "0"
 	createUserIds, err := models.DocumentModel.GetDocumentGroupCreateUserId()
 	if err != nil {
-		this.ErrorLog("查找创建文档最多用户出错："+err.Error())
+		this.ErrorLog("查找创建文档最多用户出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(createUserIds) > 0 {
@@ -63,7 +64,7 @@ func (this *StaticController) Default() {
 	editUserId := "0"
 	editUserIds, err := models.DocumentModel.GetDocumentGroupEditUserId()
 	if err != nil {
-		this.ErrorLog("查找修改文档最多用户出错："+err.Error())
+		this.ErrorLog("查找修改文档最多用户出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(editUserIds) > 0 {
@@ -73,7 +74,7 @@ func (this *StaticController) Default() {
 	collectUserId := "0"
 	collectUserIds, err := models.CollectionModel.GetCollectionGroupUserId(models.Collection_Type_Doc)
 	if err != nil {
-		this.ErrorLog("查找收藏文档最多用户出错："+err.Error())
+		this.ErrorLog("查找收藏文档最多用户出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(collectUserIds) > 0 {
@@ -83,7 +84,7 @@ func (this *StaticController) Default() {
 	fansUserId := "0"
 	fansUserIds, err := models.FollowModel.GetFansUserGroupUserId()
 	if err != nil {
-		this.ErrorLog("查找粉丝数最多用户出错："+err.Error())
+		this.ErrorLog("查找粉丝数最多用户出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(fansUserIds) > 0 {
@@ -93,7 +94,7 @@ func (this *StaticController) Default() {
 	userIds := []string{createUserId, editUserId, collectUserId, fansUserId}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("查找文档总数出错："+err.Error())
+		this.ErrorLog("查找文档总数出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 
@@ -134,9 +135,9 @@ func (this *StaticController) SpaceDocsRank() {
 
 	number, _ := this.GetInt("number", 15)
 	spaceDocsRank := []map[string]string{}
-	spaceDocCountIds , err := models.DocumentModel.GetSpaceIdsOrderByCountDocumentLimit(number)
+	spaceDocCountIds, err := models.DocumentModel.GetSpaceIdsOrderByCountDocumentLimit(number)
 	if err != nil {
-		this.ErrorLog("查找空间文档排行出错："+err.Error())
+		this.ErrorLog("查找空间文档排行出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(spaceDocCountIds) > 0 {
@@ -146,13 +147,13 @@ func (this *StaticController) SpaceDocsRank() {
 		}
 		spaces, err := models.SpaceModel.GetSpaceBySpaceIds(spaceIds)
 		if err != nil {
-			this.ErrorLog("查找空间文档排行出错："+err.Error())
+			this.ErrorLog("查找空间文档排行出错：" + err.Error())
 			this.jsonError("查找数据出错")
 		}
 		for _, spaceDocCountId := range spaceDocCountIds {
 			spaceDocCount := map[string]string{
 				"space_name": "",
-				"total": spaceDocCountId["total"],
+				"total":      spaceDocCountId["total"],
 			}
 			for _, space := range spaces {
 				if spaceDocCountId["space_id"] == space["space_id"] {
@@ -171,9 +172,9 @@ func (this *StaticController) CollectDocRank() {
 
 	number, _ := this.GetInt("number", 10)
 	collectDocsRank := []map[string]string{}
-	collectionDocIds , err := models.CollectionModel.GetResourceIdsOrderByCountLimit(number, models.Collection_Type_Doc)
+	collectionDocIds, err := models.CollectionModel.GetResourceIdsOrderByCountLimit(number, models.Collection_Type_Doc)
 	if err != nil {
-		this.ErrorLog("查找收藏文档排行出错："+err.Error())
+		this.ErrorLog("查找收藏文档排行出错：" + err.Error())
 		this.jsonError("查找数据出错")
 	}
 	if len(collectionDocIds) > 0 {
@@ -183,13 +184,13 @@ func (this *StaticController) CollectDocRank() {
 		}
 		documents, err := models.DocumentModel.GetDocumentsByDocumentIds(documentIds)
 		if err != nil {
-			this.ErrorLog("查找收藏文档排行出错："+err.Error())
+			this.ErrorLog("查找收藏文档排行出错：" + err.Error())
 			this.jsonError("查找数据出错")
 		}
 		for _, collectionDocId := range collectionDocIds {
 			collectDocCount := map[string]string{
 				"document_name": "",
-				"total": collectionDocId["total"],
+				"total":         collectionDocId["total"],
 			}
 			for _, document := range documents {
 				if collectionDocId["resource_id"] == document["document_id"] {
@@ -207,11 +208,11 @@ func (this *StaticController) CollectDocRank() {
 func (this *StaticController) DocCountByTime() {
 
 	limitDay, _ := this.GetInt("limit_day", 10)
-	startTime := time.Now().Unix() - int64(limitDay * 3600 * 24)
+	startTime := time.Now().Unix() - int64(limitDay*3600*24)
 
-	documentCountDate , err := models.DocumentModel.GetCountGroupByCreateTime(startTime)
+	documentCountDate, err := models.DocumentModel.GetCountGroupByCreateTime(startTime)
 	if err != nil {
-		this.ErrorLog("查找文档数量增长趋势出错："+err.Error())
+		this.ErrorLog("查找文档数量增长趋势出错：" + err.Error())
 		this.jsonError("查找文档数量增长趋势出错")
 	}
 
@@ -226,10 +227,10 @@ func (this *StaticController) Monitor() {
 	}
 
 	serverInfo := map[string]string{
-		"localIp": utils.Misc.GetLocalIp(),
-		"hostname": hostInfo.Hostname,
-		"os": hostInfo.OS,
-		"platform": hostInfo.Platform,
+		"localIp":        utils.Misc.GetLocalIp(),
+		"hostname":       hostInfo.Hostname,
+		"os":             hostInfo.OS,
+		"platform":       hostInfo.Platform,
 		"platformFamily": hostInfo.PlatformFamily,
 	}
 
@@ -249,14 +250,32 @@ func (this *StaticController) Monitor() {
 }
 
 func (this *StaticController) ServerStatus() {
-	vm, _ := mem.VirtualMemory()
+	memoryUsedPercent := 0
+	cpuUsedPercent := 0
+	diskUsedPercent := 0
+	vm, err := mem.VirtualMemory()
+	if err != nil {
+		logs.Error("get memory err=%s", err.Error())
+	}
+	if vm != nil {
+		memoryUsedPercent = int(vm.UsedPercent)
+	}
 	cpuPercent, _ := cpu.Percent(0, false)
-	d, _ := disk.Usage("/")
+	if len(cpuPercent) > 0 {
+		cpuUsedPercent = int(cpuPercent[0])
+	}
+	d, err := disk.Usage("/")
+	if err != nil {
+		logs.Error("get disk err=%s", err.Error())
+	}
+	if d != nil {
+		diskUsedPercent = int(d.UsedPercent)
+	}
 
 	data := map[string]interface{}{
-		"memory_used_percent": int(vm.UsedPercent),
-		"cpu_used_percent":    int(cpuPercent[0]),
-		"disk_used_percent":   int(d.UsedPercent),
+		"memory_used_percent": memoryUsedPercent,
+		"cpu_used_percent":    cpuUsedPercent,
+		"disk_used_percent":   diskUsedPercent,
 	}
 
 	this.jsonSuccess("ok", data)
@@ -265,7 +284,7 @@ func (this *StaticController) ServerStatus() {
 func (this *StaticController) ServerTime() {
 	data := map[string]interface{}{
 		"server_time": time.Now().Unix(),
-		"run_time": time.Now().Unix() - app.StartTime,
+		"run_time":    time.Now().Unix() - app.StartTime,
 	}
 
 	this.jsonSuccess("ok", data)

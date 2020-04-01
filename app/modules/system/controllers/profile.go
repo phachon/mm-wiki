@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"strings"
-	"mm-wiki/app/models"
 	"github.com/astaxie/beego/validation"
+	"github.com/phachon/mm-wiki/app/models"
+	"strings"
 )
 
 type ProfileController struct {
@@ -14,13 +14,13 @@ func (this *ProfileController) Info() {
 
 	user, err := models.UserModel.GetUserByUserId(this.UserId)
 	if err != nil {
-		this.ErrorLog("获取我的资料失败: "+err.Error())
+		this.ErrorLog("获取我的资料失败: " + err.Error())
 		this.ViewError("获取资料失败")
 	}
 
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(this.UserId, 0, 10)
 	if err != nil {
-		this.ErrorLog("查找用户活动出错："+err.Error())
+		this.ErrorLog("查找用户活动出错：" + err.Error())
 		this.ViewError("查找用户活动出错！", "/main/index")
 	}
 
@@ -30,7 +30,7 @@ func (this *ProfileController) Info() {
 	}
 	documents, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("查找用户活动出错: "+err.Error())
+		this.ErrorLog("查找用户活动出错: " + err.Error())
 		this.ViewError("查找用户活动出错", "/main/index")
 	}
 
@@ -55,7 +55,7 @@ func (this *ProfileController) Edit() {
 
 	user, err := models.UserModel.GetUserByUserId(this.UserId)
 	if err != nil {
-		this.ErrorLog("获取我的资料失败: "+err.Error())
+		this.ErrorLog("获取我的资料失败: " + err.Error())
 		this.ViewError("获取资料失败")
 	}
 	this.Data["user"] = user
@@ -89,12 +89,12 @@ func (this *ProfileController) Modify() {
 	if mobile == "" {
 		this.jsonError("手机号不能为空！")
 	}
-	if !v.Mobile(mobile, "mobile").Ok {
-		this.jsonError("手机号格式不正确！")
-	}
-	if phone != "" && !v.Phone(phone, "phone").Ok {
-		this.jsonError("电话格式不正确！")
-	}
+	//if !v.Mobile(mobile, "mobile").Ok {
+	//	this.jsonError("手机号格式不正确！")
+	//}
+	//if phone != "" && !v.Phone(phone, "phone").Ok {
+	//	this.jsonError("电话格式不正确！")
+	//}
 
 	_, err := models.UserModel.Update(this.UserId, map[string]interface{}{
 		"given_name": givenName,
@@ -120,7 +120,7 @@ func (this *ProfileController) FollowUser() {
 	// follow users
 	followUsers, err := models.FollowModel.GetFollowsByUserIdAndType(this.UserId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取我的关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取我的关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/system/profile/info")
 	}
 	userIds := []string{}
@@ -129,7 +129,7 @@ func (this *ProfileController) FollowUser() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("获取我的关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取我的关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/system/profile/info")
 	}
 	for _, user := range users {
@@ -145,7 +145,7 @@ func (this *ProfileController) FollowUser() {
 	// fans users
 	followedUsers, err := models.FollowModel.GetFollowsByObjectIdAndType(this.UserId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/system/profile/info")
 	}
 	followedUserIds := []string{}
@@ -154,7 +154,7 @@ func (this *ProfileController) FollowUser() {
 	}
 	fansUsers, err := models.UserModel.GetUsersByUserIds(followedUserIds)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/system/profile/info")
 	}
 
@@ -169,18 +169,18 @@ func (this *ProfileController) FollowUser() {
 func (this *ProfileController) FollowDoc() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 10
+	number, _ := this.GetRangeInt("number", 10, 10, 100)
 	limit := (page - 1) * number
 
 	// follow docs limit
 	followDocuments, err := models.FollowModel.GetFollowsByUserIdTypeAndLimit(this.UserId, models.Follow_Type_Doc, limit, number)
 	if err != nil {
-		this.ErrorLog("获取关注文档列表失败: "+err.Error())
+		this.ErrorLog("获取关注文档列表失败: " + err.Error())
 		this.ViewError("获取关注文档列表失败", "/system/profile/info")
 	}
 	count, err := models.FollowModel.CountFollowsByUserIdAndType(this.UserId, models.Follow_Type_Doc)
 	if err != nil {
-		this.ErrorLog("获取关注文档列表失败: "+err.Error())
+		this.ErrorLog("获取关注文档列表失败: " + err.Error())
 		this.ViewError("获取关注文档列表失败", "/system/profile/info")
 	}
 
@@ -190,7 +190,7 @@ func (this *ProfileController) FollowDoc() {
 	}
 	documents, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("获取我的关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取我的关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/system/profile/info")
 	}
 
@@ -221,7 +221,7 @@ func (this *ProfileController) FollowDoc() {
 func (this *ProfileController) Activity() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 12
+	number, _ := this.GetRangeInt("number", 15, 10, 100)
 	limit := (page - 1) * number
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
 
@@ -231,12 +231,12 @@ func (this *ProfileController) Activity() {
 	if keyword != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdKeywordAndLimit(this.UserId, keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserIdAndKeyword(this.UserId, keyword)
-	}else {
+	} else {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(this.UserId, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserId(this.UserId)
 	}
 	if err != nil {
-		this.ErrorLog("我的活动查找失败："+err.Error())
+		this.ErrorLog("我的活动查找失败：" + err.Error())
 		this.ViewError("我的活动查找失败！", "/system/main/index")
 	}
 
@@ -248,12 +248,12 @@ func (this *ProfileController) Activity() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("我的活动查找失败："+err.Error())
+		this.ErrorLog("我的活动查找失败：" + err.Error())
 		this.ViewError("我的活动查找失败！", "/system/main/index")
 	}
 	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("我的活动查找失败："+err.Error())
+		this.ErrorLog("我的活动查找失败：" + err.Error())
 		this.ViewError("我的活动查找失败！", "/system/main/index")
 	}
 	for _, logDocument := range logDocuments {
@@ -280,12 +280,12 @@ func (this *ProfileController) Activity() {
 	this.viewLayout("profile/activity", "profile")
 }
 
-func (this *ProfileController) Password()  {
+func (this *ProfileController) Password() {
 
 	this.viewLayout("profile/password", "profile")
 }
 
-func (this *ProfileController) SavePass()  {
+func (this *ProfileController) SavePass() {
 
 	pwd := strings.TrimSpace(this.GetString("pwd", ""))
 	pwdNew := strings.TrimSpace(this.GetString("pwd_new", ""))

@@ -446,3 +446,53 @@ ul.countdown li p {
 .view-page-time {
     font-size: 12px;
 }
+
+
+/**
+ * .editormd
+ */
+
+.editormd {
+    border-radius: 4px;
+    border-bottom: 0;
+}
+
+/**
+ * 分页选择框
+ */
+.pagination > .pagination-select > span {
+    padding: 0;
+}
+
+select.pagination-select-xs {
+    height: 28px;
+    line-height: 28px;
+    border-width: 0;
+    border-radius: 0;
+    background-color: #fff;
+    border-color: #fff;
+}
+
+select.pagination-select-xs:hover {
+    color: #23527c;
+    background-color: #eee;
+}
+
+#attach_section .progress {
+    height: 14px;
+    /*margin-bottom: 15px;*/
+    margin-top: 0;
+}
+
+#attach_section .progress-bar {
+    font-size:10px;
+    line-height:14px;
+}
+
+mark {
+    padding: 1px 2px;
+    margin: 0 -2px;
+    background-color: #fff34d;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}

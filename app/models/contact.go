@@ -1,7 +1,7 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 )
 

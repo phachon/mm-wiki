@@ -62,14 +62,21 @@
                     {{end}}
                 </td>
                 <td class="center">
-                    <a name="edit" data-link="/system/user/edit?user_id={{$user.user_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
-                {{if ne $user.user_id "1"}}
-                    {{if eq $user.is_forbidden "1"}}
-                        <a onclick="Layers.confirm('确定恢复该用户吗？', '/system/user/recover?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-ok"></i>恢复</a>
+                    <!-- 修改 root 用户只能被自己修改 -->
+                    {{if eq $user.role_id "1"}}
+                        {{if eq $.login_role_id "1"}}
+                            <a name="edit" data-link="/system/user/edit?user_id={{$user.user_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                        {{else}}
+                             <label class="text text-danger">暂无权限</label>
+                        {{end}}
                     {{else}}
-                        <a onclick="Layers.confirm('确定屏蔽该用户吗？', '/system/user/forbidden?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-remove"></i>屏蔽</a>
+                        <a name="edit" data-link="/system/user/edit?user_id={{$user.user_id}}"><i class="glyphicon glyphicon-edit"></i>修改</a>
+                        {{if eq $user.is_forbidden "1"}}
+                            <a onclick="Layers.confirm('确定恢复该用户吗？', '/system/user/recover?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-ok"></i>恢复</a>
+                        {{else}}
+                            <a onclick="Layers.confirm('确定屏蔽该用户吗？', '/system/user/forbidden?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-remove"></i>屏蔽</a>
+                        {{end}}
                     {{end}}
-                {{end}}
                 </td>
             </tr>
             {{end}}

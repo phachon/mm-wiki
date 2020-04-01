@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
 	"fmt"
+	"github.com/phachon/mm-wiki/app/models"
 )
 
 type MainController struct {
@@ -29,7 +29,7 @@ func (this *MainController) Index() {
 		if err != nil {
 			this.ViewError("查找用户权限失败！")
 		}
-	}else {
+	} else {
 		rolePrivileges, err := models.RolePrivilegeModel.GetRolePrivilegesByRoleId(roleId)
 		if err != nil {
 			this.ViewError("查找用户权限出错")

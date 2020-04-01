@@ -2,20 +2,28 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
+                <button type="button" class="navbar-toggle" aria-label="Expand and Collapse Menu" style="float: left;margin-left: 15px;" onclick="layoutToggle()">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a class="navbar-brand" href="/" style="width: 238px">&nbsp;&nbsp;Markdown Mini Wiki</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Expand and Collapse Menu">
+                    <i class="glyphicon glyphicon-chevron-down" style="color: #fff;"></i>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li {{if eq .navName "main"}}class="active"{{end}}><a href="/"><i class="fa fa-home"></i>&nbsp;主页</a></li>
                     <li {{if eq .navName "space"}}class="active"{{end}}><a href="/space/index"><i class="fa fa-cube"></i>&nbsp;空间</a></li>
                     <li {{if eq .navName "user"}}class="active"{{end}}><a href="/user/index"><i class="fa fa-user "></i>&nbsp;用户</a></li>
                     <li {{if eq .navName "system"}}class="active"{{end}}><a href="/system/main/index"><i class="fa fa-cog"></i>&nbsp;系统</a></li>
                 </ul>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <form class="navbar-form navbar-left" action="#" method="post">
+                <form class="navbar-form navbar-left visible-md visible-lg" action="#" method="post">
                     <div class="form-group has-feedback">
                         {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
                         <div class="input-group input-group-sm">
-                            <input class="form-control input-sm" name="document_name" type="text" onkeydown="KeyDown('#search_btn')" placeholder="输入文档名搜索..." style="width: 280px">
+                            <input class="form-control input-sm" name="keyword" type="text" onkeydown="KeyDown('#search_btn')" placeholder="请输入关键字搜索...">
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" type="button" name="search" id="search_btn" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
                             </span>
@@ -75,8 +83,8 @@
         }
     }
     function mainSearch(element, url) {
-        var searchText = $(element).find("input[name='document_name']").val();
-        url = url + "?document_name="+searchText;
+        var searchText = $(element).find("input[name='keyword']").val();
+        url = url + "?keyword="+searchText;
         layer.open({
             type: 2,
             skin: Layers.skin,

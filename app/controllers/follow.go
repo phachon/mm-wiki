@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 )
 
 type FollowController struct {
@@ -23,7 +23,7 @@ func (this *FollowController) Add() {
 	if followType != models.Follow_Type_Doc && followType != models.Follow_Type_User {
 		this.jsonError("关注类型错误！")
 	}
-	if followType == models.Follow_Type_User && objectId == this.UserId{
+	if followType == models.Follow_Type_User && objectId == this.UserId {
 		this.jsonError("不能关注自己！")
 	}
 
@@ -41,7 +41,7 @@ func (this *FollowController) Add() {
 		this.jsonError("添加关注失败！")
 	}
 
-	this.InfoLog("添加关注"+utils.Convert.IntToString(fId, 10)+" 成功")
+	this.InfoLog("添加关注" + utils.Convert.IntToString(fId, 10) + " 成功")
 	this.jsonSuccess("关注成功！", nil, redirect)
 }
 
@@ -70,10 +70,10 @@ func (this *FollowController) Cancel() {
 
 	err = models.FollowModel.Delete(followId)
 	if err != nil {
-		this.ErrorLog("取消关注 "+followId+" 失败：" + err.Error())
+		this.ErrorLog("取消关注 " + followId + " 失败：" + err.Error())
 		this.jsonError("取消关注用户失败！")
 	}
 
-	this.InfoLog("取消关注 "+followId+" 成功")
+	this.InfoLog("取消关注 " + followId + " 成功")
 	this.jsonSuccess("已取消关注！", nil, redirect)
 }

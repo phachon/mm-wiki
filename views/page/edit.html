@@ -1,32 +1,32 @@
-<div class="container-fluid">
+<div class="container-fluid" style="height: 100%">
+    <form id="page_form" action="/page/modify" method="post" style="height: 98%" onsubmit="return false">
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <form id="page_form" action="/page/modify" method="post">
-                <div class="panel-body" style="padding: 10px">
-                        <input type="hidden" name="document_id" value="{{$document.document_id}}">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}" {{if eq $document.parent_id "0"}} readonly="readonly" {{end}}>
-                        </div>
-                        <div class="col-md-2 text-center" >
-                            <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form, {{.sendEmail}}, {{.autoFollowDoc}})"><i class="fa fa-save"></i> 保存</button>
-                            <button type="button" class="btn btn-default" onclick="Page.cancelSave('确定要放弃此次修改吗?', '/document/index?document_id={{$document.document_id}}')"><i class="fa fa-mail-reply"></i> 取消</button>
-                        </div>
-                    </div>
+            <input type="hidden" name="document_id" value="{{$document.document_id}}">
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" name="name" class="form-control" placeholder="请输入文档名称" value="{{$document.name}}" {{if eq $document.parent_id "0"}} readonly="readonly" {{end}}>
                 </div>
-                <div id="document_page_editor"></div>
-                </form>
-                <div class="panel-footer">
-                    <div class="text-right"><span class="text-info">最后修改时间：{{dateFormat $document.update_time "Y-m-d H:i:s"}}</span></div>
+                <div class="col-md-2 text-center" >
+                    <button type="button" class="btn btn-primary" onclick="Page.ajaxSave(this.form, {{.sendEmail}}, {{.autoFollowDoc}})"><i class="fa fa-save"></i> 保存</button>
+                    <button type="button" class="btn btn-default" onclick="Page.cancelSave('确定要放弃此次修改吗?', '/document/index?document_id={{$document.document_id}}')"><i class="fa fa-mail-reply"></i> 取消</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row" style="height: 98%; padding-top: 8px;">
+        <div class="col-md-12" style="height: 98%">
+            <div id="document_page_editor" style="height: 98%"></div>
+        </div>
+    </div>
+    </form>
 </div>
 <script type="text/javascript">
     if(parent.layoutClose) {
         parent.layoutClose();
+    }
+    if(parent.hiddenScrollY) {
+        parent.hiddenScrollY();
     }
     var storageId = "mm_wiki_doc_"+{{$document.document_id}}
     $(function() {
@@ -35,17 +35,19 @@
             css : "/static/plugins/editor.md/lib/katex/katex.min"
         };
         var editor = editormd("document_page_editor", {
+            placeholder: "欢迎使用 MM-Wiki, 支持 Markdown 语法",
             width: "100%",
-            height: 500,
+            // height: height,
             path : '/static/plugins/editor.md/lib/',
             toolbarIcons : function() {
                 // Using "||" set icons align right.
                 return [
-                    "sidebar", "save", "|", "undo", "redo", "|",
+                    "sidebar", "save", "|",
+                    "undo", "redo", "|",
                     "bold", "del", "italic", "quote", "|",
                     "h1", "h2", "h3", "h4", "h5", "h6", "|",
                     "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+                    "link", "reference-link", "image", "attachment", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
                     "goto-line", "watch", "preview", "search", "|",
                     "help"
                 ]
@@ -53,18 +55,21 @@
             // 增加自定义工具栏
             toolbarCustomIcons : {
                 sidebar   : '<a onclick="parent.layoutToggle()" title="展开关闭侧边栏"><i class="fa fa-columns item"></i></a>',
-                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>"
+                save : "<a onclick="+'Page.ajaxSave("#page_form")'+" title='保存文档'><i class='fa fa-save'></i></a>",
+                attachment : '<a onclick="Page.attachment({{$document.document_id}})" title="上传附件"><i class="fa fa-paperclip item"></i></a>'
             },
             theme : "default",
             previewTheme : "default",
             editorTheme : "default",
             markdown : {{$pageContent}},
             codeFold : true,
+            placeholder: "欢迎使用 MM-Wiki，请使用 Markdown 规范编写！",
             //syncScrolling : false,
             saveHTMLToTextarea: false,    // 保存 HTML 到 Textarea
             searchReplace: true,
             //watch : false,                // 关闭实时预览
-            htmlDecode : "style,script,iframe|on*",  // 开启 HTML 标签解析，为了安全性，默认不开启
+            // htmlDecode : "style,script,iframe|on*,alert",  // 开启 HTML 标签解析，为了安全性，默认不开启
+            htmlDecode : "style,script,iframe,sub,sup,embed,img|on*",  // 开启 HTML 标签解析，为了安全性，默认不开启
             //toolbar  : false,             //关闭工具栏
             //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
             emoji : false,
@@ -80,7 +85,7 @@
             //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
             imageUpload : true,
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/image/upload",
+            imageUploadURL : "/image/upload?document_id={{$document.document_id}}",
             onload : function() {
                 var docStorage = Storage.get(storageId);
                 if (docStorage !== "") {

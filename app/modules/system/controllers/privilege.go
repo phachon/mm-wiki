@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"strings"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
 	"github.com/astaxie/beego"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
+	"strings"
 )
 
 type PrivilegeController struct {
@@ -61,22 +61,22 @@ func (this *PrivilegeController) Save() {
 	}
 
 	privilegeId, err := models.PrivilegeModel.Insert(map[string]interface{}{
-		"name": name,
-		"type": privilegeType,
-		"parent_id": parentId,
+		"name":       name,
+		"type":       privilegeType,
+		"parent_id":  parentId,
 		"controller": controller,
-		"action": action,
-		"target": target,
-		"icon":   icon,
+		"action":     action,
+		"target":     target,
+		"icon":       icon,
 		"is_display": isDisplay,
-		"sequence": sequence,
+		"sequence":   sequence,
 	})
 
 	if err != nil {
 		this.ErrorLog("添加权限失败：" + err.Error())
 		this.jsonError("添加权限失败")
 	}
-	this.InfoLog("添加权限 "+utils.Convert.IntToString(privilegeId, 10)+" 成功")
+	this.InfoLog("添加权限 " + utils.Convert.IntToString(privilegeId, 10) + " 成功")
 	this.jsonSuccess("添加权限成功", nil, "/system/privilege/list")
 }
 
@@ -102,7 +102,7 @@ func (this *PrivilegeController) Edit() {
 
 	privilege, err := models.PrivilegeModel.GetPrivilegeByPrivilegeId(privilegeId)
 	if err != nil {
-		this.ErrorLog("查找权限失败："+err.Error())
+		this.ErrorLog("查找权限失败：" + err.Error())
 		this.ViewError("查找权限失败！", "/system/privilege/list")
 	}
 	if len(privilege) == 0 {
@@ -158,22 +158,22 @@ func (this *PrivilegeController) Modify() {
 	}
 
 	_, err := models.PrivilegeModel.Update(privilegeId, map[string]interface{}{
-		"name": name,
-		"type": privilegeType,
-		"parent_id": parentId,
+		"name":       name,
+		"type":       privilegeType,
+		"parent_id":  parentId,
 		"controller": controller,
-		"action": action,
-		"target": target,
-		"icon":   icon,
+		"action":     action,
+		"target":     target,
+		"icon":       icon,
 		"is_display": isDisplay,
-		"sequence": sequence,
+		"sequence":   sequence,
 	})
 
 	if err != nil {
-		this.ErrorLog("修改权限 "+privilegeId+" 失败：" + err.Error())
+		this.ErrorLog("修改权限 " + privilegeId + " 失败：" + err.Error())
 		this.jsonError("修改权限失败！")
 	}
-	this.InfoLog("修改权限 "+privilegeId+" 成功")
+	this.InfoLog("修改权限 " + privilegeId + " 成功")
 	this.jsonSuccess("修改权限成功", nil, "/system/privilege/list")
 }
 
@@ -192,7 +192,7 @@ func (this *PrivilegeController) Delete() {
 
 	privilege, err := models.PrivilegeModel.GetPrivilegeByPrivilegeId(privilegeId)
 	if err != nil {
-		this.ErrorLog("删除权限 "+privilegeId+" 失败: "+err.Error())
+		this.ErrorLog("删除权限 " + privilegeId + " 失败: " + err.Error())
 		this.jsonError("删除权限失败")
 	}
 	if len(privilege) == 0 {
@@ -202,17 +202,17 @@ func (this *PrivilegeController) Delete() {
 	// delete role_privilege by privilegeId
 	err = models.RolePrivilegeModel.DeleteByPrivilegeId(privilegeId)
 	if err != nil {
-		this.ErrorLog("删除角色权限 "+privilegeId+" 失败: "+err.Error())
+		this.ErrorLog("删除角色权限 " + privilegeId + " 失败: " + err.Error())
 		this.jsonError("删除权限失败")
 	}
 
 	// delete privilege
 	err = models.PrivilegeModel.Delete(privilegeId)
 	if err != nil {
-		this.ErrorLog("删除权限 "+privilegeId+" 失败: "+err.Error())
+		this.ErrorLog("删除权限 " + privilegeId + " 失败: " + err.Error())
 		this.jsonError("删除权限失败")
 	}
 
-	this.InfoLog("删除权限 "+privilegeId+" 成功")
+	this.InfoLog("删除权限 " + privilegeId + " 成功")
 	this.jsonSuccess("删除权限成功", nil, "/system/privilege/list")
 }

@@ -9,16 +9,16 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 [![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
 [![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
 
->> Demo 网站：http://mm-wiki.phachon.com 账号：admin 密码：123456
-
 # 特点
 - 部署方便，基于 golang 编写，只需要下载对于平台下二进制文件执行即可。
 - 快速安装程序, 提供方便的安装界面程序，无需任何手动操作。
 - 独立的空间，空间是一组文档的集合，一般为公司部门或者团队，空间下的文档相互独立。空间可根据需求设置空间访问级别。
+- 支持 markdown 语法写作，支持附件上传。
 - 完善的系统权限管理，系统可以自定义角色，并为不同角色授予不同的权限。
 - 集成统一登录，本系统支持通过外部系统认证用户, 比如与公司的 LDAP 登录融合。具体请看登录认证功能。
 - 邮件通知功能，当开启邮件通知，文档更改会通知所有关注该文档的用户。
 - 文档具有分享和下载功能，目前只支持下载 MarkDown 源文件。
+- 支持文档全文搜索
 
 # 安装
 ## 1. 自助安装
@@ -132,6 +132,13 @@ $ cd mm-wiki
 $ go build ./
 ```
 
+## 支持
+请作者喝杯茶吧！
+
+![wechat](./static/images/preview/wechat_1.png) 
+
+![alipay](./static/images/preview/alipay_2.png)
+
 ## 反馈
 - 官方 QQ 交流群：853467682
 - 如果您喜欢该项目，请 [Star](https://github.com/phachon/mm-wiki/stargazers).
@@ -146,4 +153,5 @@ MIT
 
 谢谢
 ---
+
 Create By phachon

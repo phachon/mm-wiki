@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"strings"
-	"mm-wiki/app/models"
-	"mm-wiki/app/utils"
 	"time"
+
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
+
 	"github.com/astaxie/beego/validation"
 )
 
@@ -47,10 +49,10 @@ func (this *ContactController) Save() {
 	}
 
 	contact := map[string]interface{}{
-		"name":        name,
-		"mobile":      mobile,
-		"position":    position,
-		"email":       email,
+		"name":     name,
+		"mobile":   mobile,
+		"position": position,
+		"email":    email,
 	}
 
 	contactId, err := models.ContactModel.Insert(contact)
@@ -58,7 +60,7 @@ func (this *ContactController) Save() {
 		this.ErrorLog("添加联系人失败：" + err.Error())
 		this.jsonError("添加联系人失败")
 	}
-	this.InfoLog("添加联系人 "+utils.Convert.IntToString(contactId, 10)+" 成功")
+	this.InfoLog("添加联系人 " + utils.Convert.IntToString(contactId, 10) + " 成功")
 	this.jsonSuccess("添加联系人成功", nil, "/system/contact/list")
 }
 
@@ -69,7 +71,7 @@ func (this *ContactController) List() {
 	contacts, err = models.ContactModel.GetAllContact()
 
 	if err != nil {
-		this.ErrorLog("获取联系人列表出错: "+err.Error())
+		this.ErrorLog("获取联系人列表出错: " + err.Error())
 		this.ViewError("获取联系人列表出错", "/system/main/index")
 	}
 
@@ -136,10 +138,10 @@ func (this *ContactController) Modify() {
 	}
 	_, err := models.ContactModel.UpdateByContactId(contact, contactId)
 	if err != nil {
-		this.ErrorLog("修改联系人 "+contactId+" 失败：" + err.Error())
+		this.ErrorLog("修改联系人 " + contactId + " 失败：" + err.Error())
 		this.jsonError("修改联系人失败")
 	}
-	this.InfoLog("修改联系人 "+contactId+" 成功")
+	this.InfoLog("修改联系人 " + contactId + " 成功")
 	this.jsonSuccess("修改联系人成功", nil, "/system/contact/list")
 }
 
@@ -155,7 +157,7 @@ func (this *ContactController) Delete() {
 
 	contact, err := models.ContactModel.GetContactByContactId(contactId)
 	if err != nil {
-		this.ErrorLog("删除联系人 "+contactId+" 失败: "+err.Error())
+		this.ErrorLog("删除联系人 " + contactId + " 失败: " + err.Error())
 		this.jsonError("删除联系人失败")
 	}
 	if len(contact) == 0 {
@@ -164,10 +166,10 @@ func (this *ContactController) Delete() {
 
 	_, err = models.ContactModel.DeleteByContactId(contactId)
 	if err != nil {
-		this.ErrorLog("删除联系人 "+contactId+" 失败: "+err.Error())
+		this.ErrorLog("删除联系人 " + contactId + " 失败: " + err.Error())
 		this.jsonError("删除联系人失败")
 	}
 
-	this.InfoLog("删除联系人 "+contactId+" 成功")
+	this.InfoLog("删除联系人 " + contactId + " 成功")
 	this.jsonSuccess("删除联系人成功", nil, "/system/contact/list")
 }

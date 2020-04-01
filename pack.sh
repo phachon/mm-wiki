@@ -1,57 +1,69 @@
 #!/bin/bash
-VER=$1
-if [ "$VER" = "" ]; then
-    echo 'please input pack version!'
-    exit 1
-fi
+VER="$(grep "SYSTEM_VERSION" global/system.go | tr '"' ' ' | awk '{print $3}')"
 RELEASE="release-${VER}"
-rm -rf ${RELEASE}
-mkdir ${RELEASE}
 
-# windows amd64
-echo 'Start pack windows amd64...'
-GOOS=windows GOARCH=amd64 go get ./...
-GOOS=windows GOARCH=amd64 go build ./
-cd install
-GOOS=windows GOARCH=amd64 go build ./
-cd ..
-tar -czvf "${RELEASE}/mm-wiki-windows-amd64.tar.gz" mm-wiki.exe conf/ docs/ logs/.gitignore static/ views/ install/install.exe LICENSE README.md
-rm -rf mm-wiki.exe
+function show_help_text() {
+  echo "Usage: $0 [all|windows|darwin|linux|help|-h|--help] [386|amd64]
+  By default, run \"$0\" is same as:
+    $0 linux amd64
+  run \"$0 {OS_TYPE}\" is same as:
+    $0 {OS_TYPE} amd64
 
-echo 'Start pack windows X386...'
-GOOS=windows GOARCH=386 go get ./...
-GOOS=windows GOARCH=386 go build ./
-cd install
-GOOS=windows GOARCH=386 go build ./
-cd ..
-tar -czvf "${RELEASE}/mm-wiki-windows-386.tar.gz" mm-wiki.exe conf/ docs/ logs/.gitignore static/ views/ install/install.exe LICENSE README.md
-rm -rf mm-wiki.exe
+Example:
+  Build windows 386 Package:
+    $0 windows 386
+  Build windows amd64 Package:
+    $0 windows
+  or
+    $0 windows amd64
+  Build mac Package:
+    $0 mac
+  Build All OS And All ARCH Package:
+    $0 all
+  Show Help Text:
+    $0 help"
+}
 
-echo 'Start pack linux amd64'
-GOOS=linux GOARCH=amd64 go get ./...
-GOOS=linux GOARCH=amd64 go build ./
-cd install
-GOOS=linux GOARCH=amd64 go build ./
-cd ..
-tar -czvf "${RELEASE}/mm-wiki-linux-amd64.tar.gz" mm-wiki conf/ docs/ logs/.gitignore static/ views/ install/install LICENSE README.md
-rm -rf mm-wiki
+function clean() {
+  rm -rf "${RELEASE}"
+  mkdir "${RELEASE}"
+}
 
-echo 'Start pack linux 386'
-GOOS=linux GOARCH=386 go get ./...
-GOOS=linux GOARCH=386 go build ./
-cd install
-GOOS=linux GOARCH=386 go build ./
-cd ..
-tar -czvf "${RELEASE}/mm-wiki-linux-386.tar.gz" mm-wiki conf/ docs/ logs/.gitignore static/ views/ install/install LICENSE README.md
-rm -rf mm-wiki
+function build_pack() {
+  echo "Start pack $1 $2..."
+  GOOS=$1 GOARCH=$2 ./build.sh
+  tar -czf "${RELEASE}/mm-wiki-${VER}-$1-$2.tar.gz" -C release .
+}
 
-echo 'Start pack mac amd64'
-GOOS=darwin GOARCH=amd64 go get ./...
-GOOS=darwin GOARCH=amd64 go build ./
-cd install
-GOOS=darwin GOARCH=amd64 go build ./
-cd ..
-tar -czvf "${RELEASE}/mm-wiki-mac-amd64.tar.gz" mm-wiki conf/ docs/ logs/.gitignore static/ views/ install/install LICENSE README.md
-rm -rf mm-wiki
+OS=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+ARCH=$(echo "$2" | tr '[:upper:]' '[:lower:]')
+
+case "$OS" in
+-h | --help | help)
+  show_help_text
+  ;;
+all)
+  clean
+  build_pack windows 386
+  build_pack windows amd64
+
+  build_pack linux 386
+  build_pack linux amd64
+
+  build_pack darwin amd64
+  ;;
+*)
+  clean
+  if [ "$OS" != "" ]; then
+    if [ "$ARCH" != "" ]; then
+      build_pack $OS $ARCH
+    else
+      build_pack $OS amd64
+    fi
+  else
+    build_pack linux amd64
+  fi
+  ;;
+esac
 
 echo 'END'

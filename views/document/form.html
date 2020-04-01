@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <br>{{$parentDocuments := .parent_documents}}{{$spaceId := .space_id}}{{$parentId := .parent_id}}
-            <form class="form-horizontal" method="post" action="/document/save">
+            <form class="form-horizontal" method="post" action="/document/save" onsubmit="return false">
                 <input type="hidden" name="parent_id" value="{{$parentId}}">
                 <input type="hidden" name="space_id" value="{{$spaceId}}">
                 <div class="form-group">

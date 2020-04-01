@@ -1,20 +1,19 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
 )
 
 const (
-	Email_Used_True = 1
+	Email_Used_True  = 1
 	Email_Used_False = 0
 )
 
 const Table_Email_Name = "email"
 
 type Email struct {
-
 }
 
 var EmailModel = Email{}
@@ -24,7 +23,7 @@ func (u *Email) GetEmailByEmailId(emailId string) (email map[string]string, err 
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
-		"email_id":   emailId,
+		"email_id": emailId,
 	}))
 	if err != nil {
 		return
@@ -39,7 +38,7 @@ func (u *Email) HasSameName(emailId, name string) (has bool, err error) {
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
 		"email_id <>": emailId,
-		"name":   name,
+		"name":        name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -55,7 +54,7 @@ func (u *Email) HasEmailName(name string) (has bool, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name": name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -71,7 +70,7 @@ func (u *Email) GetEmailByName(name string) (email map[string]string, err error)
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
-		"name":  name,
+		"name": name,
 	}).Limit(0, 1))
 	if err != nil {
 		return
@@ -99,14 +98,14 @@ func (u *Email) Insert(emailValue map[string]interface{}) (id int64, err error) 
 
 	// is_used
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
-		"is_used":  Email_Used_True,
+		"is_used": Email_Used_True,
 	}).Limit(0, 1))
 	if err != nil {
 		return
 	}
 	if rs.Len() == 0 {
 		emailValue["is_used"] = Email_Used_True
-	}else {
+	} else {
 		emailValue["is_used"] = Email_Used_False
 	}
 	emailValue["create_time"] = time.Now().Unix()
@@ -124,9 +123,9 @@ func (u *Email) Insert(emailValue map[string]interface{}) (id int64, err error) 
 func (u *Email) Update(emailId string, emailValue map[string]interface{}) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	emailValue["update_time"] =  time.Now().Unix()
+	emailValue["update_time"] = time.Now().Unix()
 	rs, err = db.Exec(db.AR().Update(Table_Email_Name, emailValue, map[string]interface{}{
-		"email_id":   emailId,
+		"email_id": emailId,
 	}))
 	if err != nil {
 		return
@@ -251,7 +250,7 @@ func (u *Email) GetEmailByEmailIds(emailIds []string) (emails []map[string]strin
 	db := G.DB()
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_Email_Name).Where(map[string]interface{}{
-		"email_id":   emailIds,
+		"email_id": emailIds,
 	}))
 	if err != nil {
 		return
@@ -272,7 +271,7 @@ func (u *Email) SetEmailUsed(emailId string) (id int64, err error) {
 		return
 	}
 	rs, err = db.Exec(db.AR().Update(Table_Email_Name, map[string]interface{}{"is_used": Email_Used_True}, map[string]interface{}{
-		"email_id":   emailId,
+		"email_id": emailId,
 	}))
 	if err != nil {
 		return

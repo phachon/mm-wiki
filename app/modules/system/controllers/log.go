@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/models"
 	"strings"
 )
 
@@ -12,11 +12,11 @@ type LogController struct {
 func (this *LogController) System() {
 
 	page, _ := this.GetInt("page", 1)
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	level := strings.TrimSpace(this.GetString("level", ""))
 	message := strings.TrimSpace(this.GetString("message", ""))
 	username := strings.TrimSpace(this.GetString("username", ""))
 
-	number := 15
 	limit := (page - 1) * number
 	var err error
 	var count int64
@@ -29,7 +29,7 @@ func (this *LogController) System() {
 		logs, err = models.LogModel.GetLogsByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("查找系统日志出错："+err.Error())
+		this.ErrorLog("查找系统日志出错：" + err.Error())
 		this.ViewError("查找系统日志出错", "/system/main/index")
 	}
 
@@ -60,29 +60,29 @@ func (this *LogController) Info() {
 func (this *LogController) Document() {
 
 	page, _ := this.GetInt("page", 1)
-	number := 12
-	limit := (page - 1) * number
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
 	userId := strings.TrimSpace(this.GetString("user_id", ""))
 
+	limit := (page - 1) * number
 	var logDocuments = []map[string]string{}
 	var err error
 	var count int64
 	if keyword != "" && userId != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdKeywordAndLimit(userId, keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserIdAndKeyword(userId, keyword)
-	}else if userId != "" {
+	} else if userId != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(userId, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByUserId(userId)
-	}else if keyword != "" {
+	} else if keyword != "" {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByKeywordAndLimit(keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByKeyword(userId)
-	}else {
+	} else {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
 		count, err = models.LogDocumentModel.CountLogDocuments()
 	}
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 
@@ -94,12 +94,12 @@ func (this *LogController) Document() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	docs, err := models.DocumentModel.GetAllDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	for _, logDocument := range logDocuments {
@@ -122,7 +122,7 @@ func (this *LogController) Document() {
 
 	users, err = models.UserModel.GetUsers()
 	if err != nil {
-		this.ErrorLog("文档日志查找失败："+err.Error())
+		this.ErrorLog("文档日志查找失败：" + err.Error())
 		this.ViewError("文档日志查找失败！", "/system/main/index")
 	}
 	this.Data["logDocuments"] = logDocuments

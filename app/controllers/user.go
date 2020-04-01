@@ -2,7 +2,8 @@ package controllers
 
 import (
 	"strings"
-	"mm-wiki/app/models"
+
+	"github.com/phachon/mm-wiki/app/models"
 )
 
 type UserController struct {
@@ -17,12 +18,12 @@ func (this *UserController) List() {
 
 	keywords := map[string]string{}
 	page, _ := this.GetInt("page", 1)
+	number, _ := this.GetRangeInt("number", 20, 10, 100)
 	username := strings.TrimSpace(this.GetString("username", ""))
 	if username != "" {
 		keywords["username"] = username
 	}
 
-	number := 20
 	limit := (page - 1) * number
 	var err error
 	var count int64
@@ -35,13 +36,13 @@ func (this *UserController) List() {
 		users, err = models.UserModel.GetUsersByLimit(limit, number)
 	}
 	if err != nil {
-		this.ErrorLog("获取全部用户列表失败: "+err.Error())
+		this.ErrorLog("获取全部用户列表失败: " + err.Error())
 		this.ViewError("获取全部用户列表失败", "/main/index")
 	}
 
 	followUsers, err := models.FollowModel.GetFollowsByUserIdAndType(this.UserId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取全部用户列表失败: "+err.Error())
+		this.ErrorLog("获取全部用户列表失败: " + err.Error())
 		this.ViewError("获取全部用户列表失败", "/main/index")
 	}
 
@@ -68,7 +69,7 @@ func (this *UserController) Follow() {
 
 	followUsers, err := models.FollowModel.GetFollowsByUserIdAndType(this.UserId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 
@@ -78,7 +79,7 @@ func (this *UserController) Follow() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 	for _, user := range users {
@@ -109,16 +110,16 @@ func (this *UserController) Info() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("查找用户出错："+err.Error())
+		this.ErrorLog("查找用户出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/main/index")
 	}
 	if len(user) == 0 {
 		this.ViewError("用户不存在！", "/main/index")
 	}
-	
+
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByUserIdAndLimit(userId, 0, 10)
 	if err != nil {
-		this.ErrorLog("查找用户活动出错："+err.Error())
+		this.ErrorLog("查找用户活动出错：" + err.Error())
 		this.ViewError("查找用户活动出错！", "/main/index")
 	}
 
@@ -128,7 +129,7 @@ func (this *UserController) Info() {
 	}
 	documents, err := models.DocumentModel.GetDocumentsByDocumentIds(docIds)
 	if err != nil {
-		this.ErrorLog("查找用户活动出错: "+err.Error())
+		this.ErrorLog("查找用户活动出错: " + err.Error())
 		this.ViewError("查找用户活动出错", "/main/index")
 	}
 
@@ -158,7 +159,7 @@ func (this *UserController) FollowUser() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("查找用户出错："+err.Error())
+		this.ErrorLog("查找用户出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/user/list")
 	}
 	if len(user) == 0 {
@@ -168,7 +169,7 @@ func (this *UserController) FollowUser() {
 	// follow users
 	followUsers, err := models.FollowModel.GetFollowsByUserIdAndType(userId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 	userIds := []string{}
@@ -177,7 +178,7 @@ func (this *UserController) FollowUser() {
 	}
 	users, err := models.UserModel.GetUsersByUserIds(userIds)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 	for _, user := range users {
@@ -193,7 +194,7 @@ func (this *UserController) FollowUser() {
 	// fans users
 	followedUsers, err := models.FollowModel.GetFollowsByObjectIdAndType(userId, models.Follow_Type_User)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 	followedUserIds := []string{}
@@ -202,7 +203,7 @@ func (this *UserController) FollowUser() {
 	}
 	fansUsers, err := models.UserModel.GetUsersByUserIds(followedUserIds)
 	if err != nil {
-		this.ErrorLog("获取关注用户列表失败: "+err.Error())
+		this.ErrorLog("获取关注用户列表失败: " + err.Error())
 		this.ViewError("获取关注用户列表失败", "/user/list")
 	}
 
@@ -223,7 +224,7 @@ func (this *UserController) FollowPage() {
 
 	user, err := models.UserModel.GetUserByUserId(userId)
 	if err != nil {
-		this.ErrorLog("查找用户出错："+err.Error())
+		this.ErrorLog("查找用户出错：" + err.Error())
 		this.ViewError("查找用户出错！", "/user/list")
 	}
 	if len(user) == 0 {
@@ -232,7 +233,7 @@ func (this *UserController) FollowPage() {
 
 	followPages, err := models.FollowModel.GetFollowsByUserIdAndType(userId, models.Follow_Type_Doc)
 	if err != nil {
-		this.ErrorLog("获取用户关注页面列表失败: "+err.Error())
+		this.ErrorLog("获取用户关注页面列表失败: " + err.Error())
 		this.ViewError("获取用户关注页面列表失败", "/user/list")
 	}
 
@@ -243,7 +244,7 @@ func (this *UserController) FollowPage() {
 
 	pages, err := models.DocumentModel.GetDocumentsByDocumentIds(documentIds)
 	if err != nil {
-		this.ErrorLog("获取用户关注页面列表失败: "+err.Error())
+		this.ErrorLog("获取用户关注页面列表失败: " + err.Error())
 		this.ViewError("获取用户关注页面列表失败", "/user/list")
 	}
 

@@ -1,12 +1,12 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
-	"github.com/snail007/go-activerecord/mysql"
 	"encoding/json"
-	"time"
 	"github.com/astaxie/beego/context"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/snail007/go-activerecord/mysql"
 	"strings"
+	"time"
 )
 
 const (
@@ -158,7 +158,7 @@ func (l *Log) CountLogsByKeyword(level, message, username string) (count int64, 
 	return
 }
 
-func (l *Log) RecordLog(message string, level int, userId string, username string, ctx context.Context) (id int64, err error){
+func (l *Log) RecordLog(message string, level int, userId string, username string, ctx context.Context) (id int64, err error) {
 	userAgent := ctx.Request.UserAgent()
 	referer := ctx.Request.Referer()
 	getParams := ctx.Request.URL.String()
@@ -168,16 +168,16 @@ func (l *Log) RecordLog(message string, level int, userId string, username strin
 	postParams, _ := json.Marshal(postParamsMap)
 
 	logValue := map[string]interface{}{
-		"level": level,
-		"path": path,
-		"get": getParams,
-		"post": string(postParams),
-		"message": message,
-		"ip": strings.Split(ctx.Request.RemoteAddr, ":"),
-		"user_agent": userAgent,
-		"referer": referer,
-		"user_id": userId,
-		"username": username,
+		"level":       level,
+		"path":        path,
+		"get":         getParams,
+		"post":        string(postParams),
+		"message":     message,
+		"ip":          strings.Split(ctx.Request.RemoteAddr, ":"),
+		"user_agent":  userAgent,
+		"referer":     referer,
+		"user_id":     userId,
+		"username":    username,
 		"create_time": time.Now().Unix(),
 	}
 	return LogModel.Insert(logValue)

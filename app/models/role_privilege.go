@@ -10,7 +10,6 @@ var RolePrivilegeModel = RolePrivilege{}
 const Table_RolePrivilege_Name = "role_privilege"
 
 type RolePrivilege struct {
-
 }
 
 func (rolePrivilege *RolePrivilege) GetRolePrivilegesByRoleId(roleId string) (rolePrivileges []map[string]string, err error) {
@@ -35,8 +34,8 @@ func (rolePrivilege *RolePrivilege) GetRootRolePrivileges() (rolePrivileges []ma
 	for _, privilege := range privileges {
 		rolePrivilege := map[string]string{
 			"role_privilege_id": "",
-			"role_id": fmt.Sprintf("%d", Role_Root_Id),
-			"privilege_id": privilege["privilege_id"],
+			"role_id":           fmt.Sprintf("%d", Role_Root_Id),
+			"privilege_id":      privilege["privilege_id"],
 		}
 		rolePrivileges = append(rolePrivileges, rolePrivilege)
 	}
@@ -57,9 +56,9 @@ func (rolePrivilege *RolePrivilege) GrantRolePrivileges(roleId string, privilege
 	rolePrivileges := []map[string]interface{}{}
 	for _, privilegeId := range privilegeIds {
 		rolePrivilege := map[string]interface{}{
-			"role_id": roleId,
+			"role_id":      roleId,
 			"privilege_id": privilegeId,
-			"create_time": time.Now().Unix(),
+			"create_time":  time.Now().Unix(),
 		}
 		rolePrivileges = append(rolePrivileges, rolePrivilege)
 	}

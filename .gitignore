@@ -8,6 +8,8 @@ mm-wiki
 *.session/
 .mmwiki.sessions/
 conf/mm-wiki.conf
+mm-wiki.conf
+release/
 release-*
 data/
 install/install

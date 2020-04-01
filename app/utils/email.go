@@ -1,21 +1,21 @@
 package utils
 
 import (
-	"strings"
-	"net/smtp"
-	"time"
-	"gopkg.in/russross/blackfriday.v2"
-	"github.com/astaxie/beego"
-	"fmt"
-	"gopkg.in/gomail.v2"
-	"strconv"
 	"crypto/tls"
+	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/phachon/mm-wiki/global"
+	"gopkg.in/gomail.v2"
+	"gopkg.in/russross/blackfriday.v2"
+	"net/smtp"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var Email = NewEmail()
 
 type email struct {
-
 }
 
 func NewEmail() *email {
@@ -52,7 +52,7 @@ func (e *email) SendByEmail(email map[string]string, to []string, subject string
 	auth := smtp.PlainAuth("", userEmail, email["password"], email["host"])
 	user := email["username"]
 	nickname := email["sender_name"]
-	subject = email["sender_title_prefix"]+subject
+	subject = email["sender_title_prefix"] + subject
 
 	msg := fmt.Sprintf("To: %s \r\nFrom: %s <%s>\r\nSubject: %s \r\nContent-Type: text/%s; charset=UTF-8\r\n\r\n%s",
 		strings.Join(to, ","), nickname, user, subject, contentType, body)
@@ -73,6 +73,7 @@ func (e *email) MakeDocumentHtmlBody(document map[string]string, view string) (b
 	body = strings.Replace(body, "{{.update_time}}", Date.Format(document["update_time"], "Y-m-d H:i:s"), 1)
 	body = strings.Replace(body, "{{.comment}}", document["comment"], 1)
 	body = strings.Replace(body, "{{.document_url}}", document["url"], 1)
+	body = strings.Replace(body, "{{.copyright}}", global.SYSTEM_COPYRIGHT, 1)
 
 	content := string(blackfriday.Run([]byte(document["content"])))
 	body = strings.Replace(body, "{{.document_content}}", content, 1)

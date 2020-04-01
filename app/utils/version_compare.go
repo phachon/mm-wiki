@@ -1,20 +1,20 @@
 package utils
 
 import (
-	"strings"
 	"strconv"
+	"strings"
 )
 
 // version compare
 // version example: v0.1.1
 
 var (
-	defaultPrefix = "v"
+	defaultPrefix  = "v"
 	VersionCompare = NewVersionCompare(defaultPrefix)
 )
 
 // struct
-type versionCompare struct{
+type versionCompare struct {
 	prefix string
 }
 
@@ -85,7 +85,7 @@ func (vc *versionCompare) Lte(version1 string, version2 string) bool {
 func (vc *versionCompare) ConvertIntList(version string) []int {
 	var realVersion = version
 	if version[0:len(vc.prefix)] == vc.prefix {
-		realVersion = version[len(vc.prefix) :]
+		realVersion = version[len(vc.prefix):]
 	}
 	versionList := strings.Split(realVersion, ".")
 	var l = make([]int, len(versionList))

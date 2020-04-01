@@ -1,7 +1,7 @@
 package models
 
 import (
-	"mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"time"
 )
@@ -15,7 +15,6 @@ const (
 const Table_LogDocument_Name = "log_document"
 
 type LogDocument struct {
-	
 }
 
 var LogDocumentModel = LogDocument{}
@@ -46,10 +45,10 @@ func (ld *LogDocument) Insert(logDocument map[string]interface{}) (id int64, err
 
 func (ld *LogDocument) CreateAction(userId string, documentId string) (id int64, err error) {
 	logDocument := map[string]interface{}{
-		"user_id": userId,
+		"user_id":     userId,
 		"document_id": documentId,
-		"comment": "创建了文档",
-		"action": LogDocument_Action_Create,
+		"comment":     "创建了文档",
+		"action":      LogDocument_Action_Create,
 		"create_time": time.Now().Unix(),
 	}
 	return ld.Insert(logDocument)
@@ -57,10 +56,10 @@ func (ld *LogDocument) CreateAction(userId string, documentId string) (id int64,
 
 func (ld *LogDocument) UpdateAction(userId string, documentId string, comment string) (id int64, err error) {
 	logDocument := map[string]interface{}{
-		"user_id": userId,
+		"user_id":     userId,
 		"document_id": documentId,
-		"comment": comment,
-		"action": LogDocument_Action_Update,
+		"comment":     comment,
+		"action":      LogDocument_Action_Update,
 		"create_time": time.Now().Unix(),
 	}
 	return ld.Insert(logDocument)
@@ -68,10 +67,10 @@ func (ld *LogDocument) UpdateAction(userId string, documentId string, comment st
 
 func (ld *LogDocument) DeleteAction(userId string, documentId string) (id int64, err error) {
 	logDocument := map[string]interface{}{
-		"user_id": userId,
+		"user_id":     userId,
 		"document_id": documentId,
-		"comment": "删除了该文档",
-		"action": LogDocument_Action_Delete,
+		"comment":     "删除了该文档",
+		"action":      LogDocument_Action_Delete,
 		"create_time": time.Now().Unix(),
 	}
 	return ld.Insert(logDocument)
@@ -136,7 +135,7 @@ func (ld *LogDocument) GetLogDocumentsByUserIdKeywordAndLimit(userId string, key
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().From(Table_LogDocument_Name).Where(map[string]interface{}{
 		"comment LIKE": "%" + keyword + "%",
-		"user_id": userId,
+		"user_id":      userId,
 	}).Limit(limit, number).OrderBy("log_document_id", "DESC"))
 	if err != nil {
 		return
@@ -206,7 +205,7 @@ func (ld *LogDocument) CountLogDocumentsByUserIdAndKeyword(userId string, keywor
 	var rs *mysql.ResultSet
 	rs, err = db.Query(db.AR().Select("count(*) as total").From(Table_LogDocument_Name).Where(map[string]interface{}{
 		"comment LIKE": "%" + keyword + "%",
-		"user_id": userId,
+		"user_id":      userId,
 	}))
 	if err != nil {
 		return

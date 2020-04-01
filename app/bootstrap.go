@@ -1,22 +1,28 @@
 package app
 
 import (
-	"os"
-	"log"
-	"fmt"
 	"flag"
-	"mm-wiki/app/utils"
+	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/snail007/go-activerecord/mysql"
+	"github.com/astaxie/beego/logs"
 	"github.com/fatih/color"
-	"mm-wiki/app/models"
+	"github.com/go-ego/riot/types"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/work"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/snail007/go-activerecord/mysql"
+	"log"
+	"os"
+	"path"
 	"path/filepath"
 	"time"
-	"path"
 )
 
 var (
-	confPath = flag.String("conf", "conf/mm-wiki.conf", "please set mm-wiki conf path")
+	defaultConf = "conf/mm-wiki.conf"
+
+	confPath = flag.String("conf", "", "please set mm-wiki conf path")
 
 	version = flag.Bool("version", false, "mm-wiki version")
 
@@ -24,13 +30,23 @@ var (
 )
 
 var (
-	Version = "v0.1.3"
+	Version = global.SYSTEM_VERSION
+
+	CopyRight = beego.Str2html(global.SYSTEM_COPYRIGHT)
 
 	StartTime = int64(0)
 
 	RootDir = ""
 
+	DocumentAbsDir = ""
+
+	MarkdownAbsDir = ""
+
 	ImageAbsDir = ""
+
+	AttachmentAbsDir = ""
+
+	SearchIndexAbsDir = ""
 )
 
 func init() {
@@ -40,6 +56,8 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
+	initSearch()
+	initWork()
 	StartTime = time.Now().Unix()
 }
 
@@ -62,34 +80,37 @@ func poster() {
 | '_ ' _ \  | '_ ' _ \   _____  \ \ /\ / / | | | |/ / | |
 | | | | | | | | | | | | |_____|  \ V  V /  | | |   <  | |
 |_| |_| |_| |_| |_| |_|           \_/\_/   |_| |_|\_\ |_|
-`+
-"Author: phachon\r\n"+
-"Version: "+Version+"\r\n"+
-"Link: https://github.com/phachon/mm-wiki"
+` +
+		"Author: phachon\r\n" +
+		"Version: " + Version + "\r\n" +
+		"Link: https://github.com/phachon/mm-wiki"
 	fg.Println(logo)
 }
 
 // init beego config
 func initConfig() {
 
+	RootDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Println("init config error: " + err.Error())
+		os.Exit(1)
+	}
+	confFile := *confPath
 	if *confPath == "" {
-		log.Println("conf file not empty!")
-		os.Exit(1)
+		confFile = filepath.Join(RootDir, defaultConf)
 	}
-	ok, _ := utils.NewFile().PathIsExists(*confPath)
+	ok, _ := utils.NewFile().PathIsExists(confFile)
 	if ok == false {
-		log.Println("conf file "+*confPath+" not exists!")
+		log.Println("conf file " + confFile + " not exists!")
 		os.Exit(1)
 	}
-	//init config file
-	beego.LoadAppConfig("ini", *confPath)
+	// init config file
+	beego.LoadAppConfig("ini", confFile)
 
 	// init name
 	beego.AppConfig.Set("sys.name", "mm-wiki")
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
 	beego.BConfig.ServerName = beego.AppConfig.String("sys.name")
-
-	RootDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 
 	// set static path
 	beego.SetStaticPath("/static/", filepath.Join(RootDir, "./static"))
@@ -109,9 +130,9 @@ func initConfig() {
 		os.Exit(1)
 	}
 	for adapter, config := range logConfigs {
-		beego.SetLogger(adapter, config)
+		logs.SetLogger(adapter, config)
 	}
-	beego.SetLogFuncCall(true)
+	logs.SetLogFuncCall(true)
 }
 
 //init db
@@ -132,85 +153,131 @@ func initDB() {
 	cfg.TablePrefixSqlIdentifier = "__PREFIX__"
 	err := models.G.Regist("default", cfg)
 	if err != nil {
-		beego.Error(fmt.Errorf("database error:%s,with config : %v", err, cfg))
+		logs.Error(fmt.Errorf("database error:%s,with config : %v", err, cfg))
 		os.Exit(1)
 	}
-	models.Version = Version
 }
 
 // init document dir
 func initDocumentDir() {
 	docRootDir := beego.AppConfig.String("document::root_dir")
 	if docRootDir == "" {
-		beego.Error("document root dir "+docRootDir+" is not empty!")
+		logs.Error("document root dir " + docRootDir + " is not empty!")
 		os.Exit(1)
 	}
 	ok, _ := utils.File.PathIsExists(docRootDir)
 	if !ok {
-		beego.Error("document root dir "+docRootDir+" is not exists!")
+		logs.Error("document root dir " + docRootDir + " is not exists!")
 		os.Exit(1)
 	}
 
-	rootAbsDir, err := filepath.Abs(docRootDir)
+	documentAbsDir, err := filepath.Abs(docRootDir)
 	if err != nil {
-		beego.Error("document root dir "+docRootDir+" is error!")
+		logs.Error("document root dir " + docRootDir + " is error!")
 		os.Exit(1)
 	}
 
-	markDownAbsDir := path.Join(rootAbsDir, "markdowns")
-	imagesAbsDir := path.Join(rootAbsDir, "images")
+	DocumentAbsDir = documentAbsDir
 
-	ok, _ = utils.File.PathIsExists(markDownAbsDir)
-	if !ok {
-		err := os.Mkdir(markDownAbsDir, 0777)
-		if err != nil {
-			beego.Error("create document markdown dir "+markDownAbsDir+" error!")
-			os.Exit(1)
-		}
-	}
+	// markdown save dir
+	markDownAbsDir := path.Join(documentAbsDir, "markdowns")
+	// image save dir
+	imagesAbsDir := path.Join(documentAbsDir, "images")
+	// attachment save dir
+	attachmentAbsDir := path.Join(documentAbsDir, "attachment")
+	// search index dir
+	searchIndexAbsDir := path.Join(documentAbsDir, "search-index")
 
-	ok, _ = utils.File.PathIsExists(imagesAbsDir)
-	if !ok {
-		err := os.Mkdir(imagesAbsDir, 0777)
-		if err != nil {
-			beego.Error("create document image dir "+imagesAbsDir+" error!")
-			os.Exit(1)
-		}
-	}
-
-	utils.Document.RootAbsDir = markDownAbsDir
+	MarkdownAbsDir = markDownAbsDir
 	ImageAbsDir = imagesAbsDir
+	AttachmentAbsDir = attachmentAbsDir
+	SearchIndexAbsDir = searchIndexAbsDir
+
+	dirList := []string{MarkdownAbsDir, ImageAbsDir, AttachmentAbsDir, SearchIndexAbsDir}
+	// create dir
+	for _, dir := range dirList {
+		ok, _ = utils.File.PathIsExists(dir)
+		if !ok {
+			err := os.Mkdir(dir, 0777)
+			if err != nil {
+				logs.Error("create document dir "+dir+" error=%s", err.Error())
+				os.Exit(1)
+			}
+		}
+	}
+
+	// utils document
+	utils.Document.MarkdownAbsDir = markDownAbsDir
+	utils.Document.DocumentAbsDir = documentAbsDir
 
 	beego.SetStaticPath("/images/", ImageAbsDir)
+	// todo
+	beego.SetStaticPath("/images/:space_id/:document_id/", ImageAbsDir)
 }
 
 // check upgrade
 func checkUpgrade() {
 	if *upgrade == true {
-		beego.Info("Start checking whether MM-Wiki needs upgrading.")
+		logs.Info("Start checking whether MM-Wiki needs upgrading.")
 		versionConf, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SystemVersion)
 		if err != nil {
-			beego.Error("Get database mm-wiki version error: "+err.Error())
+			logs.Error("Get database mm-wiki version error: " + err.Error())
 			os.Exit(1)
 		}
 		var versionDb = "v0.0.0"
 		if len(versionConf) != 0 && versionConf["value"] != "" {
 			versionDb = versionConf["value"]
 		}
-		beego.Info("MM-Wiki Database version：" +versionDb)
-		beego.Info("MM-Wiki Now version: "+Version)
+		logs.Info("MM-Wiki Database version：" + versionDb)
+		logs.Info("MM-Wiki Now version: " + Version)
 
 		if versionDb == Version {
-			beego.Info("MM-Wiki does not need updating.")
-		}else {
-			beego.Info("MM-Wiki start upgrading.")
+			logs.Info("MM-Wiki does not need updating.")
+		} else {
+			logs.Info("MM-Wiki start upgrading.")
 			err := models.UpgradeModel.Start(versionDb)
 			if err != nil {
-				beego.Error("MM-Wiki upgrade failed.")
+				logs.Error("MM-Wiki upgrade failed.")
 				os.Exit(1)
 			}
-			beego.Info("MM-Wiki upgrade finish.")
+			logs.Info("MM-Wiki upgrade finish.")
 		}
 		os.Exit(0)
 	}
+}
+
+func initSearch() {
+
+	gseFile := filepath.Join(RootDir, "docs/search_dict/dictionary.txt")
+	stopFile := filepath.Join(RootDir, "docs/search_dict/stop_tokens.txt")
+	ok, _ := utils.File.PathIsExists(gseFile)
+	if !ok {
+		logs.Error("search dict file " + gseFile + " is not exists!")
+		os.Exit(1)
+	}
+	ok, _ = utils.File.PathIsExists(stopFile)
+	if !ok {
+		logs.Error("search stop dict file " + stopFile + " is not exists!")
+		os.Exit(1)
+	}
+	global.DocSearcher.Init(types.EngineOpts{
+		UseStore:    true,
+		StoreFolder: SearchIndexAbsDir,
+		Using:       3,
+		//GseDict:       "zh",
+		GseDict:       gseFile,
+		StopTokenFile: stopFile,
+		IndexerOpts: &types.IndexerOpts{
+			IndexType: types.LocsIndex,
+		},
+	})
+}
+
+func initWork() {
+	// 搜索索引 work
+	intervalTime, _ := beego.AppConfig.Int64("search::interval_time")
+	if intervalTime == 0 {
+		intervalTime = 30
+	}
+	work.InitDocSearchIndexWork(time.Duration(intervalTime) * time.Second)
 }

@@ -1,19 +1,19 @@
 package main
 
 import (
-	"mm-wiki/install/controllers"
-	"net/http"
-	"mm-wiki/app/utils"
 	"github.com/astaxie/beego"
-	"path/filepath"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/install/controllers"
+	"github.com/phachon/mm-wiki/install/storage"
+	"net/http"
 	"os"
-	"mm-wiki/install/storage"
+	"path/filepath"
 )
 
 func init() {
 
 	storage.InstallDir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	storage.RootDir =  filepath.Join(storage.InstallDir, "../")
+	storage.RootDir = filepath.Join(storage.InstallDir, "../")
 
 	beego.AppConfig.Set("sys.name", "mm-wiki-installer")
 	beego.BConfig.AppName = beego.AppConfig.String("sys.name")
@@ -32,7 +32,6 @@ func init() {
 	beego.BConfig.WebConfig.AutoRender = false
 	beego.BConfig.RouterCaseSensitive = false
 
-	// todo add router..
 	beego.AutoRouter(&controllers.InstallController{})
 	beego.Router("/", &controllers.InstallController{}, "*:Index")
 	beego.ErrorHandler("404", http_404)

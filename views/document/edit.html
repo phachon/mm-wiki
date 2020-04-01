@@ -3,7 +3,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <br>{{$parentDocuments := .parent_documents}}{{$document := .document}}
-            <form class="form-horizontal" method="post" action="/document/modify">
+            <form class="form-horizontal" method="post" action="/document/modify" onsubmit="return false">
                 <input type="hidden" name="document_id" value="{{$document.document_id}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span> 上级</label>
