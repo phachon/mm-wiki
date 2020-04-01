@@ -20,6 +20,9 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 - 文档具有分享和下载功能，目前只支持下载 MarkDown 源文件。
 - 支持文档全文搜索
 
+# 在线快速了解
+- [mm-wiki企业知识分享与团队协同软件](http://wiki.cifaz.com/), 用户名:admin, 密码:mmwiki, 点击不了请复制http://wiki.cifaz.com/
+
 # 安装
 ## 1. 自助安装
 
