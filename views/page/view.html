@@ -1,5 +1,6 @@
 <div class="container-fluid">
     <div class="row">{{$pageContent := .page_content}}{{$document := .document}}{{$parentDocuments := .parent_documents}}
+
         <div class="col-md-12">{{$createUser := .create_user}}{{$editUser := .edit_user}}{{$collectionId := .collection_id}}{{$space := .space}}
             <div class="panel-body">
                 <div class="row">
@@ -60,7 +61,15 @@
                 </div>
                 <hr style="margin: 0">
             </div>
-            <div class="panel-body">
+            <div class="panel-body md-view-box" >
+                <div class="dir-preview-box">
+                    <div class="dir-preview-btn">
+                        展开目录
+                    </div>
+                    <div class="page-view-dir-toc" id="page-view-dir-toc">
+
+                    </div>
+                </div>
                 <div id="document_page_view" style="padding: 0 10px 10px 10px;">
                     <textarea style="display:none;">{{$pageContent}}</textarea>
                 </div>
@@ -68,6 +77,7 @@
         </div>
     </div>
 </div>
+<script src="/static/plugins/md-toc/md-toc.js"></script>
 <script type="text/javascript">
     Layers.bindIframe("[name='history']", "文档修改历史", "508px", "1000px");
     $("[data-toggle='web-popover']").webuiPopover({animation: 'pop',autoHide:3000});
@@ -100,6 +110,49 @@
         $("#document_page_view").find("a").each(function () {
             var target = $(this).attr("target") || "_parent";
             $(this).attr("target", target);
+        })
+
+        // 生成目录树
+        new Toc("document_page_view", {
+            clazz: "page-view-dir-toc",
+            level: 7,
+            top: -2,
+            targetId: "page-view-dir-toc"
+        });
+
+        // 按钮目录按钮永久显示, 滑动页面时, 固定显示
+        window.onscroll = function(){
+            var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop;
+            console.log(scrollHeight);
+            var dirPreviewBox = $(".dir-preview-box");
+            if (scrollHeight >  120) {
+                dirPreviewBox.css({
+                    position: "fixed",
+                    top: "20px"
+                })
+            } else {
+                dirPreviewBox.css({
+                    position: "absolute",
+                    top: "0"
+                })
+            }
+        };
+
+        // 目录显示与隐藏
+        $(".dir-preview-btn").click(function () {
+            var pageViewDirToc = $(".page-view-dir-toc");
+            if (this.innerText === "展开目录") {
+                this.innerText = "隐藏目录";
+                pageViewDirToc.show();
+                pageViewDirToc.css({
+                    position: "absolute",
+                    top: "25px",
+                    right: 0
+                })
+            } else {
+                this.innerText = "展开目录";
+                pageViewDirToc.hide();
+            }
         })
     });
 </script>
