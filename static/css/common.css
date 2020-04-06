@@ -496,3 +496,70 @@ mark {
     border-radius: 3px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
+
+/* markdown浏览生成目录样式 */
+.md-view-box {
+    position: relative;
+}
+.md-view-box ul {
+    padding-left: 15px;
+}
+.md-view-box ul, .md-view-box li {
+    /*padding: 0;*/
+    margin: 0;
+    list-style: none;
+}
+
+.md-view-box li {
+    line-height: 24px;
+}
+
+.dir-preview-box {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    display: inline-block;
+    width: 500px;
+    z-index: 202004;
+}
+
+.dir-preview-btn {
+    position: absolute;
+    right: 0;
+    width: 80px;
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.dir-preview-btn:hover {
+    background: red;
+    cursor: pointer;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.page-view-dir-toc {
+    display: none;
+    background: #F5F5F5;
+    min-width: 50px;
+}
+
+.page-view-dir-toc .toc {
+    padding: 10px 20px 10px 0;
+}
+
+/* 目录只显示单行, 多的文字使用title, 但感觉不太合理, 暂时不要 */
+/*.page-view-dir-toc ul li a {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 500px;
+}*/
+
+.page-view-dir-toc ul li a:hover {
+    font-weight: bold;
+}
+
