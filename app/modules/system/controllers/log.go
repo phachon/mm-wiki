@@ -78,7 +78,7 @@ func (this *LogController) Document() {
 		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByKeywordAndLimit(keyword, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocumentsByKeyword(userId)
 	} else {
-		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
+		logDocuments, err = models.LogDocumentModel.GetLogDocumentsByLimit(this.UserId, limit, number)
 		count, err = models.LogDocumentModel.CountLogDocuments()
 	}
 	if err != nil {
