@@ -5,6 +5,6 @@
     不需要升级, 无数据库更改
     1.1遗留问题, 不能直接拖到其它目录, 移动并自动排序
 2.修复首页最近更新文档, 不是自己权限范围内的也能查看
-    增加字段, alter table add space_id int
+    增加字段, alter table mw_log_document add space_id int
     同步数据, update mw_log_document as logDocment, mw_document as document set logDocment.space_id = document.space_id WHERE logDocment.document_id = document.document_id
 2.文档分享地址加密
