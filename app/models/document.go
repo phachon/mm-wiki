@@ -399,22 +399,6 @@ func (d *Document) GetSlidedSequenceDocuments(spaceId string, nextSequenceStr st
 		"sequence": nextSequenceStr,
 	}
 
-	// 更新当前文档序号
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Exec(db.AR().Update(Table_Document_Name, movedDocumentMap, map[string]interface{}{
-		"document_id": movedDocumentId,
-		"is_delete":   Document_Delete_False,
-	}))
-
-	if err != nil {
-		return
-	}
-
-	affected := rs.RowsAffected
-	if affected > 0 {
-	}
-
 	// 将某个排序号后面的所有文档查询出来, 如果这个排序号是0, 则以时间为排序, 将后面的所有文档都+1变更
 	documentAll, err := d.GetDocumentAllAfterSequence(spaceId, nextDocumentId)
 
@@ -437,6 +421,22 @@ func (d *Document) GetSlidedSequenceDocuments(spaceId string, nextSequenceStr st
 			currDocument["sequence"] = strconv.Itoa(nextSequence)
 			updateAfterDocuments = append(updateAfterDocuments, currDocument)
 		}
+	}
+
+	// 更新当前文档序号
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Exec(db.AR().Update(Table_Document_Name, movedDocumentMap, map[string]interface{}{
+		"document_id": movedDocumentId,
+		"is_delete":   Document_Delete_False,
+	}))
+
+	if err != nil {
+		return
+	}
+
+	affected := rs.RowsAffected
+	if affected > 0 {
 	}
 
 	return updateAfterDocuments, nil
@@ -470,7 +470,7 @@ func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveTy
 		}
 	} else {
 		// 获取同级已排序过的文档
-		updateBatchDocuments, err = d.GetSlidedSequenceDocuments(parentId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
+		updateBatchDocuments, err = d.GetSlidedSequenceDocuments(spaceId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
 		if err != nil {
 			return
 		}
@@ -478,15 +478,19 @@ func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveTy
 
 	documentMaps := utils.MapString2Interface(updateBatchDocuments)
 
-	db := G.DB()
-	var updateBatchRs *mysql.ResultSet
-	updateBatchRs, err = db.Exec(db.AR().UpdateBatch(Table_Document_Name, documentMaps, []string{"document_id"}))
+	var rowsAffected int64 = 0
+	if documentMaps != nil {
+		db := G.DB()
+		var updateBatchRs *mysql.ResultSet
+		updateBatchRs, err = db.Exec(db.AR().UpdateBatch(Table_Document_Name, documentMaps, []string{"document_id"}))
 
-	if err != nil {
-		return
+		if err != nil {
+			return
+		}
+
+		rowsAffected = updateBatchRs.RowsAffected
 	}
 
-	rowsAffected := updateBatchRs.RowsAffected
 	return rowsAffected + 1, err
 }
 
