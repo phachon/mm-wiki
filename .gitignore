@@ -15,3 +15,5 @@ data/
 install/install
 install/install.exe
 install.lock
+
+.idea/

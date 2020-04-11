@@ -46,7 +46,9 @@ func (this *MainController) Default() {
 	//number := 8
 	limit := (page - 1) * number
 
-	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByLimit(limit, number)
+	userId := this.UserId
+
+	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByLimit(userId, limit, number)
 	if err != nil {
 		this.ErrorLog("查找更新文档列表失败：" + err.Error())
 		this.ViewError("查找更新文档列表失败！")
