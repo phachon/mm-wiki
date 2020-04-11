@@ -441,17 +441,16 @@ func (this *DocumentController) Delete() {
 
 // update same level sequence
 func (this *DocumentController) UpdateSequence() {
+
 	spaceId := this.GetString("spaceId", "0")
 	movedDocumentId := this.GetString("movedDocumentId", "0")
 	moveType := this.GetString("moveType", "next")
 	nextDocumentId := this.GetString("nextDocumentId", "0")
 
-	affectCount, err := models.DocumentModel.UpdateSequence(spaceId, movedDocumentId, moveType, nextDocumentId)
+	_, err := models.DocumentModel.UpdateSequence(spaceId, movedDocumentId, moveType, nextDocumentId)
 	if err != nil {
 		this.ErrorLog("文档排序失败:" + movedDocumentId + ", 排在哪个文档前:" + nextDocumentId + ", 失败原因：" + err.Error())
-	}
-
-	if affectCount > 0 {
+		this.jsonError("移动排序失败成功！")
 	}
 
 	this.jsonSuccess("移动排序成功", "", "/document/index?document_id="+movedDocumentId)
