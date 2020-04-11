@@ -452,7 +452,6 @@ func (this *DocumentController) UpdateSequence() {
 	}
 
 	if affectCount > 0 {
-
 	}
 
 	this.jsonSuccess("移动排序成功", "", "/document/index?document_id="+movedDocumentId)

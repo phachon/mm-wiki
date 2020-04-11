@@ -335,123 +335,145 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 	return
 }
 
-// update sequence
+// 更新没有排过序的同级文档
+func (d *Document) GetSlidingUnSequenceDocuments(spaceId string, parentDocumentId string, movedDocumentId string, moveType string, nextDocumentId string) (documents []map[string]string, err error) {
+	// 查询此空间下此父类下的所有同级文档
+	allDocuments, err := d.GetDocumentsByParentIdAndSpaceIdOnly(parentDocumentId, spaceId)
+	if err != nil {
+		return
+	}
+
+	// 即将移动文档的数组下标
+	willBeMovedIndex := 0
+	willBeMovedSequence := 0
+	currSequence := 0
+	for i := 0; i < len(allDocuments); i++ {
+		allDocument := allDocuments[i]
+
+		currDocumentId := allDocument["document_id"]
+
+		// 跳过正在操作的文档
+		if movedDocumentId == currDocumentId {
+			willBeMovedIndex = i
+			continue
+		}
+
+		currSequence += 1
+		// 检测排序模型
+		if moveType == "prev" && currDocumentId == nextDocumentId {
+			currSequence += 1
+			willBeMovedSequence = currSequence
+
+			currSequence += 1
+			allDocument["sequence"] = strconv.Itoa(currSequence)
+		} else if moveType == "next" && currDocumentId == nextDocumentId {
+			allDocument["sequence"] = strconv.Itoa(currSequence)
+
+			currSequence += 1
+			willBeMovedSequence = currSequence
+		} else {
+			allDocument["sequence"] = strconv.Itoa(currSequence)
+		}
+	}
+
+	allDocuments[willBeMovedIndex]["sequence"] = strconv.Itoa(willBeMovedSequence)
+	updateBatchDocuments := allDocuments
+
+	return updateBatchDocuments, nil
+}
+
+// 获取同级已排序过的文档
+func (d *Document) GetSlidedSequenceDocuments(spaceId string, nextSequenceStr string, movedDocumentId string, moveType string, nextDocumentId string) (documents []map[string]string, err error) {
+	// moveType, prev排在目标文档前面, prev, 默认下一个, next排在目标文档后面
+	nextSequence, err := strconv.Atoi(nextSequenceStr)
+
+	if err != nil || nextSequence == 0 {
+		nextSequence = 1
+	}
+
+	if moveType == "next" {
+		nextSequence += 1
+	}
+	nextSequenceStr = strconv.Itoa(nextSequence)
+	movedDocumentMap := map[string]interface{}{
+		"sequence": nextSequenceStr,
+	}
+
+	// 更新当前文档序号
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Exec(db.AR().Update(Table_Document_Name, movedDocumentMap, map[string]interface{}{
+		"document_id": movedDocumentId,
+		"is_delete":   Document_Delete_False,
+	}))
+
+	if err != nil {
+		return
+	}
+
+	affected := rs.RowsAffected
+	if affected > 0 {
+	}
+
+	// 将某个排序号后面的所有文档查询出来, 如果这个排序号是0, 则以时间为排序, 将后面的所有文档都+1变更
+	documentAll, err := d.GetDocumentAllAfterSequence(spaceId, nextDocumentId)
+
+	if err != nil {
+		return
+	}
+
+	documentCount := len(documentAll)
+	var updateAfterDocuments []map[string]string
+	if documentCount > 0 {
+		for i := 0; i < documentCount; i++ {
+			currDocument := documentAll[i]
+			currDocumentId := currDocument["document_id"]
+
+			if currDocumentId == nextDocumentId || currDocumentId == movedDocumentId {
+				continue
+			}
+
+			nextSequence += 1
+			currDocument["sequence"] = strconv.Itoa(nextSequence)
+			updateAfterDocuments = append(updateAfterDocuments, currDocument)
+		}
+	}
+
+	return updateAfterDocuments, nil
+}
+
+// update sequence, TODO 同级文档数量过多, 可能引起性能问题, 同级超过5万
 func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveType string, nextDocumentId string) (affectCount int64, err error) {
+	// 需要修改的批量文档数据
+	var updateBatchDocuments []map[string]string
 
 	// 获取目标文档信息
 	nexDocumentFormDb, err := d.GetDocumentByDocumentId(nextDocumentId)
+	if err != nil {
+		return
+	}
+
 	nextSequenceStr := nexDocumentFormDb["sequence"]
 	parentId := nexDocumentFormDb["parent_id"]
 
 	// 本层级的最大排序号,
 	maxSequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
+	if err != nil {
+		return
+	}
 
-	// 需要修改的批量文档数据
-	var updateBatchDocuments []map[string]string
-
-	// 为0时, 从未排序过将所有程序重新排序
 	if maxSequence == 0 {
-		// 查询此空间下此父类下的所有文档
-		allDocuments, err := d.GetDocumentsByParentIdAndSpaceIdOnly(parentId, spaceId)
-		if err != nil {
-		}
-
-		// 即将移动文档的数组下标
-		willBeMovedIndex := 0
-		willBeMovedSequence := 0
-		currSequence := 0
-		for i := 0; i < len(allDocuments); i++ {
-			allDocument := allDocuments[i]
-
-			currDocumentId := allDocument["document_id"]
-
-			// 跳过需要移动文档的处理
-			if movedDocumentId == currDocumentId {
-				willBeMovedIndex = i
-				continue
-			}
-
-			currSequence += 1
-			// 检测排序模型
-			if moveType == "prev" && currDocumentId == nextDocumentId {
-				currSequence += 1
-				willBeMovedSequence = currSequence
-
-				currSequence += 1
-				allDocument["sequence"] = strconv.Itoa(currSequence)
-			} else if moveType == "next" && currDocumentId == nextDocumentId {
-				allDocument["sequence"] = strconv.Itoa(currSequence)
-
-				currSequence += 1
-				willBeMovedSequence = currSequence
-			} else {
-				allDocument["sequence"] = strconv.Itoa(currSequence)
-			}
-		}
-
-		allDocuments[willBeMovedIndex]["sequence"] = strconv.Itoa(willBeMovedSequence)
-		updateBatchDocuments = allDocuments
-	} else {
-		// moveType, prev排在目标文档前面, next排在目标文档后面
-		nextSequence, _ := strconv.Atoi(nextSequenceStr)
-
-		if nextSequence == 0 {
-			nextSequence = 1
-		}
-
-		if moveType == "prev" {
-			//nextSequence -= 1
-		}
-
-		if moveType == "next" {
-			nextSequence += 1
-		}
-		nextSequenceStr := strconv.Itoa(nextSequence)
-		movedDocumentMap := map[string]interface{}{
-			"sequence": nextSequenceStr,
-		}
-
-		db := G.DB()
-		var rs *mysql.ResultSet
-		rs, err = db.Exec(db.AR().Update(Table_Document_Name, movedDocumentMap, map[string]interface{}{
-			"document_id": movedDocumentId,
-			"is_delete":   Document_Delete_False,
-		}))
-
+		// 为0时, 从未排序过将所有程序重新排序
+		updateBatchDocuments, err = d.GetSlidingUnSequenceDocuments(spaceId, parentId, movedDocumentId, moveType, nextDocumentId)
 		if err != nil {
 			return
 		}
-
-		affected := rs.RowsAffected
-		if affected > 0 {
-		}
-
-		// 将某个排序号后面的所有文档查询出来, 如果这个排序号是0, 则以时间为排序, 将后面的所有文档都+1变更
-		documents, err := d.GetDocumentAllAfterSequence(spaceId, nextDocumentId)
-
+	} else {
+		// 获取同级已排序过的文档
+		updateAfterDocuments, err := d.GetSlidedSequenceDocuments(parentId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
 		if err != nil {
+			return
 		}
-
-		documentCount := len(documents)
-		var updateAfterDocuments []map[string]string
-		if documentCount > 0 {
-			for i := 0; i < documentCount; i++ {
-				currDocument := documents[i]
-				currDocumentId := currDocument["document_id"]
-
-				if currDocumentId == nextDocumentId || currDocumentId == movedDocumentId {
-					continue
-				}
-
-				if err != nil {
-				}
-
-				nextSequence += 1
-				currDocument["sequence"] = strconv.Itoa(nextSequence)
-				updateAfterDocuments = append(updateAfterDocuments, currDocument)
-			}
-		}
-
 		updateBatchDocuments = updateAfterDocuments
 	}
 
@@ -462,14 +484,10 @@ func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveTy
 	updateBatchRs, err = db.Exec(db.AR().UpdateBatch(Table_Document_Name, documentMaps, []string{"document_id"}))
 
 	if err != nil {
-
+		return
 	}
 
 	rowsAffected := updateBatchRs.RowsAffected
-	if rowsAffected > 0 {
-
-	}
-
 	return rowsAffected + 1, err
 }
 
