@@ -299,7 +299,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 
 	// create document log
 	go func() {
-		LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
+		LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id), spaceId)
 	}()
 
 	// follow document
@@ -470,11 +470,10 @@ func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveTy
 		}
 	} else {
 		// 获取同级已排序过的文档
-		updateAfterDocuments, err := d.GetSlidedSequenceDocuments(parentId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
+		updateBatchDocuments, err = d.GetSlidedSequenceDocuments(parentId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
 		if err != nil {
 			return
 		}
-		updateBatchDocuments = updateAfterDocuments
 	}
 
 	documentMaps := utils.MapString2Interface(updateBatchDocuments)
