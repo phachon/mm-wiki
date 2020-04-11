@@ -135,6 +135,12 @@ $ cd mm-wiki
 $ go build ./
 ```
 
+>如果你想为 mm-wiki 贡献代码，请加开发者交流群：922827699
+
+# 贡献者列表
+<!-- ALL-CONTRIBUTORS-LIST: START - Do not remove or modify this section -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## 支持
 请作者喝杯茶吧！
 
