@@ -293,6 +293,7 @@ func (this *DocumentController) Move() {
 
 	documentId := this.GetString("document_id", "0")
 	targetId := this.GetString("target_id", "0")
+	moveType := this.GetString("move_type", "") // 同层文件排序
 
 	if documentId == "0" {
 		this.jsonError("没有选择文档节点！")
@@ -309,8 +310,10 @@ func (this *DocumentController) Move() {
 	if len(document) == 0 {
 		this.jsonError("文档不存在！")
 	}
-	if document["type"] == fmt.Sprintf("%d", models.Document_Type_Dir) {
-		this.jsonError("不能移动文档目录！")
+	if moveType != "next" && moveType != "prev" {
+		if document["type"] == fmt.Sprintf("%d", models.Document_Type_Dir) {
+			this.jsonError("不能移动文档目录！")
+		}
 	}
 
 	targetDocument, err := models.DocumentModel.GetDocumentByDocumentId(targetId)
@@ -324,8 +327,10 @@ func (this *DocumentController) Move() {
 	if document["space_id"] != targetDocument["space_id"] {
 		this.jsonError("文档和目标文档不在同一空间！")
 	}
-	if targetDocument["type"] != fmt.Sprintf("%d", models.Document_Type_Dir) {
-		this.jsonError("目标文档必须是目录！")
+	if moveType != "next" && moveType != "prev" {
+		if targetDocument["type"] != fmt.Sprintf("%d", models.Document_Type_Dir) {
+			this.jsonError("目标文档必须是目录！")
+		}
 	}
 
 	space, err := models.SpaceModel.GetSpaceBySpaceId(document["space_id"])
@@ -340,6 +345,12 @@ func (this *DocumentController) Move() {
 	_, isEditor, _ := this.GetDocumentPrivilege(space)
 	if !isEditor {
 		this.jsonError("您没有权限移动该空间下的文档！")
+	}
+
+	// 排序逻辑：next-移动到目标文档之后 prev-移动到目标文档之前
+	if moveType == "next" || moveType == "prev" {
+		this.updateDocSequence(moveType, document, targetDocument)
+		return
 	}
 
 	_, oldPageFile, err := models.DocumentModel.GetParentDocumentsByDocument(document)
@@ -374,6 +385,39 @@ func (this *DocumentController) Move() {
 
 	this.InfoLog("移动文档 " + documentId + " 成功")
 	this.jsonSuccess("移动文档成功", nil, "/document/index?document_id="+documentId)
+}
+
+// 移动文档排序
+func (this *DocumentController) updateDocSequence(moveType string, document map[string]string, targetDocument map[string]string) {
+
+	sequence := utils.Convert.StringToInt(targetDocument["sequence"])
+	spaceId := targetDocument["space_id"]
+	targetDocumentId := targetDocument["document_id"]
+	movedDocumentId := document["document_id"]
+
+	updateSequence := sequence
+	if moveType == "next" {
+		updateSequence = sequence + 1
+	}
+
+	// 批量修改序号
+	_, err := models.DocumentModel.MoveSequenceBySpaceIdAndGtSequence(spaceId, updateSequence, 1)
+	if err != nil {
+		this.ErrorLog("移动文档 " + movedDocumentId + "到目标文档 " + targetDocumentId + " " + moveType + " 失败：" + err.Error())
+		this.jsonError("移动文档失败！")
+	}
+
+	// 修改当前文档的序号
+	updateValue := map[string]interface{}{
+		"sequence":     updateSequence,
+		"edit_user_id": this.UserId,
+	}
+	_, err = models.DocumentModel.Update(movedDocumentId, updateValue, fmt.Sprintf("移动文档"))
+	if err != nil {
+		this.ErrorLog("移动文档 " + movedDocumentId + "到目标文档 " + targetDocumentId + " " + moveType + " 失败：" + err.Error())
+		this.jsonError("移动文档失败！")
+	}
+	this.jsonSuccess("移动文档成功", "", "/document/index?document_id="+movedDocumentId)
 }
 
 // delete document
@@ -437,21 +481,4 @@ func (this *DocumentController) Delete() {
 
 	this.InfoLog("删除文档 " + documentId + " 成功")
 	this.jsonSuccess("删除文档成功", "", "/document/index?document_id="+document["parent_id"])
-}
-
-// update same level sequence
-func (this *DocumentController) UpdateSequence() {
-
-	spaceId := this.GetString("spaceId", "0")
-	movedDocumentId := this.GetString("movedDocumentId", "0")
-	moveType := this.GetString("moveType", "next")
-	nextDocumentId := this.GetString("nextDocumentId", "0")
-
-	_, err := models.DocumentModel.UpdateSequence(spaceId, movedDocumentId, moveType, nextDocumentId)
-	if err != nil {
-		this.ErrorLog("文档排序失败:" + movedDocumentId + ", 排在哪个文档前:" + nextDocumentId + ", 失败原因：" + err.Error())
-		this.jsonError("移动排序失败成功！")
-	}
-
-	this.jsonSuccess("移动排序成功", "", "/document/index?document_id="+movedDocumentId)
 }

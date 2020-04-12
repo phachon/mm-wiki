@@ -164,40 +164,24 @@ var Document = {
             if (isEditor == false) {
                 return false;
             }
-            // if (moveType === "prev") {
-            //     return false;
-            // }
-            // if (moveType === "next") {
-            //     return false;
-            // }
-
-            // 排序逻辑
+            var moveNode = treeNodes[0];
+            // 文档当前层级排序
             if (moveType === "prev" || moveType === "next") {
-                let movedNode = treeNodes[0];
-                Common.ajaxSubmit("/document/updatesequence?spaceId=" + movedNode.spaceId
-                    + "&moveType=" + moveType
-                    + "&movedDocumentId=" + movedNode.id
-                    + "&nextDocumentId=" + targetNode.id);
+                let moveUrl = "/document/move?move_type=" + moveType
+                    + "&document_id=" + moveNode.id
+                    + "&target_id=" + targetNode.id;
+                Common.ajaxSubmit(moveUrl, moveUrl);
                 return false;
             }
 
-            // console.log(treeNodes[0]);
-            // console.log(targetNode);
-            var moveNode = treeNodes[0];
+            // 移动文档到目录中
             if (moveNode.isParent) {
                 return false;
             }
             if (!targetNode.isParent) {
                 return false;
             }
-
-            // 当前层级排序
-
-            // 移动到另一个父类中, 并进行排序
-
-            console.log(treeNodes[0]);
-            console.log(targetNode);
-
+            
             var title = '<i class="fa fa-volume-up"></i> 确定要移动文档吗？';
             layer.confirm(title, {
                 btn: ['是', '否'],
@@ -206,7 +190,6 @@ var Document = {
                 title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
             }, function () {
                 Common.ajaxSubmit("/document/move?document_id=" + moveNode.id + "&target_id=" + targetNode.id);
-                // location.href = "/document/index?document_id="+moveNode.id;
             }, function () {
 
             });

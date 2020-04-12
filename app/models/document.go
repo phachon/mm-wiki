@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/snail007/go-activerecord/mysql"
 	"strconv"
@@ -155,47 +156,6 @@ func (d *Document) GetDocumentMaxSequence(parentId string, spaceId string) (sequ
 	return
 }
 
-// get all document after this document by sequence, if sequence eq 0, by create_time
-func (d *Document) GetDocumentAllAfterSequence(spaceId string, documentId string) (documents []map[string]string, err error) {
-	db := G.DB()
-	var rs *mysql.ResultSet
-
-	// get this document info
-	nextDocument, err := d.GetDocumentByDocumentId(documentId)
-
-	sequenceStr := nextDocument["sequence"]
-	sequence, err := strconv.Atoi(sequenceStr)
-
-	//sql := "select * from " + Table_Document_Name
-	now := time.Now().Unix()
-
-	if sequence == 0 {
-		createTimeStr := nextDocument["create_time"]
-		rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"create_time <":  strconv.FormatInt(now, 10),
-			"create_time >=": createTimeStr,
-			"space_id":       spaceId,
-			"is_delete":      Document_Delete_False,
-		}).OrderBy("create_time", "asc"))
-
-		//sql += " where create_time > " + strconv.FormatInt(now, 10) + " and create_time > " + createTimeStr + " order by create_time asc"
-	} else {
-		//sql += " where sequence > " + sequenceStr + " order by sequence asc"
-		rs, err = db.Query(db.AR().From(Table_Document_Name).Where(map[string]interface{}{
-			"sequence >=": sequenceStr,
-			"space_id":    spaceId,
-			"is_delete":   Document_Delete_False,
-		}).OrderBy("sequence", "asc"))
-	}
-
-	if err != nil {
-		return
-	}
-
-	documents = rs.Rows()
-	return
-}
-
 // delete document by document_id
 func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile string, docType string) (err error) {
 	db := G.DB()
@@ -228,19 +188,28 @@ func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile st
 	}
 
 	// create document log
-	go func() {
-		LogDocumentModel.DeleteAction(userId, documentId)
-	}()
+	go func(userId, documentId string) {
+		_, err := LogDocumentModel.DeleteAction(userId, documentId)
+		if err != nil {
+			logs.Error("delete document add log err=%s", err.Error())
+		}
+	}(userId, documentId)
 
 	// delete follow doc
-	go func() {
-		FollowModel.DeleteByObjectIdType(documentId, fmt.Sprintf("%d", Follow_Type_Doc))
-	}()
+	go func(documentId string) {
+		err := FollowModel.DeleteByObjectIdType(documentId, fmt.Sprintf("%d", Follow_Type_Doc))
+		if err != nil {
+			logs.Error("delete follow document err=%s", err.Error())
+		}
+	}(documentId)
 
 	// delete collect doc
-	go func() {
-		CollectionModel.DeleteByResourceIdType(documentId, fmt.Sprintf("%d", Collection_Type_Doc))
-	}()
+	go func(documentId string) {
+		err := CollectionModel.DeleteByResourceIdType(documentId, fmt.Sprintf("%d", Collection_Type_Doc))
+		if err != nil {
+			logs.Error("delete collect document err=%s", err.Error())
+		}
+	}(documentId)
 
 	return
 }
@@ -260,7 +229,6 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	spaceId := documentValue["space_id"].(string)
 
 	sequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
-
 	if err != nil {
 		sequence = 0
 	}
@@ -297,15 +265,22 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 		return
 	}
 
+	userId := documentValue["create_user_id"].(string)
 	// create document log
-	go func() {
-		LogDocumentModel.CreateAction(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id), spaceId)
-	}()
+	go func(userId, documentId, spaceId string) {
+		_, err := LogDocumentModel.CreateAction(userId, documentId, spaceId)
+		if err != nil {
+			logs.Error("create document add log err=%s", err.Error())
+		}
+	}(userId, fmt.Sprintf("%d", id), spaceId)
 
 	// follow document
-	go func() {
-		FollowModel.CreateAutoFollowDocument(documentValue["create_user_id"].(string), fmt.Sprintf("%d", id))
-	}()
+	go func(userId, documentId string) {
+		_, err := FollowModel.CreateAutoFollowDocument(userId, documentId)
+		if err != nil {
+			logs.Error("follow document err=%s", err.Error())
+		}
+	}(userId, fmt.Sprintf("%d", id))
 	return
 }
 
@@ -323,175 +298,45 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 	}
 	id = rs.LastInsertId
 
-	// create document log
-	go func() {
-		LogDocumentModel.UpdateAction(documentValue["edit_user_id"].(string), documentId, comment)
-	}()
+	// update document log
+	go func(editUserId string, documentId string, comment string) {
+		_, err := LogDocumentModel.UpdateAction(editUserId, documentId, comment)
+		if err != nil {
+			logs.Error("update document add log err=%s", err.Error())
+		}
+	}(documentValue["edit_user_id"].(string), documentId, comment)
 
 	// follow document
-	go func() {
-		FollowModel.CreateAutoFollowDocument(documentValue["edit_user_id"].(string), documentId)
-	}()
+	go func(editUserId string, documentId string) {
+		_, err := FollowModel.CreateAutoFollowDocument(editUserId, documentId)
+		if err != nil {
+			logs.Error("follow document err=%s", err.Error())
+		}
+	}(documentValue["edit_user_id"].(string), documentId)
 	return
 }
 
-// 更新没有排过序的同级文档
-func (d *Document) GetSlidingUnSequenceDocuments(spaceId string, parentDocumentId string, movedDocumentId string, moveType string, nextDocumentId string) (documents []map[string]string, err error) {
-	// 查询此空间下此父类下的所有同级文档
-	allDocuments, err := d.GetDocumentsByParentIdAndSpaceIdOnly(parentDocumentId, spaceId)
-	if err != nil {
-		return
-	}
-
-	// 即将移动文档的数组下标
-	willBeMovedIndex := 0
-	willBeMovedSequence := 0
-	currSequence := 0
-	for i := 0; i < len(allDocuments); i++ {
-		allDocument := allDocuments[i]
-
-		currDocumentId := allDocument["document_id"]
-
-		// 跳过正在操作的文档
-		if movedDocumentId == currDocumentId {
-			willBeMovedIndex = i
-			continue
-		}
-
-		currSequence += 1
-		// 检测排序模型
-		if moveType == "prev" && currDocumentId == nextDocumentId {
-			currSequence += 1
-			willBeMovedSequence = currSequence
-
-			currSequence += 1
-			allDocument["sequence"] = strconv.Itoa(currSequence)
-		} else if moveType == "next" && currDocumentId == nextDocumentId {
-			allDocument["sequence"] = strconv.Itoa(currSequence)
-
-			currSequence += 1
-			willBeMovedSequence = currSequence
-		} else {
-			allDocument["sequence"] = strconv.Itoa(currSequence)
-		}
-	}
-
-	allDocuments[willBeMovedIndex]["sequence"] = strconv.Itoa(willBeMovedSequence)
-	updateBatchDocuments := allDocuments
-
-	return updateBatchDocuments, nil
-}
-
-// 获取同级已排序过的文档
-func (d *Document) GetSlidedSequenceDocuments(spaceId string, nextSequenceStr string, movedDocumentId string, moveType string, nextDocumentId string) (documents []map[string]string, err error) {
-	// moveType, prev排在目标文档前面, prev, 默认下一个, next排在目标文档后面
-	nextSequence, err := strconv.Atoi(nextSequenceStr)
-
-	if err != nil || nextSequence == 0 {
-		nextSequence = 1
-	}
-
-	if moveType == "next" {
-		nextSequence += 1
-	}
-	nextSequenceStr = strconv.Itoa(nextSequence)
-	movedDocumentMap := map[string]interface{}{
-		"sequence": nextSequenceStr,
-	}
-
-	// 将某个排序号后面的所有文档查询出来, 如果这个排序号是0, 则以时间为排序, 将后面的所有文档都+1变更
-	documentAll, err := d.GetDocumentAllAfterSequence(spaceId, nextDocumentId)
-
-	if err != nil {
-		return
-	}
-
-	documentCount := len(documentAll)
-	var updateAfterDocuments []map[string]string
-	if documentCount > 0 {
-		for i := 0; i < documentCount; i++ {
-			currDocument := documentAll[i]
-			currDocumentId := currDocument["document_id"]
-
-			if currDocumentId == nextDocumentId || currDocumentId == movedDocumentId {
-				continue
-			}
-
-			nextSequence += 1
-			currDocument["sequence"] = strconv.Itoa(nextSequence)
-			updateAfterDocuments = append(updateAfterDocuments, currDocument)
-		}
-	}
-
-	// 更新当前文档序号
+// update document by spaceId and >= sequence
+// 批量移动更新文档序号
+func (d *Document) MoveSequenceBySpaceIdAndGtSequence(spaceId string, startSequence int, n int) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
-	rs, err = db.Exec(db.AR().Update(Table_Document_Name, movedDocumentMap, map[string]interface{}{
-		"document_id": movedDocumentId,
-		"is_delete":   Document_Delete_False,
-	}))
-
+	//documentValue := map[string]interface{}{
+	//	"sequence": fmt.Sprintf("(sequence+%d)", n),
+	//	"update_time": time.Now().Unix(),
+	//}
+	updateTime := time.Now().Unix()
+	sql := fmt.Sprintf(
+		"update mw_%s set sequence=sequence+%d, update_time=%d where space_id=%s and sequence >= %d and is_delete=%d",
+		Table_Document_Name, n, updateTime, spaceId, startSequence, Document_Delete_False,
+	)
+	rs, err = db.ExecSQL(sql)
 	if err != nil {
+		logs.Error(err.Error())
 		return
 	}
-
-	affected := rs.RowsAffected
-	if affected > 0 {
-	}
-
-	return updateAfterDocuments, nil
-}
-
-// update sequence, TODO 同级文档数量过多, 可能引起性能问题, 同级超过5万
-func (d *Document) UpdateSequence(spaceId string, movedDocumentId string, moveType string, nextDocumentId string) (affectCount int64, err error) {
-	// 需要修改的批量文档数据
-	var updateBatchDocuments []map[string]string
-
-	// 获取目标文档信息
-	nexDocumentFormDb, err := d.GetDocumentByDocumentId(nextDocumentId)
-	if err != nil {
-		return
-	}
-
-	nextSequenceStr := nexDocumentFormDb["sequence"]
-	parentId := nexDocumentFormDb["parent_id"]
-
-	// 本层级的最大排序号,
-	maxSequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
-	if err != nil {
-		return
-	}
-
-	if maxSequence == 0 {
-		// 为0时, 从未排序过将所有程序重新排序
-		updateBatchDocuments, err = d.GetSlidingUnSequenceDocuments(spaceId, parentId, movedDocumentId, moveType, nextDocumentId)
-		if err != nil {
-			return
-		}
-	} else {
-		// 获取同级已排序过的文档
-		updateBatchDocuments, err = d.GetSlidedSequenceDocuments(spaceId, nextSequenceStr, movedDocumentId, moveType, nextDocumentId)
-		if err != nil {
-			return
-		}
-	}
-
-	documentMaps := utils.MapString2Interface(updateBatchDocuments)
-
-	var rowsAffected int64 = 0
-	if documentMaps != nil {
-		db := G.DB()
-		var updateBatchRs *mysql.ResultSet
-		updateBatchRs, err = db.Exec(db.AR().UpdateBatch(Table_Document_Name, documentMaps, []string{"document_id"}))
-
-		if err != nil {
-			return
-		}
-
-		rowsAffected = updateBatchRs.RowsAffected
-	}
-
-	return rowsAffected + 1, err
+	id = rs.LastInsertId
+	return
 }
 
 // move document
@@ -525,9 +370,12 @@ func (d *Document) MoveDBAndFile(documentId string, updateValue map[string]inter
 	}
 
 	// create document log
-	go func() {
-		LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
-	}()
+	go func(userId, documentId, comment string) {
+		_, err := LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
+		if err != nil {
+			logs.Error("update document add log err=%s", err.Error())
+		}
+	}(updateValue["edit_user_id"].(string), documentId, comment)
 
 	return
 }
