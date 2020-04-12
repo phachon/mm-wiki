@@ -1,5 +1,34 @@
 # 更新日志：
 
+## v0.1.8（2020-04）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 修复版本号问题
+2. 首页和登录页面自适应
+
+#### 新增功能
+1. 增加在线部署网站
+2. 增加文档移动排序支持
+3. 增加目录大纲显示
+4. 首页最近文档过滤掉无权限的空间文档
+5. 一些样式调整
+6. 增加 docker 支持
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.1.8-linux-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+3. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+### 感谢
+特别感谢 [@eahomliu](https://github.com/eahomliu) [@cifaz](https://github.com/cifaz) [@cxgreat2014](https://github.com/cxgreat2014) 几位贡献 PR
+
 ## v0.1.7（2020-02）
 
 ### Fix Bug & Add Feature
