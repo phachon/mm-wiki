@@ -17,7 +17,25 @@
   "skipCi": true,
   "contributors": [
     {
-      "login": "cifaz",
+      "login": "phachon",
+      "name": "phachon",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/19726268?v=4",
+      "profile": "https://phachon.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cxgreat2014",
+      "name": "cxgreat2014",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/15062548?v=4",
+      "profile": "https://github.com/cxgreat2014",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+     "login": "cifaz",
       "name": "ccz",
       "avatar_url": "https://avatars0.githubusercontent.com/u/4531158?v=4",
       "profile": "https://github.com/cifaz",
