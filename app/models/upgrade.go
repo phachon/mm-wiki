@@ -30,8 +30,13 @@ var (
 func (up *Upgrade) initHandleFunc() {
 	// v0 ~ v0.1.2
 	upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.1.2", Func: up.v0ToV012})
+
 	// v0.1.2 ~ v0.1.3
 	upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.1.3", Func: up.v012ToV013})
+
+	// v0.1.3 ~ v0.1.8
+	upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.1.8", Func: up.v013ToV018})
+
 	// v0.1.8 ~ v0.2.1
 	//upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.2.1", Func: up.v018ToV021})
 	// v0.2.1 ~ v0.2.7
@@ -72,10 +77,10 @@ func (up *Upgrade) Start(dbVersion string) (err error) {
 	// last update current version
 	err = up.upgradeAfter(global.SYSTEM_VERSION)
 	if err != nil {
-		logs.Error("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
-		return errors.New("upgrade to database "+global.SYSTEM_VERSION+" error: " + err.Error())
+		logs.Error("upgrade to database " + global.SYSTEM_VERSION + " error: " + err.Error())
+		return errors.New("upgrade to database " + global.SYSTEM_VERSION + " error: " + err.Error())
 	}
-	logs.Info("upgrade finish, version: "+global.SYSTEM_VERSION)
+	logs.Info("upgrade finish, version: " + global.SYSTEM_VERSION)
 
 	return nil
 }
@@ -129,6 +134,30 @@ func (up *Upgrade) v012ToV013() error {
 		") ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件信息表';"
 
 	return up.createTable(sql)
+}
+
+// upgrade v0.1.3 ~ v0.1.8
+func (up *Upgrade) v013ToV018() error {
+	db := G.DB()
+
+	// 1. 文档日志表增加 space_id 字段
+	// `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id'
+	_, err := db.Exec(db.AR().Raw("alter table mw_log_document add `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间ID'"))
+	if err == nil {
+		// 文档日志表里的 space_id
+		_, err = db.Exec(db.AR().Raw("update mw_log_document as logDocment, mw_document as document set logDocment.space_id = document.space_id WHERE logDocment.document_id = document.document_id"))
+		if err != nil {
+			return err
+		}
+	}
+
+	// 2. 修改文档表里的排序号，需要先判断排序号是否已经修改过（只修改sequence=0）
+	_, err = db.Exec(db.AR().Raw("update mw_document set mw_document.sequence = mw_document.document_id WHERE sequence=0"))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // upgrade v0.1.8 ~ v0.2.1

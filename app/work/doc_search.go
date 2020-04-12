@@ -21,7 +21,7 @@ func InitDocSearchIndexWork(t time.Duration) {
 		}()
 		for {
 			select {
-			case <- time.Tick(t):
+			case <-time.Tick(t):
 				loadDocSearchIndex()
 			}
 		}

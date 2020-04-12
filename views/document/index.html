@@ -1,17 +1,22 @@
 <div id="main-left" class="ui-layout-west">
-    <div class="left-page">{{$documents := .documents}}{{$spaceDocument := .space_document}}{{$defaultDocumentId := .default_document_id}}{{$space := .space}}
+    <div class="left-page">{{$documents := .documents}}
+        {{$spaceDocument := .space_document}}{{$defaultDocumentId := .default_document_id}}{{$space := .space}}
         <div class="page-search">
             <form onsubmit="return false">
                 <div class="form-group has-feedback">
                     <i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>
-                    <input class="form-control input-sm" id="document_search" type="text" value="" placeholder="搜索空间文档..." style="padding-right: 28px;">
+                    <input class="form-control input-sm" id="document_search" type="text" value=""
+                           placeholder="搜索空间文档..." style="padding-right: 28px;">
                 </div>
             </form>
         </div>
         <div class="page-tree">
             <h4 class="text-center">
                 <a href="/document/index?document_id={{$spaceDocument.document_id}}">{{$spaceDocument.name}}</a>
-                <a name="create_document" data-link="/document/add?space_id={{$spaceDocument.space_id}}&parent_id={{$spaceDocument.document_id}}"><span class="fa fa-plus-square-o"></span></a>
+                <a name="create_document"
+                   data-link="/document/add?space_id={{$spaceDocument.space_id}}&parent_id={{$spaceDocument.document_id}}">
+                    <span class="fa fa-plus-square-o"></span>
+                </a>
             </h4>
             <hr>
             <ul id="dir_tree" class="ztree"></ul>
@@ -38,4 +43,7 @@
     Document.ListTree("#dir_tree", documentsData, {{$defaultDocumentId}}, {{.is_editor}}, {{.is_delete}});
     Layers.bindIframe("[name='create_document']", "创建文档", "345px", "800px");
 </script>
-<iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes" style="overflow-y: auto" src="/page/view?document_id={{$defaultDocumentId}}"></iframe>
+{{/* markdown显示 */}}
+<iframe class="ui-layout-center" id="mainFrame" name="mainFrame"  width="100%" frameborder="0" scrolling="yes"
+        style="overflow-y: auto" src="/page/view?document_id={{$defaultDocumentId}}"></iframe>
+

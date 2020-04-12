@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/astaxie/beego"
 )
 
 type AuthorController struct {
