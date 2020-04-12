@@ -51,6 +51,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "eahomliu",
+      "name": "eahomliu",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/50134691?v=4",
+      "profile": "https://github.com/eahomliu",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "projectName": "mm-wiki",
