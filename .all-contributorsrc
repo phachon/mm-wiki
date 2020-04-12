@@ -35,12 +35,21 @@
       ]
     },
     {
-     "login": "cifaz",
+      "login": "cifaz",
       "name": "ccz",
       "avatar_url": "https://avatars0.githubusercontent.com/u/4531158?v=4",
       "profile": "https://github.com/cifaz",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "ruoranw",
+      "name": "Ruoran Wang",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/25990237?v=4",
+      "profile": "https://www.linkedin.com/in/wangruoran/",
+      "contributions": [
+        "doc"
       ]
     }
   ],
