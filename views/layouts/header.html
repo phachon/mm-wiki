@@ -21,18 +21,15 @@
                 </ul>
                 <form class="navbar-form navbar-left visible-md visible-lg" action="#" method="post">
                     <div class="form-group has-feedback">
-                        {{/*<i class="glyphicon glyphicon-search form-control-feedback" style="line-height: 32px;"></i>*/}}
-                        <div class="input-group input-group-sm">
+                        <div class="input-group input-group-sm" style="width: 320px">
                             <input class="form-control input-sm" name="keyword" type="text" onkeydown="KeyDown('#search_btn')" placeholder="请输入关键字搜索...">
-                            <span class="input-group-btn">
+                            <span class="input-group-btn" style="width: 30px">
                                 <button class="btn btn-primary" type="button" name="search" id="search_btn" onclick="mainSearch(this.form, '/main/search')"><i class="fa fa-search"></i></button>
                             </span>
                         </div>
-                        {{/*<input class="form-control input-sm" type="text" placeholder="输入文档名搜索..." style="padding-right: 28px;width: 280px">*/}}
                     </div>
                     &nbsp;
                     <div class="btn-group btn-group-sm" role="group">
-                        {{/*<button type="button" class="btn btn-primary"><i class="glyphicon glyphicon-fullscreen"></i></button>*/}}
                         <button type="button" onclick="layoutToggle()" class="btn btn-primary"><i class="fa fa-columns"></i></button>
                     </div>
                 </form>

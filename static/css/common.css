@@ -501,16 +501,18 @@ mark {
 .md-view-box {
     position: relative;
 }
-.md-view-box ul {
+
+.md-view-box .page-view-dir-toc ul {
     padding-left: 15px;
 }
-.md-view-box ul, .md-view-box li {
+
+.md-view-box .page-view-dir-toc ul, .md-view-box .page-view-dir-toc li {
     /*padding: 0;*/
     margin: 0;
     list-style: none;
 }
 
-.md-view-box li {
+.md-view-box .page-view-dir-toc li {
     line-height: 24px;
 }
 
@@ -534,7 +536,9 @@ mark {
 }
 
 .dir-preview-btn:hover {
-    background: red;
+    /*background: red;*/
+    background: #337ab7;
+    border-color: #2e6da4;
     cursor: pointer;
     color: #FFFFFF;
     font-weight: bold;
