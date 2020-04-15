@@ -1,5 +1,26 @@
 # 更新日志：
 
+## v0.1.9（2020-04）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 修复markdown序号问题
+
+#### 新增功能
+无
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.1.9-linux-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+3. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+
 ## v0.1.8（2020-04）
 
 ### Fix Bug & Add Feature
