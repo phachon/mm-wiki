@@ -1,0 +1,61 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "skipCi": true,
+  "contributors": [
+    {
+      "login": "phachon",
+      "name": "phachon",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/19726268?v=4",
+      "profile": "https://phachon.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cxgreat2014",
+      "name": "cxgreat2014",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/15062548?v=4",
+      "profile": "https://github.com/cxgreat2014",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cifaz",
+      "name": "ccz",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4531158?v=4",
+      "profile": "https://github.com/cifaz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ruoranw",
+      "name": "Ruoran Wang",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/25990237?v=4",
+      "profile": "https://www.linkedin.com/in/wangruoran/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "eahomliu",
+      "name": "eahomliu",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/50134691?v=4",
+      "profile": "https://github.com/eahomliu",
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    }
+  ],
+  "projectName": "mm-wiki",
+  "projectOwner": "phachon",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

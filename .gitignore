@@ -17,3 +17,5 @@ install/install.exe
 install.lock
 
 .idea/
+
+node_modules/

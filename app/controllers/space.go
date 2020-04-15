@@ -15,7 +15,7 @@ func (this *SpaceController) Index() {
 
 	// get space tags
 	spaceTags := map[string]string{}
-	spaces, err := models.SpaceModel.GetSpaces(this.UserId)
+	spaces, err := models.SpaceModel.GetSpaces()
 	if err == nil {
 		for _, space := range spaces {
 			tags := space["tags"]
