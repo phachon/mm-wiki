@@ -123,7 +123,6 @@
         // 按钮目录按钮永久显示, 滑动页面时, 固定显示
         window.onscroll = function(){
             var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop;
-            console.log(scrollHeight);
             var dirPreviewBox = $(".dir-preview-box");
             if (scrollHeight >  120) {
                 dirPreviewBox.css({
