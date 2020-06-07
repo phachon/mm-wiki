@@ -35,7 +35,6 @@
             css : "/static/plugins/editor.md/lib/katex/katex.min"
         };
         var editor = editormd("document_page_editor", {
-            placeholder: "欢迎使用 MM-Wiki, 支持 Markdown 语法",
             width: "100%",
             // height: height,
             path : '/static/plugins/editor.md/lib/',
@@ -65,13 +64,19 @@
             codeFold : true,
             placeholder: "欢迎使用 MM-Wiki，请使用 Markdown 规范编写！",
             //syncScrolling : false,
-            saveHTMLToTextarea: false,    // 保存 HTML 到 Textarea
+            // 保存 HTML 到 Textarea
+            saveHTMLToTextarea: false,
             searchReplace: true,
-            //watch : false,                // 关闭实时预览
-            // htmlDecode : "style,script,iframe|on*,alert",  // 开启 HTML 标签解析，为了安全性，默认不开启
-            htmlDecode : "style,script,iframe,sub,sup,embed,img|on*",  // 开启 HTML 标签解析，为了安全性，默认不开启
-            //toolbar  : false,             //关闭工具栏
-            //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+            // 关闭实时预览
+            //watch : false,
+            // 开启 HTML 标签解析，为了安全性，默认不开启
+            // htmlDecode : "style,script,iframe|on*,alert",
+            // 开启 HTML 标签解析，为了安全性，默认不开启
+            htmlDecode : "style,script,iframe,sub,sup,embed,img|on*",
+            //关闭工具栏
+            //toolbar  : false,
+            // 关闭预览 HTML 的代码块高亮，默认开启
+            //previewCodeHighlight : false,
             emoji : false,
             taskList : true,
             tocm : true,                  // Using [TOCM]

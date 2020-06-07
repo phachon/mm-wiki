@@ -88,21 +88,22 @@ var Page = {
                         isFollowDoc = "1";
                     }
                 }
-                if (commentText && commentText.length > 0) {
-                    if (commentText.length > 50 ) {
-                        layer.tips("最多50个字符！", $("textarea[name='edit_comment']"))
-                    }else {
-                        layer.close(index);
-                        var options = {
-                            dataType: 'json',
-                            success: response,
-                            data: {'comment': commentText, 'is_notice_user': isNoticeUser, 'is_follow_doc': isFollowDoc}
-                        };
-                        $(element).ajaxSubmit(options);
-                    }
-                }else {
-                    $("textarea[name='edit_comment']").focus();
+                if (commentText.length > 50 ) {
+                    layer.tips("最多50个字符！", $("textarea[name='edit_comment']"))
+                } else {
+                    layer.close(index);
+                    var options = {
+                        dataType: 'json',
+                        success: response,
+                        data: {'comment': commentText, 'is_notice_user': isNoticeUser, 'is_follow_doc': isFollowDoc}
+                    };
+                    $(element).ajaxSubmit(options);
                 }
+                // if (commentText && commentText.length > 0) {
+                //
+                // }else {
+                //     $("textarea[name='edit_comment']").focus();
+                // }
             },
             btn2: function(index, layero){
                 layer.close(index);

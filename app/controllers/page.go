@@ -199,9 +199,9 @@ func (this *PageController) Modify() {
 	if newName == utils.Document_Default_FileName {
 		this.jsonError("文档名称不能为 " + utils.Document_Default_FileName + " ！")
 	}
-	if comment == "" {
-		this.jsonError("必须输入此次修改的备注！")
-	}
+	//if comment == "" {
+	//	this.jsonError("必须输入此次修改的备注！")
+	//}
 
 	document, err := models.DocumentModel.GetDocumentByDocumentId(documentId)
 	if err != nil {
