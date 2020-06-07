@@ -3,15 +3,17 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/phachon/mm-wiki/app"
 	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/services"
 	"github.com/phachon/mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 )
 
 type PageController struct {
@@ -156,13 +158,13 @@ func (this *PageController) Edit() {
 	}
 
 	autoFollowDoc := "0"
-	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_AutoFollowDoc)
+	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.ConfigKeyAutoFollowdoc)
 	if len(autoFollowConfig) > 0 && autoFollowConfig["value"] == "1" {
 		autoFollowDoc = "1"
 	}
 
 	sendEmail := "0"
-	sendEmailConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_SendEmail)
+	sendEmailConfig, _ := models.ConfigModel.GetConfigByKey(models.ConfigKeySendEmail)
 	if len(sendEmailConfig) > 0 && sendEmailConfig["value"] == "1" {
 		sendEmail = "1"
 	}
@@ -272,16 +274,20 @@ func (this *PageController) Modify() {
 				logInfo["message"] = "更新文档时发送邮件通知失败：" + err.Error()
 				logInfo["level"] = models.Log_Level_Error
 				models.LogModel.Insert(logInfo)
-				beego.Error("更新文档时发送邮件通知失败：" + err.Error())
+				logs.Error("更新文档时发送邮件通知失败：" + err.Error())
 			}
 		}(documentId, this.User["username"], comment, url)
 	}
 	// follow doc
 	if isFollowDoc == "1" {
 		go func() {
-			models.FollowModel.FollowDocument(this.UserId, documentId)
+			_, _ = models.FollowModel.FollowDocument(this.UserId, documentId)
 		}()
 	}
+	// 更新文档索引
+	go func(documentId string) {
+		_ = services.DocIndexService.ForceUpdateDocIndexByDocId(documentId)
+	}(documentId)
 
 	this.InfoLog("修改文档 " + documentId + " 成功")
 	this.jsonSuccess("文档修改成功！", nil, "/document/index?document_id="+documentId)
@@ -460,7 +466,7 @@ func sendEmail(documentId string, username string, comment string, url string) e
 	}
 
 	// get send email open config
-	sendEmailConfig, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SendEmail)
+	sendEmailConfig, err := models.ConfigModel.GetConfigByKey(models.ConfigKeySendEmail)
 	if err != nil {
 		return errors.New("发送邮件通知查找发送邮件配置失败：" + err.Error())
 	}

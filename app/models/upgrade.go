@@ -37,8 +37,9 @@ func (up *Upgrade) initHandleFunc() {
 	// v0.1.3 ~ v0.1.8
 	upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.1.8", Func: up.v013ToV018})
 
-	// v0.1.8 ~ v0.2.1
-	//upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.2.1", Func: up.v018ToV021})
+	// v0.1.8 ~ v0.2.0
+	upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.2.0", Func: up.v018ToV020})
+
 	// v0.2.1 ~ v0.2.7
 	//upgradeMap = append(upgradeMap, &upgradeHandle{Version: "v0.2.7", Func: up.v021ToV027})
 	// v0.2.7 ~ v0.3.3
@@ -160,8 +161,20 @@ func (up *Upgrade) v013ToV018() error {
 	return nil
 }
 
-// upgrade v0.1.8 ~ v0.2.1
-func (up *Upgrade) v018ToV021() error {
+// upgrade v0.1.8 ~ v0.2.0
+func (up *Upgrade) v018ToV020() error {
+	// 配置表增加数据
+	db := G.DB()
+	// 1. 配置表增加全文搜索开关
+	_, err := db.Exec(db.AR().Raw("INSERT INTO `mw_config` (config_id, name, key, value, create_time, update_time) VALUES ('开启全文搜索', 'fulltext_search_open', '1', unix_timestamp(now()), unix_timestamp(now()));"))
+	if err != nil {
+		return err
+	}
+	// 2. 配置表增加搜索索引时间间隔
+	_, err = db.Exec(db.AR().Raw("INSERT INTO `mw_config` (config_id, name, key, value, create_time, update_time) VALUES ('索引更新间隔', 'doc_search_timer', '3600', unix_timestamp(now()), unix_timestamp(now()));"))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -195,7 +208,7 @@ func (up *Upgrade) createTable(sqlTable string) error {
 
 func (up *Upgrade) upgradeAfter(version string) (err error) {
 	// update system version
-	config, err := ConfigModel.GetConfigByKey(Config_Key_SystemVersion)
+	config, err := ConfigModel.GetConfigByKey(ConfigKeySystemVersion)
 	if err != nil {
 		return
 	}
@@ -207,7 +220,7 @@ func (up *Upgrade) upgradeAfter(version string) (err error) {
 		}
 		_, err = ConfigModel.Insert(configValue)
 	} else {
-		_, err = ConfigModel.UpdateByKey(Config_Key_SystemVersion, version)
+		_, err = ConfigModel.UpdateByKey(ConfigKeySystemVersion, version)
 	}
 
 	return err

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"github.com/phachon/mm-wiki/app/work"
 	"strings"
 
 	"github.com/phachon/mm-wiki/app/models"
@@ -20,13 +22,13 @@ func (this *ConfigController) Global() {
 
 	var configValue = map[string]string{}
 	for _, config := range configs {
-		if config["key"] == models.Config_Key_AutoFollowDoc && config["value"] != "1" {
+		if config["key"] == models.ConfigKeyAutoFollowdoc && config["value"] != "1" {
 			config["value"] = "0"
 		}
-		if config["key"] == models.Config_Key_SendEmail && config["value"] != "1" {
+		if config["key"] == models.ConfigKeySendEmail && config["value"] != "1" {
 			config["value"] = "0"
 		}
-		if config["key"] == models.Config_Key_AuthLogin && config["value"] != "1" {
+		if config["key"] == models.ConfigKeyAuthLogin && config["value"] != "1" {
 			config["value"] = "0"
 		}
 		configValue[config["key"]] = config["value"]
@@ -41,11 +43,13 @@ func (this *ConfigController) Modify() {
 	if !this.IsPost() {
 		this.ViewError("请求方式有误！", "/system/email/list")
 	}
-	mainTitle := this.GetString(models.Config_Key_MainTitle, "")
-	mainDescription := strings.TrimSpace(this.GetString(models.Config_Key_MainDescription, ""))
-	autoFollowDocOpen := strings.TrimSpace(this.GetString(models.Config_Key_AutoFollowDoc, "0"))
-	sendEmailOpen := strings.TrimSpace(this.GetString(models.Config_Key_SendEmail, "0"))
-	ssoOpen := strings.TrimSpace(this.GetString(models.Config_Key_AuthLogin, "0"))
+	mainTitle := this.GetString(models.ConfigKeyMainTitle, "")
+	mainDescription := strings.TrimSpace(this.GetString(models.ConfigKeyMainDescription, ""))
+	autoFollowDocOpen := strings.TrimSpace(this.GetString(models.ConfigKeyAutoFollowdoc, "0"))
+	sendEmailOpen := strings.TrimSpace(this.GetString(models.ConfigKeySendEmail, "0"))
+	ssoOpen := strings.TrimSpace(this.GetString(models.ConfigKeyAuthLogin, "0"))
+	fulltextSearch := strings.TrimSpace(this.GetString(models.ConfigKeyFulltextSearch, "0"))
+	docSearchTimer := strings.TrimSpace(this.GetString(models.ConfigKeyDocSearchTimer, "3600"))
 
 	if sendEmailOpen == "1" {
 		email, err := models.EmailModel.GetUsedEmail()
@@ -68,37 +72,74 @@ func (this *ConfigController) Modify() {
 			this.jsonError("开启统一登录必须先添加并启用一个登录认证！")
 		}
 	}
-
-	_, err := models.ConfigModel.UpdateByKey(models.Config_Key_MainTitle, mainTitle)
+	updateValues := map[string]string{
+		models.ConfigKeyMainTitle:       mainTitle,
+		models.ConfigKeyMainDescription: mainDescription,
+		models.ConfigKeyAutoFollowdoc:   autoFollowDocOpen,
+		models.ConfigKeySendEmail:       sendEmailOpen,
+		models.ConfigKeyAuthLogin:       ssoOpen,
+		models.ConfigKeyFulltextSearch:  fulltextSearch,
+		models.ConfigKeyDocSearchTimer:  docSearchTimer,
+	}
+	// 有修改再更新
+	configs, err := models.ConfigModel.GetConfigs()
 	if err != nil {
-		this.ErrorLog("修改配置 main_title  失败: " + err.Error())
-		this.jsonError("主页标题配置失败！")
+		this.ErrorLog("获取配置信息失败: " + err.Error())
+		this.jsonError("获取配置出错！")
+	}
+	updateKeys := make(map[string]string)
+	for _, config := range configs {
+		if len(config) == 0 {
+			continue
+		}
+		name := config["name"]
+		key := config["key"]
+		value := config["value"]
+		updateValue, ok := updateValues[key]
+		if !ok {
+			continue
+		}
+		// 没有修改不更新
+		if value == updateValue {
+			continue
+		}
+		_, err := models.ConfigModel.UpdateByKey(key, updateValue)
+		if err != nil {
+			this.ErrorLog(fmt.Sprintf("修改配置 %s 失败: %s", name, err.Error()))
+			this.jsonError(fmt.Sprintf("修改配置 %s 失败", name))
+		}
+		updateKeys[key] = updateValue
 	}
 
-	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_MainDescription, mainDescription)
-	if err != nil {
-		this.ErrorLog("修改配置 main_description  失败: " + err.Error())
-		this.jsonError("主页描述配置失败！")
-	}
-
-	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_AutoFollowDoc, autoFollowDocOpen)
-	if err != nil {
-		this.ErrorLog("修改配置 auto_follow_doc_open  失败: " + err.Error())
-		this.jsonError("开启自动关注配置失败！")
-	}
-
-	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_SendEmail, sendEmailOpen)
-	if err != nil {
-		this.ErrorLog("修改配置 send_email_open  失败: " + err.Error())
-		this.jsonError("开启邮件通知配置失败！")
-	}
-
-	_, err = models.ConfigModel.UpdateByKey(models.Config_Key_AuthLogin, ssoOpen)
-	if err != nil {
-		this.ErrorLog("修改配置 sso_open  失败: " + err.Error())
-		this.jsonError("开启统一登录配置失败！")
-	}
-
+	// 更新后的回调
+	this.configUpdateCallback(updateKeys)
 	this.InfoLog("修改全局配置成功")
 	this.jsonSuccess("修改全局配置成功", nil, "/system/config/global")
+}
+
+// 配置更新通知回调
+func (this *ConfigController) configUpdateCallback(updateKeyMaps map[string]string) {
+	fullTextOpenUpdate := false
+	updateValue, ok := updateKeyMaps[models.ConfigKeyFulltextSearch]
+	if ok {
+		fullTextOpenUpdate = true
+	}
+	docSearchTimerUpdate := false
+	_, ok = updateKeyMaps[models.ConfigKeyDocSearchTimer]
+	if ok {
+		docSearchTimerUpdate = true
+	}
+	// 索引时间更新，开关没有更新，重启一下 worker
+	if docSearchTimerUpdate && !fullTextOpenUpdate {
+		work.DocSearchWorker.Restart()
+		return
+	}
+	// 开关更新
+	if fullTextOpenUpdate {
+		if updateValue == "1" {
+			work.DocSearchWorker.Start()
+			return
+		}
+		work.DocSearchWorker.Stop()
+	}
 }

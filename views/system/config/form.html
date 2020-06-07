@@ -50,6 +50,24 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启全文搜索</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="fulltext_search_open" value="1" {{if eq .configValue.fulltext_search_open "1"}} checked="checked" {{end}} placeholder="">
+                    </div>
+                    <div class="col-sm-3 form-comment">
+                        <span class="text-danger"> * 开启全文搜索后，搜索时可根据文档内容搜索</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>索引更新间隔</label>
+                    <div class="col-sm-1">
+                        <input type="text" name="doc_search_timer" class="form-control" value="{{.configValue.doc_search_timer}}" placeholder="索引更新间隔(秒)">
+                    </div>
+                    <div class="col-sm-8 form-comment">
+                        <span class="text-danger"> * 开启全文搜索后，定时更新全文索引的时间间隔，单位秒（默认 1h，全文索引不需要频繁更新，文档更新后自动更新文档索引）</span>
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" onclick="Form.ajaxSubmit(this.form, false);" class="btn btn-primary">保存</button>
                     </div>

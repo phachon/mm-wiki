@@ -205,7 +205,7 @@ func (this *ProfileController) FollowDoc() {
 	}
 
 	autoFollowDoc := "0"
-	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.Config_Key_AutoFollowDoc)
+	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.ConfigKeyAutoFollowdoc)
 	if len(autoFollowConfig) > 0 && autoFollowConfig["value"] == "1" {
 		autoFollowDoc = "1"
 	}

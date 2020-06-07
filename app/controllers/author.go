@@ -20,7 +20,7 @@ func (this *AuthorController) Index() {
 
 	// is open auth login
 	ssoOpen := "0"
-	config, err := models.ConfigModel.GetConfigByKey(models.Config_Key_AuthLogin)
+	config, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyAuthLogin)
 	if err == nil && len(config) > 0 && config["value"] == "1" {
 		ssoOpen = "1"
 	}
@@ -98,7 +98,7 @@ func (this *AuthorController) AuthLogin() {
 	}
 
 	// is open auth login
-	config, err := models.ConfigModel.GetConfigByKey(models.Config_Key_AuthLogin)
+	config, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyAuthLogin)
 	if err != nil || len(config) == 0 || config["value"] != "1" {
 		this.jsonError("系统未开启统一登录功能！")
 	}

@@ -27,9 +27,7 @@ var (
 	version = flag.Bool("version", false, "mm-wiki version")
 
 	upgrade = flag.Bool("upgrade", false, "mm-wiki upgrade")
-)
 
-var (
 	Version = global.SYSTEM_VERSION
 
 	CopyRight = beego.Str2html(global.SYSTEM_COPYRIGHT)
@@ -219,7 +217,7 @@ func initDocumentDir() {
 func checkUpgrade() {
 	if *upgrade == true {
 		logs.Info("Start checking whether MM-Wiki needs upgrading.")
-		versionConf, err := models.ConfigModel.GetConfigByKey(models.Config_Key_SystemVersion)
+		versionConf, err := models.ConfigModel.GetConfigByKey(models.ConfigKeySystemVersion)
 		if err != nil {
 			logs.Error("Get database mm-wiki version error: " + err.Error())
 			os.Exit(1)
@@ -274,10 +272,5 @@ func initSearch() {
 }
 
 func initWork() {
-	// 搜索索引 work
-	intervalTime, _ := beego.AppConfig.Int64("search::interval_time")
-	if intervalTime == 0 {
-		intervalTime = 30
-	}
-	work.InitDocSearchIndexWork(time.Duration(intervalTime) * time.Second)
+	work.DocSearchWorker.Start()
 }
