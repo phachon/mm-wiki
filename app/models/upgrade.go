@@ -8,6 +8,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/phachon/mm-wiki/global"
+	"time"
 )
 
 type Upgrade struct {
@@ -165,13 +166,16 @@ func (up *Upgrade) v013ToV018() error {
 func (up *Upgrade) v018ToV020() error {
 	// 配置表增加数据
 	db := G.DB()
+	updateTime := time.Now().Unix()
 	// 1. 配置表增加全文搜索开关
-	_, err := db.Exec(db.AR().Raw("INSERT INTO `mw_config` (config_id, name, key, value, create_time, update_time) VALUES ('开启全文搜索', 'fulltext_search_open', '1', unix_timestamp(now()), unix_timestamp(now()));"))
+	insertSql := fmt.Sprintf("INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('开启全文搜索', 'fulltext_search_open', '1', %d, %d)", updateTime, updateTime)
+	_, err := db.Exec(db.AR().Raw(insertSql))
 	if err != nil {
 		return err
 	}
 	// 2. 配置表增加搜索索引时间间隔
-	_, err = db.Exec(db.AR().Raw("INSERT INTO `mw_config` (config_id, name, key, value, create_time, update_time) VALUES ('索引更新间隔', 'doc_search_timer', '3600', unix_timestamp(now()), unix_timestamp(now()));"))
+	insertSql = fmt.Sprintf("INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('索引更新间隔', 'doc_search_timer', '3600', %d, %d)", updateTime, updateTime)
+	_, err = db.Exec(db.AR().Raw(insertSql))
 	if err != nil {
 		return err
 	}
