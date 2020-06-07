@@ -111,24 +111,8 @@ func (this *MainController) Default() {
 	}
 
 	// main title config
-	mainTitle := ""
-	mainDescription := ""
-	mainTitleConfig, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyMainTitle)
-	if err != nil {
-		this.ErrorLog("查找 main_title 配置失败：" + err.Error())
-	} else {
-		if len(mainTitleConfig) > 0 {
-			mainTitle = mainTitleConfig["value"]
-		}
-	}
-	mainDescriptionConfig, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyMainDescription)
-	if err != nil {
-		this.ErrorLog("查找 main_description 配置失败：" + err.Error())
-	} else {
-		if len(mainDescriptionConfig) > 0 {
-			mainDescription = mainDescriptionConfig["value"]
-		}
-	}
+	mainTitle := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyMainTitle, "")
+	mainDescription := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyMainDescription, "")
 
 	this.Data["panel_title"] = mainTitle
 	this.Data["panel_description"] = mainDescription

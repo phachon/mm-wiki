@@ -93,30 +93,14 @@ func (d *DocSearch) Stop() {
 
 // 查找是否开启全文索引并获取配置
 func (d *DocSearch) getFullTextSearchConf() (timer int64, isOpen bool) {
-	fulltextSearchOpen, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyFulltextSearch)
-	if err != nil {
-		logs.Error("[getFullTextSearchConf] get fulltext search config err=%v", err.Error())
-		return 0, false
-	}
-	docSearchTimer, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyDocSearchTimer)
-	if err != nil {
-		logs.Error("[getFullTextSearchConf] get search timer config err=%v", err.Error())
-		return 0, false
-	}
-	if len(docSearchTimer) != 0 {
-		if timerConf, ok := docSearchTimer["value"]; ok {
-			timer = utils.Convert.StringToInt64(timerConf)
-		}
-	}
+	fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
+	docSearchTimer := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyDocSearchTimer, "3600")
+	timer = utils.Convert.StringToInt64(docSearchTimer)
 	// 默认 3600 s
 	if timer <= 0 {
 		timer = int64(3600)
 	}
-	if len(fulltextSearchOpen) == 0 {
-		return timer, false
-	}
-	value, ok := fulltextSearchOpen["value"]
-	if ok && value == "1" {
+	if fulltextSearchOpen == "1" {
 		return timer, true
 	}
 	return timer, false

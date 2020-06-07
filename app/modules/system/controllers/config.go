@@ -50,6 +50,7 @@ func (this *ConfigController) Modify() {
 	ssoOpen := strings.TrimSpace(this.GetString(models.ConfigKeyAuthLogin, "0"))
 	fulltextSearch := strings.TrimSpace(this.GetString(models.ConfigKeyFulltextSearch, "0"))
 	docSearchTimer := strings.TrimSpace(this.GetString(models.ConfigKeyDocSearchTimer, "3600"))
+	systemName := strings.TrimSpace(this.GetString(models.ConfigKeySystemName, "Markdown Mini Wiki"))
 
 	if sendEmailOpen == "1" {
 		email, err := models.EmailModel.GetUsedEmail()
@@ -80,6 +81,7 @@ func (this *ConfigController) Modify() {
 		models.ConfigKeyAuthLogin:       ssoOpen,
 		models.ConfigKeyFulltextSearch:  fulltextSearch,
 		models.ConfigKeyDocSearchTimer:  docSearchTimer,
+		models.ConfigKeySystemName:      systemName,
 	}
 	// 有修改再更新
 	configs, err := models.ConfigModel.GetConfigs()

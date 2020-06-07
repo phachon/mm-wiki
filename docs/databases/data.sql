@@ -164,3 +164,4 @@ INSERT INTO `mw_config` VALUES ('5', '是否开启统一登录', 'sso_open', '',
 -- INSERT INTO `mw_config` (name, key, value, create_time, update_time) VALUES ('系统版本号', 'system_version', 'v0.0.0', unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('开启全文搜索', 'fulltext_search_open', '1', unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('索引更新间隔', 'doc_search_timer', '3600', unix_timestamp(now()), unix_timestamp(now()));
+INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('系统名称', 'system_name', 'Markdown Mini Wiki', unix_timestamp(now()), unix_timestamp(now()));

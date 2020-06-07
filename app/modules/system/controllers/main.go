@@ -43,12 +43,15 @@ func (this *MainController) Index() {
 			this.ViewError("查找用户权限失败！")
 		}
 	}
-
+	// 查找系统名称
+	//systemName := models.ConfigModel.GetConfigValueByKey(models.ConfigKeySystemName, "Markdown Mini Wiki")
 	this.Data["menus"] = menus
 	this.Data["controllers"] = controllers
+	//this.Data["system_name"] = systemName
 	this.viewLayout("main/index", "main")
 }
 
 func (this *MainController) Default() {
+
 	this.viewLayout("main/default", "default")
 }

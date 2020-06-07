@@ -157,17 +157,8 @@ func (this *PageController) Edit() {
 		this.ViewError("文档不存在！")
 	}
 
-	autoFollowDoc := "0"
-	autoFollowConfig, _ := models.ConfigModel.GetConfigByKey(models.ConfigKeyAutoFollowdoc)
-	if len(autoFollowConfig) > 0 && autoFollowConfig["value"] == "1" {
-		autoFollowDoc = "1"
-	}
-
-	sendEmail := "0"
-	sendEmailConfig, _ := models.ConfigModel.GetConfigByKey(models.ConfigKeySendEmail)
-	if len(sendEmailConfig) > 0 && sendEmailConfig["value"] == "1" {
-		sendEmail = "1"
-	}
+	autoFollowDoc := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyAutoFollowdoc, "0")
+	sendEmail := models.ConfigModel.GetConfigValueByKey(models.ConfigKeySendEmail, "0")
 
 	this.Data["sendEmail"] = sendEmail
 	this.Data["autoFollowDoc"] = autoFollowDoc
@@ -466,14 +457,8 @@ func sendEmail(documentId string, username string, comment string, url string) e
 	}
 
 	// get send email open config
-	sendEmailConfig, err := models.ConfigModel.GetConfigByKey(models.ConfigKeySendEmail)
-	if err != nil {
-		return errors.New("发送邮件通知查找发送邮件配置失败：" + err.Error())
-	}
-	if len(sendEmailConfig) == 0 {
-		return nil
-	}
-	if sendEmailConfig["value"] == "0" {
+	sendEmailConfig := models.ConfigModel.GetConfigValueByKey(models.ConfigKeySendEmail, "0")
+	if sendEmailConfig == "0" {
 		return nil
 	}
 

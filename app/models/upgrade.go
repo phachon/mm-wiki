@@ -179,6 +179,12 @@ func (up *Upgrade) v018ToV020() error {
 	if err != nil {
 		return err
 	}
+	// 3. 配置表增加系统名称配置
+	insertSql = fmt.Sprintf("INSERT INTO `mw_config` (name, `key`, value, create_time, update_time) VALUES ('系统名称', 'system_name', 'Markdown Mini Wiki', %d, %d)", updateTime, updateTime)
+	_, err = db.Exec(db.AR().Raw(insertSql))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

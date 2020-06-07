@@ -16,6 +16,7 @@ const (
 	ConfigKeySystemVersion   = "system_version"
 	ConfigKeyFulltextSearch  = "fulltext_search_open"
 	ConfigKeyDocSearchTimer  = "doc_search_timer"
+	ConfigKeySystemName      = "system_name"
 )
 
 type Config struct {
@@ -158,4 +159,20 @@ func (c *Config) GetConfigByKey(key string) (config map[string]string, err error
 	}
 	config = rs.Row()
 	return
+}
+
+// get config value by config key
+func (c *Config) GetConfigValueByKey(key string, defaultValue string) (value string) {
+
+	configData, err := c.GetConfigByKey(key)
+	if err != nil {
+		return defaultValue
+	}
+	if len(configData) == 0 {
+		return defaultValue
+	}
+	if value, ok := configData["value"]; ok {
+		return value
+	}
+	return defaultValue
 }

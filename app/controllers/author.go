@@ -19,12 +19,7 @@ type AuthorController struct {
 func (this *AuthorController) Index() {
 
 	// is open auth login
-	ssoOpen := "0"
-	config, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyAuthLogin)
-	if err == nil && len(config) > 0 && config["value"] == "1" {
-		ssoOpen = "1"
-	}
-
+	ssoOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyAuthLogin, "0")
 	this.Data["sso_open"] = ssoOpen
 	this.viewLayout("author/login", "author")
 }
@@ -98,8 +93,8 @@ func (this *AuthorController) AuthLogin() {
 	}
 
 	// is open auth login
-	config, err := models.ConfigModel.GetConfigByKey(models.ConfigKeyAuthLogin)
-	if err != nil || len(config) == 0 || config["value"] != "1" {
+	authLoginConf := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyAuthLogin, "0")
+	if authLoginConf != "1" {
 		this.jsonError("系统未开启统一登录功能！")
 	}
 	// get auth login config
