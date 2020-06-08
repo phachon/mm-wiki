@@ -1,5 +1,7 @@
 <h2 align="center">
+
 ![brand](./static/images/logo_sm.png)
+
 </h2>
 
 <div align="center">
