@@ -8,12 +8,15 @@ import (
 const Table_Config_Name = "config"
 
 const (
-	Config_Key_MainTitle       = "main_title"
-	Config_Key_MainDescription = "main_description"
-	Config_Key_AutoFollowDoc   = "auto_follow_doc_open"
-	Config_Key_SendEmail       = "send_email_open"
-	Config_Key_AuthLogin       = "sso_open"
-	Config_Key_SystemVersion   = "system_version"
+	ConfigKeyMainTitle       = "main_title"
+	ConfigKeyMainDescription = "main_description"
+	ConfigKeyAutoFollowdoc   = "auto_follow_doc_open"
+	ConfigKeySendEmail       = "send_email_open"
+	ConfigKeyAuthLogin       = "sso_open"
+	ConfigKeySystemVersion   = "system_version"
+	ConfigKeyFulltextSearch  = "fulltext_search_open"
+	ConfigKeyDocSearchTimer  = "doc_search_timer"
+	ConfigKeySystemName      = "system_name"
 )
 
 type Config struct {
@@ -81,6 +84,26 @@ func (c *Config) GetConfigs() (configs []map[string]string, err error) {
 	return
 }
 
+// get all configs key map
+func (c *Config) GetConfigsKeyMap() (configMaps map[string]map[string]string, err error) {
+	configMaps = make(map[string]map[string]string)
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(
+		db.AR().From(Table_Config_Name))
+	if err != nil {
+		return
+	}
+	configs := rs.Rows()
+	for _, config := range configs {
+		key, ok := config["key"]
+		if ok {
+			configMaps[key] = config
+		}
+	}
+	return
+}
+
 // get config by many config_id
 func (c *Config) GetConfigByConfigIds(configIds []string) (configs []map[string]string, err error) {
 	db := G.DB()
@@ -136,4 +159,20 @@ func (c *Config) GetConfigByKey(key string) (config map[string]string, err error
 	}
 	config = rs.Row()
 	return
+}
+
+// get config value by config key
+func (c *Config) GetConfigValueByKey(key string, defaultValue string) (value string) {
+
+	configData, err := c.GetConfigByKey(key)
+	if err != nil {
+		return defaultValue
+	}
+	if len(configData) == 0 {
+		return defaultValue
+	}
+	if value, ok := configData["value"]; ok {
+		return value
+	}
+	return defaultValue
 }

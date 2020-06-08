@@ -11,6 +11,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>系统名称</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="system_name" class="form-control" value="{{.configValue.system_name}}" placeholder="请输入系统名称">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="text-danger"> * </span>主页标题</label>
                     <div class="col-sm-4">
                         <input type="text" name="main_title" class="form-control" value="{{.configValue.main_title}}" placeholder="请输入主页标题">
@@ -47,6 +53,24 @@
                     </div>
                     <div class="col-sm-3 form-comment">
                         <span class="text-danger"> * 开启统一登录必须先添加并启用登录认证</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>开启全文搜索</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" name="fulltext_search_open" value="1" {{if eq .configValue.fulltext_search_open "1"}} checked="checked" {{end}} placeholder="">
+                    </div>
+                    <div class="col-sm-3 form-comment">
+                        <span class="text-danger"> * 开启全文搜索后，搜索时可根据文档内容搜索</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><span class="text-danger"> * </span>索引更新间隔</label>
+                    <div class="col-sm-1">
+                        <input type="text" name="doc_search_timer" class="form-control" value="{{.configValue.doc_search_timer}}" placeholder="索引更新间隔(秒)">
+                    </div>
+                    <div class="col-sm-8 form-comment">
+                        <span class="text-danger"> * 开启全文搜索后，定时更新全文索引的时间间隔，单位秒（默认 1h，全文索引不需要频繁更新，文档更新后自动更新文档索引）</span>
                     </div>
                 </div>
                 <div class="form-group">

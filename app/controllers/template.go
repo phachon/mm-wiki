@@ -106,6 +106,9 @@ func (this *TemplateController) isLogin() bool {
 	this.User = this.GetSession("author").(map[string]string)
 	this.UserId = this.User["user_id"]
 
+	// 查找系统名称
+	systemName := models.ConfigModel.GetConfigValueByKey(models.ConfigKeySystemName, "Markdown Mini Wiki")
+	this.Data["system_name"] = systemName
 	this.Data["login_user_id"] = this.UserId
 	this.Data["login_username"] = this.User["username"]
 	this.Data["login_role_id"] = this.User["role_id"]

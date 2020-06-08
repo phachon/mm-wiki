@@ -199,11 +199,8 @@ func (f *Follow) GetFollowsByFollowIds(followIds []string) (follows []map[string
 // create auto follow document
 func (f *Follow) CreateAutoFollowDocument(userId string, documentId string) (id int64, err error) {
 
-	autoFollow, err := ConfigModel.GetConfigByKey(Config_Key_AutoFollowDoc)
-	if err != nil {
-		return 0, err
-	}
-	if len(autoFollow) > 0 && autoFollow["value"] == "1" {
+	autoFollowConf := ConfigModel.GetConfigValueByKey(ConfigKeyAutoFollowdoc, "0")
+	if autoFollowConf == "1" {
 		follow, err := f.GetFollowByUserIdAndTypeAndObjectId(userId, Follow_Type_Doc, documentId)
 		if err != nil {
 			return 0, err
