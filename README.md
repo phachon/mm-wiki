@@ -1,6 +1,13 @@
+<h2 align="center">
+
 ![brand](./static/images/logo_sm.png)
 
+</h2>
+
+<div align="center">
+
 MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于快速构建企业 Wiki 和团队知识分享平台。部署方便，使用简单，帮助团队构建一个信息共享、文档管理的协作环境。
+</br>
 
 [![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/) 
 [![build](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg)](https://travis-ci.org/phachon/mm-wiki)
@@ -8,6 +15,8 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 [![platforms](https://img.shields.io/badge/platform-All-yellow.svg?style=flat)]()
 [![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
 [![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
+
+</div>
 
 # 特点
 - 部署方便，基于 golang 编写，只需要下载对于平台下二进制文件执行即可。

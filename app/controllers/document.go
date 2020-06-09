@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/phachon/mm-wiki/app/services"
 	"regexp"
 	"strings"
 
@@ -478,6 +479,11 @@ func (this *DocumentController) Delete() {
 	if err != nil {
 		this.ErrorLog("删除文档 " + documentId + " 附件失败：" + err.Error())
 	}
+
+	// 删除文档索引
+	go func(documentId string) {
+		services.DocIndexService.ForceDelDocIdIndex(documentId)
+	}(documentId)
 
 	this.InfoLog("删除文档 " + documentId + " 成功")
 	this.jsonSuccess("删除文档成功", "", "/document/index?document_id="+document["parent_id"])
