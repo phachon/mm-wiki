@@ -1,0 +1,57 @@
+<div class="container-fluid">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">{{$username := .username}}
+            <form action="" method="get">
+                <div class="col-sm-offset-8 col-sm-4">
+                    <div class="input-group">
+                        <input class="form-control" name="username" type="text" value="{{$username}}" placeholder="用户名">
+				            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="w8p">ID</th>
+                <th class="w13p">用户名</th>
+                <th class="w13p">姓名</th>
+                <th>职位</th>
+                <th class="w15p">手机号</th>
+                <th class="w20p">邮箱</th>
+                <th class="w11p">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $user := .users}}
+            <tr>
+                <td class="center">{{$user.user_id}}</td>
+                <td><a>{{$user.username}}</a></td>
+                <td><a>{{$user.given_name}}</a></td>
+                <td>{{$user.position}}</td>
+                <td class="center">{{$user.mobile}}</td>
+                <td>{{$user.email}}</td>
+                <td class="center">
+                    {{if ne $user.is_forbidden "1"}}
+                        <a onclick="Layers.confirm('确定导入该用户为系统联系人吗？', '/system/user/forbidden?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-import"></i>导入</a>
+                    {{end}}
+                </td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {{template "paginator/default.html" .}}
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    Layers.bindIframe("[name='edit']", "修改用户信息", "450px", "1000px");
+    Layers.bindIframe("[name='info']", "用户详情", "500px", "1000px");
+</script>

@@ -3,9 +3,14 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-1">
                     <div class="input-group">
                         <a name="add" data-link="/system/contact/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加联系人 </a>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="input-group">
+                        <a name="import" data-link="/system/contact/import" class="btn btn-primary"><i class="glyphicon glyphicon-import"></i> 导入联系人 </a>
                     </div>
                 </div>
                 <form action="" method="get">
@@ -54,5 +59,6 @@
 </div>
 <script type="text/javascript">
     Layers.bindIframe("[name='add']", "添加系统联系人", "400px", "850px");
+    Layers.bindIframe("[name='import']", "导入联系人", "500px", "1000px");
     Layers.bindIframe("[name='edit']", "修改系统联系人", "400px", "850px");
 </script>
