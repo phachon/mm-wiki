@@ -185,6 +185,23 @@ func (up *Upgrade) v018ToV020() error {
 	if err != nil {
 		return err
 	}
+	// 4. 权限表增加导入联系人权限
+	// INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (93, '导入联系人', 71, 'controller', 'contact', 'import', 'glyphicon-list', '', 0, 97, unix_timestamp(now()), unix_timestamp(now()));
+	privilege := map[string]interface{}{
+		"name":       "导入联系人",
+		"type":       "controller",
+		"parent_id":  71,
+		"controller": "contact",
+		"action":     "import",
+		"target":     "",
+		"icon":       "glyphicon-list",
+		"is_display": 0,
+		"sequence":   97,
+	}
+	_, err = PrivilegeModel.InsertNotExists(privilege)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
