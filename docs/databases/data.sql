@@ -115,6 +115,7 @@ INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, actio
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (90, 'ajax获取服务器状态', 84, 'controller', 'static', 'serverStatus', 'glyphicon-list', '', 0, 96, unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (91, 'ajax获取服务器时间', 84, 'controller', 'static', 'serverTime', 'glyphicon-list', '', 0, 97, unix_timestamp(now()), unix_timestamp(now()));
 INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (92, '测试邮件服务器', 53, 'controller', 'email', 'test', 'glyphicon-list', '', 0, 80, unix_timestamp(now()), unix_timestamp(now()));
+INSERT INTO mw_privilege (privilege_id, name, parent_id, type, controller, action, icon, target, is_display, sequence, create_time, update_time) VALUES (93, '导入联系人', 71, 'controller', 'contact', 'import', 'glyphicon-list', '', 0, 97, unix_timestamp(now()), unix_timestamp(now()));
 
 
 

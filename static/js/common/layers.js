@@ -64,6 +64,26 @@ var Layers = {
 	},
 
 	/**
+	 * confirm 提示框， post 请求
+	 * @param title
+	 * @param confirm
+	 * @param cancel
+	 */
+	confirmCallback: function (title, confirm, cancel) {
+		title = '<i class="fa fa-volume-up"></i> '+title;
+		layer.confirm(title, {
+			btn: ['是','否'],
+			skin: Layers.skin,
+			btnAlign: 'c',
+			title: "<i class='fa fa-warning'></i><strong> 警告</strong>"
+		}, function() {
+			confirm();
+		}, function() {
+			cancel();
+		});
+	},
+
+	/**
 	 * bind iframe 窗
 	 */
 	bindIframe: function (element, title, height, width, url) {
