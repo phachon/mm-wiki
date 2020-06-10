@@ -29,19 +29,24 @@
             </thead>
             <tbody>
             {{range $user := .users}}
-            <tr>
-                <td class="center">{{$user.user_id}}</td>
-                <td><a>{{$user.username}}</a></td>
-                <td><a>{{$user.given_name}}</a></td>
-                <td>{{$user.position}}</td>
-                <td class="center">{{$user.mobile}}</td>
-                <td>{{$user.email}}</td>
-                <td class="center">
-                    {{if ne $user.is_forbidden "1"}}
-                        <a onclick="Layers.confirm('确定导入该用户为系统联系人吗？', '/system/user/forbidden?user_id={{$user.user_id}}');"><i class="glyphicon glyphicon-import"></i>导入</a>
-                    {{end}}
-                </td>
-            </tr>
+                {{ $userData := "name=$user.given_name" }}
+                <tr>
+                    <td class="center">{{$user.user_id}}</td>
+                    <td><a>{{$user.username}}</a></td>
+                    <td><a>{{$user.given_name}}</a></td>
+                    <td>{{$user.position}}</td>
+                    <td class="center">{{$user.mobile}}</td>
+                    <td>{{$user.email}}</td>
+                    <td class="center">
+                        {{if ne $user.is_forbidden "1"}}
+                            <a onclick="importContact('确定导入该用户为系统联系人吗？',
+                                    '/system/contact/save',
+                                    'name={{$user.given_name}}&mobile={{$user.mobile}}&position={{$user.position}}&email={{$user.email}}');">
+                                <i class="glyphicon glyphicon-import"></i>导入
+                            </a>
+                        {{end}}
+                    </td>
+                </tr>
             {{end}}
             </tbody>
         </table>
@@ -52,6 +57,17 @@
 </div>
 </div>
 <script type="text/javascript">
-    Layers.bindIframe("[name='edit']", "修改用户信息", "450px", "1000px");
-    Layers.bindIframe("[name='info']", "用户详情", "500px", "1000px");
+    function importContact(title, url, data) {
+        Layers.confirmCallback(title, function () {
+            Common.ajaxSubmitCallback(url, data, function (response) {
+                if(response.code === 0) {
+                    Layers.failedMsg(response.message, function () {});
+                    return;
+                }
+                Layers.successMsg(response.message, function () {
+                    parent.location.href = response.redirect.url;
+                });
+            });
+        }, function () {})
+    }
 </script>

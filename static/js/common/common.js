@@ -38,6 +38,35 @@ var Common = {
 	},
 
 	/**
+	 * ajax submit callback
+	 * @param url
+	 * @param data
+	 * @param success
+	 * @param err
+	 */
+	ajaxSubmitCallback : function (url, data, success, err) {
+		var jsonData = {};
+		if (data !== "" && data !== undefined)  {
+			var values = data.split("&");
+			for (var i = 0; i < values.length; i ++) {
+				jsonData[values[i].split("=")[0]] = unescape(values[i].split("=")[1]);
+			}
+		}
+		$.ajax({
+			type : 'post',
+			url : url,
+			data : jsonData,
+			dataType: "json",
+			success : function(response) {
+				success(response);
+			},
+			error : function(response) {
+				err(response);
+			}
+		});
+	},
+
+	/**
 	 * redirect
 	 * @param redirect
 	 */

@@ -32,15 +32,6 @@ func (this *ContactController) Save() {
 	if name == "" {
 		this.jsonError("联系人姓名不能为空！")
 	}
-	if position == "" {
-		this.jsonError("职位不能为空！")
-	}
-	if mobile == "" {
-		this.jsonError("联系电话不能为空！")
-	}
-	if !v.Phone(mobile, "mobile").Ok {
-		this.jsonError("联系电话格式不正确！")
-	}
 	if email == "" {
 		this.jsonError("邮箱不能为空！")
 	}
