@@ -1,14 +1,14 @@
 package controllers
 
 import (
+	"github.com/phachon/mm-wiki/app/services"
+	"net/url"
 	"strings"
 
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego/validation"
-	valid "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
 )
 
 type AuthController struct {
@@ -53,7 +53,7 @@ func (this *AuthController) Save() {
 		this.ViewError("请求方式有误！", "/system/auth/list")
 	}
 	name := strings.TrimSpace(this.GetString("name", ""))
-	url := strings.TrimSpace(this.GetString("url", ""))
+	authUrl := strings.TrimSpace(this.GetString("url", ""))
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
@@ -67,11 +67,16 @@ func (this *AuthController) Save() {
 	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
 		this.jsonError("用户名前缀格式不正确！")
 	}
-	if url == "" {
+	if authUrl == "" {
 		this.jsonError("认证URL不能为空！")
 	}
-	if valid.Validate(url, is.URL) != nil {
-		this.jsonError("认证URL格式不正确！")
+	u, err := url.Parse(authUrl)
+	if err != nil || u == nil {
+		this.jsonError("认证 URL 解析错误！")
+		return
+	}
+	if !services.AuthLogin.UrlIsSupport(u.Scheme) {
+		this.jsonError("认证 URL 协议不支持！")
 	}
 
 	ok, err := models.AuthModel.HasAuthName(name)
@@ -94,7 +99,7 @@ func (this *AuthController) Save() {
 
 	authId, err := models.AuthModel.Insert(map[string]interface{}{
 		"name":            name,
-		"url":             url,
+		"url":             authUrl,
 		"username_prefix": usernamePrefix,
 		"ext_data":        extData,
 	})
@@ -130,7 +135,7 @@ func (this *AuthController) Modify() {
 	}
 	authId := this.GetString("login_auth_id", "")
 	name := strings.TrimSpace(this.GetString("name", ""))
-	url := strings.TrimSpace(this.GetString("url", ""))
+	authUrl := strings.TrimSpace(this.GetString("url", ""))
 	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
@@ -147,11 +152,16 @@ func (this *AuthController) Modify() {
 	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
 		this.jsonError("用户名前缀格式不正确！")
 	}
-	if url == "" {
+	if authUrl == "" {
 		this.jsonError("认证URL不能为空！")
 	}
-	if valid.Validate(url, is.URL) != nil {
-		this.jsonError("认证URL格式不正确！")
+	u, err := url.Parse(authUrl)
+	if err != nil || u == nil {
+		this.jsonError("认证 URL 解析错误！")
+		return
+	}
+	if !services.AuthLogin.UrlIsSupport(u.Scheme) {
+		this.jsonError("认证 URL 协议不支持！")
 	}
 
 	auth, err := models.AuthModel.GetAuthByAuthId(authId)
@@ -174,7 +184,7 @@ func (this *AuthController) Modify() {
 
 	_, err = models.AuthModel.Update(authId, map[string]interface{}{
 		"name":            name,
-		"url":             url,
+		"url":             authUrl,
 		"username_prefix": usernamePrefix,
 		"ext_data":        extData,
 	})

@@ -9,6 +9,7 @@ require (
 	github.com/astaxie/beego v1.12.0
 	github.com/fatih/color v1.7.0
 	github.com/go-ego/riot v0.0.0-20191215221243-bdbc256e4cbd
+	github.com/go-ldap/ldap/v3 v3.1.11
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/mattn/go-colorable v0.1.4 // indirect
