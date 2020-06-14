@@ -303,3 +303,21 @@ CREATE TABLE `mw_attachment` (
   PRIMARY KEY (`attachment_id`),
   KEY (`document_id`, `source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='附件信息表';
+
+-- --------------------------------
+-- 插件表
+-- --------------------------------
+DROP TABLE IF EXISTS `mw_plugin`;
+CREATE TABLE `mw_plugin` (
+  `plugin_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '插件 id',
+  `plugin_key` varchar(100) NOT NULL DEFAULT '' COMMENT '插件KEY',
+  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '插件标题',
+  `description` varchar(800) NOT NULL DEFAULT '' COMMENT '插件描述',
+  `conf_value` text NOT NULL COMMENT '插件所需配置信息json',
+  `cover_url` varchar(500) NOT NULL default '' COMMENT '封面图',
+  `is_open` tinyint(3) NOT NULL DEFAULT '1' COMMENT '是否启用插件 0 否 1 是',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`plugin_id`),
+  UNIQUE KEY (`plugin_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='插件表';

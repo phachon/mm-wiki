@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <form action="" method="get">
+                    <div class="col-md-offset-9 col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" name="keyword" type="text" value="{{.keyword}}" placeholder="插件名称">
+                            <span class="input-group-btn">
+				              <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+				            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr style="margin-bottom: 0">
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                {{range $plugin := .plugins}}
+                <div class="col-sm-6 col-md-3">
+                    <div class="thumbnail">
+                        <img src="{{$plugin.cover_url}}" style="height: 150px; width: 100%;border-bottom: 1px solid #ddd">
+                        <div class="caption">
+                            <a>
+                                <h3 class="center" style="margin-top: 10px">{{$plugin.title}}</h3>
+                            </a>
+                            <p style="height: 80px; overflow-y: auto">{{$plugin.description}}</p>
+                            <div style="height: 30px">
+                                <span style="float: left;">
+                                    <a name="config" data-link="/system/plugin/config?plugin_id={{$plugin.plugin_id}}" class="btn btn-sm btn-default" role="button">
+                                        <i class="fa fa-wrench"></i> 配置
+                                    </a>
+                                </span>
+                                <span style="float: right;">
+                                    <input type="checkbox" name="fulltext_search_open" value="1">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        <div>
+            {{template "paginator/default.html" .}}
+        </div>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("input[type='checkbox']").bootstrapSwitch({
+            size: 'small',
+            onText: '开',
+            offText: '关'
+        });
+    });
+    Layers.bindIframe("[name='config']", "插件配置", "600px", "1100px");
+</script>
