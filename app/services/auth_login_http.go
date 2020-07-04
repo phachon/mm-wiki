@@ -13,8 +13,8 @@ type AuthLoginHttpRes struct {
 
 // AuthLoinHttpService http auth login
 type AuthLoinHttpService struct {
-	url         string
-	extData     string
+	url     string
+	extData string
 }
 
 // NewAuthLoginHttpService
@@ -23,9 +23,10 @@ func NewAuthLoginHttpService() AuthLoginService {
 }
 
 // InitConf init http auth login config
-func (ah *AuthLoinHttpService) InitConf(url string, conf string) {
+func (ah *AuthLoinHttpService) InitConf(url string, conf string) error {
 	ah.url = url
 	ah.extData = conf
+	return nil
 }
 
 // AuthLogin send http request

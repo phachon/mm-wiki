@@ -19,9 +19,9 @@ type AuthLoginResponse struct {
 }
 
 const (
-	AuthLoginProtocolHttp = "http"
+	AuthLoginProtocolHttp  = "http"
 	AuthLoginProtocolHttps = "https"
-	AuthLoginProtocolLdap = "ldap"
+	AuthLoginProtocolLdap  = "ldap"
 	AuthLoginProtocolLdaps = "ldaps"
 )
 
@@ -29,7 +29,7 @@ const (
 type AuthLoginService interface {
 
 	// Init init login config
-	InitConf(url string, conf string)
+	InitConf(url string, conf string) error
 
 	// GetServiceName get auth login service name
 	GetServiceName() string
@@ -101,7 +101,10 @@ func (am *AuthLoginManager) AuthLogin(username, password string) (*AuthLoginResp
 		serviceConf = extData
 	}
 	// init auth login service config
-	authLoginService.InitConf(authUrl, serviceConf)
+	err = authLoginService.InitConf(authUrl, serviceConf)
+	if err != nil {
+		return nil, fmt.Errorf("登录配置初始化失败：%s", err.Error())
+	}
 	// start auth login
 	return authLoginService.AuthLogin(username, password)
 }
