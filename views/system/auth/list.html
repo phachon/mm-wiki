@@ -5,7 +5,7 @@
                 <form action="" method="get">
                     <div class="col-md-4">
                         <button type="button" name="add" data-link="/system/auth/add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 添加登录认证</button>
-                        <button type="button" name="doc" data-link="/system/auth/doc" class="btn btn-info"><i class="glyphicon glyphicon-list-alt"></i> 认证接口规范</button>
+                        <button type="button" name="doc" data-link="/system/auth/doc" class="btn btn-info"><i class="glyphicon glyphicon-list-alt"></i> 登录认证文档</button>
                     </div>
                     <div class="col-md-5"></div>
                     <div class="col-md-3">
@@ -26,8 +26,8 @@
                     <th class="w5p">ID</th>
                     <th class="w13p">名称</th>
                     <th class="w8p">用户名前缀</th>
-                    <th>认证URL</th>
-                    <th class="w20p">额外数据</th>
+                    <th class="w25p">认证URL</th>
+                    <th>附加参数（配置数据）</th>
                     <th class="w8p">是否启用</th>
                     <th class="w13p">操作</th>
                 </tr>
@@ -66,5 +66,5 @@
 <script type="text/javascript">
     Layers.bindIframe("button[name='add']", "添加登录认证", "400px", "900px");
     Layers.bindIframe("[name='edit']", "修改登录认证", "400px", "900px");
-    Layers.bindIframe("[name='doc']", "登录认证接口规范", "550px", "1000px");
+    Layers.bindIframe("[name='doc']", "登录认证文档", "650px", "1150px");
 </script>

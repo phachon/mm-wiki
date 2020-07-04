@@ -151,7 +151,7 @@ func (a *Attachment) Delete(attachmentId string) (err error) {
 }
 
 // insert attachment
-func (a *Attachment) Insert(attachmentValue map[string]interface{}) (id int64, err error) {
+func (a *Attachment) Insert(attachmentValue map[string]interface{}, spaceId string) (id int64, err error) {
 
 	attachmentValue["create_time"] = time.Now().Unix()
 	attachmentValue["update_time"] = time.Now().Unix()
@@ -164,14 +164,14 @@ func (a *Attachment) Insert(attachmentValue map[string]interface{}) (id int64, e
 	id = rs.LastInsertId
 
 	// create document log
-	go func() {
+	go func(attachmentValue map[string]interface{}, spaceId string) {
 		comment := fmt.Sprintf("上传了附件 %s", attachmentValue["name"].(string))
 		if attachmentValue["source"].(int) == Attachment_Source_Image {
 			comment = fmt.Sprintf("上传了图片 %s", attachmentValue["name"].(string))
 		}
 		_, _ = LogDocumentModel.UpdateAction(attachmentValue["user_id"].(string),
-			attachmentValue["document_id"].(string), comment)
-	}()
+			attachmentValue["document_id"].(string), comment, spaceId)
+	}(attachmentValue, spaceId)
 
 	return
 }

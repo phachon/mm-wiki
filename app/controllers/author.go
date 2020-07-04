@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
+	"github.com/phachon/mm-wiki/app/services"
 	"strings"
 	"time"
 
@@ -111,44 +112,29 @@ func (this *AuthorController) AuthLogin() {
 	if password == "" {
 		this.jsonError("统一登录密码不能为空！")
 	}
-
-	queryValue := map[string]string{
-		"username": username,
-		"password": password,
-		"ext_data": authLogin["ext_data"],
-	}
-	// request auth login api
-	body, code, err := utils.Request.HttpPost(authLogin["url"], queryValue, nil)
+	authLoginRes, err := services.AuthLogin.AuthLogin(username, password)
 	if err != nil {
-		this.jsonError("登录认证失败：" + err.Error())
+		logs.Error("统一登录失败：", err.Error())
+		this.jsonError("统一登录失败！")
+		return
 	}
-	if len(body) == 0 {
-		this.jsonError("登录认证失败：" + fmt.Sprintf("%d", code))
+	if authLoginRes == nil {
+		this.jsonError("统一登录失败！")
+		return
 	}
-	v := map[string]interface{}{}
-	err = json.Unmarshal(body, &v)
-	if err != nil {
-		this.jsonError("登录认证失败!" + err.Error())
-	}
-
-	if v["message"].(string) != "" {
-		this.jsonError("登录失败：" + v["message"].(string))
-	}
-	authData := v["data"].(map[string]interface{})
-
 	realUsername := authLogin["username_prefix"] + "_" + username
 	passwordEncode := models.UserModel.EncodePassword(password)
 	userValue := map[string]interface{}{
 		"username":   realUsername,
-		"given_name": authData["given_name"],
+		"given_name": authLoginRes.GivenName,
 		"password":   passwordEncode,
-		"email":      authData["email"],
-		"mobile":     authData["mobile"],
-		"phone":      authData["phone"],
-		"department": authData["department"],
-		"position":   authData["position"],
-		"location":   authData["location"],
-		"im":         authData["im"],
+		"email":      authLoginRes.Email,
+		"mobile":     authLoginRes.Mobile,
+		"phone":      authLoginRes.Phone,
+		"department": authLoginRes.Department,
+		"position":   authLoginRes.Position,
+		"location":   authLoginRes.Location,
+		"im":         authLoginRes.Im,
 		"last_time":  time.Now().Unix(),
 		"last_ip":    this.GetClientIp(),
 	}
