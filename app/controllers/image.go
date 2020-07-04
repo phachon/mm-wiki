@@ -101,7 +101,7 @@ func (this *ImageController) Upload() {
 		"path":        fmt.Sprintf("images/%s/%s/%s", spaceId, documentId, h.Filename),
 		"source":      models.Attachment_Source_Image,
 	}
-	_, err = models.AttachmentModel.Insert(attachment)
+	_, err = models.AttachmentModel.Insert(attachment, spaceId)
 	if err != nil {
 		_ = os.Remove(imageFile)
 		this.ErrorLog("上传图片保存信息错误: " + err.Error())

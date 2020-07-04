@@ -55,10 +55,11 @@ func (ld *LogDocument) CreateAction(userId string, documentId string, spaceId st
 	return ld.Insert(logDocument)
 }
 
-func (ld *LogDocument) UpdateAction(userId string, documentId string, comment string) (id int64, err error) {
+func (ld *LogDocument) UpdateAction(userId string, documentId string, comment string, spaceId string) (id int64, err error) {
 	logDocument := map[string]interface{}{
 		"user_id":     userId,
 		"document_id": documentId,
+		"space_id":    spaceId,
 		"comment":     comment,
 		"action":      LogDocument_Action_Update,
 		"create_time": time.Now().Unix(),
@@ -66,10 +67,11 @@ func (ld *LogDocument) UpdateAction(userId string, documentId string, comment st
 	return ld.Insert(logDocument)
 }
 
-func (ld *LogDocument) DeleteAction(userId string, documentId string) (id int64, err error) {
+func (ld *LogDocument) DeleteAction(userId string, documentId string, spaceId string) (id int64, err error) {
 	logDocument := map[string]interface{}{
 		"user_id":     userId,
 		"document_id": documentId,
+		"space_id":    spaceId,
 		"comment":     "删除了该文档",
 		"action":      LogDocument_Action_Delete,
 		"create_time": time.Now().Unix(),

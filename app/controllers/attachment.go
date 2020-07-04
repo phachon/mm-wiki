@@ -156,7 +156,7 @@ func (this *AttachmentController) Upload() {
 		"path":        fmt.Sprintf("attachment/%s/%s/%s", spaceId, documentId, h.Filename),
 		"source":      models.Attachment_Source_Default,
 	}
-	_, err = models.AttachmentModel.Insert(attachment)
+	_, err = models.AttachmentModel.Insert(attachment, spaceId)
 	if err != nil {
 		_ = os.Remove(attachmentFile)
 		this.ErrorLog("上传附件错误: " + err.Error())
@@ -221,9 +221,9 @@ func (this *AttachmentController) Delete() {
 	}
 
 	// update document log
-	go func() {
-		_, _ = models.LogDocumentModel.UpdateAction(this.UserId, documentId, "删除了附件 "+attachmentName)
-	}()
+	go func(userId string, documentId string, attachmentName string, spaceId string) {
+		_, _ = models.LogDocumentModel.UpdateAction(userId, documentId, "删除了附件 "+attachmentName, spaceId)
+	}(this.UserId, documentId, attachmentName, spaceId)
 
 	redirect := fmt.Sprintf("/attachment/page?document_id=%s", documentId)
 	if attachmentSource == fmt.Sprintf("%d", models.Attachment_Source_Image) {

@@ -249,7 +249,7 @@ func (this *PageController) Modify() {
 		"name":         newName,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.UpdateDBAndFile(documentId, document, documentContent, updateValue, comment)
+	_, err = models.DocumentModel.UpdateDBAndFile(documentId, spaceId, document, documentContent, updateValue, comment)
 	if err != nil {
 		this.ErrorLog("修改文档 " + documentId + " 失败：" + err.Error())
 		this.jsonError("修改文档失败！")
@@ -271,9 +271,9 @@ func (this *PageController) Modify() {
 	}
 	// follow doc
 	if isFollowDoc == "1" {
-		go func() {
-			_, _ = models.FollowModel.FollowDocument(this.UserId, documentId)
-		}()
+		go func(userId string, documentId string) {
+			_, _ = models.FollowModel.FollowDocument(userId, documentId)
+		}(this.UserId, documentId)
 	}
 	// 更新文档索引
 	go func(documentId string) {

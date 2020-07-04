@@ -334,7 +334,8 @@ func (this *DocumentController) Move() {
 		}
 	}
 
-	space, err := models.SpaceModel.GetSpaceBySpaceId(document["space_id"])
+	spaceId := document["space_id"]
+	space, err := models.SpaceModel.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		this.ErrorLog("移动文档失败：" + err.Error())
 		this.jsonError("移动文档失败！")
@@ -378,7 +379,8 @@ func (this *DocumentController) Move() {
 		"path":         targetDocument["path"] + "," + targetId,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.MoveDBAndFile(documentId, updateValue, oldPageFile, newPageFile, document["type"], "移动文档到 "+targetDocument["name"])
+	_, err = models.DocumentModel.MoveDBAndFile(documentId, spaceId, updateValue,
+		oldPageFile, newPageFile, document["type"], "移动文档到 "+targetDocument["name"])
 	if err != nil {
 		this.ErrorLog("移动文档 " + documentId + " 失败：" + err.Error())
 		this.jsonError("移动文档失败！")
@@ -413,7 +415,7 @@ func (this *DocumentController) updateDocSequence(moveType string, document map[
 		"sequence":     updateSequence,
 		"edit_user_id": this.UserId,
 	}
-	_, err = models.DocumentModel.Update(movedDocumentId, updateValue, fmt.Sprintf("移动文档"))
+	_, err = models.DocumentModel.Update(movedDocumentId, updateValue, fmt.Sprintf("移动文档"), spaceId)
 	if err != nil {
 		this.ErrorLog("移动文档 " + movedDocumentId + "到目标文档 " + targetDocumentId + " " + moveType + " 失败：" + err.Error())
 		this.jsonError("移动文档失败！")
@@ -447,7 +449,7 @@ func (this *DocumentController) Delete() {
 			this.jsonError("请先删除或移动目录下所有文档！")
 		}
 	}
-
+	spaceId := document["space_id"]
 	space, err := models.SpaceModel.GetSpaceBySpaceId(document["space_id"])
 	if err != nil {
 		this.ErrorLog("删除文档失败：" + err.Error())
@@ -468,7 +470,7 @@ func (this *DocumentController) Delete() {
 		this.jsonError("删除文档失败！")
 	}
 
-	err = models.DocumentModel.DeleteDBAndFile(documentId, this.UserId, pageFile, document["type"])
+	err = models.DocumentModel.DeleteDBAndFile(documentId, spaceId, this.UserId, pageFile, document["type"])
 	if err != nil {
 		this.ErrorLog("删除文档 " + documentId + " 失败：" + err.Error())
 		this.jsonError("删除文档失败！")

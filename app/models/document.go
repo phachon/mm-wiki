@@ -157,7 +157,7 @@ func (d *Document) GetDocumentMaxSequence(parentId string, spaceId string) (sequ
 }
 
 // delete document by document_id
-func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile string, docType string) (err error) {
+func (d *Document) DeleteDBAndFile(documentId string, spaceId string, userId string, pageFile string, docType string) (err error) {
 	db := G.DB()
 	tx, err := db.Begin(db.Config)
 	if err != nil {
@@ -188,12 +188,12 @@ func (d *Document) DeleteDBAndFile(documentId string, userId string, pageFile st
 	}
 
 	// create document log
-	go func(userId, documentId string) {
-		_, err := LogDocumentModel.DeleteAction(userId, documentId)
+	go func(userId, documentId string, spaceId string) {
+		_, err := LogDocumentModel.DeleteAction(userId, documentId, spaceId)
 		if err != nil {
 			logs.Error("delete document add log err=%s", err.Error())
 		}
-	}(userId, documentId)
+	}(userId, documentId, spaceId)
 
 	// delete follow doc
 	go func(documentId string) {
@@ -285,7 +285,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 }
 
 // update document by document_id
-func (d *Document) Update(documentId string, documentValue map[string]interface{}, comment string) (id int64, err error) {
+func (d *Document) Update(documentId string, documentValue map[string]interface{}, comment string, spaceId string) (id int64, err error) {
 	db := G.DB()
 	var rs *mysql.ResultSet
 	documentValue["update_time"] = time.Now().Unix()
@@ -299,12 +299,12 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 	id = rs.LastInsertId
 
 	// update document log
-	go func(editUserId string, documentId string, comment string) {
-		_, err := LogDocumentModel.UpdateAction(editUserId, documentId, comment)
+	go func(editUserId string, documentId string, comment string, spaceId string) {
+		_, err := LogDocumentModel.UpdateAction(editUserId, documentId, comment, spaceId)
 		if err != nil {
 			logs.Error("update document add log err=%s", err.Error())
 		}
-	}(documentValue["edit_user_id"].(string), documentId, comment)
+	}(documentValue["edit_user_id"].(string), documentId, comment, spaceId)
 
 	// follow document
 	go func(editUserId string, documentId string) {
@@ -340,7 +340,8 @@ func (d *Document) MoveSequenceBySpaceIdAndGtSequence(spaceId string, startSeque
 }
 
 // move document
-func (d *Document) MoveDBAndFile(documentId string, updateValue map[string]interface{}, oldPageFile string, newPageFile string, docType string, comment string) (id int64, err error) {
+func (d *Document) MoveDBAndFile(documentId string, spaceId string, updateValue map[string]interface{},
+	oldPageFile string, newPageFile string, docType string, comment string) (id int64, err error) {
 
 	db := G.DB()
 	tx, err := db.Begin(db.Config)
@@ -370,18 +371,18 @@ func (d *Document) MoveDBAndFile(documentId string, updateValue map[string]inter
 	}
 
 	// create document log
-	go func(userId, documentId, comment string) {
-		_, err := LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
+	go func(userId, documentId, comment string, spaceId string) {
+		_, err := LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment, spaceId)
 		if err != nil {
 			logs.Error("update document add log err=%s", err.Error())
 		}
-	}(updateValue["edit_user_id"].(string), documentId, comment)
+	}(updateValue["edit_user_id"].(string), documentId, comment, spaceId)
 
 	return
 }
 
 // update document by document_id
-func (d *Document) UpdateDBAndFile(documentId string, document map[string]string, documentContent string, updateValue map[string]interface{}, comment string) (id int64, err error) {
+func (d *Document) UpdateDBAndFile(documentId string, spaceId string, document map[string]string, documentContent string, updateValue map[string]interface{}, comment string) (id int64, err error) {
 
 	// get document page file
 	_, oldPageFile, err := DocumentModel.GetParentDocumentsByDocument(document)
@@ -425,14 +426,14 @@ func (d *Document) UpdateDBAndFile(documentId string, document map[string]string
 	}
 
 	// create document log
-	go func() {
-		LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment)
-	}()
+	go func(documentId string, comment string, spaceId string) {
+		_, _ = LogDocumentModel.UpdateAction(updateValue["edit_user_id"].(string), documentId, comment, spaceId)
+	}(documentId, comment, spaceId)
 
 	// create follow doc
-	go func() {
-		FollowModel.CreateAutoFollowDocument(updateValue["edit_user_id"].(string), documentId)
-	}()
+	go func(documentId string) {
+		_, _ = FollowModel.CreateAutoFollowDocument(updateValue["edit_user_id"].(string), documentId)
+	}(documentId)
 
 	return
 }
