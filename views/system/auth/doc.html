@@ -30,12 +30,13 @@
                                 <td>配置数据格式必须为 json 字符串，字段含义如下
 <pre>
 {
-    "basedn":"dc=umich,dc=edu", // ldap base dn; 用于搜索的节点；必填不能为空
-    "bind_username":"readonly", // ldap bind dn; 用来获取查询权限的 bind 用户；非必填可以为空
-    "bind_password":"password"  // ldap bind dn password; bind 用户密码；非必填可以为空
+    "basedn":"dc=umich,dc=edu",     // ldap base dn; 用于搜索的节点；必填不能为空
+    "bind_username":"readonly",     // ldap bind dn; 用来获取查询权限的 bind 用户；非必填可以为空
+    "bind_password":"password"      // ldap bind dn password; bind 用户密码；非必填可以为空
+    "account_pattern": ""           // ldap search pattern; 非必填可以为空，默认值为<code>(&(objectClass=User)(userPrincipalName=%s))</code>
 }
 </pre>
-                                    示例：<code>{"basedn":"dc=umich,dc=edu","bind_username":"my_username","bind_password":"your_password"}</code>
+                                    示例：<code>{"basedn":"dc=umich,dc=edu","bind_username":"my_username","bind_password":"your_password","account_pattern": ""}</code>
                                 </td>
                             </tr>
                             <tr>

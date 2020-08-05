@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/go-ldap/ldap/v3"
 )
 
@@ -12,9 +13,10 @@ var (
 )
 
 type AuthLoginConfig struct {
-	BaseDn       string `json:"basedn"`
-	BindUsername string `json:"bind_username"`
-	BindPassword string `json:"bind_password"`
+	BaseDn         string `json:"basedn"`
+	BindUsername   string `json:"bind_username"`
+	BindPassword   string `json:"bind_password"`
+	AccountPattern string `json:"account_pattern"`
 }
 
 // AuthLoinLdapService ldap auth login
@@ -69,6 +71,10 @@ func (al *AuthLoinLdapService) AuthLogin(username string, password string) (*Aut
 	}
 
 	// 搜索下用户信息
+	accountPattern := "(&(objectClass=User)(userPrincipalName=%s))"
+	if al.config.AccountPattern != "" {
+		accountPattern = al.config.AccountPattern
+	}
 	searchRequest := ldap.NewSearchRequest(
 		al.config.BaseDn,
 		ldap.ScopeWholeSubtree,
@@ -76,7 +82,7 @@ func (al *AuthLoinLdapService) AuthLogin(username string, password string) (*Aut
 		0,
 		0,
 		false,
-		fmt.Sprintf("(&(objectClass=User)(userPrincipalName=%s))", username),
+		fmt.Sprintf(accountPattern, username),
 		[]string{"dn", "mail", "displayName", "telephoneNumber", "mobile", "department", "physicalDeliveryOfficeName"},
 		nil,
 	)
