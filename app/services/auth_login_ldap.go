@@ -13,14 +13,22 @@ var (
 )
 
 type AuthLoginConfig struct {
-	BaseDn         string `json:"basedn"`
-	BindUsername   string `json:"bind_username"`
-	BindPassword   string `json:"bind_password"`
-	AccountPattern string `json:"account_pattern"`
+	BaseDn        string `json:"basedn"`
+	BindUsername  string `json:"bind_username"`
+	BindPassword  string `json:"bind_password"`
+  AccountPattern string `json:"account_pattern"`
+	GivenNameKey  string `json:"given_name_key"`
+	EmailKey      string `json:"email_key"`
+	MobileKey     string `json:"mobile_key"`
+	PhoneKey      string `json:"phone_key"`
+	DepartmentKey string `json:"department_key"`
+	PositionKey   string `json:"position_key"`
+	LocationKey   string `json:"location_key"`
+	ImKey         string `json:"im_key"`
 }
 
-// AuthLoinLdapService ldap auth login
-type AuthLoinLdapService struct {
+// AuthLoginLdapService ldap auth login
+type AuthLoginLdapService struct {
 	url    string
 	conf   string
 	config *AuthLoginConfig
@@ -28,11 +36,11 @@ type AuthLoinLdapService struct {
 
 // NewAuthLoginLdapService
 func NewAuthLoginLdapService() AuthLoginService {
-	return &AuthLoinLdapService{}
+	return &AuthLoginLdapService{}
 }
 
 // InitConf init ldap auth login config
-func (al *AuthLoinLdapService) InitConf(url string, conf string) error {
+func (al *AuthLoginLdapService) InitConf(url string, conf string) error {
 	al.url = url
 	al.conf = conf
 	authLoginConfig := &AuthLoginConfig{}
@@ -45,13 +53,16 @@ func (al *AuthLoinLdapService) InitConf(url string, conf string) error {
 }
 
 // AuthLogin ldap auth
-func (al *AuthLoinLdapService) AuthLogin(username string, password string) (*AuthLoginResponse, error) {
+func (al *AuthLoginLdapService) AuthLogin(username string, password string) (*AuthLoginResponse, error) {
 
 	if al.url == "" {
 		return nil, fmt.Errorf("LDAP URL is empty")
 	}
 	if al.config == nil || al.conf == "" {
 		return nil, fmt.Errorf("LDAP 配置数据错误")
+	}
+	if al.config.GivenNameKey == "" {
+		return nil, fmt.Errorf("LDAP 配置 given_name_key 错误")
 	}
 
 	lc, err := ldap.DialURL(al.url)
@@ -83,7 +94,7 @@ func (al *AuthLoinLdapService) AuthLogin(username string, password string) (*Aut
 		0,
 		false,
 		fmt.Sprintf(accountPattern, username),
-		[]string{"dn", "mail", "displayName", "telephoneNumber", "mobile", "department", "physicalDeliveryOfficeName"},
+		al.GetAttributes(),
 		nil,
 	)
 	searchResult, err := lc.Search(searchRequest)
@@ -102,20 +113,38 @@ func (al *AuthLoinLdapService) AuthLogin(username string, password string) (*Aut
 	}
 
 	result := &AuthLoginResponse{
-		GivenName:  searchResult.Entries[0].GetAttributeValue("displayName"),
-		Email:      searchResult.Entries[0].GetAttributeValue("mail"),
-		Mobile:     searchResult.Entries[0].GetAttributeValue("mobile"),
-		Phone:      searchResult.Entries[0].GetAttributeValue("telephoneNumber"),
-		Department: searchResult.Entries[0].GetAttributeValue("department"),
-		Position:   searchResult.Entries[0].GetAttributeValue(""),
-		Location:   searchResult.Entries[0].GetAttributeValue("physicalDeliveryOfficeName"),
-		Im:         "",
+		GivenName:  searchResult.Entries[0].GetAttributeValue(al.config.GivenNameKey),
+		Email:      searchResult.Entries[0].GetAttributeValue(al.config.EmailKey),
+		Mobile:     searchResult.Entries[0].GetAttributeValue(al.config.MobileKey),
+		Phone:      searchResult.Entries[0].GetAttributeValue(al.config.PhoneKey),
+		Department: searchResult.Entries[0].GetAttributeValue(al.config.DepartmentKey),
+		Position:   searchResult.Entries[0].GetAttributeValue(al.config.PositionKey),
+		Location:   searchResult.Entries[0].GetAttributeValue(al.config.LocationKey),
+		Im:         searchResult.Entries[0].GetAttributeValue(al.config.ImKey),
 	}
 	return result, nil
 }
 
+// GetAttributes get config attribute name
+func (al *AuthLoginLdapService) GetAttributes() []string {
+
+	attributes := []string{"dn"}
+	confAttributes := []string{
+		"dn", al.config.GivenNameKey, al.config.EmailKey,
+		al.config.MobileKey, al.config.PhoneKey, al.config.DepartmentKey,
+		al.config.PositionKey, al.config.LocationKey, al.config.ImKey,
+	}
+	for _, confAttribute := range confAttributes {
+		if confAttribute == "" {
+			continue
+		}
+		attributes = append(attributes, confAttribute)
+	}
+	return attributes
+}
+
 // GetServiceName ldap
-func (al *AuthLoinLdapService) GetServiceName() string {
+func (al *AuthLoginLdapService) GetServiceName() string {
 	return AuthLoginProtocolLdap
 }
 

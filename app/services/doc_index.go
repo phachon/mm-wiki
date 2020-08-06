@@ -19,9 +19,20 @@ func NewDocIndexService() *DocIndex {
 	return &DocIndex{}
 }
 
+func (di *DocIndex) IsUpdateDocIndex() bool {
+	fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
+	if fulltextSearchOpen == "1" {
+		return true
+	}
+	return false
+}
+
 // ForceDelDocIdIndex 强制删除索引
 func (di *DocIndex) ForceDelDocIdIndex(docId string) {
 	if docId == "" {
+		return
+	}
+	if !di.IsUpdateDocIndex() {
 		return
 	}
 	// add search index
@@ -32,6 +43,9 @@ func (di *DocIndex) ForceDelDocIdIndex(docId string) {
 // UpdateDocIndex 更新单个文件的索引
 func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 	if docId == "" {
+		return nil
+	}
+	if !di.IsUpdateDocIndex() {
 		return nil
 	}
 	doc, err := models.DocumentModel.GetDocumentByDocumentId(docId)
@@ -52,6 +66,9 @@ func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 func (di *DocIndex) UpdateDocIndex(doc map[string]string) {
 	docId, ok := doc["document_id"]
 	if !ok || docId == "" {
+		return
+	}
+	if !di.IsUpdateDocIndex() {
 		return
 	}
 	content, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
@@ -91,6 +108,9 @@ func (di *DocIndex) UpdateDocsIndex(docs []map[string]string) {
 
 // UpdateAllDocIndex 更新所有的文档
 func (di *DocIndex) UpdateAllDocIndex(batchNum int) {
+	if !di.IsUpdateDocIndex() {
+		return
+	}
 	allDocs, err := models.DocumentModel.GetAllDocuments()
 	if err != nil {
 		logs.Error("[UpdateAllDocIndex] getAllDocuments err: %s", err.Error())
