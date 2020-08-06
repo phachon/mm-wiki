@@ -8,23 +8,28 @@ import (
 	"github.com/go-ldap/ldap/v3"
 )
 
+const (
+	LdapDefaultAccountPattern     = "(&(objectClass=User)(userPrincipalName=%s))"
+	LdapDefaultAttributeGivenName = "displayName"
+)
+
 var (
 	LdapUserSearchNotFoundErr = errors.New("用户不存在或密码错误")
 )
 
 type AuthLoginConfig struct {
-	BaseDn        string `json:"basedn"`
-	BindUsername  string `json:"bind_username"`
-	BindPassword  string `json:"bind_password"`
-  AccountPattern string `json:"account_pattern"`
-	GivenNameKey  string `json:"given_name_key"`
-	EmailKey      string `json:"email_key"`
-	MobileKey     string `json:"mobile_key"`
-	PhoneKey      string `json:"phone_key"`
-	DepartmentKey string `json:"department_key"`
-	PositionKey   string `json:"position_key"`
-	LocationKey   string `json:"location_key"`
-	ImKey         string `json:"im_key"`
+	BaseDn         string `json:"basedn"`
+	BindUsername   string `json:"bind_username"`
+	BindPassword   string `json:"bind_password"`
+	AccountPattern string `json:"account_pattern"`
+	GivenNameKey   string `json:"given_name_key"`
+	EmailKey       string `json:"email_key"`
+	MobileKey      string `json:"mobile_key"`
+	PhoneKey       string `json:"phone_key"`
+	DepartmentKey  string `json:"department_key"`
+	PositionKey    string `json:"position_key"`
+	LocationKey    string `json:"location_key"`
+	ImKey          string `json:"im_key"`
 }
 
 // AuthLoginLdapService ldap auth login
@@ -49,6 +54,12 @@ func (al *AuthLoginLdapService) InitConf(url string, conf string) error {
 		return err
 	}
 	al.config = authLoginConfig
+	if al.config.AccountPattern == "" {
+		al.config.AccountPattern = LdapDefaultAccountPattern
+	}
+	if al.config.GivenNameKey == "" {
+		al.config.GivenNameKey = LdapDefaultAttributeGivenName
+	}
 	return nil
 }
 
@@ -82,10 +93,6 @@ func (al *AuthLoginLdapService) AuthLogin(username string, password string) (*Au
 	}
 
 	// 搜索下用户信息
-	accountPattern := "(&(objectClass=User)(userPrincipalName=%s))"
-	if al.config.AccountPattern != "" {
-		accountPattern = al.config.AccountPattern
-	}
 	searchRequest := ldap.NewSearchRequest(
 		al.config.BaseDn,
 		ldap.ScopeWholeSubtree,
@@ -93,7 +100,7 @@ func (al *AuthLoginLdapService) AuthLogin(username string, password string) (*Au
 		0,
 		0,
 		false,
-		fmt.Sprintf(accountPattern, username),
+		fmt.Sprintf(al.config.AccountPattern, username),
 		al.GetAttributes(),
 		nil,
 	)
