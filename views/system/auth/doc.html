@@ -33,6 +33,7 @@
     "basedn": "dc=umich,dc=edu", // ldap base dn; 用于搜索的节点；必填不能为空
     "bind_username": "readonly", // ldap bind dn; 用来获取查询权限的 bind 用户；非必填可以为空
     "bind_password": "password", // ldap bind dn password; bind 用户密码；非必填可以为空
+    "account_pattern": "(&(objectClass=User)(userPrincipalName=%s))" // ldap search pattern; 非必填可以为空，默认值为(&(objectClass=User)(userPrincipalName=%s))
     "given_name_key": "displayName", // ldap 查询用户名对应的 key，必填
     "email_key": "mail", // ldap 查询邮箱对应的 key, 没有可为空
     "mobile_key": "mobile", // ldap 查询手机号对应的 key，没有可为空
