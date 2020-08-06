@@ -1,5 +1,32 @@
 # 更新日志：
 
+## v0.2.0（2020-06）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 修改文档时，文档日志不更新 #215
+2. 全文搜索重构，优化性能 #197
+3. markdown语法不规范导致保存后文字丢失 #176
+4. 修改文档备注可不填写 #184
+
+#### 新增功能
+1. 系统联系人可选择现有用户和添加新用户 #80
+2. 增加 ldap 登录
+3. 允许配置系统的名称 #183
+4. 系统文案可配置 #175
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.2.0-linux-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+4. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+
 ## v0.1.9（2020-04）
 
 ### Fix Bug & Add Feature
