@@ -8,7 +8,7 @@
                             <span class="input-group-addon"> 搜索方式</span>
                             <select class="form-control" name="search_type">
                                 <option value="title" {{if eq $.search_type "title"}} selected="selected" {{end}}>文档标题</option>
-                                <option value="content" {{if eq $.search_type "content"}} selected="selected" {{end}}>文档内容</option>
+{{/*                                <option value="content" {{if eq $.search_type "content"}} selected="selected" {{end}}>文档内容</option>*/}}
                             </select>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
             <hr>
             {{if eq .count 0}}
                 <div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-bottom: 0">
-                    <p><i class="glyphicon glyphicon-volume-up"></i> 抱歉，暂时没有搜索到您想要的结果，切换搜索方式试试看？</p>
+                    <p><i class="glyphicon glyphicon-volume-up"></i> 抱歉，暂时没有搜索到您想要的结果</p>
                 </div>
             {{else}}
             <div class="row">
