@@ -20,10 +20,10 @@ func NewDocIndexService() *DocIndex {
 }
 
 func (di *DocIndex) IsUpdateDocIndex() bool {
-	fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
-	if fulltextSearchOpen == "1" {
-		return true
-	}
+	//fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
+	//if fulltextSearchOpen == "1" {
+	//	return true
+	//}
 	return false
 }
 

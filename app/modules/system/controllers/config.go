@@ -114,7 +114,7 @@ func (this *ConfigController) Modify() {
 	}
 
 	// 更新后的回调
-	this.configUpdateCallback(updateKeys)
+	//this.configUpdateCallback(updateKeys)
 	this.InfoLog("修改全局配置成功")
 	this.jsonSuccess("修改全局配置成功", nil, "/system/config/global")
 }

@@ -1,5 +1,26 @@
 # 更新日志：
 
+## v0.2.1（2020-09）
+
+### Fix Bug & Add Feature
+#### 修复bug
+1. 暂时去掉全文搜索功能
+
+#### 新增功能
+无
+
+### 升级（Upgrade）
+1. 下载新版本到部署该项目的根目录
+2. 覆盖解压 (tar -zxvf mm-wiki-v0.2.0-linux-amd64.tar.gz)
+3. 执行升级命令
+```
+./mm-wiki --conf conf/mm-wiki.conf --upgrade
+```
+4. 重新启动
+```
+./mm-wiki --conf conf/mm-wiki.conf
+```
+
 ## v0.2.0（2020-06）
 
 ### Fix Bug & Add Feature

@@ -54,8 +54,8 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
-	initSearch()
-	initWork()
+	//initSearch()
+	//initWork()
 	StartTime = time.Now().Unix()
 }
 
