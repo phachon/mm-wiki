@@ -108,8 +108,10 @@
 
         // 将所有的 a 标签 target="_parent"
         $("#document_page_view").find("a").each(function () {
-            var target = $(this).attr("target") || "_parent";
-            $(this).attr("target", target);
+			if($(this).attr("show")!="new"){
+                var target = $(this).attr("target") || "_parent";
+                $(this).attr("target", target);
+			}
         })
 
         // 生成目录树
