@@ -174,7 +174,7 @@ CREATE TABLE `mw_follow` (
 DROP TABLE IF EXISTS `mw_log_document`;
 CREATE TABLE `mw_log_document` (
   `log_document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档日志 id',
-  `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档id',
+  `document_id` varchar(50) NOT NULL DEFAULT '0' COMMENT '文档id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
   `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 创建 2 修改 3 删除',
