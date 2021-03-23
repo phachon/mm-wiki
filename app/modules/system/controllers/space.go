@@ -247,10 +247,19 @@ func (this *SpaceController) Member() {
 			}
 		}
 	}
-
+	// 获取当前空间下的所有user
+	spaceAllUsers, err := models.SpaceUserModel.GetSpaceUsersBySpaceId(spaceId);
+	if err != nil {
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
+		this.ViewError("获取空间所有成员列表失败！", "/system/space/list")
+	}
+	var allUserIds = []string{}
+	for _, spaceUser := range spaceAllUsers {
+		allUserIds = append(allUserIds, spaceUser["user_id"])
+	}
 	var otherUsers = []map[string]string{}
-	if len(userIds) > 0 {
-		otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)
+	if len(allUserIds) > 0 {
+		otherUsers, err = models.UserModel.GetUserByNotUserIds(allUserIds)
 	} else {
 		otherUsers, err = models.UserModel.GetUsers()
 	}
