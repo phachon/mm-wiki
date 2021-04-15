@@ -10,6 +10,7 @@
   DB_NAME=mm_wiki
   DB_USER=mm_wiki
   DB_PASS=ukC2ZkcG_ZTeb
+  COOKIE=2160000
   ```
 - 数据库准备
   - 导入docs/databases/data.sql和docs/databases/table.sql（注：需取消注释data.sql中第一条管理用户插入语句）

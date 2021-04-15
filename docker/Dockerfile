@@ -29,7 +29,8 @@ ENV HTTP_PORT=8081 \
     DB_PORT=3306 \
     DB_NAME=mm_wiki \
     DB_USER=mm_wiki \
-    DB_PASS=123456
+    DB_PASS=123456 \
+    COOKIE=2160000
 
 COPY --from=build /app/mm-wiki/release /app/mm-wiki
 

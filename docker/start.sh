@@ -16,6 +16,7 @@ if [ ! -f "conf/mm-wiki.conf" ];then
   sed -i "s/name=\"mm_wiki\"/name=\"$DB_NAME\"/g" conf/mm-wiki.conf
   sed -i "s/user=\"root\"/user=\"$DB_USER\"/g" conf/mm-wiki.conf
   sed -i "s/pass=\"123456\"/pass=\"$DB_PASS\"/g" conf/mm-wiki.conf
+  sed -i "s/cookie_expired=72000/cookie_expired=$COOKIE/g" conf/mm-wiki.conf
 fi
 
 /app/mm-wiki/mm-wiki --conf /app/mm-wiki/conf/mm-wiki.conf
