@@ -7,8 +7,6 @@ import (
 
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
-
-	"github.com/astaxie/beego/validation"
 )
 
 type AuthController struct {
@@ -54,19 +52,19 @@ func (this *AuthController) Save() {
 	}
 	name := strings.TrimSpace(this.GetString("name", ""))
 	authUrl := strings.TrimSpace(this.GetString("url", ""))
-	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
+	//usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
-	v := validation.Validation{}
+	//v := validation.Validation{}
 	if name == "" {
 		this.jsonError("登录认证名称不能为空！")
 	}
-	if usernamePrefix == "" {
-		this.jsonError("用户名前缀不能为空！")
-	}
-	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
-		this.jsonError("用户名前缀格式不正确！")
-	}
+	//if usernamePrefix == "" {
+	//	this.jsonError("用户名前缀不能为空！")
+	//}
+	//if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
+	//	this.jsonError("用户名前缀格式不正确！")
+	//}
 	if authUrl == "" {
 		this.jsonError("认证URL不能为空！")
 	}
@@ -88,20 +86,20 @@ func (this *AuthController) Save() {
 		this.jsonError("登录认证名称已经存在！")
 	}
 
-	ok, err = models.AuthModel.HasAuthUsernamePrefix(usernamePrefix)
-	if err != nil {
-		this.ErrorLog("添加登录认证失败：" + err.Error())
-		this.jsonError("添加登录认证失败！")
-	}
-	if ok {
-		this.jsonError("用户名前缀已经存在！")
-	}
+	//ok, err = models.AuthModel.HasAuthUsernamePrefix(usernamePrefix)
+	//if err != nil {
+	//	this.ErrorLog("添加登录认证失败：" + err.Error())
+	//	this.jsonError("添加登录认证失败！")
+	//}
+	//if ok {
+	//	this.jsonError("用户名前缀已经存在！")
+	//}
 
 	authId, err := models.AuthModel.Insert(map[string]interface{}{
-		"name":            name,
-		"url":             authUrl,
-		"username_prefix": usernamePrefix,
-		"ext_data":        extData,
+		"name": name,
+		"url":  authUrl,
+		//"username_prefix": usernamePrefix,
+		"ext_data": extData,
 	})
 
 	if err != nil {
@@ -136,22 +134,22 @@ func (this *AuthController) Modify() {
 	authId := this.GetString("login_auth_id", "")
 	name := strings.TrimSpace(this.GetString("name", ""))
 	authUrl := strings.TrimSpace(this.GetString("url", ""))
-	usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
+	//usernamePrefix := strings.TrimSpace(this.GetString("username_prefix", ""))
 	extData := strings.TrimSpace(this.GetString("ext_data", ""))
 
-	v := validation.Validation{}
+	//v := validation.Validation{}
 	if authId == "" {
 		this.jsonError("登录认证不存在！")
 	}
 	if name == "" {
 		this.jsonError("登录认证名称不能为空！")
 	}
-	if usernamePrefix == "" {
-		this.jsonError("用户名前缀不能为空！")
-	}
-	if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
-		this.jsonError("用户名前缀格式不正确！")
-	}
+	//if usernamePrefix == "" {
+	//	this.jsonError("用户名前缀不能为空！")
+	//}
+	//if !v.AlphaNumeric(usernamePrefix, "username_prefix").Ok {
+	//	this.jsonError("用户名前缀格式不正确！")
+	//}
 	if authUrl == "" {
 		this.jsonError("认证URL不能为空！")
 	}
@@ -173,20 +171,20 @@ func (this *AuthController) Modify() {
 		this.jsonError("登录认证不存在！")
 	}
 
-	ok, _ := models.AuthModel.HasSameName(authId, name)
-	if ok {
-		this.jsonError("登录认证名称已经存在！")
-	}
-	ok, _ = models.AuthModel.HasSameUsernamePrefix(authId, usernamePrefix)
-	if ok {
-		this.jsonError("用户名前缀已经存在！")
-	}
+	//ok, _ := models.AuthModel.HasSameName(authId, name)
+	//if ok {
+	//	this.jsonError("登录认证名称已经存在！")
+	//}
+	//ok, _ = models.AuthModel.HasSameUsernamePrefix(authId, usernamePrefix)
+	//if ok {
+	//	this.jsonError("用户名前缀已经存在！")
+	//}
 
 	_, err = models.AuthModel.Update(authId, map[string]interface{}{
-		"name":            name,
-		"url":             authUrl,
-		"username_prefix": usernamePrefix,
-		"ext_data":        extData,
+		"name": name,
+		"url":  authUrl,
+		//"username_prefix": usernamePrefix,
+		"ext_data": extData,
 	})
 
 	if err != nil {

@@ -8,10 +8,17 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 WORKDIR /app
 
-RUN apk add git \
-    && git clone https://github.com/phachon/mm-wiki.git \
-    && cd mm-wiki \
+ARG VERSION=0.2.0
+
+RUN wget -c https://github.com/phachon/mm-wiki/archive/refs/tags/v$VERSION.tar.gz \
+    && tar -zxvf *.tar.gz \
+    && cd mm-wiki-$VERSION \
     && sh build.sh
+
+#RUN apk add git \
+#    && git clone https://github.com/phachon/mm-wiki.git \
+#    && cd mm-wiki \
+#    && sh build.sh
 
 
 FROM alpine:3.13
@@ -24,6 +31,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata
 
+ARG VERSION=0.2.0
+
 ENV HTTP_PORT=8081 \
     DB_HOST=127.0.0.1 \
     DB_PORT=3306 \
@@ -32,7 +41,7 @@ ENV HTTP_PORT=8081 \
     DB_PASS=123456 \
     COOKIE=72000
 
-COPY --from=build /app/mm-wiki/release /app/mm-wiki
+COPY --from=build /app/mm-wiki-$VERSION/release /app/mm-wiki
 
 WORKDIR /app/mm-wiki
 VOLUME /app/mm-wiki/data
