@@ -1,9 +1,8 @@
 package controllers
 
 import (
+	"github.com/chaiyd/mm-wiki/app/models"
 	"strings"
-
-	"github.com/phachon/mm-wiki/app/models"
 )
 
 type UserController struct {

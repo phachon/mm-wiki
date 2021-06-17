@@ -3,13 +3,13 @@ package controllers
 import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
-	"github.com/phachon/mm-wiki/app/services"
+	"github.com/chaiyd/mm-wiki/app/services"
 	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/utils"
 )
 
 type AuthorController struct {

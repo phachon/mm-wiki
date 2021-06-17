@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/phachon/mm-wiki/app"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app"
+	"github.com/chaiyd/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego"
 )

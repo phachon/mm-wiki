@@ -2,12 +2,12 @@
 
 MM-Wiki is a light software that enables companies for internal knowledge sharing and for better collaboration. It serves as a platform for information sharing and wiki creating within as well as among teams.
 
-[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/) 
+[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/chaiyd/mm-wiki/) 
 [![build](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg)](https://travis-ci.org/phachon/mm-wiki)
 [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/phachon/mm-wiki/master/LICENSE)
 [![platforms](https://img.shields.io/badge/platform-All-yellow.svg?style=flat)]()
-[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
-[![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
+[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/chaiyd/mm-wiki/releases) 
+[![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/chaiyd/mm-wiki/releases) 
 
 # Features
 - Easy deployment. It’s built with [Go](https://golang.org/doc/). You only need to download the package based on your system and execute the binary file.
@@ -30,7 +30,7 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
     $ mkdir mm_wiki
     $ cd mm_wiki
     # Take linux amd64 as an example: download the latest release of the software.
-    # Downloading address: https://github.com/phachon/mm-wiki/releases 
+    # Downloading address: https://github.com/chaiyd/mm-wiki/releases 
     # Unzip the file to the directory you just created.
     $ tar -zxvf mm-wiki-linux-amd64.tar.gz
     # Enter into the installation directory
@@ -46,7 +46,7 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
     ```
 - Windows
 
-    1.Take linux amd64 as an example: [download](https://github.com/phachon/mm-wiki/releases) the latest release of the software.<br />
+    1.Take linux amd64 as an example: [download](https://github.com/chaiyd/mm-wiki/releases) the latest release of the software.<br />
     2.Unzip the file to a directory that you set before.<br />
     3.Click into the install directory.<br />
     4.Double click install.exe. <br />
@@ -122,7 +122,7 @@ MM-Wiki is built with many great plugins. Many thanks to developers of these plu
 
 Requirement：go 1.8
 ```
-$ git clone https://github.com/phachon/mm-wiki.git
+$ git clone https://github.com/chaiyd/mm-wiki.git
 $ cd mm-wiki
 $ go build ./
 ```
@@ -136,10 +136,10 @@ If you want to buy me a coffee :)
 
 ## Feedback
 - Official QQ group number：853467682
-- If you like this app, please [Star](https://github.com/phachon/mm-wiki/stargazers) it.
-- If there're issues while you're using it, submit a [issue](https://github.com/phachon/mm-wiki/issues).
-- If you find a bug and solve it, make a [pull request](https://github.com/phachon/mm-wiki/pulls).
-- If you want to contribute to it, please [fork](https://github.com/phachon/mm-wiki/network/members) it.
+- If you like this app, please [Star](https://github.com/chaiyd/mm-wiki/stargazers) it.
+- If there're issues while you're using it, submit a [issue](https://github.com/chaiyd/mm-wiki/issues).
+- If you find a bug and solve it, make a [pull request](https://github.com/chaiyd/mm-wiki/pulls).
+- If you want to contribute to it, please [fork](https://github.com/chaiyd/mm-wiki/network/members) it.
 - If you want to make friends with me,shoot me an email at [phachon@163.com](mailto:phachon@163.com).
 
 ## License

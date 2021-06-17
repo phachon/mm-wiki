@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/phachon/mm-wiki/app/work"
+	"github.com/chaiyd/mm-wiki/app/work"
 	"strings"
 
-	"github.com/phachon/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/models"
 )
 
 type ConfigController struct {

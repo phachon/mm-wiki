@@ -10,13 +10,13 @@ WORKDIR /app
 
 ARG VERSION=0.2.0
 
-RUN wget -c https://github.com/phachon/mm-wiki/archive/refs/tags/v$VERSION.tar.gz \
+RUN wget -c https://github.com/chaiyd/mm-wiki/archive/refs/tags/v$VERSION.tar.gz \
     && tar -zxvf *.tar.gz \
     && cd mm-wiki-$VERSION \
     && sh build.sh
 
 #RUN apk add git \
-#    && git clone https://github.com/phachon/mm-wiki.git \
+#    && git clone https://github.com/chaiyd/mm-wiki.git \
 #    && cd mm-wiki \
 #    && sh build.sh
 

@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"github.com/phachon/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/models"
 	"net/url"
 )
 

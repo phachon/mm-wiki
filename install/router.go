@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/phachon/mm-wiki/install/controllers"
-	"github.com/phachon/mm-wiki/install/storage"
+	"github.com/chaiyd/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/install/controllers"
+	"github.com/chaiyd/mm-wiki/install/storage"
 	"net/http"
 	"os"
 	"path/filepath"

@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/phachon/mm-wiki/global"
+	"github.com/chaiyd/mm-wiki/global"
 	"gopkg.in/gomail.v2"
 	"gopkg.in/russross/blackfriday.v2"
 	"net/smtp"

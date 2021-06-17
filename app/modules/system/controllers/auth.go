@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"github.com/phachon/mm-wiki/app/services"
+	"github.com/chaiyd/mm-wiki/app/services"
 	"net/url"
 	"strings"
 
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/utils"
 )
 
 type AuthController struct {

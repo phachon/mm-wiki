@@ -9,12 +9,12 @@
 MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于快速构建企业 Wiki 和团队知识分享平台。部署方便，使用简单，帮助团队构建一个信息共享、文档管理的协作环境。
 </br>
 
-[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/phachon/mm-wiki/) 
+[![stable](https://img.shields.io/badge/stable-stable-green.svg)](https://github.com/chaiyd/mm-wiki/) 
 [![build](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg)](https://travis-ci.org/phachon/mm-wiki)
 [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/phachon/mm-wiki/master/LICENSE)
 [![platforms](https://img.shields.io/badge/platform-All-yellow.svg?style=flat)]()
-[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/phachon/mm-wiki/releases) 
-[![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/phachon/mm-wiki/releases) 
+[![download_count](https://img.shields.io/github/downloads/phachon/mm-wiki/total.svg?style=plastic)](https://github.com/chaiyd/mm-wiki/releases) 
+[![release](https://img.shields.io/github/release/phachon/mm-wiki.svg?style=flat)](https://github.com/chaiyd/mm-wiki/releases) 
 
 </div>
 
@@ -35,7 +35,7 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 # 安装
 ## 1. 自助安装
 
-打开 https://github.com/phachon/mm-wiki/releases 找到对应平台的版本下载编译好的压缩包
+打开 https://github.com/chaiyd/mm-wiki/releases 找到对应平台的版本下载编译好的压缩包
 
 - Linux 平台
 
@@ -44,7 +44,7 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
     $ mkdir mm_wiki
     $ cd mm_wiki
     # 以 linux amd64 为例，下载最新版本压缩包
-    # https://github.com/phachon/mm-wiki/releases 自行下载 wget http://
+    # https://github.com/chaiyd/mm-wiki/releases 自行下载 wget http://
     # 解压到当前目录
     $ tar -zxvf mm-wiki-linux-amd64.tar.gz
     # 进入程序安装目录
@@ -63,7 +63,7 @@ MM-Wiki 是一个轻量级的企业知识分享与团队协同软件，可用于
 
     ```
     # 以 windows amd64 为例，下载最新版本压缩包
-    # https://github.com/phachon/mm-wiki/releases 自行下载
+    # https://github.com/chaiyd/mm-wiki/releases 自行下载
     # 手动解压到当前目录
     # 进入 install 目录
     # 双击点开 install.exe 文件
@@ -158,7 +158,7 @@ MM-Wiki 是站在巨人的肩膀上开发的一款软件，是因为系统中使
 
 环境要求：go 1.8
 ```
-$ git clone https://github.com/phachon/mm-wiki.git
+$ git clone https://github.com/chaiyd/mm-wiki.git
 $ cd mm-wiki
 $ go build ./
 ```
@@ -171,11 +171,11 @@ $ go build ./
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://phachon.com"><img src="https://avatars3.githubusercontent.com/u/19726268?v=4" width="100px;" alt=""/><br /><sub><b>phachon</b></sub></a><br /><a href="https://github.com/phachon/mm-wiki/commits?author=phachon" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/cxgreat2014"><img src="https://avatars2.githubusercontent.com/u/15062548?v=4" width="100px;" alt=""/><br /><sub><b>cxgreat2014</b></sub></a><br /><a href="https://github.com/phachon/mm-wiki/commits?author=cxgreat2014" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/cifaz"><img src="https://avatars0.githubusercontent.com/u/4531158?v=4" width="100px;" alt=""/><br /><sub><b>ccz</b></sub></a><br /><a href="https://github.com/phachon/mm-wiki/commits?author=cifaz" title="Code">💻</a></td>
-    <td align="center"><a href="https://www.linkedin.com/in/wangruoran/"><img src="https://avatars3.githubusercontent.com/u/25990237?v=4" width="100px;" alt=""/><br /><sub><b>Ruoran Wang</b></sub></a><br /><a href="https://github.com/phachon/mm-wiki/commits?author=ruoranw" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/eahomliu"><img src="https://avatars3.githubusercontent.com/u/50134691?v=4" width="100px;" alt=""/><br /><sub><b>eahomliu</b></sub></a><br /><a href="https://github.com/phachon/mm-wiki/commits?author=eahomliu" title="Documentation">📖</a> <a href="https://github.com/phachon/mm-wiki/commits?author=eahomliu" title="Code">💻</a></td>
+    <td align="center"><a href="https://phachon.com"><img src="https://avatars3.githubusercontent.com/u/19726268?v=4" width="100px;" alt=""/><br /><sub><b>phachon</b></sub></a><br /><a href="https://github.com/chaiyd/mm-wiki/commits?author=phachon" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/cxgreat2014"><img src="https://avatars2.githubusercontent.com/u/15062548?v=4" width="100px;" alt=""/><br /><sub><b>cxgreat2014</b></sub></a><br /><a href="https://github.com/chaiyd/mm-wiki/commits?author=cxgreat2014" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/cifaz"><img src="https://avatars0.githubusercontent.com/u/4531158?v=4" width="100px;" alt=""/><br /><sub><b>ccz</b></sub></a><br /><a href="https://github.com/chaiyd/mm-wiki/commits?author=cifaz" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/wangruoran/"><img src="https://avatars3.githubusercontent.com/u/25990237?v=4" width="100px;" alt=""/><br /><sub><b>Ruoran Wang</b></sub></a><br /><a href="https://github.com/chaiyd/mm-wiki/commits?author=ruoranw" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/eahomliu"><img src="https://avatars3.githubusercontent.com/u/50134691?v=4" width="100px;" alt=""/><br /><sub><b>eahomliu</b></sub></a><br /><a href="https://github.com/chaiyd/mm-wiki/commits?author=eahomliu" title="Documentation">📖</a> <a href="https://github.com/chaiyd/mm-wiki/commits?author=eahomliu" title="Code">💻</a></td>
   </tr>
 </table>
 
@@ -192,10 +192,10 @@ $ go build ./
 
 ## 反馈
 - 官方 QQ 交流群：853467682
-- 如果您喜欢该项目，请 [Star](https://github.com/phachon/mm-wiki/stargazers).
-- 如果在使用过程中有任何问题， 请提交 [Issue](https://github.com/phachon/mm-wiki/issues).
-- 如果您发现并解决了bug，请提交 [Pull Request](https://github.com/phachon/mm-wiki/pulls).
-- 如果您想二次开发，欢迎 [Fork](https://github.com/phachon/mm-wiki/network/members).
+- 如果您喜欢该项目，请 [Star](https://github.com/chaiyd/mm-wiki/stargazers).
+- 如果在使用过程中有任何问题， 请提交 [Issue](https://github.com/chaiyd/mm-wiki/issues).
+- 如果您发现并解决了bug，请提交 [Pull Request](https://github.com/chaiyd/mm-wiki/pulls).
+- 如果您想二次开发，欢迎 [Fork](https://github.com/chaiyd/mm-wiki/network/members).
 - 如果你想交个朋友，欢迎发邮件给 [phachon@163.com](mailto:phachon@163.com).
 
 ## License

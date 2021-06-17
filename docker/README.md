@@ -29,7 +29,7 @@
   
 
 ## mm-wiki官方文档
-- https://github.com/phachon/mm-wiki.git
+- https://github.com/chaiyd/mm-wiki.git
 
 
 ## openldap
