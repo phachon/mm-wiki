@@ -122,7 +122,8 @@ func (this *AuthorController) AuthLogin() {
 		this.jsonError("统一登录失败！")
 		return
 	}
-	realUsername := authLogin["username_prefix"] + "_" + username
+	//realUsername := authLogin["username_prefix"] + "_" + username
+	realUsername := username
 	passwordEncode := models.UserModel.EncodePassword(password)
 	userValue := map[string]interface{}{
 		"username":   realUsername,
