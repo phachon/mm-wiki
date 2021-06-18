@@ -81,7 +81,8 @@ func poster() {
 ` +
 		"Author: phachon\r\n" +
 		"Version: " + Version + "\r\n" +
-		"Link: https://github.com/chaiyd/mm-wiki"
+		"Link: https://github.com/phachon/mm-wiki" + "\r\n" +
+		"frok: https://github.com/chaiyd/mm-wiki"
 	fg.Println(logo)
 }
 

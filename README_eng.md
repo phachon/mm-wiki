@@ -30,7 +30,7 @@ MM-Wiki is a light software that enables companies for internal knowledge sharin
     $ mkdir mm_wiki
     $ cd mm_wiki
     # Take linux amd64 as an example: download the latest release of the software.
-    # Downloading address: https://github.com/chaiyd/mm-wiki/releases 
+    # Downloading address: https://github.com/phachon/mm-wiki/releases 
     # Unzip the file to the directory you just created.
     $ tar -zxvf mm-wiki-linux-amd64.tar.gz
     # Enter into the installation directory
