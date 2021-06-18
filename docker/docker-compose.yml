@@ -5,7 +5,7 @@ services:
     build:
       context: .
     container_name: mm-wiki
-    image: chaiyd/mm-wiki:0.2.1
+    image: chaiyd/mm-wiki:0.2.3
     restart: always
     volumes:
       - /data/docker/mm-wiki/data:/app/mm-wiki/data
