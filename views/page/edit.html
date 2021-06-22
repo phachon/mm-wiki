@@ -92,6 +92,51 @@
             imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
             imageUploadURL : "/image/upload?document_id={{$document.document_id}}",
             onload : function() {
+                //Vincent [46603415@qq.com] 新增图片粘贴上传功能 Start
+                $('#document_page_editor').on("paste",function(e){
+                    //判断图片类型的正则
+                    var isImage=(/.jpg$|.jpeg$|.png$|.bmp$|.webp$|.gif$/i);
+                    var e = e || event;
+                    var img=null;
+                    //IE支持window.clipboardData,chrome支持e.originalEvent.clipboardData
+                    var clipboardData = e.originalEvent.clipboardData || window.clipboardData;
+                    if(!(clipboardData&&clipboardData.items)){
+                        return;
+                    }
+
+                    for(var i=0,length=clipboardData.items.length;i<length;i++){
+                        var item=clipboardData.items[i];
+                        if(item.kind==='file'&&isImage.test(item.type)){
+                            var time = Date.parse(new Date());
+                            img=item.getAsFile();
+                            var newname=time + "-" +img.name;
+                            var url='/image/upload?document_id={{$document.document_id}}&guid='+time;
+                            var formData=new FormData();
+                            var newImg=new File([img],newname,{type:img.type});
+                            console.log(newImg)
+                            formData.append('editormd-image-file',newImg);
+
+                            //上传图片
+                            var xhr=new XMLHttpRequest();
+                            //上传结束
+                            xhr.onload=function () {
+                                var data=JSON.parse(xhr.responseText);
+                                console.log(data)
+                                if (data.success === 1) {
+                                    editor.insertValue("![image](" + data.url + ")\r\n");
+                                }else {
+                                    alert(data.message)
+                                }
+                            }
+
+                            xhr.open('POST',url,true);
+                            xhr.send(formData);
+                            //当剪贴板里是图片时，禁止默认的粘贴
+                            return false;
+                        }
+                    }
+                });
+                //Vincent [46603415@qq.com] 新增图片粘贴上传功能 End
                 var docStorage = Storage.get(storageId);
                 if (docStorage !== "") {
                     layer.confirm("是否恢复为上次未提交的本地文档？", {
