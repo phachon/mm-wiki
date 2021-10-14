@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/phachon/mm-wiki/app"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app"
+	"github.com/chaiyd/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego"
 )
@@ -247,8 +247,13 @@ func (this *TemplateController) JsonError(message interface{}, data ...interface
 
 // get client ip
 func (this *TemplateController) GetClientIp() string {
-	s := strings.Split(this.Ctx.Request.RemoteAddr, ":")
-	return s[0]
+	s := this.Ctx.Input.IP()
+	if s == "" {
+		s = strings.Split(this.Ctx.Request.RemoteAddr, ":")[0]
+	}
+	return s
+	//s := strings.Split(this.Ctx.Request.RemoteAddr, ":")
+	//return s[0]
 }
 
 // paginator

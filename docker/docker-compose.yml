@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mm-wiki:
+    #build:
+    #  context: .
+    container_name: mm-wiki
+    image: chaiyd/mm-wiki:0.2.3
+    restart: always
+    volumes:
+      - /data/docker/mm-wiki/data:/app/mm-wiki/data
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    environment:
+      - HTTP_PORT=8081
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=mm_wiki
+      - DB_USER=mm_wiki
+      - DB_PASS=ukC2ZkcG_ZTeb
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ukC2ZkcG_ZTeb
+      MYSQL_DATABASE: mm_wiki
+      MYSQL_USER: mm_wiki
+      MYSQL_PASSWORD: ukC2ZkcG_ZTeb
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data:

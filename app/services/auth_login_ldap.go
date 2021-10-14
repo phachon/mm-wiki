@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"github.com/go-ldap/ldap/v3"
 )
 
 const (
-	LdapDefaultAccountPattern     = "(&(objectClass=User)(userPrincipalName=%s))"
-	LdapDefaultAttributeGivenName = "displayName"
+	LdapDefaultAccountPattern     = "(&(objectClass=User)(uid=%s))"
+	LdapDefaultAttributeGivenName = "cn"
 )
 
 var (

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app/models"
+	"github.com/chaiyd/mm-wiki/app/utils"
 
 	"github.com/astaxie/beego"
 	"github.com/go-ozzo/ozzo-validation"
@@ -321,7 +321,7 @@ func (this *EmailController) Test() {
 		"update_time":  fmt.Sprintf("%d", time.Now().Unix()),
 		"comment":      "",
 		"document_url": "",
-		"content":      "欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
+		"content":      "欢迎使用 <a href='https://github.com/chaiyd/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
 	}
 
 	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template_test.html"

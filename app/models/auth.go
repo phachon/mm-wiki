@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/chaiyd/mm-wiki/app/utils"
 
 	"github.com/snail007/go-activerecord/mysql"
 )
@@ -52,21 +52,21 @@ func (a *Auth) HasSameName(authId, name string) (has bool, err error) {
 }
 
 // auth_id and name is exists
-func (a *Auth) HasSameUsernamePrefix(authId, usernamePrefix string) (has bool, err error) {
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
-		"login_auth_id <>": authId,
-		"username_prefix":  usernamePrefix,
-	}).Limit(0, 1))
-	if err != nil {
-		return
-	}
-	if rs.Len() > 0 {
-		has = true
-	}
-	return
-}
+//func (a *Auth) HasSameUsernamePrefix(authId, usernamePrefix string) (has bool, err error) {
+//	db := G.DB()
+//	var rs *mysql.ResultSet
+//	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
+//		"login_auth_id <>": authId,
+//		"username_prefix":  usernamePrefix,
+//	}).Limit(0, 1))
+//	if err != nil {
+//		return
+//	}
+//	if rs.Len() > 0 {
+//		has = true
+//	}
+//	return
+//}
 
 // name is exists
 func (a *Auth) HasAuthName(name string) (has bool, err error) {
@@ -85,20 +85,20 @@ func (a *Auth) HasAuthName(name string) (has bool, err error) {
 }
 
 // name is exists
-func (a *Auth) HasAuthUsernamePrefix(usernamePrefix string) (has bool, err error) {
-	db := G.DB()
-	var rs *mysql.ResultSet
-	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
-		"username_prefix": usernamePrefix,
-	}).Limit(0, 1))
-	if err != nil {
-		return
-	}
-	if rs.Len() > 0 {
-		has = true
-	}
-	return
-}
+//func (a *Auth) HasAuthUsernamePrefix(usernamePrefix string) (has bool, err error) {
+//	db := G.DB()
+//	var rs *mysql.ResultSet
+//	rs, err = db.Query(db.AR().From(Table_Auth_Name).Where(map[string]interface{}{
+//		"username_prefix": usernamePrefix,
+//	}).Limit(0, 1))
+//	if err != nil {
+//		return
+//	}
+//	if rs.Len() > 0 {
+//		has = true
+//	}
+//	return
+//}
 
 // get auth by name
 func (a *Auth) GetAuthByName(name string) (auth map[string]string, err error) {

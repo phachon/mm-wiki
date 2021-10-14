@@ -30,12 +30,12 @@
                                 <td>配置数据格式必须为 json 字符串，字段含义如下
 <pre>
 {
-    "basedn": "dc=umich,dc=edu", // ldap base dn; 用于搜索的节点；必填不能为空
-    "bind_username": "readonly", // ldap bind dn; 用来获取查询权限的 bind 用户；非必填可以为空
-    "bind_password": "password", // ldap bind dn password; bind 用户密码；非必填可以为空
-    "account_pattern": "(&(objectClass=User)(userPrincipalName=%s))" // ldap search pattern; 非必填可以为空，默认值为(&(objectClass=User)(userPrincipalName=%s))
-    "given_name_key": "displayName", // ldap 查询用户名对应的 key，非必填可以为空，默认为 displayName
-    "email_key": "mail", // ldap 查询邮箱对应的 key, 非必填可以为空
+    "basedn": "cn=dev,dc=mmwiki,dc=com",
+    "bind_username": "cn=readonly,dc=mmwiki,dc=com",
+    "bind_password": "mmwiki",
+	"account_pattern": "(&(objectClass=inetOrgPerson)(uid=%s))",// ldap search pattern; 非必填可以为空，默认值为(&(objectClass=inetOrgPerson)(uid=%s))
+	"given_name_key": "cn",  // ldap 查询用户名对应的 key，非必填可以为空，默认为 cn
+    "email_key": "mail",
     "mobile_key": "mobile", // ldap 查询手机号对应的 key，非必填可以为空
     "phone_key": "telephoneNumber", // ldap 查询电话对应的 key，非必填可以为空
     "department_key": "department", // ldap 查询部门对应的 key，非必填可以为空
@@ -134,7 +134,7 @@ ext_data: 登录认证附加参数 string; 即登录配置填写的 附加参数
                                 <td>注意事项</td>
                                 <td> http 登录认证的原理是：当用户选择http方式的统一认证登录时，MM-Wiki 将用户名和密码一起发送到配置的登录认证接口，
                                     根据接口返回的结果 message 为空判断登录成功，并从 data 字段获取到用户信息存储到 MM-Wiki 系统中；如果登录失败请参考以上文档说明！
-                                    <a target="_blank" href="https://github.com/phachon/mm-wiki/blob/master/docs/examples/auth_login/http_login.php">
+                                    <a target="_blank" href="https://github.com/chaiyd/mm-wiki/blob/master/docs/examples/auth_login/http_login.php">
                                         <i class="fa fa-share"></i> PHP 开发接口示例
                                     </a>
                                 </td>
