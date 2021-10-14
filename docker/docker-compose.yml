@@ -2,8 +2,8 @@ version: '3'
 
 services:
   mm-wiki:
-    build:
-      context: .
+    #build:
+    #  context: .
     container_name: mm-wiki
     image: chaiyd/mm-wiki:0.2.3
     restart: always
