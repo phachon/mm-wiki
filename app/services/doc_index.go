@@ -3,11 +3,9 @@ package services
 import (
 	"sync"
 
+	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/global"
-
-	"github.com/astaxie/beego/logs"
-	"github.com/go-ego/riot/types"
 )
 
 var DocIndexService = NewDocIndexService()
@@ -20,11 +18,8 @@ func NewDocIndexService() *DocIndex {
 }
 
 func (di *DocIndex) IsUpdateDocIndex() bool {
-	//fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
-	//if fulltextSearchOpen == "1" {
-	//	return true
-	//}
-	return false
+	fulltextSearchOpen := models.ConfigModel.GetConfigValueByKey(models.ConfigKeyFulltextSearch, "0")
+	return fulltextSearchOpen == "1"
 }
 
 // ForceDelDocIdIndex 强制删除索引
@@ -36,8 +31,7 @@ func (di *DocIndex) ForceDelDocIdIndex(docId string) {
 		return
 	}
 	// add search index
-	data := types.DocData{Content: ""}
-	global.DocSearcher.IndexDoc(docId, data, true)
+	global.SearchIndex.Delete(docId)
 }
 
 // UpdateDocIndex 更新单个文件的索引
@@ -57,8 +51,7 @@ func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 		return err
 	}
 	// add search index
-	data := types.DocData{Content: content}
-	global.DocSearcher.IndexDoc(docId, data, true)
+	global.SearchIndex.Index(docId, content)
 	return nil
 }
 
@@ -77,8 +70,7 @@ func (di *DocIndex) UpdateDocIndex(doc map[string]string) {
 		return
 	}
 	// add search index
-	data := types.DocData{Content: content}
-	global.DocSearcher.IndexDoc(docId, data)
+	global.SearchIndex.Index(docId, content)
 }
 
 // UpdateDocsIndex 批量更新多个文件的索引
@@ -141,9 +133,4 @@ func (di *DocIndex) getBatchDocs(allDocs []map[string]string, n int) [][]map[str
 		res = append(res, allDocs[len(allDocs)-remainder:])
 	}
 	return res
-}
-
-// FlushIndex 所有索引
-func (di *DocIndex) Flush() {
-	global.DocSearcher.Flush()
 }
