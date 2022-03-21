@@ -3,20 +3,22 @@ package app
 import (
 	"flag"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/fatih/color"
-	"github.com/go-ego/riot/types"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/phachon/mm-wiki/app/work"
-	"github.com/phachon/mm-wiki/global"
-	"github.com/snail007/go-activerecord/mysql"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/blevesearch/bleve/v2"
+	"github.com/fatih/color"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/services"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/app/work"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/snail007/go-activerecord/mysql"
 )
 
 var (
@@ -54,7 +56,7 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
-	//initSearch()
+	initSearch()
 	//initWork()
 	StartTime = time.Now().Unix()
 }
@@ -241,30 +243,38 @@ func checkUpgrade() {
 }
 
 func initSearch() {
-
-	gseFile := filepath.Join(RootDir, "docs/search_dict/dictionary.txt")
-	stopFile := filepath.Join(RootDir, "docs/search_dict/stop_tokens.txt")
-	ok, _ := utils.File.PathIsExists(gseFile)
-	if !ok {
-		logs.Error("search dict file " + gseFile + " is not exists!")
-		os.Exit(1)
+	// check index file is exist
+	var err error
+	file, _ := os.Stat("mm-wiki.bleve")
+	if file == nil {
+		global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
+		if err != nil {
+			logs.Error("[initSearch] fail to init Search index, err: %+v", err)
+			return
+		}
+		services.DocIndexService.UpdateAllDocIndex(100)
+		return
 	}
-	ok, _ = utils.File.PathIsExists(stopFile)
-	if !ok {
-		logs.Error("search stop dict file " + stopFile + " is not exists!")
-		os.Exit(1)
+	global.SearchIndex, err = bleve.Open("mm-wiki.bleve")
+	if err != nil {
+		logs.Error("[initSearch] fail to open Search index, err: %+v", err)
+		return
 	}
-	global.DocSearcher.Init(types.EngineOpts{
-		UseStore:    true,
-		StoreFolder: SearchIndexAbsDir,
-		Using:       3,
-		//GseDict:       "zh",
-		GseDict:       gseFile,
-		StopTokenFile: stopFile,
-		IndexerOpts: &types.IndexerOpts{
-			IndexType: types.LocsIndex,
-		},
-	})
+	//check index file doc num
+	indexDocNum, err := global.SearchIndex.DocCount()
+	if err != nil {
+		logs.Error("[initSearch] fail to get indexDocNum, err: %+v", err)
+		return
+	}
+	allDocNum, err := models.DocumentModel.CountDocuments()
+	if err != nil {
+		logs.Error("[initSearch] fail to get allDocNum, err: %+v", err)
+		return
+	}
+	if indexDocNum < uint64(allDocNum) {
+		services.DocIndexService.UpdateAllDocIndex(100)
+	}
+	return
 }
 
 func initWork() {
