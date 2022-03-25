@@ -182,24 +182,23 @@ func (this *MainController) Search() {
 
 		// 开始全文搜索
 		req := bleve.NewSearchRequestOptions(query, math.MaxInt32, 0, true)
-		req.Highlight = bleve.NewHighlightWithStyle("html")
+		req.Highlight = bleve.NewHighlightWithStyle("mm-wiki")
 		searchDoc, err := global.SearchIndex.Search(req)
 		if err != nil {
 			logs.Error("fail to Search file, err: %+v", err)
 			this.ViewError("搜索文档错误！")
 		}
-
 		// 规范化返回结果
 		var searchDocIds []string
 		for _, searchDoc := range searchDoc.Hits {
 			resultText := searchDoc.Fragments["Content"][0]
 
 			//修复中文高亮缺陷
-			resultText = strings.Replace(resultText, "<mark>", "", -1)
-			resultText = strings.Replace(resultText, "</mark>", "", -1)
-			for _, key := range keyList {
-				resultText = strings.Replace(resultText, key, "<mark>"+key+"</mark>", -1)
-			}
+			// resultText = strings.Replace(resultText, "<mark>", "", -1)
+			// resultText = strings.Replace(resultText, "</mark>", "", -1)
+			// for _, key := range keyList {
+			// 	resultText = strings.Replace(resultText, key, "<mark>"+key+"</mark>", -1)
+			// }
 
 			searchDocContents[searchDoc.ID] = resultText
 			searchDocIds = append(searchDocIds, searchDoc.ID)

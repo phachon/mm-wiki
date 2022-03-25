@@ -13,6 +13,10 @@ var DocIndexService = NewDocIndexService()
 type DocIndex struct {
 }
 
+type DocContent struct {
+	Content string
+}
+
 func NewDocIndexService() *DocIndex {
 	return &DocIndex{}
 }
@@ -51,7 +55,7 @@ func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 		return err
 	}
 	// add search index
-	global.SearchIndex.Index(docId, content)
+	global.SearchIndex.Index(docId, DocContent{Content: content})
 	return nil
 }
 
@@ -70,7 +74,7 @@ func (di *DocIndex) UpdateDocIndex(doc map[string]string) {
 		return
 	}
 	// add search index
-	global.SearchIndex.Index(docId, content)
+	global.SearchIndex.Index(docId, DocContent{Content: content})
 }
 
 // UpdateDocsIndex 批量更新多个文件的索引

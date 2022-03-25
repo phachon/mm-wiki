@@ -19,6 +19,7 @@ import (
 	"github.com/phachon/mm-wiki/app/work"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/snail007/go-activerecord/mysql"
+	"github.com/yanyiwu/gojieba"
 )
 
 var (
@@ -56,7 +57,11 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
+	initTokenizer()
+	initAnalyzer()
 	initSearch()
+	initFragmentFormatter()
+	initHighlighter()
 	//initWork()
 	StartTime = time.Now().Unix()
 }
@@ -243,8 +248,32 @@ func checkUpgrade() {
 }
 
 func initSearch() {
-	// check index file is exist
-	var err error
+	//选择搜索引擎
+	err := global.SearchMap.AddCustomTokenizer("gojieba",
+		map[string]interface{}{
+			"dictpath":     gojieba.DICT_PATH,
+			"hmmpath":      gojieba.HMM_PATH,
+			"userdictpath": gojieba.USER_DICT_PATH,
+			"idf":          gojieba.IDF_PATH,
+			"stop_words":   gojieba.STOP_WORDS_PATH,
+			"type":         "gojieba",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	err = global.SearchMap.AddCustomAnalyzer("gojieba",
+		map[string]interface{}{
+			"type":      "gojieba",
+			"tokenizer": "gojieba",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	global.SearchMap.DefaultAnalyzer = "gojieba"
+
+	// 检查索引是不是已经存在
 	file, _ := os.Stat("mm-wiki.bleve")
 	if file == nil {
 		global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
@@ -260,7 +289,8 @@ func initSearch() {
 		logs.Error("[initSearch] fail to open Search index, err: %+v", err)
 		return
 	}
-	//check index file doc num
+
+	//检查索引文件是不是完整
 	indexDocNum, err := global.SearchIndex.DocCount()
 	if err != nil {
 		logs.Error("[initSearch] fail to get indexDocNum, err: %+v", err)
