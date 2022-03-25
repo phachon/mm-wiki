@@ -24,6 +24,7 @@ require (
 	github.com/shirou/w32 v0.0.0-20160930032740-bb4de0191aa4 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/snail007/go-activerecord v0.0.0-20190813031814-2ac2f3d7cff0
+	github.com/vcaesar/gse-bleve v0.31.2
 	github.com/yanyiwu/gojieba v1.1.3-0.20220131084353-a30c1dcd29bb
 	golang.org/x/crypto v0.0.0-20190911031432-227b76d455e7 // indirect
 	golang.org/x/net v0.0.0-20191002035440-2ec189313ef0 // indirect

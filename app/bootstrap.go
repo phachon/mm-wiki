@@ -11,7 +11,6 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	"github.com/blevesearch/bleve/v2"
 	"github.com/fatih/color"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/services"
@@ -19,7 +18,7 @@ import (
 	"github.com/phachon/mm-wiki/app/work"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/snail007/go-activerecord/mysql"
-	"github.com/yanyiwu/gojieba"
+	gse "github.com/vcaesar/gse-bleve"
 )
 
 var (
@@ -57,8 +56,8 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
-	initTokenizer()
-	initAnalyzer()
+	// initTokenizer()
+	// initAnalyzer()
 	initSearch()
 	initFragmentFormatter()
 	initHighlighter()
@@ -249,62 +248,22 @@ func checkUpgrade() {
 
 func initSearch() {
 	//选择搜索引擎
-	err := global.SearchMap.AddCustomTokenizer("gojieba",
-		map[string]interface{}{
-			"dictpath":     gojieba.DICT_PATH,
-			"hmmpath":      gojieba.HMM_PATH,
-			"userdictpath": gojieba.USER_DICT_PATH,
-			"idf":          gojieba.IDF_PATH,
-			"stop_words":   gojieba.STOP_WORDS_PATH,
-			"type":         "gojieba",
-		},
-	)
-	if err != nil {
-		panic(err)
+	os.RemoveAll("mm-wiki.bleve")
+	opt := gse.Option{
+		Index: "mm-wiki.bleve",
+		Dicts: "embed, zh",
+		Stop:  "",
+		Opt:   "search-hmm",
+		Trim:  "trim",
 	}
-	err = global.SearchMap.AddCustomAnalyzer("gojieba",
-		map[string]interface{}{
-			"type":      "gojieba",
-			"tokenizer": "gojieba",
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-	global.SearchMap.DefaultAnalyzer = "gojieba"
+	var err error
 
-	// 检查索引是不是已经存在
-	file, _ := os.Stat("mm-wiki.bleve")
-	if file == nil {
-		global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
-		if err != nil {
-			logs.Error("[initSearch] fail to init Search index, err: %+v", err)
-			return
-		}
-		services.DocIndexService.UpdateAllDocIndex(100)
-		return
-	}
-	global.SearchIndex, err = bleve.Open("mm-wiki.bleve")
+	global.SearchIndex, err = gse.New(opt)
 	if err != nil {
-		logs.Error("[initSearch] fail to open Search index, err: %+v", err)
+		logs.Error("[initSearch] fail to init Search index, err: %+v", err)
 		return
 	}
-
-	//检查索引文件是不是完整
-	indexDocNum, err := global.SearchIndex.DocCount()
-	if err != nil {
-		logs.Error("[initSearch] fail to get indexDocNum, err: %+v", err)
-		return
-	}
-	allDocNum, err := models.DocumentModel.CountDocuments()
-	if err != nil {
-		logs.Error("[initSearch] fail to get allDocNum, err: %+v", err)
-		return
-	}
-	if indexDocNum < uint64(allDocNum) {
-		services.DocIndexService.UpdateAllDocIndex(100)
-	}
-	return
+	services.DocIndexService.UpdateAllDocIndex(100)
 }
 
 func initWork() {

@@ -176,13 +176,13 @@ func (this *MainController) Search() {
 		keyList := strings.Split(keyword, " ")
 		queryList := []query.Query{}
 		for _, key := range keyList {
-			queryList = append(queryList, bleve.NewMatchPhraseQuery(key))
+			keyQuery := bleve.NewMatchQuery(key)
+			queryList = append(queryList, keyQuery)
 		}
 		query := bleve.NewConjunctionQuery(queryList...)
-
 		// 开始全文搜索
 		req := bleve.NewSearchRequestOptions(query, math.MaxInt32, 0, true)
-		req.Highlight = bleve.NewHighlightWithStyle("mm-wiki")
+		req.Highlight = bleve.NewHighlightWithStyle("html")
 		searchDoc, err := global.SearchIndex.Search(req)
 		if err != nil {
 			logs.Error("fail to Search file, err: %+v", err)
@@ -192,14 +192,6 @@ func (this *MainController) Search() {
 		var searchDocIds []string
 		for _, searchDoc := range searchDoc.Hits {
 			resultText := searchDoc.Fragments["Content"][0]
-
-			//修复中文高亮缺陷
-			// resultText = strings.Replace(resultText, "<mark>", "", -1)
-			// resultText = strings.Replace(resultText, "</mark>", "", -1)
-			// for _, key := range keyList {
-			// 	resultText = strings.Replace(resultText, key, "<mark>"+key+"</mark>", -1)
-			// }
-
 			searchDocContents[searchDoc.ID] = resultText
 			searchDocIds = append(searchDocIds, searchDoc.ID)
 		}
