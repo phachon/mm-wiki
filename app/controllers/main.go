@@ -182,7 +182,7 @@ func (this *MainController) Search() {
 		query := bleve.NewConjunctionQuery(queryList...)
 		// 开始全文搜索
 		req := bleve.NewSearchRequestOptions(query, math.MaxInt32, 0, true)
-		req.Highlight = bleve.NewHighlightWithStyle("html")
+		req.Highlight = bleve.NewHighlightWithStyle("mm-wiki")
 		searchDoc, err := global.SearchIndex.Search(req)
 		if err != nil {
 			logs.Error("fail to Search file, err: %+v", err)
