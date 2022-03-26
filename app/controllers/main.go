@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"math"
+	"sort"
 	"strings"
 
 	"github.com/astaxie/beego/logs"
@@ -163,6 +164,8 @@ func (this *MainController) Search() {
 		}
 	}
 	searchDocContents := make(map[string]string)
+	DocScore := make(map[string]float64)
+	var searchDocIds []string
 	// 默认根据内容搜索
 	// v0.2.1 下线全文搜索功能
 	if searchType == "title" {
@@ -189,11 +192,11 @@ func (this *MainController) Search() {
 			this.ViewError("搜索文档错误！")
 		}
 		// 规范化返回结果
-		var searchDocIds []string
 		for _, searchDoc := range searchDoc.Hits {
 			resultText := searchDoc.Fragments["Content"][0]
 			searchDocContents[searchDoc.ID] = resultText
 			searchDocIds = append(searchDocIds, searchDoc.ID)
+			DocScore[searchDoc.ID] = searchDoc.Score
 		}
 		documents, err = models.DocumentModel.GetDocumentsByDocumentIds(searchDocIds)
 		if err != nil {
@@ -218,6 +221,9 @@ func (this *MainController) Search() {
 		}
 		realDocuments = append(realDocuments, document)
 	}
+	sort.Slice(realDocuments, func(i, j int) bool {
+		return DocScore[realDocuments[i]["document_id"]] > DocScore[realDocuments[j]["document_id"]]
+	})
 	this.Data["search_type"] = searchType
 	this.Data["keyword"] = keyword
 	this.Data["documents"] = realDocuments

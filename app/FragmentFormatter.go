@@ -9,7 +9,8 @@ import (
 
 const Name = "mm-wiki"
 
-const defaultHTMLHighlightBefore = "<span style=\"color:rgba(255,0,0,0.5)\">"
+//更换颜色代码，可参考：https://html-color-codes.info/chinese/
+const defaultHTMLHighlightBefore = "<span style=\"color:#F03F3F\">"
 const defaultHTMLHighlightAfter = "</span>"
 
 type FragmentFormatter struct {
