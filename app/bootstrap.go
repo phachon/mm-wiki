@@ -255,6 +255,7 @@ func initSearch() {
 		Stop:  "",
 		Opt:   "search-hmm",
 		Trim:  "trim",
+		Alpha: true,
 	}
 	var err error
 
