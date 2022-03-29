@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
-	"github.com/phachon/mm-wiki/app/services"
 	"strings"
 	"time"
+
+	"github.com/astaxie/beego/logs"
+	"github.com/phachon/mm-wiki/app/services"
 
 	"github.com/astaxie/beego"
 	"github.com/phachon/mm-wiki/app/models"
@@ -48,7 +49,7 @@ func (this *AuthorController) Login() {
 	if err != nil {
 		this.jsonError("登录出错")
 	}
-	if len(user) == 0 {
+	if len(user) == 0 || username != user["username"] {
 		this.jsonError("用户名或密码错误!")
 	}
 	if user["is_forbidden"] == fmt.Sprintf("%d", models.User_Forbidden_True) {
