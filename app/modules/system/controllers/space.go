@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/phachon/mm-wiki/app"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 )
 
 type SpaceController struct {
@@ -28,7 +29,7 @@ func (this *SpaceController) Save() {
 	description := strings.TrimSpace(this.GetString("description", ""))
 	tags := strings.TrimSpace(this.GetString("tags", ""))
 	visitLevel := strings.TrimSpace(this.GetString("visit_level", "public"))
-	isShare := strings.TrimSpace(this.GetString("is_share", "1"))
+	isShare := strings.TrimSpace(this.GetString("is_share", "0"))
 	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
 	if name == "" {

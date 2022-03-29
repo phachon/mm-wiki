@@ -41,12 +41,8 @@
                     </td>
                     <td class="center">
                         <div class="btn-group btn-group-sm" role="group">
-                            {{if eq $space.collection "1"}}
-                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
-                            {{else}}
-                                <a name="collection_space" onclick="Common.ajaxSubmit('/collection/add?type=2&resource_id={{$space.space_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star-empty"> </i></a>
-                            {{end}}
-                                <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
+                            <a name="collection_space" onclick="Common.ajaxSubmit('/collection/cancel?collection_id={{$space.collection_id}}')" type="button" class="btn btn-default"><i class="glyphicon glyphicon-star"> </i></a>
+                            <a name="user" data-link="/space/member?space_id={{$space.space_id}}" type="button" class="btn btn-default"><i class="fa fa-group"></i></a>
                         </div>
                     </td>
                 </tr>
