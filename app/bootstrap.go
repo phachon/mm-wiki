@@ -11,6 +11,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"github.com/blevesearch/bleve/v2"
 	"github.com/fatih/color"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/services"
@@ -18,7 +19,7 @@ import (
 	"github.com/phachon/mm-wiki/app/work"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/snail007/go-activerecord/mysql"
-	gse "github.com/vcaesar/gse-bleve"
+	"github.com/yanyiwu/gojieba"
 )
 
 var (
@@ -56,8 +57,9 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
-	// initTokenizer()
-	// initAnalyzer()
+	// initTokenFilter()
+	initTokenizer()
+	initAnalyzer()
 	initSearch()
 	initFragmentFormatter()
 	initHighlighter()
@@ -249,21 +251,32 @@ func checkUpgrade() {
 func initSearch() {
 	//选择搜索引擎
 	os.RemoveAll("mm-wiki.bleve")
-	opt := gse.Option{
-		Index: "mm-wiki.bleve",
-		Dicts: "embed, zh",
-		Stop:  "",
-		Opt:   "search-hmm",
-		Trim:  "trim",
-		Alpha: true,
-	}
-	var err error
-
-	global.SearchIndex, err = gse.New(opt)
+	err := global.SearchMap.AddCustomTokenizer("gojieba",
+		map[string]interface{}{
+			"dictpath":     gojieba.DICT_PATH,
+			"hmmpath":      gojieba.HMM_PATH,
+			"userdictpath": "./docs/search_dict/dictionary.txt",
+			"idf":          gojieba.IDF_PATH,
+			"stop_words":   "./docs/search_dict/stop_tokens.txt",
+			"type":         "gojieba",
+		},
+	)
 	if err != nil {
-		logs.Error("[initSearch] fail to init Search index, err: %+v", err)
-		return
+		panic(err)
 	}
+	err = global.SearchMap.AddCustomAnalyzer("gojieba",
+		map[string]interface{}{
+			"type":      "gojieba",
+			"tokenizer": "gojieba",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	global.SearchMap.DefaultAnalyzer = "gojieba"
+
+	global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
+
 	services.DocIndexService.UpdateAllDocIndex(100)
 }
 
