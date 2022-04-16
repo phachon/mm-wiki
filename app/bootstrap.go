@@ -6,7 +6,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/fatih/color"
-	"github.com/go-ego/riot/types"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
 	"github.com/phachon/mm-wiki/app/work"
@@ -254,17 +253,17 @@ func initSearch() {
 		logs.Error("search stop dict file " + stopFile + " is not exists!")
 		os.Exit(1)
 	}
-	global.DocSearcher.Init(types.EngineOpts{
-		UseStore:    true,
-		StoreFolder: SearchIndexAbsDir,
-		Using:       3,
-		//GseDict:       "zh",
-		GseDict:       gseFile,
-		StopTokenFile: stopFile,
-		IndexerOpts: &types.IndexerOpts{
-			IndexType: types.LocsIndex,
-		},
-	})
+	//global.DocSearcher.Init(types.EngineOpts{
+	//	UseStore:    true,
+	//	StoreFolder: SearchIndexAbsDir,
+	//	Using:       3,
+	//	//GseDict:       "zh",
+	//	GseDict:       gseFile,
+	//	StopTokenFile: stopFile,
+	//	IndexerOpts: &types.IndexerOpts{
+	//		IndexType: types.LocsIndex,
+	//	},
+	//})
 }
 
 func initWork() {
