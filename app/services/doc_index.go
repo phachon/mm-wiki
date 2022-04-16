@@ -3,11 +3,8 @@ package services
 import (
 	"sync"
 
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/global"
-
 	"github.com/astaxie/beego/logs"
-	"github.com/go-ego/riot/types"
+	"github.com/phachon/mm-wiki/app/models"
 )
 
 var DocIndexService = NewDocIndexService()
@@ -35,9 +32,8 @@ func (di *DocIndex) ForceDelDocIdIndex(docId string) {
 	if !di.IsUpdateDocIndex() {
 		return
 	}
-	// add search index
-	data := types.DocData{Content: ""}
-	global.DocSearcher.IndexDoc(docId, data, true)
+	// todo add search index
+
 }
 
 // UpdateDocIndex 更新单个文件的索引
@@ -52,13 +48,11 @@ func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 	if err != nil {
 		return err
 	}
-	content, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
+	_, _, err = models.DocumentModel.GetDocumentContentByDocument(doc)
 	if err != nil {
 		return err
 	}
-	// add search index
-	data := types.DocData{Content: content}
-	global.DocSearcher.IndexDoc(docId, data, true)
+	// todo add search index
 	return nil
 }
 
@@ -71,14 +65,12 @@ func (di *DocIndex) UpdateDocIndex(doc map[string]string) {
 	if !di.IsUpdateDocIndex() {
 		return
 	}
-	content, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
+	_, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
 	if err != nil {
 		logs.Error("[UpdateDocIndex] get documentId=%s content err: %s", docId, err.Error())
 		return
 	}
-	// add search index
-	data := types.DocData{Content: content}
-	global.DocSearcher.IndexDoc(docId, data)
+	// todo add search index
 }
 
 // UpdateDocsIndex 批量更新多个文件的索引
@@ -145,5 +137,4 @@ func (di *DocIndex) getBatchDocs(allDocs []map[string]string, n int) [][]map[str
 
 // FlushIndex 所有索引
 func (di *DocIndex) Flush() {
-	global.DocSearcher.Flush()
 }
