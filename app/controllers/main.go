@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/phachon/mm-wiki/app/models"
 	"strings"
+
+	"github.com/phachon/mm-wiki/app/models"
 )
 
 type MainController struct {
@@ -10,7 +11,6 @@ type MainController struct {
 }
 
 func (this *MainController) Index() {
-
 	collectDocs, err := models.CollectionModel.GetCollectionsByUserIdAndType(this.UserId, models.Collection_Type_Doc)
 	if err != nil {
 		this.ErrorLog("查找收藏文档错误: " + err.Error())
@@ -26,7 +26,6 @@ func (this *MainController) Index() {
 		this.ErrorLog("查找收藏文档错误: " + err.Error())
 		this.ViewError("查找收藏文档错误！")
 	}
-
 	this.Data["documents"] = documents
 	this.Data["count"] = len(documents)
 	this.viewLayout("main/index", "main")
