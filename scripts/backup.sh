@@ -4,8 +4,17 @@ function parse_conf_value() {
     echo $(grep -e "^$1=" $2 | awk '{split($0,array,"="); print array[2]}' | tr -d '"')
 }
 
-ROOT_DIR=$(cd "$(dirname "$0")";pwd)
-CONF_FILE=${ROOT_DIR}/conf/mm-wiki.conf
+function help() {
+    echo "$0 /path/to/mm-wiki.conf"
+}
+
+if [[ "$1" == "" ]]; then
+    help
+    exit 1
+fi
+
+CONF_FILE=$1
+[[ ! -f ${CONF_FILE} ]] && echo "Failed to open ${CONF_FILE}" && exit 1
 echo "Config file: ${CONF_FILE}"
 
 BACKUP_NAME=backup-`date '+%Y%m%d-%H%M%S'`

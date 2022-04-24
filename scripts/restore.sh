@@ -5,15 +5,16 @@ function parse_conf_value() {
 }
 
 function help() {
-    echo "$0 backup-date-time.tgz"
+    echo "$0 backup-date-time.tgz /path/to/conf/"
 }
 
-if [[ "$1" == "" ]]; then
+if [[ "$#" -ne 2 ]]; then
     help
     exit 1
 fi
 
-ROOT_DIR=$(cd "$(dirname "$0")";pwd)
+CONF_DIR=$2
+[[ ! -d  ${CONF_DIR} ]] && mkdir -p ${CONF_DIR}
 BACKUP_FILEPATH=$1
 BACKUP_FILENAME=$(basename ${BACKUP_FILEPATH})
 BACKUP_NAME=${BACKUP_FILENAME%.*}
@@ -25,10 +26,10 @@ tar xf ${BACKUP_FILEPATH} -C ${BACKUP_DIR}
 
 echo "Restore config..."
 CONF_FILE=${BACKUP_DIR}/mm-wiki.conf
-if [[ -f ${ROOT_DIR}/conf/mm-wiki.conf ]]; then
-    mv ${ROOT_DIR}/conf/mm-wiki.conf ${ROOT_DIR}/conf/mm-wiki.conf.save
+if [[ -f ${CONF_DIR}/mm-wiki.conf ]]; then
+    mv ${CONF_DIR}/mm-wiki.conf ${CONF_DIR}/mm-wiki.conf.save
 fi
-cp ${BACKUP_DIR}/mm-wiki.conf ${ROOT_DIR}/conf/mm-wiki.conf
+cp ${BACKUP_DIR}/mm-wiki.conf ${CONF_DIR}/mm-wiki.conf
 
 echo "Restore database..."
 DB_DATABASE=$(parse_conf_value name ${CONF_FILE})
@@ -46,4 +47,4 @@ mkdir -p ${DOC_DIR}
 tar xf ${BACKUP_DIR}/documents.tgz -C ${DOC_DIR}
 
 rm -rf ${BACKUP_DIR}
-echo "Restore completed."
+echo "Restore completed: ${CONF_DIR}/mm-wiki.conf"
