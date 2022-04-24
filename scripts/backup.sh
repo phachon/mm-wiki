@@ -17,7 +17,7 @@ CONF_FILE=$1
 [[ ! -f ${CONF_FILE} ]] && echo "Failed to open ${CONF_FILE}" && exit 1
 echo "Config file: ${CONF_FILE}"
 
-BACKUP_NAME=backup-`date '+%Y%m%d-%H%M%S'`
+BACKUP_NAME=mm-wiki-backup-`date '+%Y%m%d-%H%M%S'`
 BACKUP_DIR=/tmp/${BACKUP_NAME}
 mkdir -p ${BACKUP_DIR}
 
