@@ -53,7 +53,7 @@ func (this *UserController) Save() {
 	if username == "" {
 		this.jsonError("用户名不能为空！")
 	}
-	if !v.Match(username, regexp.MustCompile("[a-zA-Z0-9.-_]+"), "match").Ok {
+	if !v.Match(username, regexp.MustCompile(`^[a-zA-Z0-9\.\-\_]+$`), "match").Ok {
 		this.jsonError("用户名格式不正确！")
 	}
 	if givenName == "" {
