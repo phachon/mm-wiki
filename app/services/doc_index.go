@@ -8,7 +8,6 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/global"
-
 )
 
 var DocIndexService = NewDocIndexService()
@@ -19,7 +18,6 @@ type DocIndex struct {
 type DocContent struct {
 	ID      float64
 	Content string
-	Time    float64
 }
 
 func NewDocIndexService() *DocIndex {
@@ -56,24 +54,16 @@ func (di *DocIndex) ForceUpdateDocIndexByDocId(docId string) error {
 	if err != nil {
 		return err
 	}
-	_, _, err = models.DocumentModel.GetDocumentContentByDocument(doc)
+	content, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
 	if err != nil {
 		return err
 	}
-<<<<<<< HEAD
 	// add search index
 	DocID, err := strconv.ParseFloat(docId, 64)
 	if err != nil {
 		logs.Error("string转float64失败：err %+v", err)
 	}
-	Uptime, err := strconv.ParseFloat(doc["update_time"], 64)
-	if err != nil {
-		logs.Error("string转float64失败：err %+v", err)
-	}
-	global.SearchIndex.Index(docId, DocContent{ID: DocID, Content: content, Time: Uptime})
-=======
-	// todo add search index
->>>>>>> master
+	global.SearchIndex.Index(docId, DocContent{ID: DocID, Content: content})
 	return nil
 }
 
@@ -86,25 +76,17 @@ func (di *DocIndex) UpdateDocIndex(doc map[string]string) {
 	if !di.IsUpdateDocIndex() {
 		return
 	}
-	_, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
+	content, _, err := models.DocumentModel.GetDocumentContentByDocument(doc)
 	if err != nil {
 		logs.Error("[UpdateDocIndex] get documentId=%s content err: %s", docId, err.Error())
 		return
 	}
-<<<<<<< HEAD
 	// add search index
 	DocID, err := strconv.ParseFloat(docId, 64)
 	if err != nil {
 		logs.Error("string转float64失败：err %+v", err)
 	}
-	Uptime, err := strconv.ParseFloat(doc["update_time"], 64)
-	if err != nil {
-		logs.Error("string转float64失败：err %+v", err)
-	}
-	global.SearchIndex.Index(docId, DocContent{ID: DocID, Content: content, Time: Uptime})
-=======
-	// todo add search index
->>>>>>> master
+	global.SearchIndex.Index(docId, DocContent{ID: DocID, Content: content})
 }
 
 // UpdateDocsIndex 批量更新多个文件的索引
@@ -205,7 +187,6 @@ func (di *DocIndex) getBatchDocs(allDocs []map[string]string, n int) [][]map[str
 	return res
 }
 
-<<<<<<< HEAD
 // 获取分批文档ID
 func (di *DocIndex) getBatchDocIDs(allDocs []string, n int) [][]string {
 
@@ -291,8 +272,4 @@ func intersect(slice1, slice2 []string) []string {
 		}
 	}
 	return nn
-=======
-// FlushIndex 所有索引
-func (di *DocIndex) Flush() {
->>>>>>> master
 }

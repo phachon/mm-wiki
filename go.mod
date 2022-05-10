@@ -23,7 +23,7 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/snail007/go-activerecord v0.0.0-20190813031814-2ac2f3d7cff0
 	github.com/stretchr/testify v1.7.1 // indirect
-	github.com/yanyiwu/gojieba v1.1.2
+	github.com/yanyiwu/gojieba v1.1.3-0.20220131084353-a30c1dcd29bb
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
