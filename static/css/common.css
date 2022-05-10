@@ -548,6 +548,8 @@ mark {
     display: none;
     background: #F5F5F5;
     min-width: 50px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .page-view-dir-toc .toc {

@@ -31,7 +31,6 @@ func (this *MainController) Index() {
 		this.ErrorLog("查找收藏文档错误: " + err.Error())
 		this.ViewError("查找收藏文档错误！")
 	}
-
 	this.Data["documents"] = documents
 	this.Data["count"] = len(documents)
 	this.viewLayout("main/index", "main")

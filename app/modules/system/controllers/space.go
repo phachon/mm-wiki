@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/phachon/mm-wiki/app"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/phachon/mm-wiki/app"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/utils"
 )
 
 type SpaceController struct {
@@ -28,7 +29,7 @@ func (this *SpaceController) Save() {
 	description := strings.TrimSpace(this.GetString("description", ""))
 	tags := strings.TrimSpace(this.GetString("tags", ""))
 	visitLevel := strings.TrimSpace(this.GetString("visit_level", "public"))
-	isShare := strings.TrimSpace(this.GetString("is_share", "1"))
+	isShare := strings.TrimSpace(this.GetString("is_share", "0"))
 	isExport := strings.TrimSpace(this.GetString("is_export", "0"))
 
 	if name == "" {
@@ -247,10 +248,19 @@ func (this *SpaceController) Member() {
 			}
 		}
 	}
-
+	// 获取当前空间下的所有user
+	spaceAllUsers, err := models.SpaceUserModel.GetSpaceUsersBySpaceId(spaceId);
+	if err != nil {
+		this.ErrorLog("获取空间 " + spaceId + " 成员列表失败: " + err.Error())
+		this.ViewError("获取空间所有成员列表失败！", "/system/space/list")
+	}
+	var allUserIds = []string{}
+	for _, spaceUser := range spaceAllUsers {
+		allUserIds = append(allUserIds, spaceUser["user_id"])
+	}
 	var otherUsers = []map[string]string{}
-	if len(userIds) > 0 {
-		otherUsers, err = models.UserModel.GetUserByNotUserIds(userIds)
+	if len(allUserIds) > 0 {
+		otherUsers, err = models.UserModel.GetUserByNotUserIds(allUserIds)
 	} else {
 		otherUsers, err = models.UserModel.GetUsers()
 	}
