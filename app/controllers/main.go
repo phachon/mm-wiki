@@ -5,7 +5,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/astaxie/beego/logs"
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/search/query"
 	"github.com/phachon/mm-wiki/app/models"
@@ -188,7 +187,7 @@ func (this *MainController) Search() {
 		req.Highlight = bleve.NewHighlightWithStyle("mm-wiki")
 		searchDoc, err := global.SearchIndex.Search(req)
 		if err != nil {
-			logs.Error("fail to Search file, err: %+v", err)
+			this.ErrorLog("fail to Search file, err:" + err.Error())
 			this.ViewError("搜索文档错误！")
 		}
 		// 规范化返回结果

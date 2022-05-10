@@ -16,7 +16,6 @@ import (
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/services"
 	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/phachon/mm-wiki/app/work"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/snail007/go-activerecord/mysql"
 	"github.com/yanyiwu/gojieba"
@@ -63,7 +62,7 @@ func init() {
 	initSearch()
 	initFragmentFormatter()
 	initHighlighter()
-	//initWork()
+	initWork()
 	StartTime = time.Now().Unix()
 }
 
@@ -249,8 +248,8 @@ func checkUpgrade() {
 }
 
 func initSearch() {
-	//选择搜索引擎
 	os.RemoveAll("mm-wiki.bleve")
+	//选择搜索引擎
 	err := global.SearchMap.AddCustomTokenizer("gojieba",
 		map[string]interface{}{
 			"dictpath":     gojieba.DICT_PATH,
@@ -276,10 +275,9 @@ func initSearch() {
 	global.SearchMap.DefaultAnalyzer = "gojieba"
 
 	global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
-
-	services.DocIndexService.UpdateAllDocIndex(100)
+	services.DocIndexService.UpdateAllDocIndex(50)
 }
 
 func initWork() {
-	work.DocSearchWorker.Start()
+	go services.DocIndexService.CheckDocIndexs()
 }

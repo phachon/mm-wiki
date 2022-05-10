@@ -121,7 +121,7 @@ func (d *DocSearch) updateAllDocIndex() {
 		batchUpdateDocNum = 100
 	}
 	services.DocIndexService.UpdateAllDocIndex(batchUpdateDocNum)
-	// services.DocIndexService.Flush()
+	//services.DocIndexService.Flush()
 
 	d.lock.Lock()
 	d.isTaskRunning = false
