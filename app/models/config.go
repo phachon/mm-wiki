@@ -17,6 +17,7 @@ const (
 	ConfigKeyFulltextSearch  = "fulltext_search_open"
 	ConfigKeyDocSearchTimer  = "doc_search_timer"
 	ConfigKeySystemName      = "system_name"
+	ConfigKeySystemUrl       = "system_url"
 )
 
 type Config struct {

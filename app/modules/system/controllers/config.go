@@ -51,6 +51,7 @@ func (this *ConfigController) Modify() {
 	fulltextSearch := strings.TrimSpace(this.GetString(models.ConfigKeyFulltextSearch, "0"))
 	docSearchTimer := strings.TrimSpace(this.GetString(models.ConfigKeyDocSearchTimer, "3600"))
 	systemName := strings.TrimSpace(this.GetString(models.ConfigKeySystemName, "Markdown Mini Wiki"))
+	systemUrl := strings.TrimSpace(this.GetString(models.ConfigKeySystemUrl, "http://localhost:8080"))
 
 	if sendEmailOpen == "1" {
 		email, err := models.EmailModel.GetUsedEmail()
@@ -82,6 +83,7 @@ func (this *ConfigController) Modify() {
 		models.ConfigKeyFulltextSearch:  fulltextSearch,
 		models.ConfigKeyDocSearchTimer:  docSearchTimer,
 		models.ConfigKeySystemName:      systemName,
+		models.ConfigKeySystemUrl:       systemUrl,
 	}
 	// 有修改再更新
 	configs, err := models.ConfigModel.GetConfigs()
