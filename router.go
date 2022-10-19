@@ -1,13 +1,14 @@
 package main
 
 import (
+	"html/template"
+	"net/http"
+
 	"github.com/astaxie/beego"
 	"github.com/phachon/mm-wiki/app"
 	"github.com/phachon/mm-wiki/app/controllers"
 	systemControllers "github.com/phachon/mm-wiki/app/modules/system/controllers"
 	"github.com/phachon/mm-wiki/app/utils"
-	"html/template"
-	"net/http"
 )
 
 func init() {
@@ -18,7 +19,6 @@ func initRouter() {
 	// router
 	beego.BConfig.WebConfig.AutoRender = false
 	beego.BConfig.RouterCaseSensitive = false
-
 	beego.Router("/", &controllers.MainController{}, "*:Index")
 	beego.Router("/author", &controllers.AuthorController{}, "*:Index")
 	beego.AutoRouter(&controllers.AuthorController{})

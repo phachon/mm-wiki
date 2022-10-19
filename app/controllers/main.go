@@ -1,9 +1,14 @@
 package controllers
 
 import (
+	"math"
+	"sort"
 	"strings"
 
+	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/search/query"
 	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/global"
 )
 
 type MainController struct {
@@ -43,7 +48,6 @@ func (this *MainController) Default() {
 	limit := (page - 1) * number
 
 	userId := this.UserId
-
 	logDocuments, err := models.LogDocumentModel.GetLogDocumentsByLimit(userId, limit, number)
 	if err != nil {
 		this.ErrorLog("查找更新文档列表失败：" + err.Error())
@@ -128,7 +132,6 @@ func (this *MainController) Search() {
 
 	keyword := strings.TrimSpace(this.GetString("keyword", ""))
 	searchType := this.GetString("search_type", "content")
-
 	this.Data["search_type"] = searchType
 	this.Data["keyword"] = keyword
 	this.Data["count"] = 0
@@ -159,31 +162,45 @@ func (this *MainController) Search() {
 		}
 	}
 	searchDocContents := make(map[string]string)
+	DocScore := make(map[string]float64)
+	var searchDocIds []string
 	// 默认根据内容搜索
 	// v0.2.1 下线全文搜索功能
-	searchType = "title"
-	//if searchType == "title" {
-	//	documents, err = models.DocumentModel.GetDocumentsByLikeName(keyword)
-	//} else {
-	//	searchRes := global.DocSearcher.SearchDoc(types.SearchReq{Text: keyword})
-	//	searchDocIds := []string{}
-	//	for _, searchDoc := range searchRes.Docs {
-	//		if len(searchDoc.TokenSnippetLocs) == 0 {
-	//			continue
-	//		}
-	//		docId := searchDoc.DocId
-	//		content := searchDoc.Content
-	//		locIndex := searchDoc.TokenSnippetLocs[0]
-	//		searchContent := utils.Misc.SubStrUnicodeBySubStrIndex(content, keyword, locIndex, 30, 30)
-	//		searchDocContents[docId] = searchContent
-	//		searchDocIds = append(searchDocIds, docId)
-	//	}
-	//	documents, err = models.DocumentModel.GetDocumentsByDocumentIds(searchDocIds)
-	//}
-	documents, err = models.DocumentModel.GetDocumentsByLikeName(keyword)
-	if err != nil {
-		this.ErrorLog("搜索文档出错：" + err.Error())
-		this.ViewError("搜索文档错误！")
+	if searchType == "title" {
+		documents, err = models.DocumentModel.GetDocumentsByLikeName(keyword)
+		if err != nil {
+			this.ErrorLog("搜索文档出错：" + err.Error())
+			this.ViewError("搜索文档错误！")
+		}
+	} else {
+		// 提取关键词,支持多关键词搜索
+		keyList := strings.Split(keyword, " ")
+		queryList := []query.Query{}
+		for _, key := range keyList {
+			keyQuery := bleve.NewMatchQuery(key)
+			queryList = append(queryList, keyQuery)
+		}
+		query := bleve.NewConjunctionQuery(queryList...)
+		// 开始全文搜索
+		req := bleve.NewSearchRequestOptions(query, math.MaxInt32, 0, true)
+		req.Highlight = bleve.NewHighlightWithStyle("mm-wiki")
+		searchDoc, err := global.SearchIndex.Search(req)
+		if err != nil {
+			this.ErrorLog("fail to Search file, err:" + err.Error())
+			this.ViewError("搜索文档错误！")
+		}
+		// 规范化返回结果
+		for _, searchDoc := range searchDoc.Hits {
+			resultText := searchDoc.Fragments["Content"][0]
+			searchDocContents[searchDoc.ID] = resultText
+			searchDocIds = append(searchDocIds, searchDoc.ID)
+			DocScore[searchDoc.ID] = searchDoc.Score
+		}
+		documents, err = models.DocumentModel.GetDocumentsByDocumentIds(searchDocIds)
+		if err != nil {
+			this.ErrorLog("搜索文档出错：" + err.Error())
+			this.ViewError("搜索文档错误！")
+		}
 	}
 	// 过滤一下没权限的空间
 	realDocuments := []map[string]string{}
@@ -202,7 +219,9 @@ func (this *MainController) Search() {
 		}
 		realDocuments = append(realDocuments, document)
 	}
-
+	sort.Slice(realDocuments, func(i, j int) bool {
+		return DocScore[realDocuments[i]["document_id"]] > DocScore[realDocuments[j]["document_id"]]
+	})
 	this.Data["search_type"] = searchType
 	this.Data["keyword"] = keyword
 	this.Data["documents"] = realDocuments
