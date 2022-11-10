@@ -120,12 +120,12 @@ CREATE TABLE `mw_space_user` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mw_document`;
 CREATE TABLE `mw_document` (
-  `document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档 id',
-  `parent_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档父 id',
+  `document_id` varchar(50) NOT NULL COMMENT '文档 id',
+  `parent_id` varchar(50) NOT NULL COMMENT '文档父 id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
   `name` varchar(150) NOT NULL DEFAULT '' COMMENT '文档名称',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '文档类型 1 page 2 dir',
-  `path` char(30) NOT NULL DEFAULT '0' COMMENT '存储根文档到父文档的 document_id 值, 格式 0,1,2,...',
+  `path` varchar(3000) NOT NULL DEFAULT '0' COMMENT '存储根文档到父文档的 document_id 值,逗号分隔',
   `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序号(越小越靠前)',
   `create_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建用户 id',
   `edit_user_id` int(10) NOT NULL DEFAULT '0' COMMENT '最后修改用户 id',
@@ -160,7 +160,7 @@ CREATE TABLE `mw_follow` (
   `follow_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '关注 id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '关注类型 1 文档 2 用户',
-  `object_id` int(10) NOT NULL DEFAULT '0' COMMENT '关注对象 id',
+  `object_id` varchar(50) NOT NULL DEFAULT '0' COMMENT '关注对象 id',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`follow_id`),
   KEY (`user_id`),
@@ -174,7 +174,7 @@ CREATE TABLE `mw_follow` (
 DROP TABLE IF EXISTS `mw_log_document`;
 CREATE TABLE `mw_log_document` (
   `log_document_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档日志 id',
-  `document_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档id',
+  `document_id` varchar(50) NOT NULL DEFAULT '0' COMMENT '文档id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户id',
   `action` tinyint(3) NOT NULL DEFAULT '1' COMMENT '动作 1 创建 2 修改 3 删除',

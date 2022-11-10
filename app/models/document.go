@@ -215,7 +215,7 @@ func (d *Document) DeleteDBAndFile(documentId string, spaceId string, userId str
 }
 
 // insert document
-func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err error) {
+func (d *Document) Insert(documentValue map[string]interface{}) (id string, err error) {
 
 	db := G.DB()
 	// start db begin
@@ -225,26 +225,40 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 	}
 
 	// 处理同级排序编号
-	parentId := documentValue["parent_id"].(string)
+	//parentId := documentValue["parent_id"].(string)
 	spaceId := documentValue["space_id"].(string)
 
-	sequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
-	if err != nil {
-		sequence = 0
-	}
 
-	sequence += 1
-	documentValue["sequence"] = strconv.Itoa(sequence)
+	id = utils.NewDocumentId().Create()
+
+
+	logs.Info("created docId: %s", id)
+
+	docId := id
+
+	//sequence, err := d.GetDocumentMaxSequence(parentId, spaceId)
+	//if err != nil {
+	//	sequence = 0
+	//}
+	//
+	//sequence += 1
+	//documentValue["sequence"] = strconv.Itoa(sequence)
 
 	var rs *mysql.ResultSet
+	documentValue["document_id"] = docId
 	documentValue["create_time"] = time.Now().Unix()
 	documentValue["update_time"] = time.Now().Unix()
+
+	logs.Info("created documentValue", documentValue)
+
 	rs, err = db.ExecTx(db.AR().Insert(Table_Document_Name, documentValue), tx)
 	if err != nil {
 		tx.Rollback()
 		return
 	}
-	id = rs.LastInsertId
+
+	logs.Info("insert rows: %s, docId: %s", rs.RowsAffected, id)
+
 
 	// create document page file
 	document := map[string]string{
@@ -272,7 +286,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 		if err != nil {
 			logs.Error("create document add log err=%s", err.Error())
 		}
-	}(userId, fmt.Sprintf("%d", id), spaceId)
+	}(userId, id, spaceId)
 
 	// follow document
 	go func(userId, documentId string) {
@@ -280,7 +294,7 @@ func (d *Document) Insert(documentValue map[string]interface{}) (id int64, err e
 		if err != nil {
 			logs.Error("follow document err=%s", err.Error())
 		}
-	}(userId, fmt.Sprintf("%d", id))
+	}(userId, id)
 	return
 }
 
@@ -296,7 +310,9 @@ func (d *Document) Update(documentId string, documentValue map[string]interface{
 	if err != nil {
 		return
 	}
-	id = rs.LastInsertId
+	//id = rs.LastInsertId
+
+	logs.Info("update rows: ", rs.RowsAffected)
 
 	// update document log
 	go func(editUserId string, documentId string, comment string, spaceId string) {
