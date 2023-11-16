@@ -9,7 +9,7 @@ var Page = {
      * @param element
      * @returns {boolean}
      */
-    ajaxSave: function (element, sendEmail, isAutoFollow) {
+    ajaxSave: function (element, sendEmail, isAutoFollow, isConfirm) {
 
         /**
          * 成功信息条
@@ -45,12 +45,24 @@ var Page = {
                 Storage.remove(storageId);
                 successBox(result.message, result.data);
             }
-            if (result.redirect.url) {
+            if (result.redirect.url && result.data == "0") {
                 var sleepTime = result.redirect.sleep || 3000;
                 setTimeout(function () {
                     parent.location.href = result.redirect.url;
                 }, sleepTime);
             }
+        }
+
+        // 直接保存
+        if(isConfirm == false){
+            var commentText = ""
+            var options = {
+                dataType: 'json',
+                success: response,
+                data: {'comment': commentText, 'is_notice_user': "0", 'is_follow_doc': "1", 'save_type':"1"}
+            };
+            $(element).ajaxSubmit(options);
+            return false;
         }
 
         var containerHtml = '<div class="container-fluid" style="padding: 20px 20px 0 20px">';
@@ -95,7 +107,7 @@ var Page = {
                     var options = {
                         dataType: 'json',
                         success: response,
-                        data: {'comment': commentText, 'is_notice_user': isNoticeUser, 'is_follow_doc': isFollowDoc}
+                        data: {'comment': commentText, 'is_notice_user': isNoticeUser, 'is_follow_doc': isFollowDoc, 'save_type':"0"}
                     };
                     $(element).ajaxSubmit(options);
                 }

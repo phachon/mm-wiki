@@ -179,6 +179,8 @@ func (this *PageController) Modify() {
 	comment := strings.TrimSpace(this.GetString("comment", ""))
 	isNoticeUser := strings.TrimSpace(this.GetString("is_notice_user", "0"))
 	isFollowDoc := strings.TrimSpace(this.GetString("is_follow_doc", "0"))
+	// 保存类型
+	saveType := strings.TrimSpace(this.GetString("save_type", ""))
 
 	// rm document_page_editor-markdown-doc
 	this.Ctx.Request.PostForm.Del("document_page_editor-markdown-doc")
@@ -281,7 +283,7 @@ func (this *PageController) Modify() {
 	}(documentId)
 
 	this.InfoLog("修改文档 " + documentId + " 成功")
-	this.jsonSuccess("文档修改成功！", nil, "/document/index?document_id="+documentId)
+	this.jsonSuccess("文档修改成功！", saveType, "/document/index?document_id="+documentId)
 }
 
 // document share display
