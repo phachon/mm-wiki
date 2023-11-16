@@ -23,6 +23,16 @@
     </form>
 </div>
 <script type="text/javascript">
+    document.addEventListener("keydown", function(e) {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+            // 你的处理逻辑
+            console.log('Ctrl+S event captured!');
+            var form = document.getElementById("page_form");
+            Page.ajaxSave(form, {{.sendEmail}}, {{.autoFollowDoc}}, false);
+        }
+    }, false);
+    
     if(parent.layoutClose) {
         parent.layoutClose();
     }
