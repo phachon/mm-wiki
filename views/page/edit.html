@@ -124,7 +124,7 @@
                                 var data=JSON.parse(xhr.responseText);
                                 console.log(data)
                                 if (data.success === 1) {
-                                    editor.insertValue("![image](" + data.url + ")\r\n");
+                                    editor.insertValue("![image](" + data.url + "=100)\r\n");
                                 }else {
                                     alert(data.message)
                                 }
