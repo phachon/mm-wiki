@@ -92,7 +92,9 @@ func (this *TemplateController) isLogin() bool {
 		return false
 	}
 	// UAG and IP
-	if identify != utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent()+this.GetClientIp()+userValue["password"]) {
+	// 不再校验session的ip，不然ip更换总是要重新登录，很麻烦
+	//if identify != utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent()+this.GetClientIp()+userValue["password"]) {
+	if identify != utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent()+userValue["password"]) {
 		return false
 	}
 	// flush session
