@@ -74,7 +74,9 @@ func (this *AuthorController) Login() {
 	// save session
 	this.SetSession("author", user)
 	// save cookie
-	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + password)
+	// 不再校验session的ip，不然ip更换总是要重新登录，很麻烦
+	//identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + password)
+	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + password)
 	passportValue := utils.Encrypt.Base64Encode(username + "@" + identify)
 	passport := beego.AppConfig.String("author::passport")
 	cookieExpired, _ := beego.AppConfig.Int64("author::cookie_expired")
@@ -166,7 +168,9 @@ func (this *AuthorController) AuthLogin() {
 	// save session
 	this.SetSession("author", user)
 	// save cookie
-	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + passwordEncode)
+	// 不再校验session的ip，不然ip更换总是要重新登录，很麻烦
+	//identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + this.GetClientIp() + passwordEncode)
+	identify := utils.Encrypt.Md5Encode(this.Ctx.Request.UserAgent() + passwordEncode)
 	passportValue := utils.Encrypt.Base64Encode(user["username"] + "@" + identify)
 	passport := beego.AppConfig.String("author::passport")
 	cookieExpired, _ := beego.AppConfig.Int64("author::cookie_expired")
@@ -178,7 +182,7 @@ func (this *AuthorController) AuthLogin() {
 	this.jsonSuccess("登录成功！", nil, "/main/index")
 }
 
-//logout
+// logout
 func (this *AuthorController) Logout() {
 	this.InfoLog("退出成功")
 	passport := beego.AppConfig.String("author::passport")
