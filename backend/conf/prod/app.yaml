@@ -1,0 +1,48 @@
+# 全局配置
+Global:
+  env: dev
+  gin_mode: debug # gin 框架允许环境 debug | release | test
+
+# 服务配置
+Server:
+  ip: 0.0.0.0
+  port: 8088
+  read_timeout: 2000 # 读超时 ms
+  write_timeout: 2000 # 写超时 ms
+
+# 数据库配置
+Database:
+  kms:
+    host: 192.168.1.6
+    port: 13306
+    name: kms
+    user: "root"
+    pass: "dingxn"
+    table_prefix: "kms_"
+    conn_max_idle: 20
+    conn_max_connection: 200
+    conn_max_lifetime: 200 # 单位 s
+
+# 日志配置
+Logger:
+  default:
+    - writer: console
+      level: debug
+    - writer: file
+      level: info
+      formatter: json
+      writer_config:
+        filename: ./logs/access.log
+        max_age: 7
+        max_backups: 10
+        compress: false
+        max_size: 10
+    - writer: file
+      level: error
+      formatter: json
+      writer_config:
+        filename: ./logs/error.log
+        max_age: 7
+        max_backups: 10
+        compress: false
+        max_size: 10

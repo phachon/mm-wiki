@@ -1,0 +1,63 @@
+{
+  "name": "mm-wiki",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/pro-components": "^2.6.18",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "antd": "^5.1.6",
+    "axios": "^0.27.2",
+    "enquire-js": "^0.2.1",
+    "eslint": "^8.33.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "http-proxy-middleware": "^2.0.6",
+    "moment": "^2.29.4",
+    "prettier": "^2.8.3",
+    "rc-queue-anim": "^2.0.0",
+    "rc-tween-one": "^3.0.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-fast-marquee": "^1.3.5",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "redux": "^4.2.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "typescript": "^4.4.2",
+    "web-vitals": "^2.1.0",
+    "zustand": "^4.3.2"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.0.0",
+    "@types/webpack-env": "^1.18.0"
+  }
+}

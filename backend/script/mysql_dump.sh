@@ -1,0 +1,1 @@
+mysqldump -u root -p123456 --single-transaction kms > kms.sql;

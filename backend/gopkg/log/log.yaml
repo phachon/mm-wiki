@@ -1,0 +1,22 @@
+
+log:
+  default:
+    - writer: console
+      level: debug
+    - writer: file
+      level: info
+      formatter: json
+      formatter_config:
+        time_fmt: 2006-01-02 15:04:05
+        time_key: Time                          #日志时间字段名称，不填默认"T"
+        level_key: Level                        #日志级别字段名称，不填默认"L"
+        name_key: Name                          #日志名称字段名称， 不填默认"N"
+        caller_key: Caller                      #日志调用方字段名称， 不填默认"C"
+        message_key: Message                    #日志消息体字段名称，不填默认"M"
+        stacktrace_key: StackTrace              #日志堆栈字段名称， 不填默认"S"
+      writer_config:                            #本地文件输出具体配置
+        filename: ../log/app.log          #本地文件滚动日志存放的路径
+        max_age: 7                              #最大日志保留天数
+        max_backups: 10                         #最大日志文件数
+        compress:  false                        #日志文件是否压缩
+        max_size: 10                            #本地文件滚动日志的大小 单位 MB
