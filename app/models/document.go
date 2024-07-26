@@ -2,12 +2,17 @@ package models
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/logs"
-	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/snail007/go-activerecord/mysql"
+	"math"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/astaxie/beego/logs"
+	"github.com/blevesearch/bleve/v2"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/snail007/go-activerecord/mysql"
 )
 
 const (
@@ -636,6 +641,42 @@ func (d *Document) GetAllDocuments() (documents []map[string]string, err error) 
 		return
 	}
 	documents = rs.Rows()
+	return
+}
+
+func (d *Document) GetAllDocumentsID(start, end int64) (documentsID []string, err error) {
+	db := G.DB()
+	var rs *mysql.ResultSet
+	rs, err = db.Query(db.AR().Select("document_id").From(Table_Document_Name).Where(map[string]interface{}{
+		"is_delete":      Document_Delete_False,
+		"document_id <=": end,
+		"document_id >":  start,
+	}).OrderBy("document_id", "ASC"))
+	if err != nil {
+		return
+	}
+	documents := rs.Rows()
+	for _, ID := range documents {
+		documentsID = append(documentsID, ID["document_id"])
+	}
+	return
+}
+
+func (d *Document) GetAllDocumentsIndex(start, end float64) (documentsIndex []string, err error) {
+
+	q := bleve.NewNumericRangeQuery(&start, &end)
+	q.SetField("ID")
+	req := bleve.NewSearchRequestOptions(q, math.MaxInt64, 0, true)
+	req.Fields = []string{"ID"}
+	searchDoc, err := global.SearchIndex.Search(req)
+	for _, searchDoc := range searchDoc.Hits {
+		documentsIndex = append(documentsIndex, searchDoc.ID)
+	}
+	sort.Slice(documentsIndex, func(i, j int) bool {
+		Idi, _ := strconv.Atoi(documentsIndex[i])
+		Idj, _ := strconv.Atoi(documentsIndex[j])
+		return Idi < Idj
+	})
 	return
 }
 

@@ -3,19 +3,22 @@ package app
 import (
 	"flag"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/fatih/color"
-	"github.com/phachon/mm-wiki/app/models"
-	"github.com/phachon/mm-wiki/app/utils"
-	"github.com/phachon/mm-wiki/app/work"
-	"github.com/phachon/mm-wiki/global"
-	"github.com/snail007/go-activerecord/mysql"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
+	"github.com/blevesearch/bleve/v2"
+	"github.com/fatih/color"
+	"github.com/phachon/mm-wiki/app/models"
+	"github.com/phachon/mm-wiki/app/services"
+	"github.com/phachon/mm-wiki/app/utils"
+	"github.com/phachon/mm-wiki/global"
+	"github.com/snail007/go-activerecord/mysql"
+	"github.com/yanyiwu/gojieba"
 )
 
 var (
@@ -53,8 +56,13 @@ func init() {
 	initDB()
 	checkUpgrade()
 	initDocumentDir()
-	//initSearch()
-	//initWork()
+	// initTokenFilter()
+	initTokenizer()
+	initAnalyzer()
+	initSearch()
+	initFragmentFormatter()
+	initHighlighter()
+	initWork()
 	StartTime = time.Now().Unix()
 }
 
@@ -240,32 +248,36 @@ func checkUpgrade() {
 }
 
 func initSearch() {
+	os.RemoveAll("mm-wiki.bleve")
+	//选择搜索引擎
+	err := global.SearchMap.AddCustomTokenizer("gojieba",
+		map[string]interface{}{
+			"dictpath":     gojieba.DICT_PATH,
+			"hmmpath":      gojieba.HMM_PATH,
+			"userdictpath": "./docs/search_dict/dictionary.txt",
+			"idf":          gojieba.IDF_PATH,
+			"stop_words":   "./docs/search_dict/stop_tokens.txt",
+			"type":         "gojieba",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	err = global.SearchMap.AddCustomAnalyzer("gojieba",
+		map[string]interface{}{
+			"type":      "gojieba",
+			"tokenizer": "gojieba",
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+	global.SearchMap.DefaultAnalyzer = "gojieba"
 
-	gseFile := filepath.Join(RootDir, "docs/search_dict/dictionary.txt")
-	stopFile := filepath.Join(RootDir, "docs/search_dict/stop_tokens.txt")
-	ok, _ := utils.File.PathIsExists(gseFile)
-	if !ok {
-		logs.Error("search dict file " + gseFile + " is not exists!")
-		os.Exit(1)
-	}
-	ok, _ = utils.File.PathIsExists(stopFile)
-	if !ok {
-		logs.Error("search stop dict file " + stopFile + " is not exists!")
-		os.Exit(1)
-	}
-	//global.DocSearcher.Init(types.EngineOpts{
-	//	UseStore:    true,
-	//	StoreFolder: SearchIndexAbsDir,
-	//	Using:       3,
-	//	//GseDict:       "zh",
-	//	GseDict:       gseFile,
-	//	StopTokenFile: stopFile,
-	//	IndexerOpts: &types.IndexerOpts{
-	//		IndexType: types.LocsIndex,
-	//	},
-	//})
+	global.SearchIndex, err = bleve.New("mm-wiki.bleve", global.SearchMap)
+	services.DocIndexService.UpdateAllDocIndex(50)
 }
 
 func initWork() {
-	work.DocSearchWorker.Start()
+	go services.DocIndexService.CheckDocIndexs()
 }

@@ -1,13 +1,14 @@
 package work
 
 import (
+	"sync"
+	"time"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/services"
 	"github.com/phachon/mm-wiki/app/utils"
-	"sync"
-	"time"
 )
 
 var (
@@ -120,7 +121,7 @@ func (d *DocSearch) updateAllDocIndex() {
 		batchUpdateDocNum = 100
 	}
 	services.DocIndexService.UpdateAllDocIndex(batchUpdateDocNum)
-	services.DocIndexService.Flush()
+	//services.DocIndexService.Flush()
 
 	d.lock.Lock()
 	d.isTaskRunning = false

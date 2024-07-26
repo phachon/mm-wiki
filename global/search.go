@@ -1,10 +1,8 @@
 package global
 
 import (
-	//"github.com/go-ego/riot"
+	"github.com/blevesearch/bleve/v2"
 )
 
-// 文档搜索
-var (
-	//DocSearcher = riot.Engine{}
-)
+var SearchMap = bleve.NewIndexMapping()
+var SearchIndex bleve.Index
