@@ -33,26 +33,6 @@ const range = (start: number, end: number) => {
   return result
 }
 
-const disabledRangeTime: RangePickerProps['disabledTime'] = (date: any, type: string) => {
-  let hours = moment().hours()
-  let minutes = moment().minutes()
-  // let seconds = moment().seconds()
-  console.log(moment(date).date(), moment().date())
-  //当日只能选择当前时间之后的时间点
-  if (date && moment(date).date() === moment().date()) {
-    return {
-      disabledHours: () => range(0, hours),
-      disabledMinutes: () => range(0, minutes),
-      disabledSeconds: () => range(0, 60)
-    }
-  }
-  return {
-    disabledHours: () => range(0, 0),
-    disabledMinutes: () => range(0, 0),
-    disabledSeconds: () => range(0, 0)
-  }
-}
-
 /**
  * 公告表单 UI 组件
  * @param props

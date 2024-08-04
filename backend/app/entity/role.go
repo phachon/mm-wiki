@@ -9,6 +9,7 @@ const (
 
 	RoleTypeCustomRole         = 0 // 自定义角色
 	RoleTypeAccountDefaultRole = 1 // 账号默认角色
+	RoleTypeRootRole           = 2 // 账号默认角色
 )
 
 // RoleEntity role 角色表结构

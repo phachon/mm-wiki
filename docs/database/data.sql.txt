@@ -1,0 +1,72 @@
+-- ----------------------------
+-- Records of mk_privilege
+-- ----------------------------
+BEGIN;
+INSERT INTO `mk_privilege` VALUES (1, 'system', '系统', 0, '', 1, '', '', 'SettingOutlined', 1, 1, '2023-03-26 18:04:15', '2023-03-26 18:04:15');
+INSERT INTO `mk_privilege` VALUES (2, 'system:profile', '个人中心', 1, '1', 2, '', '', 'ProfileOutlined', 1, 1, '2023-03-26 18:06:03', '2023-03-26 18:07:59');
+INSERT INTO `mk_privilege` VALUES (3, 'system:profile:info', '个人信息', 2, '1,2', 2, '/profile/info', 'admin:profile:info', 'UnorderedListOutlined', 1, 1, '2023-03-26 18:07:40', '2023-03-26 18:07:40');
+INSERT INTO `mk_privilege` VALUES (4, 'system:profile:update', '个人信息保存', 3, '1,2,3', 3, '', 'admin:profile:update', '', 0, 1, '2023-03-26 18:09:16', '2023-03-27 23:13:51');
+INSERT INTO `mk_privilege` VALUES (5, 'system:profile:repass', '修改密码', 2, '1,2', 2, '/profile/repass', '', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:15:06', '2023-03-27 22:15:06');
+INSERT INTO `mk_privilege` VALUES (6, 'system:profile:repass_save', '修改密码保存', 5, '1,2,5', 3, '', 'admin:profile:repass', '', 0, 1, '2023-03-27 22:15:56', '2023-03-27 23:13:56');
+INSERT INTO `mk_privilege` VALUES (7, 'system:account', '账号管理', 1, '1', 2, '', '', 'UserOutlined', 1, 1, '2023-03-27 22:19:16', '2023-03-27 22:19:16');
+INSERT INTO `mk_privilege` VALUES (8, 'system:account:add', '添加账号', 7, '1,7', 2, '/account/add', 'admin:account:add', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:20:37', '2023-03-28 22:12:53');
+INSERT INTO `mk_privilege` VALUES (9, 'system:account:save', '添加账号保存', 8, '1,7,8', 3, '', 'admin:account:save', '', 0, 1, '2023-03-27 22:21:52', '2023-03-27 23:14:02');
+INSERT INTO `mk_privilege` VALUES (10, 'system:account:list', '账号列表', 7, '1,7', 2, '/account/list', 'admin:account:list', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:22:39', '2023-03-27 22:22:39');
+INSERT INTO `mk_privilege` VALUES (11, 'system:account:edit', '账号修改操作', 10, '1,7,10', 3, '', 'admin:account:edit', '', 0, 1, '2023-03-27 22:23:53', '2023-03-27 23:14:07');
+INSERT INTO `mk_privilege` VALUES (12, 'system:account:modify', '账号修改保存', 10, '1,7,10', 3, '', 'admin:account:modify', '', 0, 1, '2023-03-27 22:24:47', '2023-03-27 23:14:12');
+INSERT INTO `mk_privilege` VALUES (13, 'system:account:detail', '账号详情查看', 10, '1,7,10', 3, '', 'admin:account:detail', '', 0, 1, '2023-03-27 22:26:13', '2023-03-27 23:14:18');
+INSERT INTO `mk_privilege` VALUES (14, 'system:account:update_status', '账号状态更新', 10, '1,7,10', 3, '', 'admin:account:update_status', '', 0, 1, '2023-03-27 22:27:21', '2023-03-27 23:14:23');
+INSERT INTO `mk_privilege` VALUES (15, 'system:role', '角色管理', 1, '1', 2, '', '', 'UsergroupAddOutlined', 1, 1, '2023-03-27 22:29:13', '2023-03-27 22:29:13');
+INSERT INTO `mk_privilege` VALUES (16, 'system:role:list', '角色列表', 15, '1,15', 2, '/role/list', 'admin:role:list', 'UnorderedListOutlined', 1, 2, '2023-03-27 22:30:30', '2023-04-01 20:26:35');
+INSERT INTO `mk_privilege` VALUES (17, 'system:role:add', '添加角色', 15, '1,15', 2, '/role/add', '', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:31:31', '2023-03-27 22:31:31');
+INSERT INTO `mk_privilege` VALUES (18, 'system:role:edit', '角色修改操作', 16, '1,15,16', 3, '', 'admin:role:edit', '', 0, 1, '2023-03-27 22:32:09', '2023-03-27 23:14:33');
+INSERT INTO `mk_privilege` VALUES (19, 'system:role:modify', '角色修改保存', 16, '1,15,16', 3, '', 'admin:role:modify', '', 0, 1, '2023-03-27 22:34:38', '2023-03-27 23:14:38');
+INSERT INTO `mk_privilege` VALUES (20, 'system:role:delete', '角色删除操作', 16, '1,15,16', 3, '', 'admin:role:delete', '', 0, 1, '2023-03-27 22:37:32', '2023-03-27 23:14:43');
+INSERT INTO `mk_privilege` VALUES (21, 'system:role:account_list', '角色账号列表', 16, '1,15,16', 3, '', 'admin:role:account_list', '', 0, 1, '2023-03-27 22:38:44', '2023-03-27 23:14:47');
+INSERT INTO `mk_privilege` VALUES (22, 'system:role:account_remove', '角色账号移除', 16, '1,15,16', 3, '', 'admin:role:account_remove', '', 0, 1, '2023-03-27 22:40:23', '2023-03-27 23:14:52');
+INSERT INTO `mk_privilege` VALUES (23, 'system:role:privilege_edit', '角色权限编辑', 16, '1,15,16', 3, '', 'admin:role:privilege_edit', '', 0, 1, '2023-03-27 22:42:08', '2023-03-27 23:14:56');
+INSERT INTO `mk_privilege` VALUES (24, 'system:role:privilege_modify', '角色权限保存', 16, '1,15,16', 3, '', 'admin:role:privilege_modify', '', 0, 1, '2023-03-27 22:42:58', '2023-03-27 23:15:01');
+INSERT INTO `mk_privilege` VALUES (25, 'system:role:save', '添加角色保存', 17, '1,15,17', 3, '', 'admin:role:save', '', 0, 1, '2023-03-27 22:44:23', '2023-03-27 23:15:16');
+INSERT INTO `mk_privilege` VALUES (26, 'system:privilege', '权限管理', 1, '1', 2, '', '', 'LockOutlined', 1, 1, '2023-03-27 22:52:24', '2023-03-27 22:52:24');
+INSERT INTO `mk_privilege` VALUES (27, 'system:privilege:add', '添加权限', 26, '1,26', 2, '/privilege/add', 'admin:privilege:add', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:54:02', '2023-03-27 22:54:02');
+INSERT INTO `mk_privilege` VALUES (28, 'system:privilege:list', '权限列表', 26, '1,26', 2, '/privilege/list', 'admin:privilege:list', 'UnorderedListOutlined', 1, 1, '2023-03-27 22:54:54', '2023-03-27 22:54:54');
+INSERT INTO `mk_privilege` VALUES (29, 'system:privilege:save', '添加权限保存', 27, '1,26,27', 3, '', 'admin:privilege:save', '', 0, 1, '2023-03-27 22:56:10', '2023-03-27 23:15:21');
+INSERT INTO `mk_privilege` VALUES (30, 'system:privilege:edit', '权限修改操作', 28, '1,26,28', 3, '', 'admin:privilege:edit', '', 0, 1, '2023-03-27 22:57:16', '2023-03-27 23:15:25');
+INSERT INTO `mk_privilege` VALUES (31, 'system:privilege:modify', '权限修改保存', 28, '1,26,28', 3, '', 'admin:privilege:modify', '', 0, 1, '2023-03-27 22:58:15', '2023-03-27 23:15:29');
+INSERT INTO `mk_privilege` VALUES (32, 'system:privilege:delete', '权限删除操作', 28, '1,26,28', 3, '', 'admin:privilege:delete', '', 0, 1, '2023-03-27 22:59:16', '2023-03-27 23:15:33');
+INSERT INTO `mk_privilege` VALUES (33, 'system:log', '日志管理', 1, '1', 2, '', '', 'FileTextOutlined', 1, 1, '2023-03-27 23:16:45', '2023-03-27 23:16:45');
+INSERT INTO `mk_privilege` VALUES (34, 'system:log:list', '日志列表', 33, '1,33', 2, '/log/list', 'admin:log:list', 'UnorderedListOutlined', 1, 1, '2023-03-27 23:17:31', '2023-03-27 23:17:31');
+INSERT INTO `mk_privilege` VALUES (35, 'system:notice', '公告管理', 1, '1', 2, '', '', 'SoundOutlined', 1, 1, '2023-03-27 23:22:26', '2023-03-27 23:22:26');
+INSERT INTO `mk_privilege` VALUES (36, 'system:notice:add', '添加公告', 35, '1,35', 2, '/notice/add', '', 'UnorderedListOutlined', 1, 1, '2023-03-27 23:23:28', '2023-03-27 23:23:28');
+INSERT INTO `mk_privilege` VALUES (37, 'system:notice:list', '公告列表', 35, '1,35', 2, '/notice/list', 'admin:notice:list', 'UnorderedListOutlined', 1, 1, '2023-03-27 23:24:15', '2023-03-27 23:24:15');
+INSERT INTO `mk_privilege` VALUES (38, 'system:notice:save', '公告添加保存', 36, '1,35,36', 3, '', 'admin:notice:save', '', 0, 1, '2023-03-27 23:25:24', '2023-03-27 23:25:24');
+INSERT INTO `mk_privilege` VALUES (39, 'system:notice:edit', '公告修改操作', 37, '1,35,37', 3, '', 'admin:notice:edit', '', 0, 1, '2023-03-27 23:26:04', '2023-03-27 23:26:04');
+INSERT INTO `mk_privilege` VALUES (40, 'system:notice:modify', '公告修改保存', 37, '1,35,37', 3, '', 'admin:notice:modify', '', 0, 1, '2023-03-27 23:26:54', '2023-03-27 23:26:54');
+INSERT INTO `mk_privilege` VALUES (41, 'system:notice:delete', '公告删除操作', 37, '1,35,37', 3, '', 'admin:notice:delete', '', 0, 1, '2023-03-27 23:27:43', '2023-03-27 23:27:43');
+COMMIT;
+
+-- ----------------------------
+-- Records of mk_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `mk_role` VALUES (1, '超级管理员', '超级管理员', 0, '2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,25,16,18,19,20,21,22,23,24,26,27,29,28,30,31,32,33,34,35,36,38,37,39,40,41,1', 0, '2023-04-06 23:24:12', '2023-04-06 23:24:12');
+INSERT INTO `mk_role` VALUES (2, '默认角色', '所有账号必须有', 1, '2,3,4,5,6,1', 0, '2023-04-06 23:25:06', '2023-04-06 23:25:06');
+COMMIT;
+
+
+-- ----------------------------
+-- Records of mk_account
+-- user: root pass: 111111
+-- ----------------------------
+BEGIN;
+INSERT INTO `mk_account` VALUES (210510, 'root', '', 'root', '96e79218965eb72c92a549dd5a330112', '', '', '', 0, '2023-03-26 17:53:32', '2023-03-27 22:17:46');
+COMMIT;
+
+-- ----------------------------
+-- Records of mk_account_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `mk_account_role` VALUES (1, 1, 210510, '2023-03-27 22:17:46');
+INSERT INTO `mk_account_role` VALUES (2, 2, 210510, '2023-03-27 22:17:46');
+COMMIT;
+

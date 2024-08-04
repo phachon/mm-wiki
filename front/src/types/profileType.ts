@@ -8,3 +8,8 @@ export type ProfileInfoType = {
   account_info: AccountInfoType // 账号信息
   privilege_list?: PrivilegeListItemType[] // 权限列表
 }
+
+// ProfilePrivilegesResp /profile/privileges 返回结构
+export type ProfilePrivilegesResp = {
+  privileges?: PrivilegeListItemType[] // 权限列表
+}

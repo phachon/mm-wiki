@@ -4,9 +4,12 @@ import { ProfileInfoType } from '@/types/profileType'
 import { IAccount } from './account'
 import { PrivilegeListItemType, PrivilegeTypeNav } from '@/types/privilegeType'
 import { INavItem, IMenuItem, IFrameBreadcrumbItem } from '@/types/frame'
-import { LoginTokenStore } from './local'
+import { LoginTokenStore, removeLocalAccountInfo } from './local'
 import { NoticeService } from '@/services/Notice'
 import { NoticeInfoType } from '@/types/noticeType'
+import { MenuProps, message } from 'antd'
+
+type MenuItem = Required<MenuProps>['items'][number]
 
 /**
  * IFarme 主框架权限数据
@@ -24,95 +27,41 @@ interface IPrivilegeData {
 
 // IFarme 主框架 store 定义
 export interface IFrame {
-  /**
-   * 处理后的权限数据
-   */
-  iPrivilegeData: IPrivilegeData
+  /** 框架全局 **/
+  iPrivilegeData: IPrivilegeData // 处理后的权限数据
+  isLoading?: boolean // 页面全局 loading
+  initProfileInfo: (pathName?: string) => void // 初始化个人信息
 
-  /**
-   * 页面全局 loading
-   */
-  isLoading?: boolean
+  /** 顶部导航 **/
+  navItems: MenuItem[]
+  navSelectedKeys: string[] // 导航当前选中 key 列表
+  noticeList: NoticeInfoType[] // 公告列表
+  noticeTotal: number // 公告总数
+  onNavSelectChange: (navKey: string) => void // 导航选择操作
+  onNoticeListClick: (pageSize: number, pageNum: number) => void // 点击公告列表
+  onNoticeChange: (page: number) => void // 公告列表翻页
+  onLogoutClick: () => void // 退出操作处理
 
-  /**
-   * 当前菜单列表数据
-   */
-  iCurrentMenuItems: IMenuItem[]
+  /** 左侧菜单 **/
+  iCurrentMenuItems: IMenuItem[] // 当前菜单列表数据
+  iMenuItemSelectedKeys?: string[] // 菜单当前选中 key
+  iMenuItemOpenKeys?: string[] // 菜单当前展开的 SubMenu 菜单项 key 数组
+  onMenuItemsClick: (menuKey: string) => void // 菜单选中回调处理
+  onMenuOpenChange: (menuKeys: string[]) => void // 菜单打开回调处理
 
-  /**
-   * 面包屑数据
-   */
+  /** 面包屑 **/
   iBreadcrumbItems: IFrameBreadcrumbItem[]
-
-  /**
-   * 导航当前选中 key
-   */
-  iNavSelectedKey: string
-
-  /**
-   * 菜单当前选中 key
-   */
-  iMenuItemSelectedKeys?: string[]
-
-  /**
-   * 菜单当前展开的 SubMenu 菜单项 key 数组
-   */
-  iMenuItemOpenKeys?: string[]
-
-  /**
-   * 公告列表数据
-   */
-  noticeList?: NoticeInfoType[]
-
-  /**
-   * 公告总条数
-   */
-  noticeTotal: number
-
-  /**
-   * 初始化个人信息
-   * @returns void
-   */
-  initProfileInfo: (pathName?: string) => void
-
-  /**
-   * 导航选择回调函数
-   * @param navKey 导航key
-   */
-  onNavSelectChange: (navKey: string) => void
-
-  /**
-   * 菜单选中回调处理
-   * @param menuInfo 菜单 item 数据
-   * @returns void
-   */
-  onMenuItemsClick: (menuKey: string) => void
-
-  /**
-   * 菜单打开回调处理
-   * @param menuKeys 菜单key
-   */
-  onMenuOpenChange: (menuKeys: string[]) => void
-
-  /**
-   * 退出登录回调处理
-   * @returns void
-   */
-  logoutCallback: () => void
-  /**
-   * 公告列表回调
-   * @returns void
-   */
-  noticeListCallback: (pageSize: number, pageNum: number) => void
 }
 
 export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set, get) => ({
   isLoading: true,
   iPrivilegeData: {},
   iNavItems: [],
+  navItems: [],
   iBreadcrumbItems: [],
   iCurrentMenuItems: [],
   iNavSelectedKey: '',
+  navSelectedKeys: [],
   iMenuItemSelectedKeys: [],
   noticeList: [],
   noticeTotal: 0,
@@ -123,18 +72,21 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
   initProfileInfo: async (pathName?: string) => {
     console.log('initProfileInfo start', pathName)
     // 获取个人信息+个人权限信息
-    let profileInfo: ProfileInfoType = await ProfileService.getProfileInfo()
-    get().setAccountInfo(profileInfo.account_info)
+    // let profileInfo: ProfileInfoType = await ProfileService.getProfileInfo()
+    // get().setAccountInfo(profileInfo.account_info)
     // 转换后端的权限数据
-    let iPrivilegeData = getIPrivilegeData(profileInfo.privilege_list)
+    // let iPrivilegeData = getIPrivilegeData(profileInfo.privilege_list)
+    // set({
+    //   isLoading: false,
+    //   iPrivilegeData: iPrivilegeData
+    // })
+    // // 直接获取
+    // if (pathName == '' || pathName == '/') {
+    //   get().onMenuItemsClick(pathName ? pathName : '')
+    // }
     set({
-      isLoading: false,
-      iPrivilegeData: iPrivilegeData
+      isLoading: false
     })
-    // 直接获取
-    if (pathName == '' || pathName == '/') {
-      get().onMenuItemsClick(pathName ? pathName : '')
-    }
   },
 
   /**
@@ -142,14 +94,14 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
    * @param navKey string 导航key
    */
   onNavSelectChange: (navKey: string) => {
-    let privilegeId = navKey
-    let iNavMenuItemsMap = get().iPrivilegeData?.iNavMenuItemsMap
-    let menuItems = iNavMenuItemsMap?.get(privilegeId)
-    set({
-      iNavSelectedKey: navKey,
-      iCurrentMenuItems: menuItems,
-      iMenuItemSelectedKeys: []
-    })
+    // let privilegeId = navKey
+    // let iNavMenuItemsMap = get().iPrivilegeData?.iNavMenuItemsMap
+    // let menuItems = iNavMenuItemsMap?.get(privilegeId)
+    // set({
+    //   navSelectedKeys: [navKey],
+    //   iCurrentMenuItems: menuItems,
+    //   iMenuItemSelectedKeys: []
+    // })
   },
 
   /**
@@ -192,7 +144,7 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
     // 更新菜单
     set({
       iCurrentMenuItems: iMenuItems,
-      iNavSelectedKey: iNavSelectedKey,
+      navSelectedKeys: [iNavSelectedKey],
       iMenuItemSelectedKeys: iMenuItemSelectedKey ? [iMenuItemSelectedKey] : [],
       iMenuItemOpenKeys: iMenuItemOpenKey ? [iMenuItemOpenKey] : [],
       iBreadcrumbItems: frameBreadcrumbItems
@@ -220,14 +172,15 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
   /**
    * 退出登录回调处理
    */
-  logoutCallback: () => {
+  onLogoutClick: () => {
     LoginTokenStore.removeToken() // 删除本地 local storage 中 token
+    removeLocalAccountInfo() // 删除本地 local storage 中账号信息
+    message.success('退出成功！', 1, () => {
+      window.location.href = `/`
+    })
   },
 
-  /**
-   * 公告列表回调
-   */
-  noticeListCallback: (pageSize: number, pageNum: number) => {
+  onNoticeListClick: (pageSize: number, pageNum: number) => {
     NoticeService.getPublishNoticeList(pageSize, pageNum)
       .then((resp) => {
         set({
@@ -239,6 +192,10 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
       .catch((e) => {
         console.log(e)
       })
+  },
+
+  onNoticeChange: (page: number) => {
+    return
   }
 })
 

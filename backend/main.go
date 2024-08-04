@@ -37,9 +37,9 @@ func main() {
 		WriteTimeout:   config.GetWriteTimeout(),
 		MaxHeaderBytes: 1 << 20,
 	}
-	logger.Infof("[Platy] Listen addr=%+v", config.GetServerAddr())
+	logger.Infof("[mm-wiki] Listen addr=%+v", config.GetServerAddr())
 	err := s.ListenAndServe()
 	if err != nil {
-		logger.Fatalf("[Platy] err:%s", err)
+		logger.Fatalf("[mm-wiki] err:%s", err)
 	}
 }

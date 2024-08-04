@@ -12,13 +12,13 @@ Server:
 
 # 数据库配置
 Database:
-  kms:
+  mm_wiki:
     host: 127.0.0.1
     port: 3306
-    name: kms
+    name: mm_wiki2
     user: "root"
     pass: "123456"
-    table_prefix: "kms_"
+    table_prefix: "mk_"
     conn_max_idle: 20
     conn_max_connection: 200
     conn_max_lifetime: 200 # 单位 s

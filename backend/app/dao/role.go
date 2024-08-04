@@ -13,7 +13,7 @@ import (
 
 const (
 	// TableNameRole 系统角色表
-	TableNameRole = "hms_role"
+	TableNameRole = "mk_role"
 	// RolePrimaryKey 角色表主键ID
 	RolePrimaryKey = "role_id"
 )
@@ -35,7 +35,7 @@ func (r *Role) Insert(roleEntity *entity.RoleEntity) errors.BizError {
 	roleEntity.CreateTime = utils.NewJsonTime(time.Now())
 	roleEntity.UpdateTime = utils.NewJsonTime(time.Now())
 	roleEntity.Status = entity.RoleStatusDefault
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).Save(roleEntity)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).Save(roleEntity)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlInsertErr, db.Error.Error())
 	}
@@ -45,7 +45,7 @@ func (r *Role) Insert(roleEntity *entity.RoleEntity) errors.BizError {
 // GetRoleByName 根据角色名查找正常的角色
 func (r *Role) GetRoleByName(roleName string) (role *entity.RoleEntity, err errors.BizError) {
 	role = &entity.RoleEntity{}
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where(map[string]interface{}{
 			"name":   roleName,
 			"status": entity.RoleStatusDefault,
@@ -64,7 +64,7 @@ func (r *Role) GetRoleByName(roleName string) (role *entity.RoleEntity, err erro
 func (r *Role) GetRoleByRoleId(roleId int64) (role *entity.RoleEntity, err errors.BizError) {
 
 	role = &entity.RoleEntity{}
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where(map[string]interface{}{
 			RolePrimaryKey: roleId,
 			"status":       entity.RoleStatusDefault,
@@ -82,7 +82,7 @@ func (r *Role) GetRoleByRoleId(roleId int64) (role *entity.RoleEntity, err error
 
 // GetRolesByRoleIds 根据多个角色ID批量获取角色ID
 func (r *Role) GetRolesByRoleIds(roleIds []int64) (roles []*entity.RoleEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where("role_id IN (?) and status=?",
 			roleIds, entity.RoleStatusDefault).
 		Find(&roles)
@@ -97,7 +97,7 @@ func (r *Role) CountByName(name string) (count int64, err error) {
 	if name == "" {
 		return 0, nil
 	}
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where(map[string]interface{}{
 			"name":   name,
 			"status": entity.RoleStatusDefault,
@@ -120,7 +120,7 @@ func (r *Role) CheckNameExists(name string) (bool, error) {
 // HasSameName 角色ID和角色名是否存在
 func (r *Role) HasSameName(roleId int64, name string) (has bool, err errors.BizError) {
 	var count int64
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where("name = ?", name).
 		Where("status = ?", entity.RoleStatusDefault).
 		Where("role_id <> ?", roleId).
@@ -134,7 +134,7 @@ func (r *Role) HasSameName(roleId int64, name string) (has bool, err errors.BizE
 // Update 更新角色只会更新如下字段
 func (r *Role) Update(role entity.RoleEntity) errors.BizError {
 	role.UpdateTime = utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Select("Name", "Remark", "RoleType").
 		Where(map[string]interface{}{
 			RolePrimaryKey: role.RoleId,
@@ -150,7 +150,7 @@ func (r *Role) Update(role entity.RoleEntity) errors.BizError {
 // UpdatePrivilegeIds 更新角色下权限
 func (r *Role) UpdatePrivilegeIds(role entity.RoleEntity) errors.BizError {
 	role.UpdateTime = utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Select("PrivilegeIds").
 		Where(map[string]interface{}{
 			RolePrimaryKey: role.RoleId,
@@ -166,7 +166,7 @@ func (r *Role) UpdatePrivilegeIds(role entity.RoleEntity) errors.BizError {
 // UpdateStatus 更新角色状态
 func (r *Role) DeleteRole(roleId int64) errors.BizError {
 	updateTime := utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where(map[string]interface{}{
 			RolePrimaryKey: roleId,
 			"status":       entity.RoleStatusDefault,
@@ -181,7 +181,7 @@ func (r *Role) DeleteRole(roleId int64) errors.BizError {
 
 // GetAllRoles 获取所有的角色
 func (r *Role) GetAllRoles() (role []*entity.RoleEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where(map[string]interface{}{
 			"status": entity.RoleStatusDefault,
 		}).
@@ -194,7 +194,7 @@ func (r *Role) GetAllRoles() (role []*entity.RoleEntity, err errors.BizError) {
 
 // GetRolesByLimit 分页获取角色列表
 func (r *Role) GetRolesByLimit(limit int, offset int) (roles []*entity.RoleEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where("status", entity.RoleStatusDefault).
 		Limit(limit).
 		Offset(offset).
@@ -208,7 +208,7 @@ func (r *Role) GetRolesByLimit(limit int, offset int) (roles []*entity.RoleEntit
 
 // CountRoles 获取角色总数
 func (r *Role) CountRoles() (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole).
 		Where("status", entity.RoleStatusDefault).
 		Count(&count)
 	if db.Error != nil {
@@ -224,7 +224,7 @@ func (r *Role) GetRolesByKeywordsAndLimit(limit int, offset int, keywords *entit
 		return r.GetRolesByLimit(limit, offset)
 	}
 
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole)
 	db.Where("status", entity.RoleStatusDefault)
 	if keywords.RoleName != "" {
 		db = db.Where("name LIKE ?", "%"+keywords.RoleName+"%")
@@ -241,7 +241,7 @@ func (r *Role) GetRolesByKeywordsAndLimit(limit int, offset int, keywords *entit
 
 // CountRoles 根据关键字获取角色总数
 func (r *Role) CountRolesByKeywords(keywords *entity.RoleKeywords) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameRole)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameRole)
 	db = db.Where("status = ?", entity.RoleStatusDefault)
 	if keywords.RoleName != "" {
 		db = db.Where("name LIKE ?", "%"+keywords.RoleName+"%")
@@ -256,7 +256,7 @@ func (r *Role) CountRolesByKeywords(keywords *entity.RoleKeywords) (count int64,
 // GetRolesByPrivilegeId 根据权限ID获取角色列表
 func (r *Role) GetRolesByPrivilegeId(privilegeId int64) (roles []*entity.RoleEntity, err errors.BizError) {
 	privilegeIdStr := fmt.Sprintf("%d", privilegeId)
-	db := GetDB(dbNameKms).WithContext(r.ctx).
+	db := GetDB(dbNameMK).WithContext(r.ctx).
 		Table(TableNameRole).
 		Where("status", entity.RoleStatusDefault).
 		Where("privilege_ids LIKE ?", "%"+privilegeIdStr+"%").

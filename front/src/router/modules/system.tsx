@@ -4,115 +4,99 @@ import Privilege from '@/pages/Privilege'
 import Main from '@/pages/Main'
 import Log from '@/pages/Log'
 import Role from '@/pages/Role'
-import FrameHome from '@/pages/Frame'
-import Error404 from '@/pages/Error/Error404'
-import Error403 from '@/pages/Error/Error403'
+import SystemHome from '@/pages/System'
 import Notice from '@/pages/Notice'
-import { HOME_ROOT_PATH, IRouter, NO_ACCESS_PATH, NO_EXIST_PATH } from '../type'
+import { IRouter, SYSTEM_ROOT_PATH } from '../type'
 
 const routers: IRouter[] = [
   {
-    path: '/',
-    key: 'home',
-    component: <FrameHome />,
+    path: '/system',
+    key: 'system',
+    component: <SystemHome />,
     children: [
       {
-        path: HOME_ROOT_PATH,
+        path: SYSTEM_ROOT_PATH,
         key: 'main_index',
         component: <Main.MainIndex />,
+        auth: false,
+        permission: false
+      },
+      {
+        path: '/system/profile/info',
+        key: 'profile_info',
+        component: <Profile.ProfileInfo />,
         auth: true,
         permission: false
       },
       {
-        path: '/profile/info',
-        key: 'profile_info',
-        component: <Profile.ProfileInfo />,
-        auth: true,
-        permission: true
-      },
-      {
-        path: '/profile/repass',
+        path: '/system/profile/repass',
         key: 'profile_repass',
         component: <Profile.ProfileRepass />,
         auth: true,
         permission: true
       },
       {
-        path: '/account/add',
+        path: '/system/account/add',
         key: 'account_add',
         component: <Account.AccountAdd />,
         auth: true,
         permission: true
       },
       {
-        path: '/account/list',
+        path: '/system/account/list',
         key: 'account_list',
         component: <Account.AccountList />,
         auth: true,
         permission: true
       },
       {
-        path: '/role/add',
+        path: '/system/role/add',
         key: 'role_add',
         component: <Role.RoleAdd />,
         auth: true,
         permission: true
       },
       {
-        path: '/role/list',
+        path: '/system/role/list',
         key: 'role_list',
         component: <Role.RoleList />,
         auth: true,
         permission: true
       },
       {
-        path: '/privilege/add',
+        path: '/system/privilege/add',
         key: 'privilege_add',
         component: <Privilege.PrivilegeAdd />,
         auth: true,
         permission: true
       },
       {
-        path: '/privilege/list',
+        path: '/system/privilege/list',
         key: 'privilege_list',
         component: <Privilege.PrivilegeList />,
         auth: true,
         permission: true
       },
       {
-        path: '/log/list',
+        path: '/system/log/list',
         key: 'log_list',
         component: <Log.LogList />,
         auth: true,
         permission: true
       },
       {
-        path: '/notice/add',
+        path: '/system/notice/add',
         key: 'notice_add',
         component: <Notice.NoticeAdd />,
         auth: true,
         permission: true
       },
       {
-        path: '/notice/list',
+        path: '/system/notice/list',
         key: 'notice_list',
         component: <Notice.NoticeList />,
         auth: true,
         permission: true
-      },
-      {
-        path: NO_ACCESS_PATH,
-        key: 'error_403',
-        component: <Error403 />,
-        auth: false,
-        permission: false
-      },
-      {
-        path: NO_EXIST_PATH,
-        key: 'error_404',
-        component: <Error404 />,
-        auth: false,
-        permission: false
       }
     ],
     permission: false,

@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	dbNameKms = "hms" // hms 数据库连接
+	dbNameMK = "mm_wiki" // mm-wiki 数据库连接
 )
 
 var dbs = make(map[string]*gorm.DB)
@@ -86,12 +86,12 @@ func CloseDB(dbName string) {
 	if gormDB == nil {
 		return
 	}
-	kmsSqlDB, err := gormDB.DB()
+	sqlDB, err := gormDB.DB()
 	if err != nil {
 		logger.Errorf("[CloseDB] dbName=%s err: %v", dbName, err)
 		return
 	}
-	kmsSqlDB.Close()
+	sqlDB.Close()
 }
 
 // CloseDBs 关闭所有的 db

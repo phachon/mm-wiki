@@ -12,7 +12,7 @@ import (
 
 const (
 	// TableNameAccountRole 账号角色关系表
-	TableNameAccountRole = "hms_account_role"
+	TableNameAccountRole = "mk_account_role"
 	// AccountRolePrimaryKey 账号角色关系表主键ID
 	AccountRolePrimaryKey = "account_role_id"
 )
@@ -27,7 +27,7 @@ type AccountRole struct {
 func NewAccountRole(ctx context.Context) *AccountRole {
 	return &AccountRole{
 		ctx: ctx,
-		db:  GetDB(dbNameKms).WithContext(ctx),
+		db:  GetDB(dbNameMK).WithContext(ctx),
 	}
 }
 

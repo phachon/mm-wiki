@@ -22,7 +22,7 @@ export const RouterInterceptor = ({ children, router }: any) => {
     }
     console.log('router:', router)
     console.log('location:', location)
-    // 路由合法性校验
+    // // 路由合法性校验
     const isExist = routerPaths.indexOf(location.pathname) != -1
     if (!isExist) {
       navigate(NO_EXIST_PATH)
@@ -35,13 +35,13 @@ export const RouterInterceptor = ({ children, router }: any) => {
       return
     }
     // 路由权限校验
-    const iMenuItem = iPrivilegeData.iMenuItemsKeyMap?.get(router.path)
-    if (router.permission && !iMenuItem) {
-      navigate(NO_ACCESS_PATH)
-      return
-    }
+    // const iMenuItem = iPrivilegeData.iMenuItemsKeyMap?.get(router.path)
+    // if (router.permission && !iMenuItem) {
+    //   navigate(NO_ACCESS_PATH)
+    //   return
+    // }
     // 路由改变，改变菜单的选中态
-    onMenuItemsClick(location.pathname)
+    // onMenuItemsClick(location.pathname)
   }, [location])
 
   return children

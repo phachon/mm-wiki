@@ -143,6 +143,6 @@ func sysDBLogf(ctx *gin.Context, level int, format string, args ...interface{}) 
 	logEntity.AccountName = global.ContextValueLoginAccountName(ctx)
 	err := service.NewLog(ctx).Create(logEntity)
 	if err != nil {
-		logger.WithContext(ctx).Errorf("[KmsDBLog] create kms log err=%s", err.Error())
+		logger.WithContext(ctx).Errorf("[sysDBLog] create system log err=%s", err.Error())
 	}
 }

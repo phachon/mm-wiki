@@ -13,7 +13,7 @@ import (
 
 const (
 	// TableNameNotice 系统公告表
-	TableNameNotice = "hms_notice"
+	TableNameNotice = "mk_notice"
 	// NoticePrimaryKey 公告表主键ID
 	NoticePrimaryKey = "notice_id"
 )
@@ -35,7 +35,7 @@ func (r *Notice) Insert(noticeEntity *entity.NoticeEntity) errors.BizError {
 	noticeEntity.CreateTime = utils.NewJsonTime(time.Now())
 	noticeEntity.UpdateTime = utils.NewJsonTime(time.Now())
 	noticeEntity.Status = entity.NoticeStatusDefault
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).Save(noticeEntity)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).Save(noticeEntity)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlInsertErr, db.Error.Error())
 	}
@@ -44,7 +44,7 @@ func (r *Notice) Insert(noticeEntity *entity.NoticeEntity) errors.BizError {
 
 // GetNoticeByContent 根据公告内容查找正常的公告
 func (r *Notice) GetNoticeByContent(content string) (notices []*entity.NoticeEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where(map[string]interface{}{
 			"status":        entity.NoticeStatusDefault,
 			"content LIKE ": "%" + content + "%",
@@ -60,7 +60,7 @@ func (r *Notice) GetNoticeByContent(content string) (notices []*entity.NoticeEnt
 func (r *Notice) GetNoticeByNoticeId(noticeId int64) (notice *entity.NoticeEntity, err errors.BizError) {
 
 	notice = &entity.NoticeEntity{}
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where(map[string]interface{}{
 			NoticePrimaryKey: noticeId,
 			"status":         entity.NoticeStatusDefault,
@@ -78,7 +78,7 @@ func (r *Notice) GetNoticeByNoticeId(noticeId int64) (notice *entity.NoticeEntit
 
 // GetNoticesByNoticeIds 根据多个公告ID批量获取公告ID
 func (r *Notice) GetNoticesByNoticeIds(noticeIds []int64) (notices []*entity.NoticeEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where("status=? and notice_id IN (?)",
 			entity.NoticeStatusDefault, noticeIds).
 		Find(&notices)
@@ -93,7 +93,7 @@ func (r *Notice) CountByContent(content string) (count int64, err error) {
 	if content == "" {
 		return 0, nil
 	}
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where(map[string]interface{}{
 			"status":        entity.NoticeStatusDefault,
 			"content LIKE ": "%" + content + "%",
@@ -107,7 +107,7 @@ func (r *Notice) CountByContent(content string) (count int64, err error) {
 // Update 更新公告只会更新如下字段
 func (r *Notice) Update(notice entity.NoticeEntity) errors.BizError {
 	notice.UpdateTime = utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Select("Title", "Content", "AccountId", "Status", "PublishStatus", "PublishTime", "StartTime", "EndTime").
 		Where(map[string]interface{}{
 			NoticePrimaryKey: notice.NoticeId,
@@ -122,7 +122,7 @@ func (r *Notice) Update(notice entity.NoticeEntity) errors.BizError {
 // UpdateStatus 删除公告
 func (r *Notice) DeleteNotice(noticeId int64) errors.BizError {
 	updateTime := utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where(map[string]interface{}{
 			NoticePrimaryKey: noticeId,
 			"status":         entity.NoticeStatusDefault,
@@ -137,7 +137,7 @@ func (r *Notice) DeleteNotice(noticeId int64) errors.BizError {
 
 // GetAllNotices 获取所有的公告
 func (r *Notice) GetAllNotices() (notice []*entity.NoticeEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where(map[string]interface{}{
 			"status": entity.NoticeStatusDefault,
 		}).
@@ -150,7 +150,7 @@ func (r *Notice) GetAllNotices() (notice []*entity.NoticeEntity, err errors.BizE
 
 // GetNoticesByLimit 分页获取公告列表
 func (r *Notice) GetNoticesByLimit(limit int, offset int) (notices []*entity.NoticeEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where("status", entity.NoticeStatusDefault).
 		Limit(limit).
 		Offset(offset).
@@ -165,7 +165,7 @@ func (r *Notice) GetNoticesByLimit(limit int, offset int) (notices []*entity.Not
 // GetPublishNoticesByLimit 分页获取已发布公告列表
 func (r *Notice) GetPublishNoticesByLimit(limit int, offset int) (notices []*entity.NoticeEntity, err errors.BizError) {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where("status", entity.NoticeStatusDefault).
 		Where("publish_status", entity.NoticePublishStatusPublishing).
 		Where("start_time <= ? and end_time > ?", now, now).
@@ -181,7 +181,7 @@ func (r *Notice) GetPublishNoticesByLimit(limit int, offset int) (notices []*ent
 
 // CountNotices 获取公告总数
 func (r *Notice) CountNotices() (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where("status", entity.NoticeStatusDefault).
 		Count(&count)
 	if db.Error != nil {
@@ -193,7 +193,7 @@ func (r *Notice) CountNotices() (count int64, err errors.BizError) {
 // CountPublishNotices 获取已发布公告总数
 func (r *Notice) CountPublishNotices() (count int64, err errors.BizError) {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice).
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice).
 		Where("status", entity.NoticeStatusDefault).
 		Where("status", entity.NoticeStatusDefault).
 		Where("publish_status", entity.NoticePublishStatusPublishing).
@@ -212,7 +212,7 @@ func (r *Notice) GetNoticesByKeywordsAndLimit(limit int, offset int, keywords *e
 		return r.GetNoticesByLimit(limit, offset)
 	}
 
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice)
 	db.Where("status", entity.NoticeStatusDefault)
 	if keywords.Content != "" {
 		db = db.Where("content LIKE ?", "%"+keywords.Content+"%")
@@ -229,7 +229,7 @@ func (r *Notice) GetNoticesByKeywordsAndLimit(limit int, offset int, keywords *e
 
 // CountNotices 根据关键字获取公告总数
 func (r *Notice) CountNoticesByKeywords(keywords *entity.NoticeKeywords) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(r.ctx).Table(TableNameNotice)
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameNotice)
 	db = db.Where("status = ?", entity.NoticeStatusDefault)
 	if keywords.Content != "" {
 		db = db.Where("content LIKE ?", "%"+keywords.Content+"%")

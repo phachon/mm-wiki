@@ -13,7 +13,7 @@ import (
 
 const (
 	// TableNameAccount 系统账号表
-	TableNameAccount = "hms_account"
+	TableNameAccount = "mk_account"
 	// AccountPrimaryKey 账号表主键ID
 	AccountPrimaryKey = "account_id"
 )
@@ -35,7 +35,7 @@ func (ka *Account) Insert(accountEntity *entity.AccountEntity) errors.BizError {
 	accountEntity.CreateTime = utils.NewJsonTime(time.Now())
 	accountEntity.UpdateTime = utils.NewJsonTime(time.Now())
 	accountEntity.Status = entity.AccountStatusDefault
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).Save(accountEntity)
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).Save(accountEntity)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlInsertErr, db.Error.Error())
 	}
@@ -45,7 +45,7 @@ func (ka *Account) Insert(accountEntity *entity.AccountEntity) errors.BizError {
 // GetAccountByName 根据账号名查找正常的账号
 func (ka *Account) GetAccountByName(accountName string) (account *entity.AccountEntity, err errors.BizError) {
 	account = &entity.AccountEntity{}
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{
 			"name": accountName,
 		}).
@@ -63,7 +63,7 @@ func (ka *Account) GetAccountByName(accountName string) (account *entity.Account
 func (ka *Account) GetAccountByAccountId(accountId int64) (account *entity.AccountEntity, err errors.BizError) {
 
 	account = &entity.AccountEntity{}
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{
 			AccountPrimaryKey: accountId,
 		}).
@@ -80,7 +80,7 @@ func (ka *Account) GetAccountByAccountId(accountId int64) (account *entity.Accou
 
 // GetAccountsByAccountIds 根据多个账号ID批量获取账号ID
 func (ka *Account) GetAccountsByAccountIds(accountIds []int64) (accounts []*entity.AccountEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where("account_id IN (?)",
 			accountIds).
 		Find(&accounts)
@@ -95,7 +95,7 @@ func (ka *Account) CountByName(name string) (count int64, err error) {
 	if name == "" {
 		return 0, nil
 	}
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{
 			"name": name,
 		}).Count(&count)
@@ -117,7 +117,7 @@ func (ka *Account) CheckNameExists(name string) (bool, error) {
 // HasSameName 账号ID和账号名是否存在
 func (ka *Account) HasSameName(accountId int64, name string) (has bool, err errors.BizError) {
 	var count int64
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where("name = ?", name).
 		Where("account_id <> ?", accountId).
 		Count(&count)
@@ -130,7 +130,7 @@ func (ka *Account) HasSameName(accountId int64, name string) (has bool, err erro
 // Update 更新账号，只会更新如下字段
 func (ka *Account) Update(account entity.AccountEntity) errors.BizError {
 	account.UpdateTime = utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Select("GivenName", "Email", "Phone", "Mobile", "UpdateTime").
 		Where(map[string]interface{}{
 			AccountPrimaryKey: account.AccountId,
@@ -145,7 +145,7 @@ func (ka *Account) Update(account entity.AccountEntity) errors.BizError {
 // UpdatePassword 更新账号密码
 func (ka *Account) UpdatePassword(accountId int64, password string) errors.BizError {
 	updateTime := utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{
 			AccountPrimaryKey: accountId,
 		}).
@@ -160,7 +160,7 @@ func (ka *Account) UpdatePassword(accountId int64, password string) errors.BizEr
 // UpdateStatus 更新账号状态
 func (ka *Account) UpdateStatus(accountId int64, status int) errors.BizError {
 	updateTime := utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{
 			AccountPrimaryKey: accountId,
 		}).
@@ -174,7 +174,7 @@ func (ka *Account) UpdateStatus(accountId int64, status int) errors.BizError {
 
 // GetAllAccount 获取所有的账号
 func (ka *Account) GetAllAccount() (account []*entity.AccountEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{}).
 		Find(&account)
 	if db.Error != nil {
@@ -185,7 +185,7 @@ func (ka *Account) GetAllAccount() (account []*entity.AccountEntity, err errors.
 
 // GetAccountsByKeywords 根据账号名模糊匹配账号
 func (ka *Account) GetAccountsByKeywords(keywords *entity.AccountKeywords) (accounts []*entity.AccountEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount)
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount)
 	if keywords.Status != "" {
 		db = db.Where("status = ?", keywords.Status)
 	}
@@ -209,7 +209,7 @@ func (ka *Account) GetAccountsByKeywordAndLimit(limit int, offset int, keywords 
 		return ka.GetAccountsByLimit(limit, offset)
 	}
 
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount)
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount)
 	if keywords.Status != "" {
 		db = db.Where("status = ?", keywords.Status)
 	}
@@ -231,7 +231,7 @@ func (ka *Account) GetAccountsByKeywordAndLimit(limit int, offset int, keywords 
 
 // GetAccountsByLimit 分页获取账号列表
 func (ka *Account) GetAccountsByLimit(limit int, offset int) (accounts []*entity.AccountEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Limit(limit).
 		Offset(offset).
 		Order(fmt.Sprintf("%s DESC", AccountPrimaryKey)).
@@ -244,7 +244,7 @@ func (ka *Account) GetAccountsByLimit(limit int, offset int) (accounts []*entity
 
 // CountAccounts 账号总数
 func (ka *Account) CountAccounts() (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount).
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Count(&count)
 	if db.Error != nil {
 		return count, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
@@ -254,7 +254,7 @@ func (ka *Account) CountAccounts() (count int64, err errors.BizError) {
 
 // CountAccounts 账号总数
 func (ka *Account) CountAccountsByKeywords(keywords *entity.AccountKeywords) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(ka.ctx).Table(TableNameAccount)
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount)
 	if keywords.Status != "" {
 		db = db.Where("status = ?", keywords.Status)
 	}

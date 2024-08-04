@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
-export const HOME_ROOT_PATH = '/main/index'
+export const HOME_ROOT_PATH = '/home/index'
+export const SYSTEM_ROOT_PATH = '/system/main/index'
 export const AUTH_LOGIN_PATH = '/login'
 export const NO_EXIST_PATH = '/error/404'
 export const NO_ACCESS_PATH = '/error/403'

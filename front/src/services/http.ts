@@ -63,15 +63,15 @@ httpService.interceptors.response.use(
     const status = error.response?.status
     switch (status) {
       case 401:
-        await message.error('账号登录态失效！')
+        await message.error('账号登录态失效！', 2)
         LoginTokenStore.removeToken()
         window.location.href = `${window.location.origin}`
         return Promise.reject(error)
       case 403:
-        await message.error('暂无数据访问权限！')
+        await message.error('暂无数据访问权限！', 2)
         return Promise.reject(error)
       case 500:
-        await message.error('服务器未知错误！')
+        await message.error('服务器未知错误！', 2)
         return Promise.reject(error)
     }
     return Promise.reject(error)

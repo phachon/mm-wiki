@@ -40,11 +40,11 @@ func (ae *AccountActionEvent) Dispatch(actionType string, fields map[string]inte
 		fieldsJson, _ := json.Marshal(fields)
 		message = fmt.Sprintf("%s %s", message, string(fieldsJson))
 	}
-	ae.consumerKmsLogDB(message)
+	ae.consumerSystemLogDB(message)
 }
 
-// consumerKmsLogDB 消费事件到 kms_log 表
-func (ae *AccountActionEvent) consumerKmsLogDB(message string) {
+// consumerSystemLogDB 消费事件到 system_log 表
+func (ae *AccountActionEvent) consumerSystemLogDB(message string) {
 	logEntity := new(entity.LogEntity)
 	logEntity.Message = message
 	logEntity.Level = int(klog.LevelInfo)

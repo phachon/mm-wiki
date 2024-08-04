@@ -12,7 +12,7 @@ import (
 
 const (
 	// TableNameRolePrivilege 角色权限关系表
-	TableNameRolePrivilege = "hms_role_privilege"
+	TableNameRolePrivilege = "mk_role_privilege"
 	// RolePrivilegePrimaryKey 角色权限关系表主键ID
 	RolePrivilegePrimaryKey = "role_privilege_id"
 )
@@ -27,7 +27,7 @@ type RolePrivilege struct {
 func NewRolePrivilege(ctx context.Context) *RolePrivilege {
 	return &RolePrivilege{
 		ctx: ctx,
-		db:  GetDB(dbNameKms).WithContext(ctx),
+		db:  GetDB(dbNameMK).WithContext(ctx),
 	}
 }
 

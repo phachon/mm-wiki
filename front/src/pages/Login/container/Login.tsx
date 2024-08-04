@@ -10,7 +10,7 @@ import LoginFooterUI from '../component/Footer'
 import { message } from 'antd'
 
 const Login: React.FC = () => {
-  const setToken = useGlobalStore((state: any) => state.setToken)
+  const { setToken, setAccountInfo } = useGlobalStore()
   const navigate = useNavigate()
 
   /**
@@ -28,7 +28,8 @@ const Login: React.FC = () => {
     })
       .then((loginInfo: LoginResp) => {
         message.success('登录成功！', 2, () => {
-          setToken(loginInfo)
+          setToken(loginInfo.login_token)
+          setAccountInfo(loginInfo.account_info)
           navigate(HOME_ROOT_PATH)
         })
       })

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PRO_NAME="platy"
+PRO_NAME="mm-wiki"
 
 CURRENT_DIR=$(cd $(dirname $0); cd ..; pwd)
 VERSION_FILE="$CURRENT_DIR/version.go"

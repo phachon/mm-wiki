@@ -13,7 +13,7 @@ import (
 
 const (
 	// TableNameLog 系统日志表
-	TableNameLog = "hms_log"
+	TableNameLog = "mk_log"
 	// LogPrimaryKey 日志表主键ID
 	LogPrimaryKey = "log_id"
 )
@@ -33,7 +33,7 @@ func NewLog(ctx context.Context) *Log {
 // Insert 创建日志插入一条日志记录
 func (l *Log) Insert(logEntity *entity.LogEntity) errors.BizError {
 	logEntity.CreateTime = utils.NewJsonTime(time.Now())
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).Save(logEntity)
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).Save(logEntity)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlInsertErr, db.Error.Error())
 	}
@@ -43,7 +43,7 @@ func (l *Log) Insert(logEntity *entity.LogEntity) errors.BizError {
 // GetLogByMessage 根据日志信息查找日志
 func (l *Log) GetLogByMessage(message string) (log *entity.LogEntity, err errors.BizError) {
 	log = &entity.LogEntity{}
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Where(map[string]interface{}{
 			"message LIKE ?": "%" + message + "%",
 		}).
@@ -61,7 +61,7 @@ func (l *Log) GetLogByMessage(message string) (log *entity.LogEntity, err errors
 func (l *Log) GetLogByLogId(logId int64) (log *entity.LogEntity, err errors.BizError) {
 
 	log = &entity.LogEntity{}
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Where(map[string]interface{}{
 			LogPrimaryKey: logId,
 		}).
@@ -78,7 +78,7 @@ func (l *Log) GetLogByLogId(logId int64) (log *entity.LogEntity, err errors.BizE
 
 // GetLogsByLogIds 根据多个日志ID批量获取日志ID
 func (l *Log) GetLogsByLogIds(logIds []int64) (logs []*entity.LogEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Where("log_id IN (?)", logIds).
 		Find(&logs)
 	if db.Error != nil {
@@ -92,7 +92,7 @@ func (l *Log) CountByMessage(message string) (count int64, err error) {
 	if message == "" {
 		return 0, nil
 	}
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Where(map[string]interface{}{
 			"message LIKE ?": "%" + message + "%",
 		}).Count(&count)
@@ -104,7 +104,7 @@ func (l *Log) CountByMessage(message string) (count int64, err error) {
 
 // GetAllLogs 获取所有的日志
 func (l *Log) GetAllLogs() (log []*entity.LogEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Find(&log)
 	if db.Error != nil {
 		return log, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
@@ -114,7 +114,7 @@ func (l *Log) GetAllLogs() (log []*entity.LogEntity, err errors.BizError) {
 
 // GetLogsByLimit 分页获取日志列表
 func (l *Log) GetLogsByLimit(limit int, offset int) (logs []*entity.LogEntity, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Limit(limit).
 		Offset(offset).
 		Order(fmt.Sprintf("%s DESC", LogPrimaryKey)).
@@ -127,7 +127,7 @@ func (l *Log) GetLogsByLimit(limit int, offset int) (logs []*entity.LogEntity, e
 
 // CountLogs 获取日志总数
 func (l *Log) CountLogs() (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).Table(TableNameLog).
+	db := GetDB(dbNameMK).WithContext(l.ctx).Table(TableNameLog).
 		Count(&count)
 	if db.Error != nil {
 		return count, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
@@ -142,7 +142,7 @@ func (l *Log) GetLogsByMessageAndLimit(limit int, offset int, message string) (l
 		return l.GetLogsByLimit(limit, offset)
 	}
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("message LIKE ?", "%"+message+"%").
 		Limit(limit).
@@ -157,7 +157,7 @@ func (l *Log) GetLogsByMessageAndLimit(limit int, offset int, message string) (l
 
 // CountLogsByMessage 根据日志关键字获取日志总数
 func (l *Log) CountLogsByMessage(message string) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("name LIKE ?", "%"+message+"%").
 		Count(&count)
@@ -170,7 +170,7 @@ func (l *Log) CountLogsByMessage(message string) (count int64, err errors.BizErr
 // GetLogsByAccountId 根据账号ID获取日志列表
 func (l *Log) GetLogsByAccountId(accountId int64) (logs []*entity.LogEntity, err errors.BizError) {
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("account_id = ?", accountId).
 		Order(fmt.Sprintf("%s DESC", LogPrimaryKey)).
@@ -184,7 +184,7 @@ func (l *Log) GetLogsByAccountId(accountId int64) (logs []*entity.LogEntity, err
 // GetLogsByLevel 根据日志类型获取日志列表
 func (l *Log) GetLogsByLevel(level int) (logs []*entity.LogEntity, err errors.BizError) {
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("level = ?", level).
 		Order(fmt.Sprintf("%s DESC", LogPrimaryKey)).
@@ -198,7 +198,7 @@ func (l *Log) GetLogsByLevel(level int) (logs []*entity.LogEntity, err errors.Bi
 // GetLogsByAccountIdAndLimit 根据账号ID分页获取日志列表
 func (l *Log) GetLogsByAccountIdAndLimit(accountId int64, limit int, offset int) (logs []*entity.LogEntity, err errors.BizError) {
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("account_id = ?", accountId).
 		Limit(limit).
@@ -214,7 +214,7 @@ func (l *Log) GetLogsByAccountIdAndLimit(accountId int64, limit int, offset int)
 // GetLogsByLevelAndLimit 根据日志类型分页获取日志列表
 func (l *Log) GetLogsByLevelAndLimit(level int, limit int, offset int) (logs []*entity.LogEntity, err errors.BizError) {
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("level = ?", level).
 		Limit(limit).
@@ -229,7 +229,7 @@ func (l *Log) GetLogsByLevelAndLimit(level int, limit int, offset int) (logs []*
 
 // CountLogsByLevel 根据日志类型获取日志总数
 func (l *Log) CountLogsByLevel(level int) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("level = ?", level).
 		Count(&count)
@@ -241,7 +241,7 @@ func (l *Log) CountLogsByLevel(level int) (count int64, err errors.BizError) {
 
 // CountLogsByAccountId 根据账号ID获取日志总数
 func (l *Log) CountLogsByAccountId(accountId int64) (count int64, err errors.BizError) {
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog).
 		Where("account_id = ?", accountId).
 		Count(&count)
@@ -254,7 +254,7 @@ func (l *Log) CountLogsByAccountId(accountId int64) (count int64, err errors.Biz
 // GetLogsByKeywordsAndLimit 根据搜索关键词分页获取日志列表
 func (l *Log) GetLogsByKeywordsAndLimit(keywords *entity.LogSearchKeywords, limit int, offset int) (logs []*entity.LogEntity, err errors.BizError) {
 
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog)
 	if keywords != nil && keywords.Level > 0 {
 		db = db.Where("level = ?", keywords.Level)
@@ -280,7 +280,7 @@ func (l *Log) CountLogsByKeywords(keywords *entity.LogSearchKeywords) (count int
 	if keywords == nil {
 		return
 	}
-	db := GetDB(dbNameKms).WithContext(l.ctx).
+	db := GetDB(dbNameMK).WithContext(l.ctx).
 		Table(TableNameLog)
 	if keywords != nil && keywords.Level > 0 {
 		db = db.Where("level = ?", keywords.Level)

@@ -10,7 +10,7 @@ class Token {
   tokenExpireSecond: number
 
   constructor(tokenKey: string, expireSecond: number) {
-    this.tokenKey = tokenKey || 'KMS_ADMIN_TOKEN_KEY'
+    this.tokenKey = tokenKey || 'MM_ADMIN_TOKEN_KEY'
     this.tokenExpireKey = this.tokenKey + '_EXPIRE'
     this.tokenExpireSecond = expireSecond || 10 * 30 * 30 * 3600
   }

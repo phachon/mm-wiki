@@ -3,19 +3,19 @@ import Token from '../utils/Token'
 import { AccountInfoType } from '../types/accountType'
 
 // LocalLoginTokenKey 登录 token 本地存储的 key
-const LocalLoginTokenKey = 'KMS_ADMIN_LOGIN_TOKEN'
+const LocalLoginTokenKey = 'MM_WIKI_LOGIN_TOKEN'
 // LocalProfileAccountKey 本地存储的 key
-const LocalProfileAccountKey = 'KMS_ADMIN_PROFILE_ACCOUNT'
+const LocalProfileAccountKey = 'MM_WIKI_LOGIN_ACCOUNT'
 
 export const LoginTokenStore = new Token(LocalLoginTokenKey, 10 * 60 * 60 * 1000)
 
-// setProfileAccountInfo 存储 profile 账号信息
-export const setProfileAccountInfo = (accountInfo: AccountInfoType) => {
+// setLocalAccountInfo 存储账号信息到local
+export const setLocalAccountInfo = (accountInfo: AccountInfoType) => {
   LocalStorage.setValue(LocalProfileAccountKey, accountInfo)
 }
 
-// getProfileAccountInfo 获取 profile 账号信息
-export const getProfileAccountInfo = (): AccountInfoType | undefined => {
+// getProfileAccountInfo 获取账号信息
+export const getLocalAccountInfo = (): AccountInfoType | undefined => {
   const profileAccountInfo = LocalStorage.getValue<AccountInfoType>(LocalProfileAccountKey)
   if (profileAccountInfo == null) {
     return undefined
@@ -23,7 +23,7 @@ export const getProfileAccountInfo = (): AccountInfoType | undefined => {
   return profileAccountInfo
 }
 
-// removeProfileAccountInfo 清除 profile 账号信息
-export const removeProfileAccountInfo = (): void => {
+// removeProfileAccountInfo 清除 local 账号信息
+export const removeLocalAccountInfo = (): void => {
   LocalStorage.removeValue(LocalProfileAccountKey)
 }

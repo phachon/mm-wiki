@@ -7,11 +7,11 @@ import { AccountInfoType } from '@/types/accountType'
 
 const ProfileInfo: React.FC = () => {
   const [profileAccountInfo, setProfileAccountInfo] = useState<AccountInfoType>()
-  const { accountInfo, setAccountInfo } = useGlobalStore()
+  const { getAccountInfo, setAccountInfo } = useGlobalStore()
 
   useEffect(() => {
-    setProfileAccountInfo(accountInfo)
-  }, [accountInfo])
+    // setProfileAccountInfo(accountInfo)
+  }, [])
 
   /**
    * 修改个人资料操作
