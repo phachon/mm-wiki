@@ -21,8 +21,10 @@ const ActionButton = (props: ActionButtonProps) => {
       type="link"
       onClick={props.onClick}
       style={{
-        padding: 0,
-        height: 0
+        padding: '0',
+        height: 'auto',
+        display: 'flex',
+        alignItems: 'center'
       }}
     >
       {props.icon}

@@ -3,6 +3,7 @@ import { PrivilegeListItemType } from './privilegeType'
 
 export const RoleTypeCustomRole = 0 // 自定义角色
 export const RoleTypeAccountDefaultRole = 1 // 账号默认角色
+export const RoleTypeAccountRootRole = 2 // 超级管理员类型角色
 
 // 角色类型定义
 export const RoleTypes = [
@@ -12,8 +13,13 @@ export const RoleTypes = [
     color: 'blue'
   },
   {
+    type: RoleTypeAccountRootRole,
+    name: '超级管理员',
+    color: 'green'
+  },
+  {
     type: RoleTypeAccountDefaultRole,
-    name: '默认',
+    name: '默认角色',
     color: 'red'
   }
 ]

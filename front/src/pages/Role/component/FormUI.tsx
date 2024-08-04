@@ -1,11 +1,13 @@
 import { Button, Form, Input, Modal, Radio, Select, Space, Tooltip, Typography } from 'antd'
 import { EditLayoutForm, LayoutForm } from '../../../config/layout'
-import { RoleInfoType } from '@/types/roleType'
+import { RoleInfoType, RoleTypeAccountRootRole } from '@/types/roleType'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import PrivilegeUI from './PrivilegeUI'
 import { useEffect, useState } from 'react'
 import { PrivilegeListItemType } from '@/types/privilegeType'
 import { RoleRadioOptions } from './ToolsUI'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { title } from 'process'
 
 interface RoleFormUIProps {
   /**
@@ -40,6 +42,7 @@ const RoleFormUI = (props: RoleFormUIProps) => {
   const [form] = Form.useForm()
   const [privilegeModalOpen, setPrivilegeModalOpen] = useState<boolean>(false)
   const [selectPrivilegeIds, setSelectPrivilegeIds] = useState<string[]>()
+  const [selectPrivilegeDisabled, setSelectPrivilegeDisabled] = useState<boolean>(false)
   const roleTypeOptions = RoleRadioOptions()
 
   const isEdit = props.roleInfo ? true : false
@@ -73,7 +76,14 @@ const RoleFormUI = (props: RoleFormUIProps) => {
 
         <Form.Item label="角色类型" name="role_type" rules={[{ required: true }]} initialValue={0}>
           <Form.Item name="role_type" noStyle>
-            <Radio.Group options={roleTypeOptions} defaultValue={0} />
+            <Radio.Group
+              options={roleTypeOptions}
+              defaultValue={0}
+              onChange={(e: CheckboxChangeEvent) => {
+                console.log(e.target.value)
+                setSelectPrivilegeDisabled(e.target.value === RoleTypeAccountRootRole)
+              }}
+            />
           </Form.Item>
           <Tooltip title="添加账号会自动选中默认角色">
             <Typography.Link>
@@ -86,11 +96,22 @@ const RoleFormUI = (props: RoleFormUIProps) => {
           <Form.Item
             label="角色权限"
             name="privilege_ids"
-            rules={[{ required: true, message: '请选择角色权限' }]}
+            rules={[{ required: false, message: '请选择角色权限' }]}
           >
             <Space.Compact style={{ width: '100%' }}>
               <Input placeholder="请选择角色权限" value={selectPrivilegeIds} disabled />
-              <Button onClick={() => setPrivilegeModalOpen(true)}>选择权限</Button>
+              <Tooltip
+                title="超级管理员不需要选择权限"
+                placement="right"
+                open={selectPrivilegeDisabled}
+              >
+                <Button
+                  disabled={selectPrivilegeDisabled}
+                  onClick={() => setPrivilegeModalOpen(true)}
+                >
+                  选择权限
+                </Button>
+              </Tooltip>
             </Space.Compact>
           </Form.Item>
         )}
