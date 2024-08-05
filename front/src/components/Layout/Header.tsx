@@ -125,7 +125,7 @@ const LayoutHeader = (props: LayoutHeaderProps) => {
           setNoticeOpen(false)
         }}
         open={noticeOpen}
-        style={{ padding: 12, paddingTop: 0 }}
+        styles={{ body: { padding: 12, paddingTop: 0 } }}
         closable={false}
         extra={
           <Space>

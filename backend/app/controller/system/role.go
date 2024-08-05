@@ -38,9 +38,12 @@ func RoleSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Warnf("[RoleSave] name empty")
 		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "角色名不能为空")
 	}
-	if len(privilegeIds) == 0 {
+	if roleType != entity.RoleTypeRootRole && len(privilegeIds) == 0 {
 		logger.WithContext(ctx).Warnf("[RoleSave] privilege_ids empty")
-		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "权限不能为空")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "请选择角色权限")
+	}
+	if roleType == entity.RoleTypeRootRole {
+		privilegeIds = ""
 	}
 
 	// role 角色实体

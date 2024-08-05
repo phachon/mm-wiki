@@ -27,7 +27,7 @@ const RoleAdd: React.FC = () => {
   const onFinishSubmit = (values: any) => {
     RoleService.saveRole(values).then(() => {
       message.success('保存成功', 2, () => {
-        navigate('/role/list')
+        navigate('/system/role/list')
       })
     })
   }

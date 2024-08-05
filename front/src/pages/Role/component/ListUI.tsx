@@ -1,5 +1,5 @@
 import { Button, Popconfirm, Space, Table, TablePaginationConfig } from 'antd'
-import { RoleInfoType, RoleListItemType } from '@/types/roleType'
+import { RoleInfoType, RoleListItemType, RoleTypeAccountRootRole } from '@/types/roleType'
 import { CloseSquareOutlined, FormOutlined, TeamOutlined, LockOutlined } from '@ant-design/icons'
 import { RoleTypeTagUI } from './ToolsUI'
 import ActionButton from '@/components/Action/ActionButton'
@@ -103,14 +103,24 @@ const RoleListUI = (props: RoleListUIProps) => {
                 }
                 havePermission={roleListItem.action?.is_account_list == 1}
               />
-              <ActionButton
-                text="权限"
-                icon={<LockOutlined />}
-                onClick={() =>
-                  props.onPrivilegeListClick ? props.onPrivilegeListClick(roleListItem) : null
-                }
-                havePermission={roleListItem.action?.is_privilege_edit == 1}
-              />
+              {roleListItem.role_type == RoleTypeAccountRootRole ? (
+                <ActionButton
+                  text="权限"
+                  icon={<LockOutlined />}
+                  havePermission={false}
+                  tooltipTitle="超级管理员默认拥有所有权限"
+                />
+              ) : (
+                <ActionButton
+                  text="权限"
+                  icon={<LockOutlined />}
+                  onClick={() =>
+                    props.onPrivilegeListClick ? props.onPrivilegeListClick(roleListItem) : null
+                  }
+                  havePermission={roleListItem.action?.is_privilege_edit == 1}
+                />
+              )}
+
               <ActionButton
                 text="修改"
                 icon={<FormOutlined />}

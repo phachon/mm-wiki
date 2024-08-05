@@ -5,6 +5,7 @@ interface ActionButtonProps {
   text: string // 显示文案
   icon?: React.ReactNode // icon
   havePermission?: boolean // 是否有权限
+  tooltipTitle?: string // 提示标题
   onClick?:
     | (React.MouseEventHandler<HTMLAnchorElement> & React.MouseEventHandler<HTMLButtonElement>)
     | undefined // 点击操作
@@ -31,7 +32,7 @@ const ActionButton = (props: ActionButtonProps) => {
       <span className="button-text">{props.text}</span>
     </Button>
   ) : (
-    <Tooltip title="禁止操作">
+    <Tooltip title={props.tooltipTitle ? props.tooltipTitle : '禁止操作'}>
       <Button
         type="link"
         style={{
@@ -40,7 +41,6 @@ const ActionButton = (props: ActionButtonProps) => {
           color: '#1677ff',
           opacity: 0.5
         }}
-        disabled
       >
         {props.icon}
         <span className="button-text">{props.text}</span>
