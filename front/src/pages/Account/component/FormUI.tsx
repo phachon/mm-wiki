@@ -141,16 +141,28 @@ const AccountFormUI = (props: AccountFormUIProps) => {
           />
         </Form.Item>
 
-        <Form.Item label="邮箱" name="email">
-          <Input placeholder="请输入邮箱地址: xxx@xxx.com" />
+        <Form.Item label="手机号" name="mobile">
+          <Input placeholder="请输入手机号码" />
         </Form.Item>
 
         <Form.Item label="电话号" name="phone">
           <Input placeholder="请输入电话号码" />
         </Form.Item>
 
-        <Form.Item label="手机号" name="mobile">
-          <Input placeholder="请输入手机号码" />
+        <Form.Item label="邮箱号" name="email">
+          <Input placeholder="请输入邮箱地址: xxx@xxx.com" />
+        </Form.Item>
+
+        <Form.Item label="部门" name="department">
+          <Input placeholder="请输入任职部门: 技术研发部/后台开发组" />
+        </Form.Item>
+
+        <Form.Item label="职位" name="position">
+          <Input placeholder="请输入职位: 开发工程师" />
+        </Form.Item>
+
+        <Form.Item label="办公位" name="location">
+          <Input placeholder="请输入办公位: xx大楼SE-1231" />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: layoutForm.labelCol.span }}>

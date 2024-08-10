@@ -11,13 +11,17 @@ const (
 type AccountEntity struct {
 	AccountId  int64          `json:"account_id" gorm:"primary_key"` // 账号ID
 	Name       string         `json:"name"`                          // 账号名
-	Avatar     string         `json:"avatar"`                        // 头像
-	GivenName  string         `json:"given_name"`                    // 昵称
 	Password   string         `json:"-"`                             // 密码
-	Email      string         `json:"email"`                         // 邮箱
-	Phone      string         `json:"phone"`                         // 手机号
+	GivenName  string         `json:"given_name"`                    // 昵称
 	Mobile     string         `json:"mobile"`                        // 电话
-	Status     int            `json:"status"`                        // 状态
+	Phone      string         `json:"phone"`                         // 手机号
+	Email      string         `json:"email"`                         // 邮箱
+	Department string         `json:"department"`                    // 部门
+	Position   string         `json:"position"`                      // 职位
+	Location   string         `json:"location"`                      // 办公位
+	LastIP     string         `json:"last_ip"`                       // 最后登录 IP
+	LastTime   int64          `json:"last_time"`                     // 最后登录时间
+	Status     int            `json:"status"`                        // 状态 0 正常 -1 禁用
 	CreateTime utils.JsonTime `json:"create_time"`                   // 创建时间
 	UpdateTime utils.JsonTime `json:"update_time"`                   // 更新时间
 }

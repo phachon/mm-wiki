@@ -3,7 +3,6 @@
 -- Author: phachon
 -- Date: 2024-02-01 11:00:00
 -- ----------------------------------------------
-
 CREATE DATABASE IF NOT EXISTS mm_wiki2 DEFAULT CHARSET utf8mb4;
 
 -- ----------------------------------------------------------
@@ -24,9 +23,7 @@ CREATE TABLE `mk_account` (
   `im` char(50) NOT NULL DEFAULT '' COMMENT '即时聊天工具',
   `last_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最后登录ip',
   `last_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
-  `role_id` tinyint(3) NOT NULL DEFAULT '0' COMMENT '角色 id',
-  `is_forbidden` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否屏蔽: 0 否 1 是',
-  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态: 0 正常 -1 删除',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态: 0 正常 -1 禁用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`account_id`),
@@ -41,7 +38,7 @@ CREATE TABLE `mk_role` (
   `role_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `name` char(10) NOT NULL DEFAULT '' COMMENT '角色名称',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '角色备注',
-  `role_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '角色类型：0 自定义角色 1 默认角色',
+  `role_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '角色类型：0 自定义角色 1 默认角色 2 超级管理员',
   `privilege_ids` varchar(500) NOT NULL DEFAULT '' COMMENT '角色下的权限ID，逗号隔开',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0 正常 -1 删除',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

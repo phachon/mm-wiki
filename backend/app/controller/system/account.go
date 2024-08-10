@@ -43,9 +43,12 @@ func AccountSave(ctx *gin.Context) error {
 	name := GetParamString(ctx, "name")
 	givenName := GetParamString(ctx, "given_name")
 	roleIds := GetParamString(ctx, "role_ids")
-	email := GetParamString(ctx, "email")
-	phone := GetParamString(ctx, "phone")
 	mobile := GetParamString(ctx, "mobile")
+	phone := GetParamString(ctx, "phone")
+	email := GetParamString(ctx, "email")
+	department := GetParamString(ctx, "department")
+	position := GetParamString(ctx, "position")
+	location := GetParamString(ctx, "location")
 
 	// 判断参数合法性
 	if name == "" {
@@ -77,11 +80,14 @@ func AccountSave(ctx *gin.Context) error {
 
 	// account 账号实体
 	accountEntity := &entity.AccountEntity{
-		Name:      name,
-		GivenName: givenName,
-		Email:     email,
-		Phone:     phone,
-		Mobile:    mobile,
+		Name:       name,
+		GivenName:  givenName,
+		Mobile:     mobile,
+		Phone:      phone,
+		Email:      email,
+		Department: department,
+		Position:   position,
+		Location:   location,
 	}
 	err = service.NewAccount(ctx).Create(accountEntity)
 	if err != nil {
@@ -147,9 +153,12 @@ func AccountModify(ctx *gin.Context) error {
 	name := GetParamString(ctx, "name")
 	roleIds := GetParamString(ctx, "role_ids")
 	givenName := GetParamString(ctx, "given_name")
-	email := GetParamString(ctx, "email")
-	phone := GetParamString(ctx, "phone")
 	mobile := GetParamString(ctx, "mobile")
+	phone := GetParamString(ctx, "phone")
+	email := GetParamString(ctx, "email")
+	department := GetParamString(ctx, "department")
+	position := GetParamString(ctx, "position")
+	location := GetParamString(ctx, "location")
 
 	// 判断参数合法性
 	if accountId == 0 {
@@ -185,11 +194,14 @@ func AccountModify(ctx *gin.Context) error {
 
 	// account 账号实体
 	accountEntity := entity.AccountEntity{
-		AccountId: accountId,
-		GivenName: givenName,
-		Email:     email,
-		Phone:     phone,
-		Mobile:    mobile,
+		AccountId:  accountId,
+		GivenName:  givenName,
+		Mobile:     mobile,
+		Phone:      phone,
+		Email:      email,
+		Department: department,
+		Position:   position,
+		Location:   location,
 	}
 	err = service.NewAccount(ctx).Update(accountEntity)
 	if err != nil {

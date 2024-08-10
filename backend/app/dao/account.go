@@ -131,7 +131,10 @@ func (ka *Account) HasSameName(accountId int64, name string) (has bool, err erro
 func (ka *Account) Update(account entity.AccountEntity) errors.BizError {
 	account.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
-		Select("GivenName", "Email", "Phone", "Mobile", "UpdateTime").
+		Select(
+			"GivenName", "Mobile", "Phone", "Email", "Department",
+			"Position", "Location", "LastIP", "LastTime", "UpdateTime",
+		).
 		Where(map[string]interface{}{
 			AccountPrimaryKey: account.AccountId,
 		}).

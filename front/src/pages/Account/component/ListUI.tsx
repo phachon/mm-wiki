@@ -72,14 +72,14 @@ const AccountListUI = (props: AccountListUIProps) => {
         <Table.Column
           title={'账号ID'}
           dataIndex="account_id"
-          width={80}
+          width={100}
           key={'account_id'}
           align={'center'}
         />
-        <Table.Column title={'账号名'} dataIndex="name" key={'name'} />
-        <Table.Column title={'昵称'} dataIndex="given_name" key={'given_name'} />
-        <Table.Column title={'电话号'} dataIndex="phone" key={'phone'} />
-        <Table.Column title={'手机号'} dataIndex="mobile" key={'mobile'} />
+        <Table.Column title={'账号名'} dataIndex="name" key={'name'} width={120} />
+        <Table.Column title={'昵称'} dataIndex="given_name" key={'given_name'} width={150} />
+        <Table.Column title={'手机号'} dataIndex="mobile" key={'mobile'} width={200} />
+        <Table.Column title={'邮箱'} dataIndex="email" key={'email'} width={220} />
         <Table.Column
           width={200}
           title={'角色'}

@@ -22,9 +22,14 @@ export type AccountInfoType = {
   account_id: bigint // 账号ID
   name: string // 账号名
   given_name: string // 昵称
-  email: string // 邮箱
-  phone: string // 电话
   mobile: string // 手机号码
+  phone: string // 电话
+  email: string // 邮箱
+  department: string // 部门
+  position: string // 职位
+  location: string // 办公位
+  last_ip: string // 上次登录IP
+  last_time: string // 上次登录时间
   status: number // 状态
   create_time: string // 创建时间
   update_time: string // 修改时间
