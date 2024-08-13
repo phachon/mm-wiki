@@ -39,7 +39,7 @@ const AccountDetailUI = (props: AccountDetailUIProps) => {
         <Descriptions.Item label="职位" span={12} key="position">
           {accountInfo?.position.toString()}
         </Descriptions.Item>
-        <Descriptions.Item label="办公位" span={12} key="location">
+        <Descriptions.Item label="工位" span={12} key="location">
           {accountInfo?.location.toString()}
         </Descriptions.Item>
         <Descriptions.Item label="上次登录IP" span={12} key="last_ip">

@@ -1,7 +1,7 @@
 import ProfileInfo from './container/Info'
-import ProfileRepass from './container/Repass'
+import ProfileSetting from './container/Setting'
 
 export default {
   ProfileInfo,
-  ProfileRepass
+  ProfileSetting
 }

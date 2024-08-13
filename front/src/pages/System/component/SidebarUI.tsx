@@ -2,6 +2,7 @@ import { Layout, Menu } from 'antd'
 import { getMenuItems } from './ToolsUI'
 import { useState } from 'react'
 import { IMenuItem } from '@/types/frame'
+import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 
 interface SystemSidebarUIProps {
   menuItemOpenKeys: string[]
@@ -14,15 +15,24 @@ interface SystemSidebarUIProps {
 const SystemSidebarUI = (props: SystemSidebarUIProps) => {
   const [collapsed, setCollapsed] = useState(false)
 
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed)
+  }
+
   return (
     <Layout.Sider
-      collapsible
+      // collapsible
       collapsed={collapsed}
-      onCollapse={(value) => setCollapsed(value)}
+      onCollapse={toggleCollapsed}
       width="208px"
+      collapsedWidth="64px"
       className="admin-sidebar"
       theme="light"
+      trigger={null} // 自定义触发器
     >
+      <div className="admin-sidebar-trigger" onClick={toggleCollapsed}>
+        {collapsed ? <RightOutlined /> : <LeftOutlined />}
+      </div>
       <Menu
         mode="inline"
         openKeys={props.menuItemOpenKeys}

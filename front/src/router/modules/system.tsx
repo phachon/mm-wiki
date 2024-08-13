@@ -29,9 +29,9 @@ const routers: IRouter[] = [
         permission: false
       },
       {
-        path: '/system/profile/repass',
-        key: 'profile_repass',
-        component: <Profile.ProfileRepass />,
+        path: '/system/profile/setting',
+        key: 'profile_setting',
+        component: <Profile.ProfileSetting />,
         auth: true,
         permission: true
       },

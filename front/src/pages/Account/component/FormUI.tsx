@@ -141,15 +141,15 @@ const AccountFormUI = (props: AccountFormUIProps) => {
           />
         </Form.Item>
 
-        <Form.Item label="手机号" name="mobile">
+        <Form.Item label="手机" name="mobile">
           <Input placeholder="请输入手机号码" />
         </Form.Item>
 
-        <Form.Item label="电话号" name="phone">
+        <Form.Item label="电话" name="phone">
           <Input placeholder="请输入电话号码" />
         </Form.Item>
 
-        <Form.Item label="邮箱号" name="email">
+        <Form.Item label="邮箱" name="email">
           <Input placeholder="请输入邮箱地址: xxx@xxx.com" />
         </Form.Item>
 
@@ -161,7 +161,7 @@ const AccountFormUI = (props: AccountFormUIProps) => {
           <Input placeholder="请输入职位: 开发工程师" />
         </Form.Item>
 
-        <Form.Item label="办公位" name="location">
+        <Form.Item label="工位" name="location">
           <Input placeholder="请输入办公位: xx大楼SE-1231" />
         </Form.Item>
 

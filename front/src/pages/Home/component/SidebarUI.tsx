@@ -1,16 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Button, Dropdown, Layout, Popover, Space, Tree } from 'antd'
 import type { GetProps, MenuProps, TreeDataNode } from 'antd'
-import {
-  DownOutlined,
-  CarryOutOutlined,
-  PlusOutlined,
-  FormOutlined,
-  CopyOutlined,
-  DeleteOutlined,
-  HolderOutlined,
-  RetweetOutlined
-} from '@ant-design/icons'
 
 type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>
 

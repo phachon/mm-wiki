@@ -1,6 +1,6 @@
 import { getUrlConfig } from '../config/url'
 import httpRequest from './http'
-import { ProfileInfoType, ProfilePrivilegesResp } from '../types/profileType'
+import { ProfileInfoResp, ProfilePrivilegesResp } from '../types/profileType'
 
 const profileUrl = {
   profilePrivileges: '/system/profile/privileges',
@@ -26,9 +26,9 @@ class Profile {
   /**
    * getProfileInfo 获取个人信息
    */
-  getProfileInfo(): Promise<ProfileInfoType> {
+  getProfileInfo(): Promise<ProfileInfoResp> {
     let profileInfoUrl = getUrlConfig().proxyUrl + profileUrl.profileInfo
-    return httpRequest.get<ProfileInfoType>(profileInfoUrl, {})
+    return httpRequest.get<ProfileInfoResp>(profileInfoUrl, {})
   }
 
   /**

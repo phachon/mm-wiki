@@ -1,8 +1,8 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Divider, Form, Input } from 'antd'
 import { LayoutForm, LayoutFormButton } from '../../../config/layout'
 
 interface ProfileRepassUIProps {
-  onFinishCallback: (values: any) => void
+  onSaveCallback: (values: any) => void
 }
 
 /**
@@ -14,7 +14,13 @@ const ProfileRepassUI = (props: ProfileRepassUIProps) => {
   const [form] = Form.useForm()
   return (
     <div className="panel-body">
-      <Form {...LayoutForm} name="basic" form={form} onFinish={props.onFinishCallback}>
+      <Form
+        {...LayoutForm}
+        labelCol={{ span: 2 }}
+        name="basic"
+        form={form}
+        onFinish={props.onSaveCallback}
+      >
         <Form.Item
           label="旧密码"
           name="old_pwd"
@@ -38,8 +44,8 @@ const ProfileRepassUI = (props: ProfileRepassUIProps) => {
         >
           <Input.Password placeholder="请再次输入新密码" />
         </Form.Item>
-
-        <Form.Item {...LayoutFormButton}>
+        <Divider />
+        <Form.Item {...LayoutFormButton} wrapperCol={{ offset: 2 }}>
           <Button type="primary" htmlType="submit">
             保存
           </Button>

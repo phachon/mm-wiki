@@ -107,6 +107,34 @@
 .admin-sidebar-menu {
     overflow-y: auto;
     overflow-x: hidden;
+    border-right: none !important;
+}
+
+/* 触发器 */
+.admin-sidebar .admin-sidebar-trigger {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: -12px; /* 调整位置使其在分割线上 */
+  transform: translateY(-50%);
+  z-index: 1;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-sidebar-trigger .anticon {
+  font-size: 12px;
+  color: #bfbfbf;
+}
+
+.ant-menu-inline-collapsed {
+  padding-inline: 8px;
 }
 
 .ant-layout-sider-trigger {
@@ -115,21 +143,30 @@
     border-top-color: #ddd;
 }
 
+
+.admin-main {
+  /* display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: #fff;
+  border: none; */
+}
+
 .admin-content {
-    margin: 0 8px;
-    /*padding: 8px 8px;*/
+    margin: 0px;
+    padding-left: 0px;
     width: auto;
     background: #fff;
-    /* border: 1px solid #ddd; */
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    /* box-shadow: 0 1px 1px rgba(0,0,0,.05); */
     overflow: auto;
+    flex-flow: 1;
+    border: none;
 }
 
 .admin-breadcrumb {
     margin: 8px 8px 8px 8px;
     padding-left: 8px;
+    padding-right: 0px;
     background-color: #fff;
     border-radius: 5px;
     -moz-border-radius: 5px;

@@ -75,27 +75,13 @@ func ProfileInfo(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[ProfileInfo] 获取账号 %d 信息失败: err=%+v", accountId, err)
 		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
-	// 获取账号所有的权限
-	privileges, err := service.NewPermission(ctx).GetAccountPrivileges(accountId)
-	if err != nil {
-		sysLogErrorf(ctx, "[ProfileInfo] 获取角色权限失败: err=%+v", err)
-		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
-	}
-	// 获取权限列表树结构
-	privilegeItems, err := service.NewPrivilege(ctx).GetPrivilegeListItems(privileges)
-	if err != nil {
-		sysLogErrorf(ctx, "[ProfileInfo] 获取权限列表失败: err=%+v", err)
-		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
-	}
 	// 密码置空
 	account.Password = ""
 	type ProfileData struct {
-		AccountInfo   *entity.AccountEntity       `json:"account_info"`   // 账号信息
-		PrivilegeList []*entity.PrivilegeListItem `json:"privilege_list"` // 权限信息
+		AccountInfo *entity.AccountEntity `json:"account_info"` // 账号信息
 	}
 	data := new(ProfileData)
 	data.AccountInfo = account
-	data.PrivilegeList = privilegeItems
 
 	return RespJsonSuccess(ctx, data)
 }
@@ -146,32 +132,33 @@ func ProfileRePass(ctx *gin.Context) error {
 func ProfileUpdate(ctx *gin.Context) error {
 
 	accountId := global.ContextValueLoginAccountID(ctx)
-	//name := GetParamString(ctx, "name")
 	givenName := GetParamString(ctx, "given_name")
-	email := GetParamString(ctx, "email")
-	phone := GetParamString(ctx, "phone")
 	mobile := GetParamString(ctx, "mobile")
+	phone := GetParamString(ctx, "phone")
+	email := GetParamString(ctx, "email")
+	department := GetParamString(ctx, "department")
+	position := GetParamString(ctx, "position")
+	location := GetParamString(ctx, "location")
 
 	// 判断参数合法性
 	if accountId == 0 {
 		logger.WithContext(ctx).Warnf("[ProfileUpdate] account not login")
 		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号id不存在")
 	}
-	//if name == "" {
-	//	logger.WithContext(ctx).Warnf("[ProfileUpdate] name empty")
-	//	return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号名不能为空")
-	//}
 	if givenName == "" {
 		logger.WithContext(ctx).Warnf("[ProfileUpdate] given_name empty")
 		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "昵称不能为空")
 	}
 	// account 账号实体
 	accountEntity := entity.AccountEntity{
-		AccountId: accountId,
-		GivenName: givenName,
-		Email:     email,
-		Phone:     phone,
-		Mobile:    mobile,
+		AccountId:  accountId,
+		GivenName:  givenName,
+		Email:      email,
+		Phone:      phone,
+		Mobile:     mobile,
+		Department: department,
+		Position:   position,
+		Location:   location,
 	}
 	err := service.NewAccount(ctx).Update(accountEntity)
 	if err != nil {

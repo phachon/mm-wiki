@@ -77,12 +77,12 @@ const LayoutHeader = (props: LayoutHeaderProps) => {
   // 退出登录
   const menuItems: MenuProps['items'] = [
     {
-      label: <Link to="/system/profile/info">个人信息</Link>,
+      label: <a href="/system/profile/info">个人信息</a>,
       key: 'profile_info',
       icon: <ProfileOutlined />
     },
     {
-      label: <Link to="/system/profile/repass">修改密码</Link>,
+      label: <a href="/system/profile/setting">个人设置</a>,
       key: 'profile_repass',
       icon: <LockOutlined />
     },

@@ -203,6 +203,10 @@ func (a *Role) GetPrivilegesByRoleIds(roleIds []int64) (privileges []*entity.Pri
 	}
 	var allPrivilegeIds []int64
 	for _, role := range roles {
+		// 超级管理员角色默认返回所有权限
+		if role.RoleType == entity.RoleTypeRootRole {
+			return a.daoPrivilege.GetAllPrivilegesBySequence()
+		}
 		privilegeIdsStr := role.PrivilegeIds
 		if len(privilegeIdsStr) == 0 {
 			continue

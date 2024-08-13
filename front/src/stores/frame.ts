@@ -1,6 +1,4 @@
 import { StateCreator } from 'zustand'
-import { ProfileService } from '@/services/Profile'
-import { ProfileInfoType } from '@/types/profileType'
 import { IAccount } from './account'
 import { PrivilegeListItemType, PrivilegeTypeNav } from '@/types/privilegeType'
 import { INavItem, IMenuItem, IFrameBreadcrumbItem } from '@/types/frame'
