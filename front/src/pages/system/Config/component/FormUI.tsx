@@ -1,10 +1,5 @@
 import { Button, Form, Input, Select } from 'antd'
-import { EditLayoutForm, LayoutForm } from '../../../config/layout'
-import { AccountInfoType } from '@/types/accountType'
-import { RoleInfoType, RoleTypeAccountDefaultRole } from '@/types/roleType'
-import { DefaultOptionType } from 'antd/lib/select'
-import { useEffect } from 'react'
-import { SelectRoleLabelUI } from '@/pages/Role/component/ToolsUI'
+import { EditLayoutForm, LayoutForm } from '@/config/layout'
 
 interface ConfigFormUIProps {
   onSaveSubmit: (values: any) => void

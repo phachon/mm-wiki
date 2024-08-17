@@ -11,7 +11,7 @@ import {
   Switch,
   Cascader
 } from 'antd'
-import { EditLayoutForm, LayoutForm } from '../../../config/layout'
+import { EditLayoutForm, LayoutForm } from '@/config/layout'
 import { QuestionCircleOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import * as icons from '@ant-design/icons'
 import Icon from '@ant-design/icons'

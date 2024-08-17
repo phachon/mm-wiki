@@ -1,6 +1,6 @@
 import { IRouter, AUTH_LOGIN_PATH } from '../type'
-import Login from '@/pages/Login'
-import Test from '@/pages/Error/Test'
+import Login from '@/pages/system/Login'
+import Test from '@/pages/system/Error/Test'
 
 const routers: IRouter[] = [
   {

@@ -1,9 +1,6 @@
 import { AccountInfoType } from '@/types/accountType'
 import { Avatar, Button, Card, Col, Divider, Form, Input, List, Row, Space, Tabs } from 'antd'
 import { useEffect } from 'react'
-import { LayoutForm, LayoutFormButton } from '@/config/layout'
-import { FormOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { DepartmentListItemType } from '@/types/departmentType'
 
 interface ProfileSettingUIProps {
   accountInfo?: AccountInfoType

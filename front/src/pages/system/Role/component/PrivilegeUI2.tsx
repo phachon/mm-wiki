@@ -1,11 +1,11 @@
 import { Button, Card, Checkbox, Empty, List, Tabs, Tree } from 'antd'
-import DynamicIcon from '../../../components/DynamicIcon/DynamicIcon'
+import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
 import { PrivilegeInfoType, PrivilegeListItemType } from '@/types/privilegeType'
 import { CaretDownOutlined } from '@ant-design/icons'
 import { DataNode } from 'antd/lib/tree'
 import React, { useState } from 'react'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { arrayToMapBool, arrayToString } from '../../../utils/utils'
+import { arrayToMapBool, arrayToString } from '@/utils/utils'
 import { useEffect } from 'react'
 
 const menuGrid = {

@@ -7,7 +7,7 @@ import {
   SelectOutlined
 } from '@ant-design/icons'
 import { AccountStatusTag } from './ToolsUI'
-import { RoleTags } from '@/pages/Role/component/ToolsUI'
+import { RoleTags } from '@/pages/system/Role/component/ToolsUI'
 import ActionButton from '@/components/Action/ActionButton'
 
 interface AccountListUIProps {

@@ -1,5 +1,5 @@
 import { Card, Empty, List, Popconfirm, Space, Tabs, Tree } from 'antd'
-import DynamicIcon from '../../../components/DynamicIcon/DynamicIcon'
+import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
 import { PrivilegeInfoType, PrivilegeListItemType } from '@/types/privilegeType'
 import { EditOutlined, DeleteOutlined, CaretDownOutlined } from '@ant-design/icons'
 import { DataNode } from 'antd/lib/tree'

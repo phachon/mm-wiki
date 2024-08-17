@@ -1,12 +1,12 @@
 import { Button, Card, Form, Input, Select, TreeSelect } from 'antd'
-import { EditLayoutForm, LayoutForm } from '../../../config/layout'
+import { EditLayoutForm, LayoutForm } from '@/config/layout'
 import { AccountInfoType } from '@/types/accountType'
 import { RoleInfoType, RoleTypeAccountDefaultRole } from '@/types/roleType'
 import { DefaultOptionType } from 'antd/lib/select'
 import { useEffect } from 'react'
-import { SelectRoleLabelUI } from '@/pages/Role/component/ToolsUI'
+import { SelectRoleLabelUI } from '@/pages/system/Role/component/ToolsUI'
 import { DepartmentListItemType } from '@/types/departmentType'
-import { getSelectTreeData } from '@/pages/Department/component/ToolsUI'
+import { getSelectTreeData } from '@/pages/system/Department/component/ToolsUI'
 const { SHOW_PARENT } = TreeSelect
 
 interface AccountFormUIProps {

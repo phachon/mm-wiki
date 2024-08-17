@@ -12,7 +12,7 @@ import {
   MobileOutlined
 } from '@ant-design/icons'
 import { ProfileInfoResp } from '@/types/profileType'
-import { AccountDepartmentFullName } from '@/pages/Account/component/ToolsUI'
+import { AccountDepartmentFullName } from '@/pages/system/Account/component/ToolsUI'
 
 interface ProfileInfoUIProps {
   profileInfo?: ProfileInfoResp

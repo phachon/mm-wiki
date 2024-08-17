@@ -1,5 +1,5 @@
 import { Button, Divider, Form, Input } from 'antd'
-import { LayoutForm, LayoutFormButton } from '../../../config/layout'
+import { LayoutForm, LayoutFormButton } from '@/config/layout'
 
 interface ProfileRepassUIProps {
   onSaveSubmit: (values: any) => void

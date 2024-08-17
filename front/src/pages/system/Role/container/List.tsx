@@ -9,9 +9,8 @@ import AccountListUI from '../component/AccountListUI'
 import { AccountInfoType, AccountListResp } from '@/types/accountType'
 import PrivilegeUI from '../component/PrivilegeUI'
 import { PrivilegeListItemType } from '@/types/privilegeType'
-import { arrayToString } from '../../../utils/utils'
+import { arrayToString } from '@/utils/utils'
 import { initPagination } from '@/types/adminType'
-import PrivilegeUI2 from '../component/PrivilegeUI2'
 
 let searchKeyWords = {}
 let accountListRoleInfo: RoleInfoType // 账号列表角色信息

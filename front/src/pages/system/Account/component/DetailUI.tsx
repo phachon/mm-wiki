@@ -1,7 +1,7 @@
 import { Descriptions, Tag } from 'antd'
 import { AccountDetailResp, AccountListItemType } from '@/types/accountType'
 import { AccountDepartmentFullName, AccountStatusTag } from './ToolsUI'
-import { RoleTags } from '@/pages/Role/component/ToolsUI'
+import { RoleTags } from '@/pages/system/Role/component/ToolsUI'
 
 interface AccountDetailUIProps {
   accountDetail?: AccountDetailResp

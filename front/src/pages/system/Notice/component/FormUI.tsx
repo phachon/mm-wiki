@@ -1,5 +1,5 @@
 import { Button, DatePicker, Form, Input, Switch } from 'antd'
-import { EditLayoutForm, LayoutForm } from '../../../config/layout'
+import { EditLayoutForm, LayoutForm } from '@/config/layout'
 import { NoticeInfoType } from '@/types/noticeType'
 import TextArea from 'antd/lib/input/TextArea'
 import moment, { Moment } from 'moment'

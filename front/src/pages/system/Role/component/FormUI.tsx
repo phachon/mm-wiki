@@ -1,5 +1,5 @@
 import { Button, Form, Input, Modal, Radio, Select, Space, Tooltip, Typography } from 'antd'
-import { EditLayoutForm, LayoutForm } from '../../../config/layout'
+import { EditLayoutForm, LayoutForm } from '@/config/layout'
 import { RoleInfoType, RoleTypeAccountRootRole } from '@/types/roleType'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import PrivilegeUI from './PrivilegeUI'

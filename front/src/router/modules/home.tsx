@@ -1,8 +1,8 @@
-import Error403 from '@/pages/Error/Error403'
+import Error403 from '@/pages/system/Error/Error403'
 import { IRouter, NO_ACCESS_PATH, NO_EXIST_PATH } from '../type'
-import SpaceHome from '@/pages/Space'
-import Error404 from '@/pages/Error/Error404'
-import Home from '@/pages/Home'
+import SpaceHome from '@/pages/space/Space'
+import Error404 from '@/pages/system/Error/Error404'
+import Home from '@/pages/home/Home'
 
 const routers: IRouter[] = [
   {

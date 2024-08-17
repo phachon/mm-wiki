@@ -1,5 +1,5 @@
 import { Button, Form, Input, InputNumber, Select, TreeSelect } from 'antd'
-import { EditLayoutForm } from '../../../config/layout'
+import { EditLayoutForm } from '@/config/layout'
 import { useEffect } from 'react'
 const { SHOW_PARENT } = TreeSelect
 import { DepartmentInfoType, DepartmentListItemType } from '@/types/departmentType'
