@@ -272,7 +272,7 @@ const PrivilegeFormUI = (props: PrivilegeFormUIProps) => {
             }
             return (
               <>
-                <Form.Item label="Icon图标" name="icon" initialValue={''}>
+                <Form.Item label="Icon图标" name="icon">
                   <Select
                     showSearch
                     allowClear={true}

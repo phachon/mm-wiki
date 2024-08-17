@@ -9,7 +9,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"],
+      "@types/*": ["src/types/*"]
     },
     "types": [
       "node",

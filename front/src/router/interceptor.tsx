@@ -12,7 +12,6 @@ import { message } from 'antd'
 export const RouterInterceptor = ({ children, router }: any) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { iPrivilegeData, onMenuItemsClick } = useGlobalStore()
 
   // 监听 location 改变
   useEffect(() => {

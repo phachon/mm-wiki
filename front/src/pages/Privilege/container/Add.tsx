@@ -32,7 +32,7 @@ const PrivilegeAdd: React.FC = () => {
     PrivilegeService.savePrivilege(values)
       .then(() => {
         message.success('保存成功', 2, () => {
-          navigate('/privilege/list')
+          window.location.href = '/system/privilege/list'
         })
       })
       .catch((e) => {
