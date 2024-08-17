@@ -2,7 +2,7 @@ import { Button, Divider, Form, Input } from 'antd'
 import { LayoutForm, LayoutFormButton } from '../../../config/layout'
 
 interface ProfileRepassUIProps {
-  onSaveCallback: (values: any) => void
+  onSaveSubmit: (values: any) => void
 }
 
 /**
@@ -17,9 +17,9 @@ const ProfileRepassUI = (props: ProfileRepassUIProps) => {
       <Form
         {...LayoutForm}
         labelCol={{ span: 2 }}
-        name="basic"
+        name="repass-form"
         form={form}
-        onFinish={props.onSaveCallback}
+        onFinish={props.onSaveSubmit}
       >
         <Form.Item
           label="旧密码"

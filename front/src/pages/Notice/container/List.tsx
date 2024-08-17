@@ -55,7 +55,7 @@ const NoticeList: React.FC = () => {
    * 修改保存操作
    * @param noticeInfo
    */
-  const onEditFinishSubmit = (noticeInfo: NoticeInfoType) => {
+  const onEditSaveSubmit = (noticeInfo: NoticeInfoType) => {
     NoticeService.modifyNotice(noticeInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
@@ -141,7 +141,7 @@ const NoticeList: React.FC = () => {
         onCancel={() => setEditModalOpen(false)}
         footer={null}
       >
-        <NoticeFormUI noticeInfo={editNoticeInfo} onFinishSubmit={onEditFinishSubmit} />
+        <NoticeFormUI noticeInfo={editNoticeInfo} onSaveSubmit={onEditSaveSubmit} />
       </Modal>
     </div>
   )

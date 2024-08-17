@@ -115,7 +115,7 @@ const RoleList: React.FC = () => {
    * @param privilegeIds 权限列表
    * @returns
    */
-  const onPrivilegeFinishSubmit = (privilegeIds?: string[]) => {
+  const onPrivilegeSaveSubmit = (privilegeIds?: string[]) => {
     // 修改保存角色权限
     RoleService.modifyRolePrivilege(editRoleInfo?.role_id, privilegeIds)
       .then(() => {
@@ -134,7 +134,7 @@ const RoleList: React.FC = () => {
    * 修改保存操作
    * @param roleInfo
    */
-  const onEditFinishSubmit = (roleInfo: RoleInfoType) => {
+  const onEditSaveSubmit = (roleInfo: RoleInfoType) => {
     RoleService.modifyRole(roleInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
@@ -248,7 +248,7 @@ const RoleList: React.FC = () => {
         onCancel={() => setEditModalOpen(false)}
         footer={null}
       >
-        <RoleFormUI roleInfo={editRoleInfo} onFinishSubmit={onEditFinishSubmit} />
+        <RoleFormUI roleInfo={editRoleInfo} onSaveSubmit={onEditSaveSubmit} />
       </Modal>
       <Modal
         title="角色账号"
@@ -274,7 +274,7 @@ const RoleList: React.FC = () => {
         <PrivilegeUI
           privilegeList={allPrivileges}
           defaultPrivilegeIds={rolePrivilegIds}
-          onFinishSubmit={onPrivilegeFinishSubmit}
+          onSaveSubmit={onPrivilegeSaveSubmit}
         />
       </Modal>
     </div>

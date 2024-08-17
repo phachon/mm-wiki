@@ -30,7 +30,7 @@ interface RoleFormUIProps {
    * 角色保存方法
    * @param values 角色保存方法
    */
-  onFinishSubmit: (values: any) => void
+  onSaveSubmit: (values: any) => void
 }
 
 /**
@@ -59,7 +59,7 @@ const RoleFormUI = (props: RoleFormUIProps) => {
 
   return (
     <div className="panel-body">
-      <Form name="basic" {...layoutForm} form={form} onFinish={props.onFinishSubmit}>
+      <Form name="role-form" {...layoutForm} form={form} onFinish={props.onSaveSubmit}>
         {isEdit && (
           <Form.Item label="角色ID" name="role_id" rules={[{ required: true }]}>
             <Input disabled placeholder="请输入角色ID" />
@@ -135,7 +135,7 @@ const RoleFormUI = (props: RoleFormUIProps) => {
         <PrivilegeUI
           privilegeList={props.privilegeList ? props.privilegeList : []}
           defaultPrivilegeIds={selectPrivilegeIds}
-          onFinishSubmit={(privilegeIds?: string[]) => {
+          onSaveSubmit={(privilegeIds?: string[]) => {
             setSelectPrivilegeIds(privilegeIds)
             form.setFieldValue('privilege_ids', privilegeIds?.join(','))
             setPrivilegeModalOpen(false)

@@ -28,7 +28,7 @@ const ProfileSetting: React.FC = () => {
    * 修改密码操作
    * @param values
    */
-  const onRepassCallback = (values: { old_pwd: string; new_pwd: string; confirm_pwd: string }) => {
+  const onRepassSave = (values: { old_pwd: string; new_pwd: string; confirm_pwd: string }) => {
     // 判断两次密码是否一致
     if (values.confirm_pwd !== values.new_pwd) {
       message.error('确认密码与新密码不一致')
@@ -72,7 +72,7 @@ const ProfileSetting: React.FC = () => {
       key: '2',
       label: '密码设置',
       icon: <LockOutlined />,
-      children: <ProfileRepassUI onSaveCallback={onRepassCallback} />
+      children: <ProfileRepassUI onSaveSubmit={onRepassSave} />
     }
   ]
 

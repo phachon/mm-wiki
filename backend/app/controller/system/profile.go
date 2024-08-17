@@ -77,11 +77,19 @@ func ProfileInfo(ctx *gin.Context) error {
 	}
 	// 密码置空
 	account.Password = ""
+
+	// 获取部门全称
+	departmentNames, err := service.NewDepartment(ctx).GetDepartmentFullNames(account.DepartmentId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileInfo] 获取账号 %d 部门全称失败: err=%+v", accountId, err)
+	}
 	type ProfileData struct {
-		AccountInfo *entity.AccountEntity `json:"account_info"` // 账号信息
+		AccountInfo     *entity.AccountEntity `json:"account_info"`     // 账号信息
+		DepartmentNames []string              `json:"department_names"` // 部门全称
 	}
 	data := new(ProfileData)
 	data.AccountInfo = account
+	data.DepartmentNames = departmentNames
 
 	return RespJsonSuccess(ctx, data)
 }

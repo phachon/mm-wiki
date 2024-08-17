@@ -8,7 +8,7 @@ const NoticeAdd: React.FC = () => {
    * 添加操作
    * @param values
    */
-  const onFinishSubmit = (values: any) => {
+  const onSaveSubmit = (values: any) => {
     NoticeService.saveNotice(values).then(() => {
       message.success('添加成功', 2, () => {
         window.location.href = '/notice/list'
@@ -18,7 +18,7 @@ const NoticeAdd: React.FC = () => {
 
   return (
     <div className="pdt24">
-      <NoticeFormUI onFinishSubmit={onFinishSubmit} />
+      <NoticeFormUI onSaveSubmit={onSaveSubmit} />
     </div>
   )
 }

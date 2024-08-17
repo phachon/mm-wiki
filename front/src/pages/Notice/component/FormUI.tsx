@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 
 interface NoticeFormUIProps {
   noticeInfo?: NoticeInfoType
-  onFinishSubmit: (values: any) => void
+  onSaveSubmit: (values: any) => void
   formLayout?: {
     labelCol: { span: number }
     wrapperCol: { span: number }
@@ -23,14 +23,6 @@ const dateFormat = 'YYYY-MM-DD HH:mm'
 
 const disabledDate = (current: Dayjs) => {
   return current < moment().startOf('day')
-}
-
-const range = (start: number, end: number) => {
-  const result = []
-  for (let i = start; i < end; i++) {
-    result.push(i)
-  }
-  return result
 }
 
 /**
@@ -65,7 +57,7 @@ const NoticeFormUI = (props: NoticeFormUIProps) => {
     const startTime = rangeTime[0].format(dateFormat)
     const endTime = rangeTime[1].format(dateFormat)
     values.range_time = []
-    props.onFinishSubmit({
+    props.onSaveSubmit({
       ...values,
       start_time: startTime,
       end_time: endTime
@@ -74,7 +66,7 @@ const NoticeFormUI = (props: NoticeFormUIProps) => {
 
   return (
     <div className="panel-body">
-      <Form name="basic" {...layoutForm} form={form} onFinish={noticeOnSubmit}>
+      <Form name="notice-form" {...layoutForm} form={form} onFinish={noticeOnSubmit}>
         {isEdit && (
           <Form.Item label="公告ID" name="notice_id" rules={[{ required: true }]}>
             <Input disabled placeholder="请输入公告ID" />

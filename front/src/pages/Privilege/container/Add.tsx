@@ -27,8 +27,8 @@ const PrivilegeAdd: React.FC = () => {
   /**
    * 保存权限
    */
-  const onFinishSubmit = (values: PrivilegeInfoType) => {
-    console.log('onFinishSubmit', values)
+  const onSaveSubmit = (values: PrivilegeInfoType) => {
+    console.log('onSaveSubmit', values)
     PrivilegeService.savePrivilege(values)
       .then(() => {
         message.success('保存成功', 2, () => {
@@ -43,7 +43,7 @@ const PrivilegeAdd: React.FC = () => {
   return (
     <div className="pdt24">
       <PrivilegeFormUI
-        onFinishSubmit={onFinishSubmit}
+        onSaveSubmit={onSaveSubmit}
         parentPrivileges={parentPrivileges}
         allApiMarks={apiMarks}
       />

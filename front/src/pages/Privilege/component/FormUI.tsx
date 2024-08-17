@@ -88,7 +88,7 @@ interface PrivilegeFormUIProps {
    * @param values
    * @returns
    */
-  onFinishSubmit: (values: any) => void
+  onSaveSubmit: (values: any) => void
 
   formLayout?: {
     labelCol: { span: number }
@@ -149,7 +149,7 @@ const PrivilegeFormUI = (props: PrivilegeFormUIProps) => {
 
   return (
     <div className="panel-body">
-      <Form {...layoutForm} name="basic" form={form} onFinish={props.onFinishSubmit}>
+      <Form {...layoutForm} name="privilege-form" form={form} onFinish={props.onSaveSubmit}>
         {isEdit && (
           <Form.Item label="权限ID" name="privilege_id" rules={[{ required: true }]}>
             <Input disabled placeholder="请输入权限ID" />
@@ -275,9 +275,9 @@ const PrivilegeFormUI = (props: PrivilegeFormUIProps) => {
                 <Form.Item label="Icon图标" name="icon" initialValue={''}>
                   <Select
                     showSearch
-                    allowClear
+                    allowClear={true}
                     style={{ width: '100%' }}
-                    placeholder="选择icon图标"
+                    placeholder="请选择 icon 图标"
                   >
                     {iconList.map((iconItem) => {
                       const k = iconItem as keyof typeof icons
@@ -313,9 +313,10 @@ const PrivilegeFormUI = (props: PrivilegeFormUIProps) => {
                   rules={[{ type: 'number', min: 1, max: 1000 }]}
                 >
                   <InputNumber
-                    width={600}
+                    width={1000}
                     defaultValue={1}
                     style={{ width: '100%' }}
+                    placeholder="排序数字越小显示越靠前"
                     addonAfter={
                       <Tooltip title="排序数字越小显示越靠前">
                         <QuestionCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />

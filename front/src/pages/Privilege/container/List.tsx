@@ -62,7 +62,7 @@ const PrivilegeList: React.FC = () => {
    * 修改保存操作
    * @param privilegeInfo 权限信息
    */
-  const onEditFinishSubmit = (privilegeInfo: PrivilegeInfoType) => {
+  const onEditSaveSubmit = (privilegeInfo: PrivilegeInfoType) => {
     PrivilegeService.modifyPrivilege(privilegeInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
@@ -99,7 +99,7 @@ const PrivilegeList: React.FC = () => {
       >
         <PrivilegeFormUI
           privilegeInfo={editPrivilegeInfo}
-          onFinishSubmit={onEditFinishSubmit}
+          onSaveSubmit={onEditSaveSubmit}
           parentPrivileges={parentPrivileges}
           allApiMarks={apiMarks}
         />

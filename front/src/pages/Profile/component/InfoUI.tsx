@@ -1,5 +1,5 @@
 import { AccountInfoType } from '@/types/accountType'
-import { Avatar, Button, Card, Col, Divider, Form, Input, List, Row, Tabs } from 'antd'
+import { Avatar, Button, Card, Col, Divider, Form, List, Row, Tabs } from 'antd'
 import { useEffect } from 'react'
 import TabPane from 'antd/es/tabs/TabPane'
 import {
@@ -11,10 +11,11 @@ import {
   ClusterOutlined,
   MobileOutlined
 } from '@ant-design/icons'
+import { ProfileInfoResp } from '@/types/profileType'
+import { AccountDepartmentFullName } from '@/pages/Account/component/ToolsUI'
 
 interface ProfileInfoUIProps {
-  accountInfo?: AccountInfoType
-  onFinishCallback: (values: any) => void
+  profileInfo?: ProfileInfoResp
 }
 
 /**
@@ -23,12 +24,7 @@ interface ProfileInfoUIProps {
  * @returns
  */
 const ProfileInfoUI = (props: ProfileInfoUIProps) => {
-  const [form] = Form.useForm()
-
-  useEffect(() => {
-    form.setFieldsValue(props.accountInfo)
-  }, [props.accountInfo])
-
+  const accountInfo = props.profileInfo?.account_info
   return (
     <div className="panel-body">
       <Row gutter={24}>
@@ -41,31 +37,32 @@ const ProfileInfoUI = (props: ProfileInfoUIProps) => {
                   'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
                 }
               />
-              <h2 style={{ marginTop: 16, marginBottom: 6 }}>{props.accountInfo?.name}</h2>
-              <p style={{ margin: 0 }}>昵称：{props.accountInfo?.given_name}</p>
+              <h2 style={{ marginTop: 16, marginBottom: 6 }}>{accountInfo?.name}</h2>
+              <p style={{ margin: 0 }}>昵称：{accountInfo?.given_name}</p>
             </div>
             <Divider />
             <div style={{ textAlign: 'left' }}>
               <p>
-                <ClusterOutlined /> 部门：{props.accountInfo?.department_id}
+                <ClusterOutlined /> 部门：
+                {AccountDepartmentFullName(props.profileInfo?.department_names)}
               </p>
               <p>
-                <IdcardOutlined /> 职位：{props.accountInfo?.position}
+                <IdcardOutlined /> 职位：{accountInfo?.position}
               </p>
               <p>
-                <EnvironmentOutlined /> 工位：{props.accountInfo?.location}
+                <EnvironmentOutlined /> 工位：{accountInfo?.location}
               </p>
             </div>
             <Divider />
             <div style={{ textAlign: 'left' }}>
               <p>
-                <MobileOutlined /> 手机：{props.accountInfo?.mobile}
+                <MobileOutlined /> 手机：{accountInfo?.mobile}
               </p>
               <p>
-                <PhoneOutlined /> 电话：{props.accountInfo?.phone}
+                <PhoneOutlined /> 电话：{accountInfo?.phone}
               </p>
               <p>
-                <MailOutlined /> 邮箱：{props.accountInfo?.email}
+                <MailOutlined /> 邮箱：{accountInfo?.email}
               </p>
             </div>
           </Card>

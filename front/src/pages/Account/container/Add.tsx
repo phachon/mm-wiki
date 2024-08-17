@@ -38,7 +38,7 @@ const AccountAdd: React.FC = () => {
     AccountService.saveAccount(accountInfo)
       .then(() => {
         message.success('保存成功', 2, () => {
-          navigate('/account/list')
+          navigate('/system/account/list')
         })
       })
       .catch((e) => {

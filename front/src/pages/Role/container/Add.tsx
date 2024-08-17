@@ -21,10 +21,10 @@ const RoleAdd: React.FC = () => {
   }
 
   /**
-   * 添加操作
+   * 添加保存操作
    * @param values
    */
-  const onFinishSubmit = (values: any) => {
+  const onSaveSubmit = (values: any) => {
     RoleService.saveRole(values).then(() => {
       message.success('保存成功', 2, () => {
         navigate('/system/role/list')
@@ -34,7 +34,7 @@ const RoleAdd: React.FC = () => {
 
   return (
     <div className="pdt24">
-      <RoleFormUI onFinishSubmit={onFinishSubmit} privilegeList={allPrivileges} />
+      <RoleFormUI onSaveSubmit={onSaveSubmit} privilegeList={allPrivileges} />
     </div>
   )
 }

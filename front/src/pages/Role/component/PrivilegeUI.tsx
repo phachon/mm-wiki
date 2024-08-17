@@ -31,7 +31,7 @@ interface PrivilegeUIProps {
    * 保存操作方法
    * @param privilegeIds
    */
-  onFinishSubmit: (privilegeIds?: string[]) => void
+  onSaveSubmit: (privilegeIds?: string[]) => void
 }
 
 /**
@@ -323,7 +323,7 @@ const PrivilegeUI = (props: PrivilegeUIProps) => {
         type="card"
         items={privilegeList.map((privilegeListItem) => getTabsItem(privilegeListItem))}
       />
-      <Button type="primary" onClick={() => props.onFinishSubmit(checkedPrivilegeIds)}>
+      <Button type="primary" onClick={() => props.onSaveSubmit(checkedPrivilegeIds)}>
         保存
       </Button>
     </>
