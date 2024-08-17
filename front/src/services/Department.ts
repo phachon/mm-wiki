@@ -69,9 +69,9 @@ class Department extends Base {
    * @param departmentInfo 部门信息
    * @returns
    */
-  public deleteDepartment(departmentInfo: DepartmentInfoType): Promise<any> {
+  public deleteDepartment(departmentId: string): Promise<any> {
     let departmentDeleteUrl = this.getProxyUrl(departmentUrl.departmentDelete)
-    return httpRequest.post<any>(departmentDeleteUrl, {}, departmentInfo)
+    return httpRequest.post<any>(departmentDeleteUrl, {}, { department_id: departmentId })
   }
 
   /**

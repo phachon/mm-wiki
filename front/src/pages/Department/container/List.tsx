@@ -15,7 +15,6 @@ const DepartmentList: React.FC = () => {
   const [formVisible, setFormVisible] = useState(false)
   const [department, setDepartment] = useState<DepartmentInfoType>()
   const [modalTitle, setModalTitle] = useState('')
-  const [deleleVisible, setDeleteVisible] = useState(false)
 
   useEffect(() => {
     getDepartmentList()
@@ -59,7 +58,6 @@ const DepartmentList: React.FC = () => {
   }
 
   const modifyDepartment = (values: DepartmentInfoType) => {
-    // 编辑
     DepartmentService.modifyDepartment(values)
       .then(() => {
         message.success('保存成功', 2, () => {
@@ -100,8 +98,15 @@ const DepartmentList: React.FC = () => {
   }
 
   const onDeleteClick = (departmentId: string) => {
-    console.log('Delete node', departmentId)
-    // 删除节点的逻辑
+    DepartmentService.deleteDepartment(departmentId)
+      .then(() => {
+        message.success('删除成功', 2, () => {
+          getDepartmentList()
+        })
+      })
+      .catch((e) => {
+        console.log('删除部门 err:', e)
+      })
   }
 
   /**

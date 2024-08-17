@@ -227,12 +227,17 @@ func (p *Department) DeleteByDepartmentId(departmentId int64) errors.BizError {
 		return err
 	}
 	if len(departmentIds) > 0 {
-		return errors.Errorf(errors.BusinessRecordExistError, "部门存在子部门，不能删除")
+		return errors.Errorf(errors.BusinessRecordExistError, "该部门下存在子部门，不能直接删除！")
 	}
-	// 删除部门记录
+	// 删除部门
 	err = p.daoDepartment.DeleteDepartment(departmentId)
 	if err != nil {
 		return err
 	}
+
+	// todo 删除部门下的所有用户
+
+	// todo 删除部门下的所有文档
+
 	return nil
 }

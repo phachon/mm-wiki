@@ -1,9 +1,10 @@
-import { Button, Card, Tree } from 'antd'
+import { Button, Card, Popconfirm, Tooltip, Tree } from 'antd'
 import { useEffect, useState } from 'react'
 import { DeleteTwoTone, PlusSquareTwoTone, EditTwoTone, ApartmentOutlined } from '@ant-design/icons'
 import { DataNode } from 'antd/lib/tree'
 import { DepartmentListItemType } from '@/types/departmentType'
 import { getTreeData } from './ToolsUI'
+import ActionButton from '@/components/Action/ActionButton'
 
 interface DepartmentTreeUIProps {
   departments: DepartmentListItemType[]
@@ -54,7 +55,16 @@ const DepartmentTreeUI = (props: DepartmentTreeUIProps) => {
             props.onEditClick(node.key.toString())
           }}
         />
-        <DeleteTwoTone onClick={() => props.onDeleteClick(node.key.toString())} />
+        <Popconfirm
+          title="确定要删除吗?"
+          onConfirm={() => {
+            props.onDeleteClick(node.key.toString())
+          }}
+          okText="确定"
+          cancelText="取消"
+        >
+          <DeleteTwoTone />
+        </Popconfirm>
       </span>
     </span>
   )
