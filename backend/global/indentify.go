@@ -1,5 +1,6 @@
 package global
 
+// PrivilegeIndentify 操作权限标识
 const (
 	PrivilegeIndentifyAccountEdit         = "system:account:edit"          // 账号修改
 	PrivilegeIndentifyAccountDetail       = "system:account:detail"        // 账号删除
@@ -16,4 +17,8 @@ const (
 
 	PrivilegeIndentifyNoticeEdit   = "system:notice:edit"   // 公告修改
 	PrivilegeIndentifyNoticeDelete = "system:notice:delete" // 公告删除
+
+	PrivilegeIndentifyDepartmentAdd    = "system:department:add"    // 部门添加
+	PrivilegeIndentifyDepartmentEdit   = "system:department:edit"   // 部门修改
+	PrivilegeIndentifyDepartmentDelete = "system:department:delete" // 部门删除
 )

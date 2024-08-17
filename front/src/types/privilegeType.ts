@@ -2,7 +2,7 @@ export const PrivilegeTypeNav = 1 // 权限类型：导航
 export const PrivilegeTypeMenu = 2 // 权限类型：菜单
 export const PrivilegeTypeOperation = 3 // 权限类型：操作
 
-// 角色类型定义
+// 权限类型定义
 export const PrivilegeTypes = [
   {
     type: PrivilegeTypeNav,

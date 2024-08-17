@@ -6,6 +6,8 @@ import Log from '@/pages/Log'
 import Role from '@/pages/Role'
 import SystemHome from '@/pages/System'
 import Notice from '@/pages/Notice'
+import Config from '@/pages/Config'
+import Department from '@/pages/Department'
 import { IRouter, SYSTEM_ROOT_PATH } from '../type'
 
 const routers: IRouter[] = [
@@ -95,6 +97,20 @@ const routers: IRouter[] = [
         path: '/system/notice/list',
         key: 'notice_list',
         component: <Notice.NoticeList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/config/add',
+        key: 'config_add',
+        component: <Config.ConfigAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/department/list',
+        key: 'department_list',
+        component: <Department.DepartmentList />,
         auth: true,
         permission: true
       }

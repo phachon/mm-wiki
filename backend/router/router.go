@@ -62,6 +62,13 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/notice/list", method: http.MethodGet, controllerHandle: systemController.NoticeList},
 		{group: routerGroupNameSystem, relativePath: "/notice/publish_list", method: http.MethodGet, controllerHandle: systemController.NoticePublishList},
 		{group: routerGroupNameSystem, relativePath: "/notice/delete", method: http.MethodPost, controllerHandle: systemController.NoticeDelete},
+		// 部门管理
+		{group: routerGroupNameSystem, relativePath: "/department/add", method: http.MethodGet, controllerHandle: systemController.DepartmentAdd},
+		{group: routerGroupNameSystem, relativePath: "/department/save", method: http.MethodPost, controllerHandle: systemController.DepartmentSave},
+		{group: routerGroupNameSystem, relativePath: "/department/edit", method: http.MethodGet, controllerHandle: systemController.DepartmentEdit},
+		{group: routerGroupNameSystem, relativePath: "/department/modify", method: http.MethodPost, controllerHandle: systemController.DepartmentModify},
+		{group: routerGroupNameSystem, relativePath: "/department/list", method: http.MethodGet, controllerHandle: systemController.DepartmentList},
+		{group: routerGroupNameSystem, relativePath: "/department/delete", method: http.MethodPost, controllerHandle: systemController.DepartmentDelete},
 	}
 )
 

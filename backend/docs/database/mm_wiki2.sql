@@ -82,6 +82,22 @@ CREATE TABLE `mk_privilege` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '系统权限表';
 
 -- ----------------------------------------------------------
+-- mk_department 系统部门表
+-- ----------------------------------------------------------
+DROP TABLE IF EXISTS `mk_department`;
+CREATE TABLE `mk_department` (
+  `department_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '部门id',
+  `name` char(125) NOT NULL DEFAULT '' COMMENT '部门名',
+  `parent_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上级部门id',
+  `parent_ids` varchar(250) NOT NULL DEFAULT '' COMMENT '所有上级部门id,隔开',
+  `sequence` int(10) NOT NULL DEFAULT '1' COMMENT '排序(越小越靠前)',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`department_id`),
+  KEY `parent_id` (`parent_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '系统部门表';
+
+-- ----------------------------------------------------------
 -- mk_log 操作日志表
 -- ----------------------------------------------------------
 DROP TABLE IF EXISTS `mk_log`;

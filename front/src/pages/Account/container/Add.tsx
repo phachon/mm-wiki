@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AccountService } from '@/services/Account'
-import { message } from 'antd'
+import { Card, message } from 'antd'
 import AccountFormUI from '../component/FormUI'
 import { AccountAddResp, AccountInfoType } from '@/types/accountType'
 import { RoleInfoType } from '@/types/roleType'
