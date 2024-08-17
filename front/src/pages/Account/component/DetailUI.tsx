@@ -1,10 +1,10 @@
 import { Descriptions, Tag } from 'antd'
-import { AccountListItemType } from '@/types/accountType'
-import { AccountStatusTag } from './ToolsUI'
+import { AccountDetailResp, AccountListItemType } from '@/types/accountType'
+import { AccountDepartmentFullName, AccountStatusTag } from './ToolsUI'
 import { RoleTags } from '@/pages/Role/component/ToolsUI'
 
 interface AccountDetailUIProps {
-  accountDetail?: AccountListItemType
+  accountDetail?: AccountDetailResp
 }
 
 /**
@@ -12,6 +12,7 @@ interface AccountDetailUIProps {
  */
 const AccountDetailUI = (props: AccountDetailUIProps) => {
   const accountInfo = props.accountDetail
+  console.log('AccountDetailUI:', accountInfo)
   return (
     <div key={accountInfo?.account_id.toString()}>
       <Descriptions bordered size="small" column={12}>
@@ -34,7 +35,7 @@ const AccountDetailUI = (props: AccountDetailUIProps) => {
           {accountInfo?.email.toString()}
         </Descriptions.Item>
         <Descriptions.Item label="部门" span={12} key="department">
-          {accountInfo?.department.toString()}
+          {AccountDepartmentFullName(accountInfo?.department_names)}
         </Descriptions.Item>
         <Descriptions.Item label="职位" span={12} key="position">
           {accountInfo?.position.toString()}

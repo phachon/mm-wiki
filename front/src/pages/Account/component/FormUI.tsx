@@ -1,32 +1,23 @@
-import { Button, Card, Form, Input, Select } from 'antd'
+import { Button, Card, Form, Input, Select, TreeSelect } from 'antd'
 import { EditLayoutForm, LayoutForm } from '../../../config/layout'
 import { AccountInfoType } from '@/types/accountType'
 import { RoleInfoType, RoleTypeAccountDefaultRole } from '@/types/roleType'
 import { DefaultOptionType } from 'antd/lib/select'
 import { useEffect } from 'react'
 import { SelectRoleLabelUI } from '@/pages/Role/component/ToolsUI'
+import { DepartmentListItemType } from '@/types/departmentType'
+import { getSelectTreeData } from '@/pages/Department/component/ToolsUI'
+const { SHOW_PARENT } = TreeSelect
 
 interface AccountFormUIProps {
-  /**
-   * 角色列表
-   */
-  roleList?: RoleInfoType[]
-  /**
-   * 账号信息
-   */
-  accountInfo?: AccountInfoType
-  /**
-   * 表单布局
-   */
+  departments: DepartmentListItemType[] // 上级部门列表
+  roleList?: RoleInfoType[] // 角色列表
+  accountInfo?: AccountInfoType // 账号信息
   formLayout?: {
     labelCol: { span: number }
     wrapperCol: { span: number }
   }
-  /**
-   * 保存操作方法
-   * @param values
-   */
-  onFinishSubmit: (values: any) => void
+  onSaveSubmit: (values: any) => void // 保存操作方法
 }
 
 /**
@@ -97,7 +88,7 @@ const AccountFormUI = (props: AccountFormUIProps) => {
 
   return (
     <div className="panel-body">
-      <Form {...layoutForm} name="basic" onFinish={props.onFinishSubmit} form={form}>
+      <Form {...layoutForm} name="account-form" onFinish={props.onSaveSubmit} form={form}>
         {isEdit && (
           <Form.Item label="账号id" name="account_id" rules={[{ required: true }]}>
             <Input disabled placeholder="请输入账号ID" />
@@ -153,8 +144,20 @@ const AccountFormUI = (props: AccountFormUIProps) => {
           <Input placeholder="请输入邮箱地址: xxx@xxx.com" />
         </Form.Item>
 
-        <Form.Item label="部门" name="department">
-          <Input placeholder="请输入任职部门: 技术研发部/后台开发组" />
+        <Form.Item label="部门" name="department_id">
+          <TreeSelect
+            showSearch
+            style={{ width: '100%' }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            placeholder="请选择部门"
+            allowClear
+            treeDefaultExpandAll
+            treeNodeFilterProp="title"
+            showCheckedStrategy={SHOW_PARENT}
+            treeLine={true}
+            treeData={getSelectTreeData(props.departments)}
+            treeDataSimpleMode={true}
+          />
         </Form.Item>
 
         <Form.Item label="职位" name="position">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AccountListUI from '../component/ListUI'
 import {
+  AccountDetailResp,
   AccountEditResp,
   AccountInfoType,
   AccountListItemType,
@@ -13,6 +14,7 @@ import AccountFormUI from '../component/FormUI'
 import { RoleInfoType } from '@/types/roleType'
 import AccountDetailUI from '../component/DetailUI'
 import { initPagination } from '@/types/adminType'
+import { DepartmentInfoType } from '@/types/departmentType'
 
 let searchValues = {}
 
@@ -21,9 +23,10 @@ const AccountList: React.FC = () => {
   const [pagination, setPagination] = useState(initPagination)
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const [editAccountInfo, setEditAccountInfo] = useState<AccountInfoType>()
-  const [detailAccountInfo, setDetailAccountInfo] = useState<AccountListItemType>()
   const [detailModalOpen, setDetailModalOpen] = useState<boolean>(false)
   const [roleList, setRoleList] = useState<RoleInfoType[]>([])
+  const [departmentList, setDepartmentList] = useState<DepartmentInfoType[]>([])
+  const [accountDetail, setAccountDetail] = useState<AccountDetailResp>()
 
   useEffect(() => {
     getAccountList(initPagination, {})
@@ -92,6 +95,7 @@ const AccountList: React.FC = () => {
         if (roleIds.length > 0 && editAccountInfo.account_info) {
           editAccountInfo.account_info.role_ids = roleIds.toString()
         }
+        setDepartmentList(editAccountInfo.departments)
         setEditAccountInfo(editAccountInfo.account_info)
         setRoleList(editAccountInfo.role_list)
         setEditModalOpen(true)
@@ -106,8 +110,15 @@ const AccountList: React.FC = () => {
    * @param accountListItem 账号信息
    */
   const onDetailClick = (accountListItem: AccountListItemType) => {
-    setDetailAccountInfo(accountListItem)
-    setDetailModalOpen(true)
+    // 获取账号详情
+    AccountService.getAccountDetail(accountListItem.account_id)
+      .then((res: AccountDetailResp) => {
+        setAccountDetail(res)
+        setDetailModalOpen(true)
+      })
+      .catch((e) => {
+        console.log('获取账号详情失败 err:', e)
+      })
   }
 
   /**
@@ -131,7 +142,7 @@ const AccountList: React.FC = () => {
    * 修改完成提交
    * @param accountInfo AccountInfoType
    */
-  const onEditFinishSubmit = (accountInfo: AccountListItemType) => {
+  const onEditSaveSubmit = (accountInfo: AccountListItemType) => {
     AccountService.modifyAccount(accountInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
@@ -164,9 +175,10 @@ const AccountList: React.FC = () => {
         footer={null}
       >
         <AccountFormUI
+          departments={departmentList}
           roleList={roleList}
           accountInfo={editAccountInfo}
-          onFinishSubmit={onEditFinishSubmit}
+          onSaveSubmit={onEditSaveSubmit}
         />
       </Modal>
       <Modal
@@ -178,7 +190,7 @@ const AccountList: React.FC = () => {
         }}
         footer={null}
       >
-        <AccountDetailUI accountDetail={detailAccountInfo} />
+        <AccountDetailUI accountDetail={accountDetail} />
       </Modal>
     </div>
   )

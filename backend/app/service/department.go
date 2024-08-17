@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/phachon/mm-wiki/app/dao"
@@ -240,4 +241,31 @@ func (p *Department) DeleteByDepartmentId(departmentId int64) errors.BizError {
 	// todo 删除部门下的所有文档
 
 	return nil
+}
+
+// GetDepartmentFullNames 获取部门全称
+func (p *Department) GetDepartmentFullNames(departmentId int64) ([]string, errors.BizError) {
+	if departmentId == 0 {
+		return []string{}, nil
+	}
+	department, err := p.GetDepartmentByDepartmentId(departmentId)
+	if err != nil {
+		return []string{}, err
+	}
+	if department == nil {
+		return []string{}, errors.Errorf(errors.BusinessRecordNotExistError, "部门不存在")
+	}
+	// 获取所有上级部门
+	departmentIds := strings.Split(department.ParentIds, ",")
+	departmentIds = append(departmentIds, fmt.Sprintf("%d", departmentId))
+	departmentIdsInt64 := utils.Convert.StringsToInt64(departmentIds)
+	departments, err := p.GetDepartmentsByDepartmentIds(departmentIdsInt64)
+	if err != nil {
+		return []string{}, err
+	}
+	departmentNames := []string{}
+	for _, department := range departments {
+		departmentNames = append(departmentNames, department.Name)
+	}
+	return departmentNames, nil
 }

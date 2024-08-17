@@ -136,7 +136,7 @@ func ProfileUpdate(ctx *gin.Context) error {
 	mobile := GetParamString(ctx, "mobile")
 	phone := GetParamString(ctx, "phone")
 	email := GetParamString(ctx, "email")
-	department := GetParamString(ctx, "department")
+	departmentId := GetParamInt64(ctx, "department_id")
 	position := GetParamString(ctx, "position")
 	location := GetParamString(ctx, "location")
 
@@ -151,14 +151,14 @@ func ProfileUpdate(ctx *gin.Context) error {
 	}
 	// account 账号实体
 	accountEntity := entity.AccountEntity{
-		AccountId:  accountId,
-		GivenName:  givenName,
-		Email:      email,
-		Phone:      phone,
-		Mobile:     mobile,
-		Department: department,
-		Position:   position,
-		Location:   location,
+		AccountId:    accountId,
+		GivenName:    givenName,
+		Email:        email,
+		Phone:        phone,
+		Mobile:       mobile,
+		DepartmentId: departmentId,
+		Position:     position,
+		Location:     location,
 	}
 	err := service.NewAccount(ctx).Update(accountEntity)
 	if err != nil {

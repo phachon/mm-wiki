@@ -5,9 +5,11 @@ import AccountFormUI from '../component/FormUI'
 import { AccountAddResp, AccountInfoType } from '@/types/accountType'
 import { RoleInfoType } from '@/types/roleType'
 import { useNavigate } from 'react-router-dom'
+import { DepartmentInfoType } from '@/types/departmentType'
 
 const AccountAdd: React.FC = () => {
   const [roleList, setRoleList] = useState<RoleInfoType[]>([])
+  const [departmentList, setDepartmentList] = useState<DepartmentInfoType[]>([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -21,6 +23,7 @@ const AccountAdd: React.FC = () => {
     AccountService.getAddAccountInfo()
       .then((accountAddResp: AccountAddResp) => {
         setRoleList(accountAddResp?.roles)
+        setDepartmentList(accountAddResp?.departments)
       })
       .catch((e) => {
         console.log('获取添加账号信息 err:', e)
@@ -31,7 +34,7 @@ const AccountAdd: React.FC = () => {
    * 添加账号保存
    * @param accountInfo
    */
-  const onFinishSubmit = (accountInfo: AccountInfoType) => {
+  const onSaveSubmit = (accountInfo: AccountInfoType) => {
     AccountService.saveAccount(accountInfo)
       .then(() => {
         message.success('保存成功', 2, () => {
@@ -48,7 +51,7 @@ const AccountAdd: React.FC = () => {
    */
   return (
     <div className="pdt24">
-      <AccountFormUI roleList={roleList} onFinishSubmit={onFinishSubmit} />
+      <AccountFormUI roleList={roleList} departments={departmentList} onSaveSubmit={onSaveSubmit} />
     </div>
   )
 }

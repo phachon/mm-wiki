@@ -32,12 +32,17 @@ export const AccountStatusSelectOptions = (): DefaultOptionType[] => {
   return options
 }
 
-// export const AccountStatusTag = (status?: number) => {
-//   if (status === 0) {
-//     return <Tag color="green">正常</Tag>
-//   } else if (status === -1) {
-//     return <Tag color="error">禁用</Tag>
-//   } else {
-//     return <Tag color="warning">未知</Tag>
-//   }
-// }
+// AccountDepartmentFullName 账号部门全称
+export const AccountDepartmentFullName = (departmentNames?: string[]): string => {
+  if (!departmentNames || departmentNames.length == 0) {
+    return '未知部门'
+  }
+  let departmentFullName = ''
+  departmentNames.forEach((departmentName, index) => {
+    departmentFullName += departmentName
+    if (index < departmentNames.length - 1) {
+      departmentFullName += ' / '
+    }
+  })
+  return departmentFullName
+}

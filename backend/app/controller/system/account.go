@@ -32,9 +32,15 @@ func AccountAdd(ctx *gin.Context) error {
 		}
 		otherRoles = append(otherRoles, role)
 	}
-
+	// 获取所有的部门列表
+	departments, err := service.NewDepartment(ctx).GetAllDepartmentList()
+	if err != nil {
+		sysLogErrorf(ctx, "[AccountAdd] 获取部门失败: err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
 	return RespJsonSuccess(ctx, map[string]interface{}{
-		"roles": append(accountDefRoles, otherRoles...),
+		"roles":       append(accountDefRoles, otherRoles...),
+		"departments": departments,
 	})
 }
 
@@ -46,7 +52,7 @@ func AccountSave(ctx *gin.Context) error {
 	mobile := GetParamString(ctx, "mobile")
 	phone := GetParamString(ctx, "phone")
 	email := GetParamString(ctx, "email")
-	department := GetParamString(ctx, "department")
+	departmentId := GetParamInt64(ctx, "department_id")
 	position := GetParamString(ctx, "position")
 	location := GetParamString(ctx, "location")
 
@@ -80,14 +86,14 @@ func AccountSave(ctx *gin.Context) error {
 
 	// account 账号实体
 	accountEntity := &entity.AccountEntity{
-		Name:       name,
-		GivenName:  givenName,
-		Mobile:     mobile,
-		Phone:      phone,
-		Email:      email,
-		Department: department,
-		Position:   position,
-		Location:   location,
+		Name:         name,
+		GivenName:    givenName,
+		Mobile:       mobile,
+		Phone:        phone,
+		Email:        email,
+		DepartmentId: departmentId,
+		Position:     position,
+		Location:     location,
 	}
 	err = service.NewAccount(ctx).Create(accountEntity)
 	if err != nil {
@@ -138,8 +144,15 @@ func AccountEdit(ctx *gin.Context) error {
 		sysLogErrorf(ctx, "[AccountEdit] 获取所有的角色失败 err=%+v", err)
 		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
+	// 获取所有的部门列表
+	departments, err := service.NewDepartment(ctx).GetAllDepartmentList()
+	if err != nil {
+		sysLogErrorf(ctx, "[AccountAdd] 获取部门失败: err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
 
 	return RespJsonSuccess(ctx, &entity.AccountEditResp{
+		Departments:  departments,
 		AccountInfo:  accountInfo,
 		AccountRoles: accountRoles,
 		RoleList:     allRoles,
@@ -156,7 +169,7 @@ func AccountModify(ctx *gin.Context) error {
 	mobile := GetParamString(ctx, "mobile")
 	phone := GetParamString(ctx, "phone")
 	email := GetParamString(ctx, "email")
-	department := GetParamString(ctx, "department")
+	departmentId := GetParamInt64(ctx, "department_id")
 	position := GetParamString(ctx, "position")
 	location := GetParamString(ctx, "location")
 
@@ -194,14 +207,14 @@ func AccountModify(ctx *gin.Context) error {
 
 	// account 账号实体
 	accountEntity := entity.AccountEntity{
-		AccountId:  accountId,
-		GivenName:  givenName,
-		Mobile:     mobile,
-		Phone:      phone,
-		Email:      email,
-		Department: department,
-		Position:   position,
-		Location:   location,
+		AccountId:    accountId,
+		GivenName:    givenName,
+		Mobile:       mobile,
+		Phone:        phone,
+		Email:        email,
+		DepartmentId: departmentId,
+		Position:     position,
+		Location:     location,
 	}
 	err = service.NewAccount(ctx).Update(accountEntity)
 	if err != nil {
@@ -252,9 +265,15 @@ func AccountDetail(ctx *gin.Context) error {
 			accountId, err)
 		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
+	// 获取部门全称
+	departmentNames, err := service.NewDepartment(ctx).GetDepartmentFullNames(accountInfo.DepartmentId)
+	if err != nil {
+		logger.WithContext(ctx).Warnf("[AccountDetail] 获取账号 %d 部门全称失败: err=%+v", accountId, err)
+	}
 	return RespJsonSuccess(ctx, &entity.AccountDetailResp{
-		AccountInfo:  accountInfo,
-		AccountRoles: accountRoles,
+		AccountEntity:   accountInfo,
+		Roles:           accountRoles,
+		DepartmentNames: departmentNames,
 	})
 }
 

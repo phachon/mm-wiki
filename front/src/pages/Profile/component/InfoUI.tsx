@@ -47,7 +47,7 @@ const ProfileInfoUI = (props: ProfileInfoUIProps) => {
             <Divider />
             <div style={{ textAlign: 'left' }}>
               <p>
-                <ClusterOutlined /> 部门：{props.accountInfo?.department}
+                <ClusterOutlined /> 部门：{props.accountInfo?.department_id}
               </p>
               <p>
                 <IdcardOutlined /> 职位：{props.accountInfo?.position}

@@ -1,4 +1,5 @@
 import { PageInfoType } from './baseType'
+import { DepartmentInfoType } from './departmentType'
 import { RoleInfoType } from './roleType'
 
 // 账号状态定义
@@ -25,7 +26,7 @@ export type AccountInfoType = {
   mobile: string // 手机号码
   phone: string // 电话
   email: string // 邮箱
-  department: string // 部门
+  department_id: number // 部门id
   position: string // 职位
   location: string // 办公位
   last_ip: string // 上次登录IP
@@ -53,6 +54,7 @@ export type AccountListItemType = AccountInfoType & {
  */
 export type AccountAddResp = {
   roles: RoleInfoType[] // 所有的角色
+  departments: DepartmentInfoType[] // 部门列表
 }
 
 /**
@@ -62,14 +64,15 @@ export type AccountEditResp = {
   account_info: AccountInfoType // 账号信息
   account_roles: RoleInfoType[] // 账号角色
   role_list: RoleInfoType[] // 所有的角色
+  departments: DepartmentInfoType[] // 部门列表
 }
 
 /**
  * AccountDetailResp 账号详情返回结构
  */
-export type AccountDetailResp = {
-  account_info: AccountInfoType // 账号信息
-  account_roles: RoleInfoType[] // 账号角色
+export type AccountDetailResp = AccountInfoType & {
+  department_names?: string[] // 部门全名
+  roles?: RoleInfoType[] // 角色列表，逗号隔开
 }
 
 /**

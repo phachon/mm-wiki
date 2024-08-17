@@ -132,7 +132,7 @@ func (ka *Account) Update(account entity.AccountEntity) errors.BizError {
 	account.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Select(
-			"GivenName", "Mobile", "Phone", "Email", "Department",
+			"GivenName", "Mobile", "Phone", "Email", "DepartmentId",
 			"Position", "Location", "LastIP", "LastTime", "UpdateTime",
 		).
 		Where(map[string]interface{}{

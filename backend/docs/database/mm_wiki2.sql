@@ -17,17 +17,17 @@ CREATE TABLE `mk_account` (
   `mobile` char(13) NOT NULL DEFAULT '' COMMENT '手机号',
   `phone` char(13) NOT NULL DEFAULT '' COMMENT '电话',
   `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
-  `department` char(50) NOT NULL DEFAULT '' COMMENT '部门',
+  `department_id` int(10) NOT NULL DEFAULT '0' COMMENT '部门id',
   `position` char(50) NOT NULL DEFAULT '' COMMENT '职位',
-  `location` char(50) NOT NULL DEFAULT '' COMMENT '办公位',
-  `im` char(50) NOT NULL DEFAULT '' COMMENT '即时聊天工具',
+  `location` char(50) NOT NULL DEFAULT '' COMMENT '工位',
   `last_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最后登录ip',
   `last_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后登录时间',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态: 0 正常 -1 禁用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`account_id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  KEY `department_id` (`department_id`),
 ) ENGINE = InnoDB AUTO_INCREMENT = 210510 DEFAULT CHARSET = utf8mb4 COMMENT = '系统账号表';
 
 -- ----------------------------------------------------------
