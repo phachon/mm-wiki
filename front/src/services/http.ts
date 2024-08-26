@@ -101,7 +101,7 @@ const httpRequest = {
       url: url,
       method: 'POST',
       params: params,
-      data: qs.stringify(data),
+      data: qs.stringify(data, { arrayFormat: 'repeat' }),
       responseType: 'json'
     }
     return new Promise((resolve, reject) => {

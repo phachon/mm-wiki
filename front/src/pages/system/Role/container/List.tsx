@@ -5,7 +5,7 @@ import { message, Modal, TablePaginationConfig } from 'antd'
 import RoleListUI from '../component/ListUI'
 import RoleSearchUI from '../component/SearchUI'
 import RoleFormUI from '../component/FormUI'
-import AccountListUI from '../component/AccountListUI'
+import RoleAccountListUI from '../component/AccountListUI'
 import { AccountInfoType, AccountListResp } from '@/types/accountType'
 import PrivilegeUI from '../component/PrivilegeUI'
 import { PrivilegeListItemType } from '@/types/privilegeType'
@@ -256,7 +256,7 @@ const RoleList: React.FC = () => {
         onCancel={() => setAccountModalOpen(false)}
         footer={null}
       >
-        <AccountListUI
+        <RoleAccountListUI
           accountList={roleAccountList}
           pagination={accountPagination}
           onListChange={onAccountListChange}

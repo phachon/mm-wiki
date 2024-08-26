@@ -233,3 +233,8 @@ func (a *Account) GetListItemAction(accountItem *entity.AccountEntity) *entity.A
 	}
 	return action
 }
+
+// GetAllNormalAccounts 获取所有正常的账号
+func (a *Account) GetAllNormalAccounts() (accounts []*entity.AccountEntity, err errors.BizError) {
+	return a.daoAccount.GetAllNormalAccounts()
+}

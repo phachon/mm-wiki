@@ -21,4 +21,7 @@ const (
 	PrivilegeIndentifyDepartmentAdd    = "system:department:add"    // 部门添加
 	PrivilegeIndentifyDepartmentEdit   = "system:department:edit"   // 部门修改
 	PrivilegeIndentifyDepartmentDelete = "system:department:delete" // 部门删除
+
+	PrivilegeIndentifySpaceEdit   = "space:edit"   // 空间修改
+	PrivilegeIndentifySpaceDelete = "space:delete" // 空间删除
 )

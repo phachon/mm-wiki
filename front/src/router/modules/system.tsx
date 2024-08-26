@@ -9,6 +9,7 @@ import Notice from '@/pages/system/Notice'
 import Config from '@/pages/system/Config'
 import Department from '@/pages/system/Department'
 import { IRouter, SYSTEM_ROOT_PATH } from '../type'
+import Space from '@/pages/system/Space'
 
 const routers: IRouter[] = [
   {
@@ -111,6 +112,20 @@ const routers: IRouter[] = [
         path: '/system/department/list',
         key: 'department_list',
         component: <Department.DepartmentList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/space/add',
+        key: 'space_add',
+        component: <Space.SpaceAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/space/list',
+        key: 'space_list',
+        component: <Space.SpaceList />,
         auth: true,
         permission: true
       }

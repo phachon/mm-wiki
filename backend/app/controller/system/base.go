@@ -91,6 +91,15 @@ func GetParamMap(ctx *gin.Context, key string) map[string]string {
 	return ctx.PostFormMap(key)
 }
 
+// GetParamArray 获取参数返回字符串数组
+func GetParamArray(ctx *gin.Context, key string) []string {
+	queryVal, ok := ctx.GetQueryArray(key)
+	if ok {
+		return queryVal
+	}
+	return ctx.PostFormArray(key)
+}
+
 // GetPageInfo 获取分页信息
 func GetPageInfo(pageSize int, pageNum int, defPageSize int) (pagination *entity.PageInfo, err errors.BizError) {
 	pageSize = utils.VerifyUint(pageSize, defPageSize)

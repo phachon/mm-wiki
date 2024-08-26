@@ -175,10 +175,23 @@ func (ka *Account) UpdateStatus(accountId int64, status int) errors.BizError {
 	return nil
 }
 
-// GetAllAccount 获取所有的账号
-func (ka *Account) GetAllAccount() (account []*entity.AccountEntity, err errors.BizError) {
+// GetAllAccounts 获取所有的账号
+func (ka *Account) GetAllAccounts() (account []*entity.AccountEntity, err errors.BizError) {
 	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
 		Where(map[string]interface{}{}).
+		Find(&account)
+	if db.Error != nil {
+		return account, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return account, nil
+}
+
+// GetAllNormalAccounts 获取所有的正常账号
+func (ka *Account) GetAllNormalAccounts() (account []*entity.AccountEntity, err errors.BizError) {
+	db := GetDB(dbNameMK).WithContext(ka.ctx).Table(TableNameAccount).
+		Where(map[string]interface{}{
+			"status": entity.AccountStatusDefault,
+		}).
 		Find(&account)
 	if db.Error != nil {
 		return account, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())

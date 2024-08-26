@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	RoleAccounDefaultPageSize = 10 // 角色账号列表默认一页 10 条
+	RoleAccountDefaultPageSize = 10 // 角色账号列表默认一页 10 条
 )
 
 // AccountRole 账号角色业务逻辑
@@ -140,7 +140,7 @@ func (a *AccountRole) GetAccountsByRoleIdLimit(pageSize int, pageNum int, roleId
 
 // GetPageInfoLimitByRoleId 根据角色ID获取分页信息
 func (a *AccountRole) GetPageInfoLimitByRoleId(pageSize int, pageNum int, roleId int64) (pagination *entity.PageInfo, err errors.BizError) {
-	pageSize = utils.VerifyUint(pageSize, RoleAccounDefaultPageSize)
+	pageSize = utils.VerifyUint(pageSize, RoleAccountDefaultPageSize)
 	pageNum = utils.VerifyUint(pageNum, 1)
 	pageInfo := new(entity.PageInfo)
 	var totalNum int64

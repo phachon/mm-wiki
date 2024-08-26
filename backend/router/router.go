@@ -69,6 +69,14 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/department/modify", method: http.MethodPost, controllerHandle: systemController.DepartmentModify},
 		{group: routerGroupNameSystem, relativePath: "/department/list", method: http.MethodGet, controllerHandle: systemController.DepartmentList},
 		{group: routerGroupNameSystem, relativePath: "/department/delete", method: http.MethodPost, controllerHandle: systemController.DepartmentDelete},
+		// 空间管理
+		{group: routerGroupNameSystem, relativePath: "/space/add", method: http.MethodGet, controllerHandle: systemController.SpaceAdd},
+		{group: routerGroupNameSystem, relativePath: "/space/save", method: http.MethodPost, controllerHandle: systemController.SpaceSave},
+		{group: routerGroupNameSystem, relativePath: "/space/edit", method: http.MethodGet, controllerHandle: systemController.SpaceEdit},
+		{group: routerGroupNameSystem, relativePath: "/space/modify", method: http.MethodPost, controllerHandle: systemController.SpaceModify},
+		{group: routerGroupNameSystem, relativePath: "/space/list", method: http.MethodGet, controllerHandle: systemController.SpaceList},
+		{group: routerGroupNameSystem, relativePath: "/space/delete", method: http.MethodPost, controllerHandle: systemController.SpaceDelete},
+		{group: routerGroupNameSystem, relativePath: "/space/admin_list", method: http.MethodGet, controllerHandle: systemController.SpaceAdminList},
 	}
 )
 

@@ -3,45 +3,20 @@ import { AccountInfoType } from '@/types/accountType'
 import { CloseCircleOutlined } from '@ant-design/icons'
 
 /**
- * 账号列表 UI 组件 props
+ * 管理员账号列表 UI 组件 props
  */
-interface RoleAccountListUIProps {
-  /**
-   * 账号列表数据
-   */
-  accountList?: AccountInfoType[]
-  /**
-   * 分页信息
-   */
-  pagination?: TablePaginationConfig
-  /**
-   * 分页操作方法
-   * @param pageConfig
-   * @param filters
-   * @param sorter
-   */
-  onListChange?: (pageConfig: TablePaginationConfig, filters: any, sorter: any) => void
-  /**
-   * 移除账号操作方法
-   * @param accountInfo
-   */
-  onRemoveChange?: (accountInfo: AccountInfoType) => void
+interface SpaceAdminListUIProps {
+  accountList?: AccountInfoType[] // 账号列表数据
+  onRemoveChange?: (accountInfo: AccountInfoType) => void // 移除账号操作方法
 }
 
 /**
  * 账号列表 UI 组件
  * @param props 组件依赖数据
  */
-const RoleAccountListUI = (props: RoleAccountListUIProps) => {
+const SpaceAdminListUI = (props: SpaceAdminListUIProps) => {
   return (
-    <Table
-      rowKey={'account_id'}
-      bordered={true}
-      dataSource={props.accountList}
-      pagination={props.pagination}
-      onChange={props.onListChange ? props.onListChange : undefined}
-      footer={() => ''}
-    >
+    <Table rowKey={'account_id'} bordered={true} dataSource={props.accountList} footer={() => ''}>
       <Table.Column
         title={'账号ID'}
         dataIndex="account_id"
@@ -93,4 +68,4 @@ const RoleAccountListUI = (props: RoleAccountListUIProps) => {
   )
 }
 
-export default RoleAccountListUI
+export default SpaceAdminListUI
