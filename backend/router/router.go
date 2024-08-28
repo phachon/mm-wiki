@@ -77,6 +77,8 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/space/list", method: http.MethodGet, controllerHandle: systemController.SpaceList},
 		{group: routerGroupNameSystem, relativePath: "/space/delete", method: http.MethodPost, controllerHandle: systemController.SpaceDelete},
 		{group: routerGroupNameSystem, relativePath: "/space/admin_list", method: http.MethodGet, controllerHandle: systemController.SpaceAdminList},
+		{group: routerGroupNameSystem, relativePath: "/space/admin_remove", method: http.MethodPost, controllerHandle: systemController.SpaceAdminRemove},
+		{group: routerGroupNameSystem, relativePath: "/space/admin_add", method: http.MethodPost, controllerHandle: systemController.SpaceAdminAdd},
 	}
 )
 

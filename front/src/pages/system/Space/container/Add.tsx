@@ -33,8 +33,6 @@ const SpaceAdd: React.FC = () => {
    * @param values
    */
   const onSaveSubmit = (values: any) => {
-    console.log('onSaveSubmit values:', values)
-    // 保存操作
     SpaceService.saveSpace(values)
       .then(() => {
         message.success('添加空间成功', 2, () => {

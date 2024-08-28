@@ -124,3 +124,8 @@ func (a *SpacePermission) GetAdminsBySpaceId(spaceId int64) ([]*entity.AccountEn
 	}
 	return accounts, nil
 }
+
+// DeleteBySpaceIdAccountId 根据空间ID和账号ID删除权限
+func (a *SpacePermission) DeleteBySpaceIdAccountId(spaceId int64, accountId int64) errors.BizError {
+	return a.daoSpacePermission.DeleteBySpaceIdAccountId(spaceId, accountId)
+}

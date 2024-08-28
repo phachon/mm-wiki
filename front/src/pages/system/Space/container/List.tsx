@@ -3,10 +3,15 @@ import { message, Modal, TablePaginationConfig } from 'antd'
 import SpaceListUI from '../component/ListUI'
 import SpaceSearchUI from '../component/SearchUI'
 import SpaceFormUI from '../component/FormUI'
-import { AccountInfoType, AccountListResp } from '@/types/accountType'
-import { PrivilegeListItemType } from '@/types/privilegeType'
+import { AccountInfoType } from '@/types/accountType'
 import { initPagination } from '@/types/adminType'
-import { SpaceEditResp, SpaceInfoType, SpaceListItemType, SpaceListResp } from '@/types/spaceType'
+import {
+  SpaceAdminListResp,
+  SpaceEditResp,
+  SpaceInfoType,
+  SpaceListItemType,
+  SpaceListResp
+} from '@/types/spaceType'
 import { SpaceService } from '@/services/Space'
 import SpaceAdminListUI from '../component/AdminListUI'
 
@@ -23,6 +28,7 @@ const SpaceList: React.FC = () => {
   // 空间账号相关 state
   const [adminModalOpen, setAdminModalOpen] = useState<boolean>(false)
   const [spaceAdminList, setSpaceAdminList] = useState<AccountInfoType[]>([])
+  const [selectedAccountList, setSelectedAccountList] = useState<AccountInfoType[]>([])
 
   useEffect(() => {
     getSpaceList(initPagination, {})
@@ -140,8 +146,9 @@ const SpaceList: React.FC = () => {
    */
   const getSpaceAdminList = (spaceId: number) => {
     SpaceService.getAdminList(spaceId)
-      .then((accountListResp: AccountListResp) => {
-        setSpaceAdminList(accountListResp.list)
+      .then((resp: SpaceAdminListResp) => {
+        setSpaceAdminList(resp.admin_list)
+        setSelectedAccountList(resp.selected_list)
         if (!adminModalOpen) {
           setAdminModalOpen(true)
         }
@@ -164,6 +171,20 @@ const SpaceList: React.FC = () => {
       })
       .catch((e) => {
         console.log('移除账号失败err:', e)
+      })
+  }
+
+  const onAdminAddChange = (values: any) => {
+    console.log('onAdminAddChange values:', values)
+    const accountIds = values.admin_account_ids
+    SpaceService.addSpaceAdmin(adminListSpaceInfo?.space_id, accountIds)
+      .then(() => {
+        message.success('添加成功', 2, () => {
+          getSpaceAdminList(adminListSpaceInfo?.space_id)
+        })
+      })
+      .catch((e) => {
+        console.log('添加账号失败err:', e)
       })
   }
 
@@ -195,7 +216,12 @@ const SpaceList: React.FC = () => {
         onCancel={() => setAdminModalOpen(false)}
         footer={null}
       >
-        <SpaceAdminListUI accountList={spaceAdminList} onRemoveChange={onAdminRemoveChange} />
+        <SpaceAdminListUI
+          adminList={spaceAdminList}
+          selectedAccountList={selectedAccountList}
+          onRemoveAdminChange={onAdminRemoveChange}
+          onAddAdminChange={onAdminAddChange}
+        />
       </Modal>
     </div>
   )

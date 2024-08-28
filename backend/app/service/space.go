@@ -96,11 +96,11 @@ func (s *Space) GetSpaceBySpaceId(spaceID int64) (space *entity.SpaceEntity, err
 // DeleteSpace 删除空间
 func (s *Space) DeleteSpace(spaceId int64) errors.BizError {
 	// 查找空间是否存在
-	updateSpace, err := s.daoSpace.GetSpaceBySpaceId(spaceId)
+	spaceInfo, err := s.daoSpace.GetSpaceBySpaceId(spaceId)
 	if err != nil {
 		return err
 	}
-	if updateSpace == nil {
+	if spaceInfo == nil {
 		return errors.Errorf(errors.BusinessRecordNotExistError, "空间id %d 不存在", spaceId)
 	}
 	// todo 删除空间下的所有文档
@@ -110,7 +110,12 @@ func (s *Space) DeleteSpace(spaceId int64) errors.BizError {
 	if err != nil {
 		return err
 	}
-	// todo 删除空间下的所有账号
+	// 删除空间对应的权限
+	err = dao.NewSpacePermission(s.ctx).DeleteBySpaceId(spaceId)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -112,3 +112,9 @@ export type SpaceEditResp = {
 export type SpaceAddResp = {
   account_list: AccountInfoType[]
 }
+
+// SpaceAdminListResp 空间管理员列表返回结构
+export type SpaceAdminListResp = {
+  admin_list: AccountInfoType[]
+  selected_list: AccountInfoType[]
+}

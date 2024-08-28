@@ -1,5 +1,5 @@
 import httpRequest from './http'
-import { SpaceAddResp, SpaceEditResp, SpaceListResp } from '../types/spaceType'
+import { SpaceAddResp, SpaceAdminListResp, SpaceEditResp, SpaceListResp } from '../types/spaceType'
 import Base from './Base'
 import { AccountListResp } from '../types/accountType'
 
@@ -11,7 +11,8 @@ const spaceUrl = {
   spaceList: '/system/space/list',
   spaceDelete: '/system/space/delete',
   adminList: '/system/space/admin_list',
-  adminRemove: '/system/space/admin_remove'
+  adminRemove: '/system/space/admin_remove',
+  adminAdd: '/system/space/admin_add'
 }
 
 /**
@@ -81,9 +82,9 @@ class Space extends Base {
    * @param pageNum 页数
    * @param spaceId 空间ID
    */
-  public getAdminList(spaceId?: number): Promise<AccountListResp> {
+  public getAdminList(spaceId?: number): Promise<SpaceAdminListResp> {
     const spaceAccountListUrl = this.getProxyUrl(spaceUrl.adminList)
-    return httpRequest.get<AccountListResp>(spaceAccountListUrl, {
+    return httpRequest.get<SpaceAdminListResp>(spaceAccountListUrl, {
       space_id: spaceId
     })
   }
@@ -94,9 +95,7 @@ class Space extends Base {
    */
   public deleteSpace(spaceId: number): Promise<any> {
     const deleteSpaceUrl = this.getProxyUrl(spaceUrl.spaceDelete)
-    return httpRequest.post<any>(deleteSpaceUrl, {
-      space_id: spaceId
-    })
+    return httpRequest.post<any>(deleteSpaceUrl, {}, { space_id: spaceId })
   }
 
   /**
@@ -105,10 +104,21 @@ class Space extends Base {
    */
   public removeSpaceAdmin(spaceId?: number, accountId?: bigint): Promise<any> {
     const adminRemoveUrl = this.getProxyUrl(spaceUrl.adminRemove)
-    return httpRequest.post<any>(adminRemoveUrl, {
+    const removeBody = {
       space_id: spaceId,
       account_id: accountId
-    })
+    }
+    return httpRequest.post<any>(adminRemoveUrl, {}, removeBody)
+  }
+
+  // addSpaceAdmin 添加空间管理员
+  public addSpaceAdmin(spaceId?: number, accountIds?: bigint[]): Promise<any> {
+    const adminAddUrl = this.getProxyUrl(spaceUrl.adminAdd)
+    const adminAddBody = {
+      space_id: spaceId,
+      admin_account_ids: accountIds
+    }
+    return httpRequest.post<any>(adminAddUrl, {}, adminAddBody)
   }
 }
 

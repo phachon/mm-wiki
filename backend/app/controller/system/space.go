@@ -260,7 +260,81 @@ func SpaceAdminList(ctx *gin.Context) error {
 		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
 
+	// 获取所有的账号
+	accountList, err := service.NewAccount(ctx).GetAllNormalAccounts()
+	if err != nil {
+		sysLogErrorf(ctx, "[SpaceAdminList] 获取所有账号失败: err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+
+	// 找到可以添加的管理员
+	var adminMap = make(map[int64]bool)
+	for _, admin := range admins {
+		adminMap[admin.AccountId] = true
+	}
+	var selectedList []*entity.AccountEntity
+	for _, account := range accountList {
+		if _, ok := adminMap[account.AccountId]; !ok {
+			selectedList = append(selectedList, account)
+		}
+	}
+
 	return RespJsonSuccess(ctx, map[string]interface{}{
-		"list": admins,
+		"admin_list":    admins,
+		"selected_list": selectedList,
 	})
+}
+
+// SpaceAdminRemove 移除空间管理员
+func SpaceAdminRemove(ctx *gin.Context) error {
+
+	spaceId := GetParamInt64(ctx, "space_id")
+	accountId := GetParamInt64(ctx, "account_id")
+
+	// 判断参数合法性
+	if spaceId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpaceAdminRemove] space_id empty")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间id不存在")
+	}
+	if accountId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpaceAdminRemove] account_id empty")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号id不存在")
+	}
+
+	// 删除空间管理员
+	err := service.NewSpacePermission(ctx).DeleteBySpaceIdAccountId(spaceId, accountId)
+	if err != nil {
+		sysLogErrorf(ctx, "[SpaceAdminRemove] 移除空间 %d 管理员 %d 失败: err=%+v", spaceId, accountId, err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+	sysLogInfof(ctx, "[SpaceAdminRemove] 移除空间 %d 管理员 %d 成功", spaceId, accountId)
+
+	return RespJsonSuccess(ctx, nil)
+}
+
+// SpaceAdminAdd 添加空间管理员
+func SpaceAdminAdd(ctx *gin.Context) error {
+
+	spaceId := GetParamInt64(ctx, "space_id")
+	adminAccountIds := GetParamArray(ctx, "admin_account_ids")
+
+	// 判断参数合法性
+	if spaceId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpaceAdminAdd] space_id empty")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间id不存在")
+	}
+	if len(adminAccountIds) == 0 {
+		logger.WithContext(ctx).Warnf("[SpaceAdminAdd] adminIds empty")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "请选择空间管理员")
+	}
+
+	// adminAccountIds 转换为 int64 数组
+	accountIds := utils.Convert.StringsToInt64(adminAccountIds)
+	err := service.NewSpacePermission(ctx).CreateBatchAdminPerssions(spaceId, accountIds)
+	if err != nil {
+		sysLogErrorf(ctx, "[SpaceAdminAdd] 添加空间管理员失败: err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+	sysLogInfof(ctx, "[SpaceAdminAdd] 添加空间 %d 管理员成功", spaceId)
+	return RespJsonSuccess(ctx, nil)
 }
