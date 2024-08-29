@@ -16,10 +16,6 @@ const HomeIndex: React.FC = () => {
   const navigate = useNavigate()
   const { getAccountInfo } = useGlobalStore()
 
-  useEffect(() => {
-    // initProfileInfo(location.pathname)
-  }, [])
-
   return (
     <Layout>
       <LayoutHeader
@@ -28,19 +24,12 @@ const HomeIndex: React.FC = () => {
         navSelectedKeys={[LayoutHeaderHomeKey]}
       />
       <Layout>
-        <Allotment defaultSizes={collapsed ? [0, 48] : [0, 208]} separator={true}>
-          <Allotment.Pane minSize={208}>
-            <HomeSidebarUI />
-          </Allotment.Pane>
-          <Allotment.Pane snap>
-            <Layout>
-              <Content className="home-content">
-                <div>正文我啊啊 啊啊啊</div>
-              </Content>
-              {/* <SpaceFooterUI text={SettingConfig.footerShowText} /> */}
-            </Layout>
-          </Allotment.Pane>
-        </Allotment>
+        <HomeSidebarUI />
+        <Layout>
+          <Content className="home-content">
+            <div>正文我啊啊 啊啊啊</div>
+          </Content>
+        </Layout>
       </Layout>
     </Layout>
   )
