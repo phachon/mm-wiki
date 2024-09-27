@@ -29,8 +29,8 @@
     {{range $document := $documents}}
         var documentData = {
             'spaceId': parseInt({{$document.space_id}}),
-            'id': parseInt({{$document.document_id}}),
-            'pId': parseInt({{$document.parent_id}}),
+            'id': {{$document.document_id}},
+            'pId': {{$document.parent_id}},
             'name': {{$document.name}},
             'open': false,
             'isParent': false
