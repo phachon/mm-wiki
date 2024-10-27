@@ -152,14 +152,28 @@
 
 /* home 样式 */
 
-.home-sider {
+/* 自定义侧边栏样式 */
+.home-sidebar {
+  background-color: #ffffff; /* 设置侧边栏背景颜色为白色 */
+  border-right: 1px solid #d9d9d9; /* 添加边框 */
+  overflow: hidden; /* 确保内容溢出时隐藏 */
+  height: 100%;
+}
+
+/* 内容区样式 */
+.home-content {
   background: #fff;
   height: 100%;
 }
 
-.home-content {
-  background: #fff;
+.sidebar-content {
   height: 100%;
+  overflow-y: auto;
+}
+
+/* 自定义滚动条样式 */
+.sidebar-content::-webkit-scrollbar {
+  width: 2px;
 }
 
 /* 触发器 */
@@ -170,20 +184,21 @@
 
 .resizable-sidebar .react-resizable-handle {
   position: absolute;
-  width: 1px;
+  width: 3px;
   height: 100%;
   right: 0;
   top: 0;
   cursor: ew-resize;
   /* background-color: transparent; */
-  background-color: #e3e3e3;
+  background-color: #d9d9d9;
   transition: background-color 0.3s;
 }
 
 .resizable-sidebar .react-resizable-handle:hover {
-  background-color: #d2d2d2;
+  background-color: #bfbfbf;
 }
 
+/* 自定义触发器样式 */
 .home-sidebar-trigger {
   width: 24px;
   height: 24px;
@@ -199,6 +214,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.home-sidebar-trigger.collapsed {
+  background: #1677ff; /* 收起时变为蓝色 */
 }
 
 .home-sidebar-trigger .anticon {
@@ -235,7 +254,6 @@
 }
 
 .home-sidebar .ant-collapse-content-box .sidebar-space-item a {
-  
   color: #3d3d3d;
 }
 

@@ -155,7 +155,7 @@ const HomeSidebarUI = () => {
       width={width}
       height={Infinity}
       axis="x"
-      minConstraints={[0, Infinity]}
+      minConstraints={[56, Infinity]}
       maxConstraints={[800, Infinity]}
       onResize={handleResize}
       className="resizable-sidebar"
@@ -168,31 +168,36 @@ const HomeSidebarUI = () => {
         theme="light"
         trigger={null}
       >
-        <Menu mode="inline" style={{ marginTop: 5 }}>
-          <Menu.Item key="1" icon={<DashboardOutlined />}>
-            主页面板
-          </Menu.Item>
-          <Menu.Item key="2" icon={<FireOutlined />}>
-            探索发现
-          </Menu.Item>
-        </Menu>
-        <div style={{ paddingLeft: 6, paddingRight: 6 }}>
-          <Divider
-            style={{
-              marginTop: 0,
-              marginBottom: 6,
-              borderWidth: 1,
-              borderColor: '#e9e9e9'
-            }}
+        <div className="sidebar-content">
+          <Menu mode="inline" style={{ marginTop: 5 }}>
+            <Menu.Item key="1" icon={<DashboardOutlined />}>
+              主页面板
+            </Menu.Item>
+            <Menu.Item key="2" icon={<FireOutlined />}>
+              探索发现
+            </Menu.Item>
+          </Menu>
+          <div style={{ paddingLeft: 6, paddingRight: 6 }}>
+            <Divider
+              style={{
+                marginTop: 0,
+                marginBottom: 6,
+                borderWidth: 1,
+                borderColor: '#e9e9e9'
+              }}
+            />
+          </div>
+          <Collapse
+            defaultActiveKey={['mySpace', 'collectSpace', 'collectDoc']}
+            ghost
+            items={items}
           />
         </div>
-        <Collapse
-          defaultActiveKey={['mySpace', 'collectSpace', 'collectDoc']}
-          ghost
-          items={items}
-        />
       </Layout.Sider>
-      <div className="home-sidebar-trigger" onClick={toggleCollapsed}>
+      <div
+        className={`home-sidebar-trigger ${collapsed ? 'collapsed' : ''}`}
+        onClick={toggleCollapsed}
+      >
         {collapsed ? <RightOutlined /> : <LeftOutlined />}
       </div>
     </ResizableBox>
