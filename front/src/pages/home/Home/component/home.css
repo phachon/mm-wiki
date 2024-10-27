@@ -164,22 +164,24 @@
 
 /* 触发器 */
 .resizable-sidebar {
+  background-color: #fff;
   position: relative;
 }
 
 .resizable-sidebar .react-resizable-handle {
   position: absolute;
-  width: 3px;
+  width: 1px;
   height: 100%;
   right: 0;
   top: 0;
   cursor: ew-resize;
-  background-color: transparent;
+  /* background-color: transparent; */
+  background-color: #e3e3e3;
   transition: background-color 0.3s;
 }
 
 .resizable-sidebar .react-resizable-handle:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #d2d2d2;
 }
 
 .home-sidebar-trigger {
@@ -209,5 +211,34 @@
 }
 
 .home-sidebar {
-  transition: width 0.3s, min-width 0.3s; /* 添加 min-width 的过渡效果 */
+  background-color: #fff;
+  transition: width 0.5s, min-width 0.5s; /* 添加 min-width 的过渡效果 */
+}
+
+.home-sidebar .ant-menu-item {
+  padding-left: 32px !important;
+}
+
+.home-sidebar .ant-collapse-header {
+  padding: 8px 0 8px 12px !important;
+  white-space: nowrap; /* 防止文字折行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+}
+
+.home-sidebar .ant-collapse-content-box {
+  padding: 0 0 0 36px !important;
+  line-height: 2.3;
+  white-space: nowrap; /* 防止文字折行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+}
+
+.home-sidebar .ant-collapse-content-box .sidebar-space-item a {
+  
+  color: #3d3d3d;
+}
+
+.home-sidebar .ant-collapse-content-box .sidebar-space-item a:hover{
+  color: #1677ff;
 }

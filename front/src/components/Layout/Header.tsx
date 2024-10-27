@@ -109,8 +109,8 @@ const LayoutHeader = (props: LayoutHeaderProps) => {
       icon: <ReadOutlined />
     },
     {
-      label: <Link to="/system/profile/repass">关于软件</Link>,
-      key: 'profile_repass',
+      label: <Link to="/system/profile/about">关于软件</Link>,
+      key: 'profile_about',
       icon: <SendOutlined />
     }
   ]
