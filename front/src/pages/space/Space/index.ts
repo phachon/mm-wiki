@@ -1,3 +1,9 @@
-import SpaceHome from './container/Demo1'
+import SpaceIndex from './container/Index'
+import SpaceAll from './container/All'
+import SpaceHome from './container/Home'
 
-export default SpaceHome
+export default {
+  SpaceIndex,
+  SpaceAll,
+  SpaceHome
+}

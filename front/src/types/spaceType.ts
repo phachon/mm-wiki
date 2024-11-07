@@ -68,6 +68,7 @@ export const SpaceTypeTypes = [
 // SpaceInfoType 空间信息结构
 export type SpaceInfoType = {
   space_id: number // 空间ID
+  space_key: string // 空间Key
   name: string // 空间名
   description: string // 空间描述
   space_type: number // 空间类型

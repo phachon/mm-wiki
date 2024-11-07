@@ -58,7 +58,7 @@ const LayoutHeader = (props: LayoutHeaderProps) => {
       icon: <HomeOutlined />
     },
     {
-      label: <a href="/space">空间</a>,
+      label: <a href="/spaces">空间</a>,
       key: LayoutHeaderSpaceKey,
       icon: <AppstoreOutlined />
     },

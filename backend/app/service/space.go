@@ -162,12 +162,12 @@ func (s *Space) GetSpacesBySpaceIds(spaceIds []int64) (spaces []*entity.SpaceEnt
 }
 
 // FormatSpaceList 格式化账号列表根据账号信息
-func (a *Space) FormatSpaceList(spaces []*entity.SpaceEntity) (spaceList []*entity.SpaceListItem, err errors.BizError) {
+func (s *Space) FormatSpaceList(spaces []*entity.SpaceEntity) (spaceList []*entity.SpaceListItem, err errors.BizError) {
 	if len(spaces) == 0 {
 		return spaceList, nil
 	}
 	for _, space := range spaces {
-		action := a.GetListItemAction(space)
+		action := s.GetListItemAction(space)
 		var spaceListItem = &entity.SpaceListItem{
 			SpaceEntity: space,
 			Action:      action,
@@ -178,11 +178,30 @@ func (a *Space) FormatSpaceList(spaces []*entity.SpaceEntity) (spaceList []*enti
 }
 
 // GetListItemAction 获取列表 action 权限
-func (a *Space) GetListItemAction(spaceItem *entity.SpaceEntity) *entity.SpaceListAction {
-	indentifys := global.ContextValueLoginIdentifys(a.ctx)
+func (s *Space) GetListItemAction(spaceItem *entity.SpaceEntity) *entity.SpaceListAction {
+	indentifys := global.ContextValueLoginIdentifys(s.ctx)
 	action := &entity.SpaceListAction{
 		IsEdit:   indentifys[global.PrivilegeIndentifySpaceEdit],
 		IsDelete: indentifys[global.PrivilegeIndentifySpaceDelete],
 	}
 	return action
+}
+
+// GetPublicSpacesByLimit 获取公开的空间列表
+func (s *Space) GetPublicSpacesByLimit(limit, page int, keywords *entity.SpaceKeywords) ([]*entity.SpaceEntity, errors.BizError) {
+	offset := (page - 1) * limit
+	spaces, err := s.daoSpace.GetPublicSpacesByLimit(limit, offset, keywords)
+	if err != nil {
+		return nil, err
+	}
+	return spaces, nil
+}
+
+// GetPublicSpacesPageInfo 获取公开空间的分页信息
+func (s *Space) GetPublicSpacesPageInfo(limit, page int, keywords *entity.SpaceKeywords) (*entity.PageInfo, errors.BizError) {
+	totalNum, err := s.daoSpace.CountPublicSpaces(keywords)
+	if err != nil {
+		return nil, err
+	}
+	return entity.GetPageInfo(totalNum, limit, page), nil
 }

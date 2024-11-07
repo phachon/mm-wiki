@@ -17,6 +17,9 @@ const (
 
 	SpaceTypeTeam            = 0 // 空间类型 0 团队
 	SpaceTypeDefaultPersonal = 1 // 空间类型 1 个人
+
+	SpaceVisibilityPublic  = "public"
+	SpaceVisibilityPrivate = "private"
 )
 
 // SpaceEntity space 空间表结构

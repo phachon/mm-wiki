@@ -34,7 +34,7 @@ const routers: IRouter[] = [
       {
         path: '*',
         key: 'home_default',
-        component: <SpaceHome />,
+        component: <Home.HomeIndex />,
         auth: true,
         permission: false
       }

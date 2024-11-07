@@ -1,7 +1,6 @@
 import httpRequest from './http'
 import { SpaceAddResp, SpaceAdminListResp, SpaceEditResp, SpaceListResp } from '../types/spaceType'
 import Base from './Base'
-import { AccountListResp } from '../types/accountType'
 
 const spaceUrl = {
   spaceAdd: '/system/space/add',
@@ -12,7 +11,9 @@ const spaceUrl = {
   spaceDelete: '/system/space/delete',
   adminList: '/system/space/admin_list',
   adminRemove: '/system/space/admin_remove',
-  adminAdd: '/system/space/admin_add'
+  adminAdd: '/system/space/admin_add',
+  // 获取公开空间列表
+  spaces: '/space/spaces'
 }
 
 /**
@@ -77,6 +78,21 @@ class Space extends Base {
   }
 
   /**
+   * getSpaces 获取空间列表
+   * @param pageSize 每一页条数
+   * @param pageNum 页数
+   * @param keywords 搜索值
+   */
+  public getSpaces(pageSize?: number, pageNum?: number, keywords?: {}): Promise<SpaceListResp> {
+    const spacesUrl = this.getProxyUrl(spaceUrl.spaces)
+    return httpRequest.get<SpaceListResp>(spacesUrl, {
+      page_size: pageSize,
+      page_num: pageNum,
+      keywords: keywords ? JSON.stringify(keywords) : ''
+    })
+  }
+
+  /**
    * getAdminList 获取账号列表
    * @param pageSize 每一页条数
    * @param pageNum 页数
@@ -119,6 +135,24 @@ class Space extends Base {
       admin_account_ids: accountIds
     }
     return httpRequest.post<any>(adminAddUrl, {}, adminAddBody)
+  }
+
+  /**
+   * collectSpace 收藏空间
+   * @param spaceKey 空间标识
+   */
+  public collectSpace(spaceKey: string): Promise<any> {
+    const collectUrl = this.getProxyUrl('/space/collect')
+    return httpRequest.post<any>(collectUrl, {}, { space_key: spaceKey })
+  }
+
+  /**
+   * uncollectSpace 取消收藏空间
+   * @param spaceKey 空间标识
+   */
+  public uncollectSpace(spaceKey: string): Promise<any> {
+    const uncollectUrl = this.getProxyUrl('/space/uncollect')
+    return httpRequest.post<any>(uncollectUrl, {}, { space_key: spaceKey })
   }
 }
 

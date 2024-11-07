@@ -15,32 +15,27 @@ export const RouterInterceptor = ({ children, router }: any) => {
 
   // 监听 location 改变
   useEffect(() => {
-    if (location.pathname == '/') {
+    if (location.pathname === '/') {
       navigate(HOME_ROOT_PATH)
       return
     }
-    console.log('router:', router)
-    console.log('location:', location)
-    // // 路由合法性校验
-    const isExist = routerPaths.indexOf(location.pathname) != -1
-    if (!isExist) {
-      navigate(NO_EXIST_PATH)
-      return
-    }
-    // 路由登录校验
+
+    // 登录校验
     if (router.auth && !LoginTokenStore.checkTokenExpire()) {
-      // todo 这里会执行两次
       navigate(AUTH_LOGIN_PATH)
       return
     }
-    // 路由权限校验
-    // const iMenuItem = iPrivilegeData.iMenuItemsKeyMap?.get(router.path)
-    // if (router.permission && !iMenuItem) {
-    //   navigate(NO_ACCESS_PATH)
+
+    // 移除路由合法性校验，因为嵌套路由和重定向会导致误判
+    // 或者使用更智能的路由匹配逻辑
+    // const isExist = routerPaths.some(path => {
+    //   if (path === '*') return false
+    //   return location.pathname.startsWith(path)
+    // })
+    // if (!isExist) {
+    //   navigate(NO_EXIST_PATH)
     //   return
     // }
-    // 路由改变，改变菜单的选中态
-    // onMenuItemsClick(location.pathname)
   }, [location])
 
   return children

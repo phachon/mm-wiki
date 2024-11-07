@@ -4,14 +4,19 @@ const basicRoutes: IRouter[] = []
 const modules = require.context('@/router/modules', true, /\.tsx$/)
 const routerPathArr: string[] = []
 
-function setPathsList(routes: IRouter[]) {
-  routes.map((item: IRouter) => {
-    routerPathArr.push(item.path)
-    item.children && setPathsList(item.children)
+function setPathsList(routes: IRouter[], parentPath: string = '') {
+  routes.forEach((item: IRouter) => {
+    const fullPath =
+      item.path === '' ? parentPath : `${parentPath}/${item.path}`.replace(/\/+/g, '/')
+
+    routerPathArr.push(fullPath)
+
+    if (item.children) {
+      setPathsList(item.children, item.path === '*' ? parentPath : fullPath)
+    }
   })
 }
 
-// 读取模块下的文件，获取每个文件里的 routers
 let files = modules.keys()
 files.forEach((key) => {
   const mod = modules(key).default

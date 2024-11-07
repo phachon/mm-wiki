@@ -259,3 +259,40 @@ func (r *Space) CountSpacesByKeywords(keywords *entity.SpaceKeywords) (count int
 	}
 	return count, nil
 }
+
+// GetPublicSpacesByLimit 获取公开空间列表
+func (s *Space) GetPublicSpacesByLimit(limit, offset int, keywords *entity.SpaceKeywords) ([]*entity.SpaceEntity, errors.BizError) {
+	spaces := make([]*entity.SpaceEntity, 0)
+	db := GetDB(dbNameMK).WithContext(s.ctx).Table(TableNameSpace)
+
+	db = db.Where("visit_level = ?", entity.SpaceVisitLevelDefaultPublic)
+	if keywords != nil {
+		if keywords.SpaceName != "" {
+			db = db.Where("name LIKE ?", "%"+keywords.SpaceName+"%")
+		}
+	}
+	if err := db.Offset(offset).Limit(limit).Find(&spaces).Error; err != nil {
+		return spaces, errors.Errorf(errors.DalMysqlSelectErr, err.Error())
+	}
+
+	return spaces, nil
+}
+
+// CountPublicSpaces 统计公开空间数量
+func (d *Space) CountPublicSpaces(keywords *entity.SpaceKeywords) (int64, errors.BizError) {
+	var count int64
+	db := GetDB(dbNameMK).WithContext(d.ctx).Table(TableNameSpace)
+
+	db = db.Where("visit_level = ?", entity.SpaceVisitLevelDefaultPublic)
+	if keywords != nil {
+		if keywords.SpaceName != "" {
+			db = db.Where("name LIKE ?", "%"+keywords.SpaceName+"%")
+		}
+	}
+
+	if err := db.Count(&count).Error; err != nil {
+		return 0, errors.Errorf(errors.DalMysqlSelectErr, err.Error())
+	}
+
+	return count, nil
+}

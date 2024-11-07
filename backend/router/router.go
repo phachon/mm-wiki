@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/controller"
+	spaceController "github.com/phachon/mm-wiki/app/controller/space"
 	systemController "github.com/phachon/mm-wiki/app/controller/system"
 	"github.com/phachon/mm-wiki/filter"
 	"github.com/phachon/mm-wiki/global"
@@ -15,6 +16,7 @@ import (
 
 const (
 	routerGroupNameSystem = "/system"
+	routerGroupNameSpace  = "/space"
 )
 
 var (
@@ -79,6 +81,9 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/space/admin_list", method: http.MethodGet, controllerHandle: systemController.SpaceAdminList},
 		{group: routerGroupNameSystem, relativePath: "/space/admin_remove", method: http.MethodPost, controllerHandle: systemController.SpaceAdminRemove},
 		{group: routerGroupNameSystem, relativePath: "/space/admin_add", method: http.MethodPost, controllerHandle: systemController.SpaceAdminAdd},
+		// =====================空间=====================
+		// 获取空间列表
+		{group: routerGroupNameSpace, relativePath: "/spaces", method: http.MethodGet, controllerHandle: spaceController.GetSpaces},
 	}
 )
 

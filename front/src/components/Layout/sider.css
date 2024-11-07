@@ -1,0 +1,108 @@
+/* 自定义侧边栏样式 */
+.home-sidebar {
+  background-color: #ffffff; /* 设置侧边栏背景颜色为白色 */
+  border-right: 1px solid #d9d9d9; /* 添加边框 */
+  overflow: hidden; /* 确保内容溢出时隐藏 */
+  height: 100%;
+}
+
+/* 内容区样式 */
+.home-content {
+  background: #fff;
+  height: 100%;
+}
+
+.sidebar-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* 自定义滚动条样式 */
+.sidebar-content::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* 触发器 */
+.resizable-sidebar {
+  background-color: #fff;
+  position: relative;
+}
+
+.resizable-sidebar .react-resizable-handle {
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  right: 0;
+  top: 0;
+  cursor: ew-resize;
+  /* background-color: transparent; */
+  background-color: #d9d9d9;
+  transition: background-color 0.3s;
+}
+
+.resizable-sidebar .react-resizable-handle:hover {
+  background-color: #bfbfbf;
+}
+
+/* 自定义触发器样式 */
+.home-sidebar-trigger {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: -12px; /* 调整位置使其在分割线上 */
+  transform: translateY(-50%);
+  z-index: 1;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-sidebar-trigger.collapsed {
+  background: #1677ff; /* 收起时变为蓝色 */
+}
+
+.home-sidebar-trigger .anticon {
+  font-size: 12px;
+  color: #b3b3b3;
+}
+
+.home-sidebar-trigger:hover {
+  box-shadow: 0 0 4px 2px rgba(85, 85, 85, 0.3); /* 添加高亮效果 */
+}
+
+.home-sidebar {
+  background-color: #fff;
+  transition: width 0.5s, min-width 0.5s; /* 添加 min-width 的过渡效果 */
+}
+
+.home-sidebar .ant-menu-item {
+  padding-left: 32px !important;
+}
+
+.home-sidebar .ant-collapse-header {
+  padding: 8px 0 8px 12px !important;
+  white-space: nowrap; /* 防止文字折行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+}
+
+.home-sidebar .ant-collapse-content-box {
+  padding: 0 0 0 36px !important;
+  line-height: 2.3;
+  white-space: nowrap; /* 防止文字折行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+}
+
+.home-sidebar .ant-collapse-content-box .sidebar-space-item a {
+  color: #3d3d3d;
+}
+
+.home-sidebar .ant-collapse-content-box .sidebar-space-item a:hover{
+  color: #1677ff;
+}

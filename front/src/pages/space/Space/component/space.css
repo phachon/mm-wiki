@@ -1,0 +1,28 @@
+.space-search {
+  margin-top: 20px;
+}
+.space-search .ant-input {
+  padding-left: 8px !important;
+}
+
+.space-search .ant-input-affix-wrapper {
+  border-radius: 20px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.space-search .ant-input-search-button {
+  border-radius: 20px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  width: 80px !important;
+}
+
+.space-avatar {
+  /* background-color: #1890ff; */
+  /* color: #fff; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  font-size: large;
+}
