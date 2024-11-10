@@ -3,6 +3,7 @@ import { getMenuItems } from './ToolsUI'
 import { useState } from 'react'
 import { IMenuItem } from '@/types/frame'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import { SiderWidth } from '@/config/layout'
 
 interface SystemSidebarUIProps {
   menuItemOpenKeys: string[]
@@ -21,10 +22,9 @@ const SystemSidebarUI = (props: SystemSidebarUIProps) => {
 
   return (
     <Layout.Sider
-      // collapsible
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
-      width="208px"
+      width={SiderWidth}
       collapsedWidth="64px"
       className="admin-sidebar"
       theme="light"

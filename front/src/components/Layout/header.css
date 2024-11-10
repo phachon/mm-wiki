@@ -1,0 +1,78 @@
+/* 头部 */
+.admin-header {
+  display: flex;
+  box-shadow: 0 4px 5px rgba(0,21,41,.08);
+  padding: 0;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+}
+
+.admin-header-logo {
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .3s;
+  padding: 0 8px 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.admin-header-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.admin-header-text {
+  margin: 0 0 0 12px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  animation: fade-in;
+  animation-duration: .3s;
+}
+
+.admin-header-logo img {
+  height: 36px;
+}
+
+.admin-header-nav {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.admin-header-right {
+  display: flex;
+  padding: 0 12px;
+  transition: all .3s;
+}
+
+.ant-menu-dark.ant-menu-horizontal >.ant-menu-submenu-selected {
+  background: #192336;
+}
+
+.admin-header-action {
+  cursor: pointer;
+  padding: 0 12px;
+  color: #fff;
+  transition: all .3s;
+}
+
+.admin-header-action a {
+  color: #fff;
+}
+
+.admin-header-action:hover {
+  background: #192336;
+}
+
+.admin-header-left .ant-menu.ant-menu-dark .ant-menu-item-selected {
+  background-color: #192336;
+}
+
+.admin-header-left .ant-menu.ant-menu-dark .ant-menu-item-active {
+  background-color: #192336;
+}

@@ -26,6 +26,8 @@ import {
   LayoutHeaderSystemKey,
   LayoutHeaderUserKey
 } from './types'
+import './header.css'
+import { SiderWidth } from '@/config/layout'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -180,7 +182,7 @@ const LayoutHeader = (props: LayoutHeaderProps) => {
 
   return (
     <Layout.Header className="admin-header">
-      <div className="admin-header-logo">
+      <div className="admin-header-logo" style={{ width: SiderWidth }}>
         <a className="admin-header-link" href="/">
           {SettingConfig.frameHeaderIconUrl ? (
             <img src={SettingConfig.frameHeaderIconUrl} alt="logo"></img>

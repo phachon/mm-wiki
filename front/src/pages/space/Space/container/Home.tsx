@@ -5,6 +5,7 @@ import { useGlobalStore } from '@/stores'
 import { Layout } from 'antd'
 import React from 'react'
 import { Outlet, useParams } from 'react-router-dom'
+import SpaceSidebarUI from '../component/SidebarUI'
 
 const SpaceHome: React.FC = () => {
   const { key } = useParams<{ key: string }>()
@@ -29,7 +30,7 @@ const SpaceHome: React.FC = () => {
         navSelectedKeys={[LayoutHeaderSpaceKey]}
       />
       <Layout>
-        <LayoutSider content={<p>菜单树</p>} />
+        <LayoutSider content={<SpaceSidebarUI />} />
         <Layout.Content className="home-content" style={{ padding: 16 }}>
           <Outlet />
         </Layout.Content>

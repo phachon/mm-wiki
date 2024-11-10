@@ -4,6 +4,7 @@ import { ResizableBox } from 'react-resizable'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import 'react-resizable/css/styles.css'
 import './sider.css'
+import { SiderWidth } from '@/config/layout'
 
 type LayoutSiderProps = {
   content?: React.ReactNode
@@ -11,11 +12,11 @@ type LayoutSiderProps = {
 
 const LayoutSider = (props: LayoutSiderProps) => {
   const [collapsed, setCollapsed] = useState(false)
-  const [width, setWidth] = useState(208)
+  const [width, setWidth] = useState(SiderWidth)
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
-    setWidth(collapsed ? 208 : 0)
+    setWidth(collapsed ? SiderWidth : 0)
   }
 
   const handleResize = (e: React.SyntheticEvent, data: any) => {

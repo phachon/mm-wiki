@@ -8,6 +8,7 @@ import LayoutHeader from '@/components/Layout/Header'
 import { useGlobalStore } from '@/stores'
 import { useNavigate } from 'react-router-dom'
 import { LayoutHeaderHomeKey } from '@/components/Layout/types'
+import LayoutSider from '@/components/Layout/Sider'
 
 const { Content } = Layout
 
@@ -24,7 +25,7 @@ const HomeIndex: React.FC = () => {
         navSelectedKeys={[LayoutHeaderHomeKey]}
       />
       <Layout>
-        <HomeSidebarUI />
+        <LayoutSider content={<HomeSidebarUI />} />
         <Layout>
           <Content className="home-content">
             <div>正文我啊啊 啊啊啊</div>

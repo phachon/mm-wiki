@@ -21,3 +21,5 @@ export const EditLayoutForm = {
     span: 16
   }
 }
+
+export const SiderWidth = 240 // 侧边栏宽度
