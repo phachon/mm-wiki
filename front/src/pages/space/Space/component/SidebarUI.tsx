@@ -16,7 +16,6 @@ import {
 import './space.css'
 
 const { DirectoryTree } = Tree
-const { Search } = Input
 
 const handleMenuClick: MenuProps['onClick'] = (e) => {
   console.log('click', e)

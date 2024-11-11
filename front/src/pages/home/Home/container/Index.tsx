@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Layout, Spin } from 'antd'
-import { Allotment } from 'allotment'
 import 'allotment/dist/style.css'
 import '../component/home.css'
 import HomeSidebarUI from '../component/SidebarUI'

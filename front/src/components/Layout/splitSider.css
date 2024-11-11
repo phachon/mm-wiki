@@ -1,0 +1,67 @@
+/* Splitter 基础样式 */
+.ant-splitter {
+  background-color: transparent !important;
+}
+
+/* 分割线样式 */
+.ant-splitter-handle {
+  background-color: #f0f0f0 !important;
+  width: 2px !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ant-splitter-handle:hover {
+  opacity: 1;
+}
+
+/* 分割线拖动时的样式 */
+.ant-splitter-handle-moving {
+  background-color: #1677ff !important;
+  opacity: 1;
+}
+
+/* 侧边栏样式 */
+.split-sider {
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #f0f0f0;
+}
+
+/* 侧边栏内容区域 */
+.split-sider-content {
+  height: 100%;
+  overflow: auto;
+}
+
+/* 折叠按钮样式 */
+.split-sider-trigger {
+  position: absolute;
+  top: 50%;
+  right: -16px;
+  width: 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.split-sider-trigger:hover {
+  color: #1677ff;
+}
+
+.split-sider-trigger.collapsed {
+  right: -16px;
+}
+
+/* 确保内容区域不会被折叠按钮遮挡 */
+.split-sider-panel {
+  position: relative;
+  height: 100%;
+} 

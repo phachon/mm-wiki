@@ -29,8 +29,8 @@
 }
 
 .doc-tree .ant-tree-treenode {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   padding: 0 !important;
 }
 
@@ -38,33 +38,35 @@
   bottom: 0 !important;
 }
 
-/* 将背景颜色更改为灰色 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected:before {
-  background-color: #e6f4ff !important;
+.ant-tree-treenode.ant-tree-treenode-switcher-open.ant-tree-treenode-selected {
+  background: #e6f4ff !important;
 }
 
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper:before {
+  background: #e6f4ff !important;
+}
 /* 设置选中状态的文字颜色 */
 .ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
-  color: black !important;
-  font-weight: 500;
+  color: #1677ff !important;
+  font-weight: 400;
 }
 
 /* 设置切换图标的颜色 */
-.ant-tree.ant-tree-directory .ant-tree-switcher {
-  color: black !important;
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-switcher {
+  color: #1677ff !important;
 }
 
 .doc-tree .ant-tree-node-content-wrapper {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   padding: 0 !important;
   display: flex !important;
   align-items: center;
 }
 
 .doc-tree .ant-tree-switcher {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,8 +86,8 @@
 }
 
 .custom-title-wrapper {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -170,7 +172,7 @@
 
 .doc-tree .ant-tree-iconEle {
   width: 24px !important;
-  height: 36px;
+  height: 32px;
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -186,8 +188,8 @@
 
 /* 调整折叠箭头的位置和大小 */
 .doc-tree .ant-tree-switcher {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,14 +218,14 @@
 
 /* 调整图标的垂直对齐 */
 .doc-tree .anticon {
-  line-height: 36px;
+  line-height: 32px;
   vertical-align: middle;
 }
 
 /* 调整折叠按钮的位置和大小 */
 .doc-tree .ant-tree-switcher {
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -233,7 +235,7 @@
 /* 调整文件图标的位置 */
 .doc-tree .custom-title .anticon-file-text {
   width: 24px;
-  height: 36px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,55 +263,6 @@
 /* 调整文件图标大小 */
 .doc-tree .custom-title .anticon-file-text {
   font-size: 14px;
-}
-
-/* 设置选中状态的样式 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected:before {
-  background-color: #e6f4ff !important;  /* 恢复浅蓝色背景 */
-}
-
-/* 设置选中状态的文字颜色 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
-  color: #1677ff !important;  /* 使用 Ant Design 的主题蓝色 */
-  font-weight: 400 !important;  /* 移除加粗效果 */
-}
-
-/* 设置悬停状态的样式 */
-.ant-tree.ant-tree-directory .ant-tree-node-content-wrapper:hover {
-  background-color: #f5f5f5 !important;  /* 恢复悬停背景色 */
-}
-
-/* 设置选中且悬停状态的样式 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper:hover {
-  background-color: #e6f4ff !important;  /* 保持选中状态的背景色 */
-}
-
-/* 恢复选中状态的背景色 */
-.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
-  background-color: #e6f4ff !important;
-}
-
-/* 调整选中状态的背景色范围 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected:before {
-  background-color: #e6f4ff !important;
-  top: 0;
-  bottom: 0 !important;  /* 恢复到底部 */
-}
-
-/* 置选中状态的文字颜色 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
-  color: #1677ff !important;
-  font-weight: 400 !important;
-}
-
-/* 设置选中且悬停状态的样式 */
-.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper:hover {
-  background-color: #e6f4ff !important;
-}
-
-/* 恢复选中状态的背景色 */
-.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
-  background-color: #e6f4ff !important;
 }
 
 /* 添加标题样式 */
@@ -351,7 +304,7 @@
 /* 调整标题字号 */
 .space-title {
   margin: 0;
-  font-size: 17px;  /* 标题字号改为17px */
+  font-size: 16px;  /* 标题字号改为17px */
   font-weight: 500;
   color: #000000;
   line-height: 1.5;
