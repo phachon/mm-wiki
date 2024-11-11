@@ -267,12 +267,12 @@
 
 /* 添加标题样式 */
 .doc-sider-header {
-  padding: 16px 12px 16px 12px;
+  padding: 16px 12px;
 }
 
 .space-title {
   margin: 0;
-  font-size: 17px;  /* 标题字号改为17px */
+  font-size: 17px;
   font-weight: 500;
   color: #000000;
   line-height: 1.5;
@@ -280,7 +280,7 @@
 
 /* 调整搜索框样式 */
 .doc-sider-search {
-  padding: 12px 8px 12px 8px;
+  padding: 12px 8px;
 }
 
 .doc-sider-search .ant-input-affix-wrapper {
@@ -319,8 +319,7 @@
 }
 
 .doc-sider-divider {
-  margin: 0;
-  margin-bottom: 6px;
+  margin: 0 0 6px;
 }
 
 .space-title a {
