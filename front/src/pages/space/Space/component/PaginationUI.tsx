@@ -10,7 +10,7 @@ interface SpacePaginationProps {
 
 const SpacePaginationUI: React.FC<SpacePaginationProps> = ({ total, pageSize, onChange }) => {
   return (
-    <div style={{ textAlign: 'center', marginTop: 32 }}>
+    <div style={{ marginTop: 32 }}>
       <Pagination
         total={total}
         pageSize={pageSize}

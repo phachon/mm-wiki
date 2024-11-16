@@ -179,6 +179,7 @@
   margin-right: 0 !important;
   position: relative;
   left: -24px;  /* 向左偏移，与折叠箭头对齐 */
+  font-size: 13px;
 }
 
 /* 补偿因图标左移导致的文本位置偏移 */
@@ -253,7 +254,7 @@
 
 /* 调整展开箭头图标大小 */
 .doc-tree .ant-tree-switcher .anticon {
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
