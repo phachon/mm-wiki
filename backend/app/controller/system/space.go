@@ -86,6 +86,9 @@ func SpaceSave(ctx *gin.Context) error {
 		sysLogErrorf(ctx, "[SpaceAdd] 添加空间失败: err=%+v", err)
 		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
+
+	// 创建空间主页文档
+
 	// adminAccountIds 转换为 int64 数组
 	accountIds := utils.Convert.StringsToInt64(adminAccountIds)
 	err = service.NewSpacePermission(ctx).CreateBatchAdminPerssions(spaceEntity.SpaceId, accountIds)

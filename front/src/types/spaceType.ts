@@ -1,5 +1,6 @@
 import { PageInfoType } from './baseType'
 import { AccountInfoType } from './accountType'
+import { DocTreeEntity } from './docType'
 
 export const SpaceVisitLevelDefaultPublic = 0 // 访问级别：默认公开
 export const SpaceVisitLevelPrivate = 1 // 访问级别：私有
@@ -118,4 +119,10 @@ export type SpaceAddResp = {
 export type SpaceAdminListResp = {
   admin_list: AccountInfoType[]
   selected_list: AccountInfoType[]
+}
+
+// SpaceDocsResp 空间文档返回结构
+export type SpaceDocsResp = {
+  docs: DocTreeEntity[]
+  info: SpaceInfoType
 }

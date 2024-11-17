@@ -1,8 +1,15 @@
 import httpRequest from './http'
-import { SpaceAddResp, SpaceAdminListResp, SpaceEditResp, SpaceListResp } from '../types/spaceType'
+import {
+  SpaceAddResp,
+  SpaceAdminListResp,
+  SpaceDocsResp,
+  SpaceEditResp,
+  SpaceListResp
+} from '../types/spaceType'
 import Base from './Base'
 
 const spaceUrl = {
+  // 系统模块-空间接口
   spaceAdd: '/system/space/add',
   spaceSave: '/system/space/save',
   spaceEdit: '/system/space/edit',
@@ -12,8 +19,9 @@ const spaceUrl = {
   adminList: '/system/space/admin_list',
   adminRemove: '/system/space/admin_remove',
   adminAdd: '/system/space/admin_add',
-  // 获取公开空间列表
-  spaces: '/space/spaces'
+  // 空间模块-空间相关接口
+  allSpaces: '/space/all',
+  spaceDocs: '/space/docs'
 }
 
 /**
@@ -84,11 +92,22 @@ class Space extends Base {
    * @param keywords 搜索值
    */
   public getSpaces(pageSize?: number, pageNum?: number, keywords?: {}): Promise<SpaceListResp> {
-    const spacesUrl = this.getProxyUrl(spaceUrl.spaces)
+    const spacesUrl = this.getProxyUrl(spaceUrl.allSpaces)
     return httpRequest.get<SpaceListResp>(spacesUrl, {
       page_size: pageSize,
       page_num: pageNum,
       keywords: keywords ? JSON.stringify(keywords) : ''
+    })
+  }
+
+  /**
+   * getSpaceDocs 获取空间下文档
+   * @param spaceKey 空间Key
+   */
+  public getSpaceDocs(spaceKey: string): Promise<SpaceDocsResp> {
+    const spaceDocsUrl = this.getProxyUrl(spaceUrl.spaceDocs)
+    return httpRequest.get<SpaceDocsResp>(spaceDocsUrl, {
+      space_key: spaceKey
     })
   }
 

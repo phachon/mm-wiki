@@ -12,6 +12,7 @@ const SpacePaginationUI: React.FC<SpacePaginationProps> = ({ total, pageSize, on
   return (
     <div style={{ marginTop: 32 }}>
       <Pagination
+        align="center"
         total={total}
         pageSize={pageSize}
         showQuickJumper

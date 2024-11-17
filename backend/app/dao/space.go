@@ -266,6 +266,7 @@ func (s *Space) GetPublicSpacesByLimit(limit, offset int, keywords *entity.Space
 	db := GetDB(dbNameMK).WithContext(s.ctx).Table(TableNameSpace)
 
 	db = db.Where("visit_level = ?", entity.SpaceVisitLevelDefaultPublic)
+	db = db.Where("status = ?", entity.SpaceStatusDefault)
 	if keywords != nil {
 		if keywords.SpaceName != "" {
 			db = db.Where("name LIKE ?", "%"+keywords.SpaceName+"%")
@@ -284,6 +285,7 @@ func (d *Space) CountPublicSpaces(keywords *entity.SpaceKeywords) (int64, errors
 	db := GetDB(dbNameMK).WithContext(d.ctx).Table(TableNameSpace)
 
 	db = db.Where("visit_level = ?", entity.SpaceVisitLevelDefaultPublic)
+	db = db.Where("status = ?", entity.SpaceStatusDefault)
 	if keywords != nil {
 		if keywords.SpaceName != "" {
 			db = db.Where("name LIKE ?", "%"+keywords.SpaceName+"%")

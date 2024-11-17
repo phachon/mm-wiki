@@ -83,7 +83,8 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/space/admin_add", method: http.MethodPost, controllerHandle: systemController.SpaceAdminAdd},
 		// =====================空间=====================
 		// 获取空间列表
-		{group: routerGroupNameSpace, relativePath: "/spaces", method: http.MethodGet, controllerHandle: spaceController.GetSpaces},
+		{group: routerGroupNameSpace, relativePath: "/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
+		{group: routerGroupNameSpace, relativePath: "/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
 	}
 )
 

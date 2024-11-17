@@ -195,9 +195,10 @@ CREATE TABLE `mk_space_permission` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mk_doc`;
 CREATE TABLE `mk_doc` (
-  `doc_id` varchar(125) NOT NULL DEFAULT '' COMMENT '文档唯一ID',
-  `parent_id` varchar(125) NOT NULL DEFAULT '' COMMENT '文档父 id',
+  `doc_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '文档唯一ID',
+  `parent_id` int(10) NOT NULL DEFAULT '0' COMMENT '文档父 id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间id',
+  `space_key` varchar(150) NOT NULL DEFAULT '' COMMENT '空间 key',
   `name` varchar(150) NOT NULL DEFAULT '' COMMENT '文档标题',
   `type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '文档类型 1 page 2 dir',
   `path` varchar(1000) NOT NULL DEFAULT '0' COMMENT '存储根文档到父文档的 doc_id 值, 格式 0,1,2,...',
@@ -209,8 +210,9 @@ CREATE TABLE `mk_doc` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`doc_id`),
   KEY (`parent_id`),
+  KEY (`space_key`),
   KEY (`space_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文档表';
+) ENGINE=InnoDB AUTO_INCREMENT = 20105 DEFAULT CHARSET=utf8mb4 COMMENT='文档表';
 
 -- --------------------------------
 -- mk_collection 账号收藏表

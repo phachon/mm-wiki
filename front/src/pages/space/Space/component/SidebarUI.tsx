@@ -14,6 +14,8 @@ import {
   RetweetOutlined
 } from '@ant-design/icons'
 import './space.css'
+import { SpaceInfoType } from '@/types/spaceType'
+import { DocTreeEntity } from '@/types/docType'
 
 const { DirectoryTree } = Tree
 
@@ -137,7 +139,12 @@ const treeData: TreeDataNode[] = [
   }
 ]
 
-const SpaceSidebarUI = () => {
+type SpaceSidebarUIProps = {
+  spaceInfo?: SpaceInfoType
+  docs?: DocTreeEntity[]
+}
+
+const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
   const onSelect: GetProps<typeof Tree.DirectoryTree>['onSelect'] = (keys, info) => {
     console.log('Trigger Select', keys, info)
   }
@@ -161,10 +168,10 @@ const SpaceSidebarUI = () => {
     <div className="doc-sider">
       <div className="doc-sider-header">
         <h2 className="space-title">
-          <a href="/space/overview">
+          <a href={`/space/${props.spaceInfo?.space_key}`}>
             <Space>
               <FolderOpenOutlined />
-              xxx开发组
+              {props.spaceInfo?.name}
             </Space>
           </a>
         </h2>

@@ -205,3 +205,11 @@ func (s *Space) GetPublicSpacesPageInfo(limit, page int, keywords *entity.SpaceK
 	}
 	return entity.GetPageInfo(totalNum, limit, page), nil
 }
+
+// GetSpaceByKey 根据空间 Key 获取空间信息
+func (s *Space) GetSpaceByKey(spaceKey string) (space *entity.SpaceEntity, err errors.BizError) {
+	if len(spaceKey) == 0 {
+		return nil, nil
+	}
+	return s.daoSpace.GetSpaceBySpaceKey(spaceKey)
+}
