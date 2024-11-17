@@ -204,14 +204,16 @@ CREATE TABLE `mk_doc` (
   `path` varchar(1000) NOT NULL DEFAULT '0' COMMENT '存储根文档到父文档的 doc_id 值, 格式 0,1,2,...',
   `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序号(越小越靠前)',
   `create_account_id` int(10) NOT NULL DEFAULT '0' COMMENT '创建账号 id',
+  `create_account_name` char(100) NOT NULL DEFAULT '' COMMENT '创建帐号名',
   `edit_account_id` int(10) NOT NULL DEFAULT '0' COMMENT '最后修改账号 id',
+  `edit_account_name` char(100) NOT NULL DEFAULT '' COMMENT '创建帐号名',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态: 0 正常 -1 删除',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`doc_id`),
-  KEY (`parent_id`),
-  KEY (`space_key`),
-  KEY (`space_id`)
+  KEY `parent_id` (`parent_id`),
+  KEY `space_key_status` (`space_key`, `status`),
+  KEY `space_id_status` (`space_id`, `status`)
 ) ENGINE=InnoDB AUTO_INCREMENT = 20105 DEFAULT CHARSET=utf8mb4 COMMENT='文档表';
 
 -- --------------------------------

@@ -69,6 +69,8 @@ func SpaceDocs(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[SpaceInfo] GetDocsBySpaceKey err=%+v", err)
 		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
+	logger.WithContext(ctx).Infof("[SpaceInfo] docs=%+v", docs)
+
 	docTree := serviceDoc.DocsToTree(docs, 0)
 
 	data := map[string]interface{}{

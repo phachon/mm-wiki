@@ -5,6 +5,7 @@ import (
 
 	"github.com/phachon/mm-wiki/app/dao"
 	"github.com/phachon/mm-wiki/app/entity"
+	"github.com/phachon/mm-wiki/global"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 )
 
@@ -62,4 +63,20 @@ func (d *Doc) UpdateDoc(docEntity *entity.DocEntity) errors.BizError {
 // DeleteDoc 删除文档
 func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	return d.daoDoc.DeleteDoc(docId)
+}
+
+// CreateSpaceHomeDoc 创建空间主页文档
+func (d *Doc) CreateSpaceHomeDoc(spaceId int64, spaceKey string, title string) errors.BizError {
+	docEntity := &entity.DocEntity{
+		SpaceId:           spaceId,
+		ParentId:          0,
+		Name:              title,
+		SpaceKey:          spaceKey,
+		Type:              entity.DirEntityType,
+		CreateAccountId:   global.ContextValueLoginAccountID(d.ctx),
+		CreateAccountName: global.ContextValueLoginAccountName(d.ctx),
+		EditAccountId:     global.ContextValueLoginAccountID(d.ctx),
+		EditAccountName:   global.ContextValueLoginAccountName(d.ctx),
+	}
+	return d.daoDoc.Insert(docEntity)
 }

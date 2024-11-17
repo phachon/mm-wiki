@@ -88,6 +88,11 @@ func SpaceSave(ctx *gin.Context) error {
 	}
 
 	// 创建空间主页文档
+	err = service.NewDoc(ctx).CreateSpaceHomeDoc(spaceEntity.SpaceId, spaceKey, name)
+	if err != nil {
+		sysLogErrorf(ctx, "[SpaceAdd] 创建空间主页文档失败: err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
 
 	// adminAccountIds 转换为 int64 数组
 	accountIds := utils.Convert.StringsToInt64(adminAccountIds)

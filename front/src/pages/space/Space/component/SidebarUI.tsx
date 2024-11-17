@@ -11,6 +11,7 @@ import {
   CopyOutlined,
   DeleteOutlined,
   HolderOutlined,
+  PlusSquareOutlined,
   RetweetOutlined
 } from '@ant-design/icons'
 import './space.css'
@@ -167,13 +168,19 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
   return (
     <div className="doc-sider">
       <div className="doc-sider-header">
-        <h2 className="space-title">
+        <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
           <a href={`/space/${props.spaceInfo?.space_key}`}>
             <Space>
               <FolderOpenOutlined />
               {props.spaceInfo?.name}
             </Space>
           </a>
+          <Button
+            type="default"
+            size="small"
+            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
+            icon={<PlusOutlined />}
+          ></Button>
         </h2>
       </div>
       <Divider className="doc-sider-divider" />
