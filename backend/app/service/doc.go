@@ -52,6 +52,13 @@ func (d *Doc) GetDocByDocId(docId int64) (*entity.DocEntity, errors.BizError) {
 
 // CreateDoc 创建文档
 func (d *Doc) CreateDoc(docEntity *entity.DocEntity) errors.BizError {
+	if docEntity == nil {
+		return nil
+	}
+	docEntity.CreateAccountId = global.ContextValueLoginAccountID(d.ctx)
+	docEntity.CreateAccountName = global.ContextValueLoginAccountName(d.ctx)
+	docEntity.EditAccountId = global.ContextValueLoginAccountID(d.ctx)
+	docEntity.EditAccountName = global.ContextValueLoginAccountName(d.ctx)
 	return d.daoDoc.Insert(docEntity)
 }
 

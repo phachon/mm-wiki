@@ -64,6 +64,7 @@ func SpaceDocs(ctx *gin.Context) error {
 
 	// 获取空间下所有文档
 	serviceDoc := service.NewDoc(ctx)
+
 	docs, err := serviceDoc.GetDocsBySpaceKey(spaceKey)
 	if err != nil {
 		logger.WithContext(ctx).Errorf("[SpaceInfo] GetDocsBySpaceKey err=%+v", err)
@@ -71,11 +72,25 @@ func SpaceDocs(ctx *gin.Context) error {
 	}
 	logger.WithContext(ctx).Infof("[SpaceInfo] docs=%+v", docs)
 
-	docTree := serviceDoc.DocsToTree(docs, 0)
-
+	// 获取主页文档，循环 docs 获取 parent_id 为 0 的文档
+	var homeDoc *entity.DocEntity   // 主页文档
+	var dirDocs []*entity.DocEntity // 目录文档
+	for _, doc := range docs {
+		if doc.ParentId == 0 {
+			homeDoc = doc
+			continue
+		}
+		dirDocs = append(dirDocs, doc)
+	}
+	if homeDoc == nil {
+		logger.WithContext(ctx).Errorf("[SpaceInfo] 空间主页数据异常 spaceKey=%s", spaceKey)
+		return controller.RespJsonError(ctx, int32(errors.BusinessRecordNotExistError), "空间主页文档异常")
+	}
+	docTree := serviceDoc.DocsToTree(dirDocs, homeDoc.DocId)
 	data := map[string]interface{}{
-		"docs": docTree,
-		"info": space,
+		"home_doc":   homeDoc,
+		"dir_tree":   docTree,
+		"space_info": space,
 	}
 
 	return controller.RespJsonSuccess(ctx, data)

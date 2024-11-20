@@ -123,6 +123,7 @@ export type SpaceAdminListResp = {
 
 // SpaceDocsResp 空间文档返回结构
 export type SpaceDocsResp = {
-  docs: DocTreeEntity[]
-  info: SpaceInfoType
+  home_doc: DocTreeEntity // 主页文档
+  dir_tree: DocTreeEntity[] // 目录树
+  space_info: SpaceInfoType // 空间信息
 }

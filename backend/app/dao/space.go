@@ -60,6 +60,22 @@ func (r *Space) GetSpaceByName(spaceName string) (space *entity.SpaceEntity, err
 	return space, nil
 }
 
+// CheckSpaceKeyExists 检查空间key是否存在
+func (r *Space) CheckSpaceKeyExists(spaceKey string) (bool, errors.BizError) {
+	if spaceKey == "" {
+		return false, nil
+	}
+	var count int64
+	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameSpace).
+		Where(map[string]interface{}{
+			"space_key": spaceKey,
+		}).Count(&count)
+	if db.Error != nil {
+		return false, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return count > 0, nil
+}
+
 // GetSpaceBySpaceKey 根据空间key查找正常的空间
 func (r *Space) GetSpaceBySpaceKey(spaceKey string) (space *entity.SpaceEntity, err errors.BizError) {
 	space = &entity.SpaceEntity{}

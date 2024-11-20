@@ -42,11 +42,11 @@ func (s *Space) Create(spaceEntity *entity.SpaceEntity) errors.BizError {
 		return errors.Errorf(errors.BusinessRecordExistError, "空间名 %s 已经存在", spaceEntity.Name)
 	}
 	// 判断空间 key 是否存在
-	space, err = s.daoSpace.GetSpaceBySpaceKey(spaceEntity.SpaceKey)
+	isExists, err := s.daoSpace.CheckSpaceKeyExists(spaceEntity.SpaceKey)
 	if err != nil {
 		return err
 	}
-	if space != nil {
+	if isExists {
 		return errors.Errorf(errors.BusinessRecordExistError, "空间 key %s 已经存在", spaceEntity.SpaceKey)
 	}
 	// 插入一条记录

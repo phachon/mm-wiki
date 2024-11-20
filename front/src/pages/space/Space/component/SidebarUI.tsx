@@ -16,7 +16,7 @@ import {
 } from '@ant-design/icons'
 import './space.css'
 import { SpaceInfoType } from '@/types/spaceType'
-import { DocTreeEntity } from '@/types/docType'
+import { DocTreeEntity, DocType } from '@/types/docType'
 
 const { DirectoryTree } = Tree
 
@@ -73,76 +73,11 @@ const TreeCustomTitle = (node: TreeDataNode) => {
   )
 }
 
-const treeData: TreeDataNode[] = [
-  {
-    title: '新人指南',
-    key: '0-0-0',
-    children: [
-      {
-        title: '入职指引',
-        key: '0-0-0-0',
-        children: [
-          {
-            title: '入职指引1',
-            key: '0-0-0-0-0',
-            isLeaf: true
-          },
-          {
-            title: '入职指引2',
-            key: '0-0-0-0-1',
-            isLeaf: true
-          },
-          {
-            title: '入职指引3',
-            key: '0-0-0-0-2',
-            isLeaf: true
-          }
-        ]
-      },
-      {
-        title: '工作流程',
-        key: '0-0-0-1',
-        isLeaf: true
-      },
-      {
-        title: '研发环境',
-        key: '0-0-0-2',
-        isLeaf: true
-      }
-    ]
-  },
-  {
-    title: '项目信息',
-    key: '0-0-1',
-    children: [
-      {
-        title: '专项项目1',
-        key: '0-0-1-0',
-        isLeaf: true
-      }
-    ]
-  },
-  {
-    title: '团队规划',
-    key: '0-0-2',
-    children: [
-      {
-        title: '2021团队年度规划',
-        key: '0-0-2-0',
-        isLeaf: true
-      },
-      {
-        title: '2022团队年度规划',
-        key: '0-0-2-1',
-        isLeaf: true
-      }
-    ]
-  }
-]
-
 type SpaceSidebarUIProps = {
   spaceInfo?: SpaceInfoType
-  docs?: DocTreeEntity[]
+  dirTree?: DocTreeEntity[]
+  homeDoc?: DocTreeEntity
+  onClickAddDoc?: (docInfo?: DocTreeEntity) => void
 }
 
 const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
@@ -165,6 +100,18 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
     return null
   }
 
+  const convertTreeData = (treeData?: DocTreeEntity[]): TreeDataNode[] => {
+    if (!treeData) {
+      return []
+    }
+    return treeData.map((docItem: DocTreeEntity) => ({
+      title: docItem.name,
+      key: docItem.doc_id.toString(),
+      isLeaf: docItem.type === DocType.DOC,
+      children: docItem.children ? convertTreeData(docItem.children) : undefined
+    }))
+  }
+
   return (
     <div className="doc-sider">
       <div className="doc-sider-header">
@@ -180,6 +127,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
             size="small"
             style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
             icon={<PlusOutlined />}
+            onClick={() => props.onClickAddDoc && props.onClickAddDoc(props.homeDoc)}
           ></Button>
         </h2>
       </div>
@@ -200,7 +148,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
         defaultExpandAll
         onSelect={onSelect}
         onExpand={onExpand}
-        treeData={treeData}
+        treeData={convertTreeData(props.dirTree)}
         titleRender={TreeCustomTitle}
       />
     </div>

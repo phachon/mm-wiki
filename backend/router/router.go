@@ -17,6 +17,7 @@ import (
 const (
 	routerGroupNameSystem = "/system"
 	routerGroupNameSpace  = "/space"
+	routerGroupNameDoc    = "/doc"
 )
 
 var (
@@ -85,6 +86,8 @@ var (
 		// 获取空间列表
 		{group: routerGroupNameSpace, relativePath: "/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
 		{group: routerGroupNameSpace, relativePath: "/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
+		// 文档管理
+		{group: routerGroupNameDoc, relativePath: "/save", method: http.MethodPost, controllerHandle: spaceController.DocSave},
 	}
 )
 

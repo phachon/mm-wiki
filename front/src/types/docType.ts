@@ -1,14 +1,51 @@
+// DocType 文档类型
+export enum DocType {
+  DOC = 1,
+  FOLDER = 2
+}
+
+// 文档类型定义
+export const DocTypes = [
+  {
+    type: DocType.DOC,
+    name: '文档',
+    icon: 'FileTextOutlined'
+  },
+  {
+    type: DocType.FOLDER,
+    name: '文件夹',
+    icon: 'FolderOutlined'
+  }
+]
 
 // DocTreeEntity 文档树形结构
 export type DocTreeEntity = {
-  id: number // 文档ID
+  doc_id: number // 文档ID
+  parent_id: number // 父级ID
   space_id: number // 空间ID
   space_key: string // 空间Key
-  parent_id: number // 父级ID
-  title: string // 标题
-  sort: number // 排序
-  type: number // 类型 1:文件夹 2:文档
+  name: string // 文档名称
+  type: DocType // 文档类型
+  path: string // 路径
+  sequence: number // 排序
+  create_account_id: number // 创建账号ID
+  create_account_name: string // 创建账号名
+  edit_account_id: number // 最后修改账号ID
+  edit_account_name: string // 最后修改账号名
   create_time: string // 创建时间
   update_time: string // 修改时间
   children: DocTreeEntity[] // 子文档
+}
+
+// DocSaveReq 文档保存请求
+export type DocSaveReq = {
+  space_key: string // 空间Key
+  parent_id: number // 父级ID
+  name: string // 文档名称
+  doc_type: DocType // 文档类型
+}
+
+// DocSaveResp 文档保存响应
+export type DocSaveResp = {
+  doc_id: number // 文档ID
 }
