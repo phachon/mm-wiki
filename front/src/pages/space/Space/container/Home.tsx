@@ -2,10 +2,10 @@ import LayoutHeader from '@/components/Layout/Header'
 import LayoutSider from '@/components/Layout/Sider'
 import { LayoutHeaderSpaceKey } from '@/components/Layout/types'
 import { useGlobalStore } from '@/stores'
-import { Layout, message, Modal } from 'antd'
+import { Layout, message, Modal, TreeDataNode } from 'antd'
 import React, { useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
-import SpaceSidebarUI from '../component/SidebarUI'
+import SpaceSidebarUI, { ActionType } from '../component/SidebarUI'
 import { DocSaveResp, DocTreeEntity } from '@/types/docType'
 import { SpaceDocsResp, SpaceInfoType } from '@/types/spaceType'
 import { SpaceService } from '@/services/Space'
@@ -19,7 +19,10 @@ const SpaceHome: React.FC = () => {
   const [homeDoc, setHomeDoc] = useState<DocTreeEntity>()
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfoType>()
   const [addDocModal, setAddDocModal] = useState<boolean>(false)
-  const [parentDoc, setParentDoc] = useState<DocTreeEntity>()
+  const [parentDoc, setParentDoc] = useState<{
+    parent_id: number
+    parent_name: string
+  }>()
 
   React.useEffect(() => {
     if (key) {
@@ -43,12 +46,22 @@ const SpaceHome: React.FC = () => {
       })
   }
 
-  const onClickAddDoc = (docInfo?: DocTreeEntity) => {
-    if (!docInfo) {
-      message.error('数据异常，主页文档不存在！')
+  const onClickActionDoc = (action: string, node: TreeDataNode) => {
+    console.log('action:', action, 'node:', node)
+    if (action === ActionType.ADD) {
+      onClickAddDoc(node)
+    }
+  }
+
+  const onClickAddDoc = (node?: TreeDataNode) => {
+    if (!node) {
+      message.error('文档数据异常，请刷新页面重试！')
       return
     }
-    setParentDoc(docInfo)
+    setParentDoc({
+      parent_id: Number(node.key),
+      parent_name: node.title as string
+    })
     setAddDocModal(true)
   }
 
@@ -81,7 +94,7 @@ const SpaceHome: React.FC = () => {
               spaceInfo={spaceInfo}
               dirTree={dirTree}
               homeDoc={homeDoc}
-              onClickAddDoc={onClickAddDoc}
+              onClickActionDoc={onClickActionDoc}
             />
           }
         />

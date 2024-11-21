@@ -6,7 +6,10 @@ import { EditLayoutForm } from '@/config/layout'
 
 type AddDocUIProps = {
   onSaveSubmit: (values: any) => void
-  parentDoc?: DocTreeEntity
+  parentDoc?: {
+    parent_id: number
+    parent_name: string
+  }
 }
 
 export const AddDocUI = (props: AddDocUIProps) => {
@@ -15,8 +18,8 @@ export const AddDocUI = (props: AddDocUIProps) => {
 
   useEffect(() => {
     if (props.parentDoc) {
-      form.setFieldValue('parent_name', props.parentDoc.name)
-      form.setFieldValue('parent_id', props.parentDoc.doc_id)
+      form.setFieldValue('parent_name', props.parentDoc.parent_name)
+      form.setFieldValue('parent_id', props.parentDoc.parent_id)
     }
   }, [props.parentDoc])
 

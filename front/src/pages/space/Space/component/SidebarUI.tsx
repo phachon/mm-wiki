@@ -20,67 +20,79 @@ import { DocTreeEntity, DocType } from '@/types/docType'
 
 const { DirectoryTree } = Tree
 
-const handleMenuClick: MenuProps['onClick'] = (e) => {
-  console.log('click', e)
+export const ActionType = {
+  ADD: 'add',
+  EDIT: 'edit',
+  COPY: 'copy',
+  MOVE: 'move',
+  DELETE: 'delete'
 }
 
 const items: MenuProps['items'] = [
   {
     label: '添加',
-    key: '1',
+    key: ActionType.ADD,
     icon: <PlusOutlined />
   },
   {
     label: '编辑',
-    key: '2',
+    key: ActionType.EDIT,
     icon: <FormOutlined />
   },
   {
     label: '复制',
-    key: '3',
+    key: ActionType.COPY,
     icon: <CopyOutlined />
   },
   {
     label: '移动',
-    key: '4',
+    key: ActionType.MOVE,
     icon: <RetweetOutlined />
   },
   {
     label: '删除',
-    key: '5',
+    key: ActionType.DELETE,
     icon: <DeleteOutlined />,
     danger: true
   }
 ]
 
-const menuProps = {
-  items,
-  onClick: handleMenuClick
-}
-
-const TreeCustomTitle = (node: TreeDataNode) => {
-  return (
-    <div className="custom-title-wrapper">
-      <div className="custom-title">
-        <span className="title-text">{node.title as string}</span>
-      </div>
-      <div className="custom-icon">
-        <Dropdown menu={menuProps} trigger={['click']}>
-          <HolderOutlined style={{ fontSize: 16 }} />
-        </Dropdown>
-      </div>
-    </div>
-  )
-}
-
 type SpaceSidebarUIProps = {
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
-  onClickAddDoc?: (docInfo?: DocTreeEntity) => void
+  onClickActionDoc?: (action: string, node: TreeDataNode) => void
 }
 
 const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
+  /**
+   * 自定义树节点标题
+   * @param node 树节点
+   * @returns 自定义标题
+   */
+  const treeCustomTitle = (node: TreeDataNode) => {
+    return (
+      <div className="custom-title-wrapper">
+        <div className="custom-title">
+          <span className="title-text">{node.title as string}</span>
+        </div>
+        <div className="custom-icon">
+          <Dropdown
+            menu={{
+              items,
+              onClick: (e) => {
+                props.onClickActionDoc && props.onClickActionDoc(e.key, node)
+              }
+            }}
+            trigger={['click']}
+          >
+            <HolderOutlined style={{ fontSize: 16 }} />
+          </Dropdown>
+        </div>
+      </div>
+    )
+  }
+
   const onSelect: GetProps<typeof Tree.DirectoryTree>['onSelect'] = (keys, info) => {
     console.log('Trigger Select', keys, info)
   }
@@ -127,7 +139,13 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
             size="small"
             style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
             icon={<PlusOutlined />}
-            onClick={() => props.onClickAddDoc && props.onClickAddDoc(props.homeDoc)}
+            onClick={() =>
+              props.onClickActionDoc &&
+              props.onClickActionDoc(ActionType.ADD, {
+                key: props.homeDoc?.doc_id.toString() || '',
+                title: props.homeDoc?.name || ''
+              })
+            }
           ></Button>
         </h2>
       </div>
@@ -149,7 +167,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
         onSelect={onSelect}
         onExpand={onExpand}
         treeData={convertTreeData(props.dirTree)}
-        titleRender={TreeCustomTitle}
+        titleRender={treeCustomTitle}
       />
     </div>
   )
