@@ -1,8 +1,7 @@
 import { Button, Form, Input, Modal, Radio, Select } from 'antd'
 import { DocTypeRadioOptions } from './ToolsUI'
-import { DocTreeEntity, DocType } from '@/types/docType'
+import { DocType } from '@/types/docType'
 import { useEffect } from 'react'
-import { EditLayoutForm } from '@/config/layout'
 
 type AddDocUIProps = {
   onSaveSubmit: (values: any) => void

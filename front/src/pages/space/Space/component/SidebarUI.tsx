@@ -11,7 +11,6 @@ import {
   CopyOutlined,
   DeleteOutlined,
   HolderOutlined,
-  PlusSquareOutlined,
   RetweetOutlined
 } from '@ant-design/icons'
 import './space.css'

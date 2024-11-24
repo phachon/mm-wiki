@@ -1,3 +1,11 @@
+.space-content {
+  background: #fff;
+  height: 100%;
+  overflow: auto;
+  flex-flow: 1;
+  border: none;
+}
+
 .space-search {
   margin-top: 20px;
 }
@@ -265,7 +273,6 @@
 .doc-tree .custom-title .anticon-file-text {
   font-size: 14px;
 }
-
 /* 添加标题样式 */
 .doc-sider-header {
   padding: 16px 12px;
@@ -334,4 +341,71 @@
 
 .space-title a:active {
   color: #096dd9;  /* 点击时的深蓝色 */
+}
+
+
+/* doc view */
+
+.doc-view-page-title {
+  margin: 0px 0 8px 0;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.doc-view-page-path {
+  margin: 8px 0 8px 0;
+  font-size: 14px;
+}
+
+.doc-view-page-path a {
+  color: inherit;
+}
+
+.doc-view-page-path a:hover {
+  color: #1890ff;
+}
+
+.doc-view-page-time {
+  margin: 8px 0 8px 0;
+}
+
+.doc-view-page-time a {
+  color: inherit;
+}
+
+.doc-view-page-time a:hover {
+  color: #1890ff;
+}
+
+.doc-view-divider {
+  margin: 8px 0 16px 0;
+  border-top: 1px solid #d1d1d1;
+}
+
+.doc-view-body .cherry {
+  box-shadow: none;
+}
+
+/* 覆盖 cherry-markdown 的默认样式 */
+.cherry-markdown {
+  border: none !important; /* 移除边框 */
+  box-shadow: none !important; /* 移除阴影 */
+  padding: 0 !important; /* 移除内边距 */
+  background: none !important; /* 移除背景颜色 */
+}
+
+.cherry-markdown .cherry-markdown-preview {
+  padding: 0 !important; /* 移除预览区域的内边距 */
+  background-color: inherit !important; /* 设置背景颜色与父元素一致 */
+}
+
+.cherry-markdown .cherry-markdown-preview .cherry-markdown-preview-only {
+  border: none !important; /* 移除预览模式下的边框 */
+  box-shadow: none !important; /* 移除预览模式下的阴影 */
+  background-color: inherit !important; /* 设置背景颜色与父元素一致 */
+}
+
+.cherry-previewer {
+  border-left: none !important;
+  padding: 0 !important;
 }

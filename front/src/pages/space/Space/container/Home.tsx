@@ -11,6 +11,7 @@ import { SpaceDocsResp, SpaceInfoType } from '@/types/spaceType'
 import { SpaceService } from '@/services/Space'
 import { AddDocUI } from '../component/AddDocUI'
 import { DocService } from '@/services/Doc'
+import SpaceDocViewUI from '../component/DocViewUI'
 
 const SpaceHome: React.FC = () => {
   const { getAccountInfo } = useGlobalStore()
@@ -23,8 +24,10 @@ const SpaceHome: React.FC = () => {
     parent_id: number
     parent_name: string
   }>()
+  const [demoMk, setDemoMk] = useState('')
 
   React.useEffect(() => {
+    fetchData()
     if (key) {
       getSpaceDocs()
     }
@@ -32,6 +35,15 @@ const SpaceHome: React.FC = () => {
 
   if (!key) {
     return <div>空间 Key 不能为空</div>
+  }
+
+  const fetchData = async () => {
+    fetch('/demo.md')
+      .then((response) => response.text())
+      .then((value) => {
+        console.log('value:', value)
+        setDemoMk(value)
+      })
   }
 
   const getSpaceDocs = () => {
@@ -98,8 +110,8 @@ const SpaceHome: React.FC = () => {
             />
           }
         />
-        <Layout.Content className="home-content" style={{ padding: 16 }}>
-          <Outlet />
+        <Layout.Content className="space-content" style={{ padding: '20px 16px 0 24px' }}>
+          <SpaceDocViewUI content={demoMk} />
         </Layout.Content>
       </Layout>
       <Modal

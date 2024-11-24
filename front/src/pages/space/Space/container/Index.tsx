@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Layout, Menu, Spin } from 'antd'
+import { Layout, Menu } from 'antd'
 import LayoutHeader from '@/components/Layout/Header'
 import { useGlobalStore } from '@/stores'
-import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { LayoutHeaderSpaceKey } from '@/components/Layout/types'
 import LayoutSider from '@/components/Layout/Sider'
-import {
-  RightOutlined,
-  LeftOutlined,
-  BookOutlined,
-  HomeOutlined,
-  FireOutlined,
-  FolderOutlined,
-  DashboardOutlined,
-  AppstoreAddOutlined,
-  ProductOutlined,
-  FolderOpenOutlined,
-  StarOutlined
-} from '@ant-design/icons'
+import { FireOutlined, DashboardOutlined } from '@ant-design/icons'
 
 const { Content } = Layout
 
@@ -49,9 +37,9 @@ const SpaceIndex: React.FC = () => {
       />
       <Layout>
         <LayoutSider content={<SpaceIndexMenus />} />
-        <Layout.Content className="home-content" style={{ padding: 16 }}>
+        <Content className="space-content" style={{ padding: 16 }}>
           <Outlet />
-        </Layout.Content>
+        </Content>
       </Layout>
     </Layout>
   )
