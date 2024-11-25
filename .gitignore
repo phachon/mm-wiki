@@ -19,3 +19,5 @@ install.lock
 .idea/
 
 node_modules/
+
+front/public/demo.md

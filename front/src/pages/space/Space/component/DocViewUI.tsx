@@ -30,6 +30,9 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
           defaultModel: 'previewOnly', // 仅预览模式
           keepDocumentScrollAfterInit: true
         },
+        previewer: {
+          enablePreviewerBubble: false
+        },
         toolbars: {
           showToolbar: false,
           toolbar: [],

@@ -1,6 +1,6 @@
 # Cherry Markdown 
 
-[[toc]]
+<!-- [[toc]] -->
 
 # 基本语法
 

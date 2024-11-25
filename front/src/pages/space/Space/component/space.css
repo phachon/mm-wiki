@@ -386,6 +386,11 @@
   box-shadow: none;
 }
 
+.doc-view-body .cherry-markdown h1, .cherry-markdown h2, .cherry-markdown h3 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
 /* 覆盖 cherry-markdown 的默认样式 */
 .cherry-markdown {
   border: none !important; /* 移除边框 */
