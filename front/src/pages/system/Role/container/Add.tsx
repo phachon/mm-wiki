@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
-import { RoleService } from '@/services/Role'
+import { SystemRoleService } from '@/services/SystemRole'
 import RoleFormUI from '../component/FormUI'
 import { PrivilegeListItemType } from '@/types/privilegeType'
 import { RoleAddResp } from '@/types/roleType'
@@ -15,7 +15,7 @@ const RoleAdd: React.FC = () => {
   }, [])
 
   const getAddRoleInfo = () => {
-    RoleService.getAddRoleInfo().then((addRoleInfo: RoleAddResp) => {
+    SystemRoleService.getAddRoleInfo().then((addRoleInfo: RoleAddResp) => {
       setAllPrivileges(addRoleInfo.all_privilege)
     })
   }
@@ -25,7 +25,7 @@ const RoleAdd: React.FC = () => {
    * @param values
    */
   const onSaveSubmit = (values: any) => {
-    RoleService.saveRole(values).then(() => {
+    SystemRoleService.saveRole(values).then(() => {
       message.success('保存成功', 2, () => {
         window.location.href = '/system/role/list'
       })

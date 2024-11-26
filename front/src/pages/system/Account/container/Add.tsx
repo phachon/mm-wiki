@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { AccountService } from '@/services/Account'
+import { SystemAccountService } from '@/services/SystemAccount'
 import { Card, message } from 'antd'
 import AccountFormUI from '../component/FormUI'
 import { AccountAddResp, AccountInfoType } from '@/types/accountType'
@@ -20,7 +20,7 @@ const AccountAdd: React.FC = () => {
    * 获取添加账号信息
    */
   const getAddAcountInfo = () => {
-    AccountService.getAddAccountInfo()
+    SystemAccountService.getAddAccountInfo()
       .then((accountAddResp: AccountAddResp) => {
         setRoleList(accountAddResp?.roles)
         setDepartmentList(accountAddResp?.departments)
@@ -35,7 +35,7 @@ const AccountAdd: React.FC = () => {
    * @param accountInfo
    */
   const onSaveSubmit = (accountInfo: AccountInfoType) => {
-    AccountService.saveAccount(accountInfo)
+    SystemAccountService.saveAccount(accountInfo)
       .then(() => {
         message.success('保存成功', 2, () => {
           window.location.href = '/system/account/list'

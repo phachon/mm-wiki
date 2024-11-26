@@ -3,7 +3,7 @@ import { IAccount } from './account'
 import { PrivilegeListItemType, PrivilegeTypeNav } from '@/types/privilegeType'
 import { INavItem, IMenuItem, IFrameBreadcrumbItem } from '@/types/frame'
 import { LoginTokenStore, removeLocalAccountInfo } from './local'
-import { NoticeService } from '@/services/Notice'
+import { SystemNoticeService } from '@/services/SystemNotice'
 import { NoticeInfoType } from '@/types/noticeType'
 import { MenuProps, message } from 'antd'
 
@@ -70,7 +70,7 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
   initProfileInfo: async (pathName?: string) => {
     console.log('initProfileInfo start', pathName)
     // 获取个人信息+个人权限信息
-    // let profileInfo: ProfileInfoType = await ProfileService.getProfileInfo()
+    // let profileInfo: ProfileInfoType = await SystemSystemProfileService.getProfileInfo()
     // get().setAccountInfo(profileInfo.account_info)
     // 转换后端的权限数据
     // let iPrivilegeData = getIPrivilegeData(profileInfo.privilege_list)
@@ -179,7 +179,7 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
   },
 
   onNoticeListClick: (pageSize: number, pageNum: number) => {
-    NoticeService.getPublishNoticeList(pageSize, pageNum)
+    SystemNoticeService.getPublishNoticeList(pageSize, pageNum)
       .then((resp) => {
         set({
           noticeList: resp.list,

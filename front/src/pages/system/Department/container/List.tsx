@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DepartmentTreeUI from '../component/TreeUI'
 import { message, Modal } from 'antd'
 import DepartmentFormUI from '../component/FormUI'
-import { DepartmentService } from '@/services/Department'
+import { SystemDepartmentService } from '@/services/SystemDepartment'
 import {
   DepartmentEditResp,
   DepartmentInfoType,
@@ -22,7 +22,7 @@ const DepartmentList: React.FC = () => {
 
   const getDepartmentList = () => {
     // 获取部门列表的逻辑
-    DepartmentService.departmentList()
+    SystemDepartmentService.departmentList()
       .then((res: DepartmentListResp) => {
         setDepartments(res.list)
       })
@@ -45,7 +45,7 @@ const DepartmentList: React.FC = () => {
   }
 
   const saveDepartment = (values: DepartmentInfoType) => {
-    DepartmentService.saveDepartment(values)
+    SystemDepartmentService.saveDepartment(values)
       .then(() => {
         message.success('保存成功', 2, () => {
           getDepartmentList()
@@ -58,7 +58,7 @@ const DepartmentList: React.FC = () => {
   }
 
   const modifyDepartment = (values: DepartmentInfoType) => {
-    DepartmentService.modifyDepartment(values)
+    SystemDepartmentService.modifyDepartment(values)
       .then(() => {
         message.success('保存成功', 2, () => {
           getDepartmentList()
@@ -86,7 +86,7 @@ const DepartmentList: React.FC = () => {
   }
 
   const onEditClick = (departmentId: string) => {
-    DepartmentService.getEditDepartmentInfo(BigInt(departmentId))
+    SystemDepartmentService.getEditDepartmentInfo(BigInt(departmentId))
       .then((res: DepartmentEditResp) => {
         setModalTitle('编辑部门')
         setDepartment(res.department)
@@ -98,7 +98,7 @@ const DepartmentList: React.FC = () => {
   }
 
   const onDeleteClick = (departmentId: string) => {
-    DepartmentService.deleteDepartment(departmentId)
+    SystemDepartmentService.deleteDepartment(departmentId)
       .then(() => {
         message.success('删除成功', 2, () => {
           getDepartmentList()

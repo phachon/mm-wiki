@@ -8,7 +8,7 @@ import {
 } from '../types/spaceType'
 import Base from './Base'
 
-const spaceUrl = {
+const systemSpaceUrl = {
   // 系统模块-空间接口
   spaceAdd: '/system/space/add',
   spaceSave: '/system/space/save',
@@ -18,16 +18,13 @@ const spaceUrl = {
   spaceDelete: '/system/space/delete',
   adminList: '/system/space/admin_list',
   adminRemove: '/system/space/admin_remove',
-  adminAdd: '/system/space/admin_add',
-  // 空间模块-空间相关接口
-  allSpaces: '/space/all',
-  spaceDocs: '/space/docs'
+  adminAdd: '/system/space/admin_add'
 }
 
 /**
- * Space 空间服务
+ * SystemSpace 系统 - 空间服务
  */
-class Space extends Base {
+class SystemSpace extends Base {
   public constructor() {
     super()
   }
@@ -36,7 +33,7 @@ class Space extends Base {
    * getAddSpaceInfo 获取添加空间信息
    */
   public getAddSpaceInfo(): Promise<SpaceAddResp> {
-    const addSpaceUrl = this.getProxyUrl(spaceUrl.spaceAdd)
+    const addSpaceUrl = this.getProxyUrl(systemSpaceUrl.spaceAdd)
     return httpRequest.get<SpaceAddResp>(addSpaceUrl, {})
   }
 
@@ -45,7 +42,7 @@ class Space extends Base {
    * @param spaceInfo 添加空间信息
    */
   public saveSpace(spaceInfo: {}): Promise<any> {
-    const saveSpaceUrl = this.getProxyUrl(spaceUrl.spaceSave)
+    const saveSpaceUrl = this.getProxyUrl(systemSpaceUrl.spaceSave)
     return httpRequest.post<any>(saveSpaceUrl, {}, spaceInfo)
   }
 
@@ -54,7 +51,7 @@ class Space extends Base {
    * @param spaceId 空间id
    */
   public getEditSpaceInfo(spaceId: number): Promise<SpaceEditResp> {
-    const spaceEditUrl = this.getProxyUrl(spaceUrl.spaceEdit)
+    const spaceEditUrl = this.getProxyUrl(systemSpaceUrl.spaceEdit)
     return httpRequest.get<SpaceEditResp>(spaceEditUrl, {
       space_id: spaceId
     })
@@ -66,7 +63,7 @@ class Space extends Base {
    * @returns
    */
   public modifySpace(editSpaceInfo: {}): Promise<any> {
-    const spaceModifyUrl = this.getProxyUrl(spaceUrl.spaceModify)
+    const spaceModifyUrl = this.getProxyUrl(systemSpaceUrl.spaceModify)
     return httpRequest.post<any>(spaceModifyUrl, {}, editSpaceInfo)
   }
 
@@ -77,37 +74,11 @@ class Space extends Base {
    * @param keywords 搜索值
    */
   public getSpaceList(pageSize?: number, pageNum?: number, keywords?: {}): Promise<SpaceListResp> {
-    const spaceListUrl = this.getProxyUrl(spaceUrl.spaceList)
+    const spaceListUrl = this.getProxyUrl(systemSpaceUrl.spaceList)
     return httpRequest.get<SpaceListResp>(spaceListUrl, {
       page_size: pageSize,
       page_num: pageNum,
       keywords: JSON.stringify(keywords)
-    })
-  }
-
-  /**
-   * getSpaces 获取空间列表
-   * @param pageSize 每一页条数
-   * @param pageNum 页数
-   * @param keywords 搜索值
-   */
-  public getSpaces(pageSize?: number, pageNum?: number, keywords?: {}): Promise<SpaceListResp> {
-    const spacesUrl = this.getProxyUrl(spaceUrl.allSpaces)
-    return httpRequest.get<SpaceListResp>(spacesUrl, {
-      page_size: pageSize,
-      page_num: pageNum,
-      keywords: keywords ? JSON.stringify(keywords) : ''
-    })
-  }
-
-  /**
-   * getSpaceDocs 获取空间下文档
-   * @param spaceKey 空间Key
-   */
-  public getSpaceDocs(spaceKey: string): Promise<SpaceDocsResp> {
-    const spaceDocsUrl = this.getProxyUrl(spaceUrl.spaceDocs)
-    return httpRequest.get<SpaceDocsResp>(spaceDocsUrl, {
-      space_key: spaceKey
     })
   }
 
@@ -118,7 +89,7 @@ class Space extends Base {
    * @param spaceId 空间ID
    */
   public getAdminList(spaceId?: number): Promise<SpaceAdminListResp> {
-    const spaceAccountListUrl = this.getProxyUrl(spaceUrl.adminList)
+    const spaceAccountListUrl = this.getProxyUrl(systemSpaceUrl.adminList)
     return httpRequest.get<SpaceAdminListResp>(spaceAccountListUrl, {
       space_id: spaceId
     })
@@ -129,7 +100,7 @@ class Space extends Base {
    * @param spaceId 空间id
    */
   public deleteSpace(spaceId: number): Promise<any> {
-    const deleteSpaceUrl = this.getProxyUrl(spaceUrl.spaceDelete)
+    const deleteSpaceUrl = this.getProxyUrl(systemSpaceUrl.spaceDelete)
     return httpRequest.post<any>(deleteSpaceUrl, {}, { space_id: spaceId })
   }
 
@@ -138,7 +109,7 @@ class Space extends Base {
    * @param spaceId 空间ID
    */
   public removeSpaceAdmin(spaceId?: number, accountId?: bigint): Promise<any> {
-    const adminRemoveUrl = this.getProxyUrl(spaceUrl.adminRemove)
+    const adminRemoveUrl = this.getProxyUrl(systemSpaceUrl.adminRemove)
     const removeBody = {
       space_id: spaceId,
       account_id: accountId
@@ -148,31 +119,13 @@ class Space extends Base {
 
   // addSpaceAdmin 添加空间管理员
   public addSpaceAdmin(spaceId?: number, accountIds?: bigint[]): Promise<any> {
-    const adminAddUrl = this.getProxyUrl(spaceUrl.adminAdd)
+    const adminAddUrl = this.getProxyUrl(systemSpaceUrl.adminAdd)
     const adminAddBody = {
       space_id: spaceId,
       admin_account_ids: accountIds
     }
     return httpRequest.post<any>(adminAddUrl, {}, adminAddBody)
   }
-
-  /**
-   * collectSpace 收藏空间
-   * @param spaceKey 空间标识
-   */
-  public collectSpace(spaceKey: string): Promise<any> {
-    const collectUrl = this.getProxyUrl('/space/collect')
-    return httpRequest.post<any>(collectUrl, {}, { space_key: spaceKey })
-  }
-
-  /**
-   * uncollectSpace 取消收藏空间
-   * @param spaceKey 空间标识
-   */
-  public uncollectSpace(spaceKey: string): Promise<any> {
-    const uncollectUrl = this.getProxyUrl('/space/uncollect')
-    return httpRequest.post<any>(uncollectUrl, {}, { space_key: spaceKey })
-  }
 }
 
-export const SpaceService = new Space()
+export const SystemSpaceService = new SystemSpace()

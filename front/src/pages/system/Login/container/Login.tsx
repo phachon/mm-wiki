@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { HOME_ROOT_PATH } from '@/router/type'
 import { LoginResp } from '@/types/loginType'
 import { useGlobalStore } from '@/stores/index'
-import { LoginService } from '@/services/Login'
+import { SystemLoginService } from '@/services/SystemLogin'
 import LoginHeaderUI from '../component/Header'
 import LoginContentUI from '../component/Content'
 import LoginFooterUI from '../component/Footer'
@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     account_name: string
     password: string
   }): Promise<boolean | void> => {
-    LoginService.systemLogin({
+    SystemLoginService.systemLogin({
       account_name: values.account_name,
       password: values.password,
       verify_code: 'mock'

@@ -7,7 +7,7 @@ import {
 import httpRequest from './http'
 import Base from './Base'
 
-const accountUrl = {
+const systemAccountUrl = {
   add: '/system/account/add',
   save: '/system/account/save',
   edit: '/system/account/edit',
@@ -18,9 +18,9 @@ const accountUrl = {
 }
 
 /**
- * Account 账号服务
+ * SystemAccount 系统 - 账号服务
  */
-class Account extends Base {
+class SystemAccount extends Base {
   public constructor() {
     super()
   }
@@ -30,7 +30,7 @@ class Account extends Base {
    * @returns
    */
   public getAddAccountInfo(): Promise<AccountAddResp> {
-    const accountAddUrl = this.getProxyUrl(accountUrl.add)
+    const accountAddUrl = this.getProxyUrl(systemAccountUrl.add)
     return httpRequest.get<AccountAddResp>(accountAddUrl)
   }
 
@@ -38,7 +38,7 @@ class Account extends Base {
    * saveAccount 添加保存账号
    */
   public saveAccount(accountInfo: {}): Promise<any> {
-    const accountSaveUrl = this.getProxyUrl(accountUrl.save)
+    const accountSaveUrl = this.getProxyUrl(systemAccountUrl.save)
     return httpRequest.post<any>(accountSaveUrl, {}, accountInfo)
   }
 
@@ -46,7 +46,7 @@ class Account extends Base {
    * getEditAccountInfo 获取编辑账号信息
    */
   public getEditAccountInfo(account_id: bigint): Promise<AccountEditResp> {
-    const accountEditUrl = this.getProxyUrl(accountUrl.edit)
+    const accountEditUrl = this.getProxyUrl(systemAccountUrl.edit)
     return httpRequest.get<AccountEditResp>(accountEditUrl, {
       account_id: account_id
     })
@@ -56,7 +56,7 @@ class Account extends Base {
    * modifyAccount 修改保存账号
    */
   public modifyAccount(accountEditInfo: {}): Promise<any> {
-    const accountModifyUrl = this.getProxyUrl(accountUrl.modify)
+    const accountModifyUrl = this.getProxyUrl(systemAccountUrl.modify)
     return httpRequest.post<any>(accountModifyUrl, {}, accountEditInfo)
   }
 
@@ -68,7 +68,7 @@ class Account extends Base {
     pageNum: number | undefined,
     keywords: {}
   ): Promise<any> {
-    const accountListUrl = this.getProxyUrl(accountUrl.list)
+    const accountListUrl = this.getProxyUrl(systemAccountUrl.list)
     return httpRequest.get<AccountListResp>(accountListUrl, {
       page_size: pageSize,
       page_num: pageNum,
@@ -80,7 +80,7 @@ class Account extends Base {
    * updateAccountStatus 修改账号状态
    */
   public updateAccountStatus(accountId: bigint, status: number): Promise<any> {
-    let accountUpdateStatueUrl = this.getProxyUrl(accountUrl.updateStatus)
+    let accountUpdateStatueUrl = this.getProxyUrl(systemAccountUrl.updateStatus)
     return httpRequest.post<any>(
       accountUpdateStatueUrl,
       {},
@@ -96,11 +96,11 @@ class Account extends Base {
    * @param accountId 账号ID
    */
   public getAccountDetail(accountId: bigint): Promise<AccountDetailResp> {
-    const accountDetailUrl = this.getProxyUrl(accountUrl.detail)
+    const accountDetailUrl = this.getProxyUrl(systemAccountUrl.detail)
     return httpRequest.get<AccountDetailResp>(accountDetailUrl, {
       account_id: accountId
     })
   }
 }
 
-export const AccountService = new Account()
+export const SystemAccountService = new SystemAccount()

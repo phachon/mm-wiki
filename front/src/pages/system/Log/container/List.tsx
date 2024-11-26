@@ -3,7 +3,7 @@ import { TablePaginationConfig } from 'antd'
 import LogListUI from '../component/ListUI'
 import LogSearchUI from '../component/SearchUI'
 import { LogInfoType, LogListResp } from '@/types/logType'
-import { LogService } from '@/services/Log'
+import { SystemLogService } from '@/services/SystemLog'
 import { initPagination } from '@/types/adminType'
 
 let searchKeyWords = {}
@@ -50,7 +50,7 @@ const LogList: React.FC = () => {
     const pageSize = pagination.pageSize
     const current = pagination.current
     searchKeyWords = searchValues
-    LogService.logList(pageSize, current, searchValues)
+    SystemLogService.logList(pageSize, current, searchValues)
       .then((logList: LogListResp) => {
         setLogList(logList.list)
         setPagination({

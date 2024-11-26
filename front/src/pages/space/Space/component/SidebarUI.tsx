@@ -60,7 +60,8 @@ type SpaceSidebarUIProps = {
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
-  onClickActionDoc?: (action: string, node: TreeDataNode) => void
+  onClickDocSelect?: (docId: string) => void
+  onClickDocAction?: (action: string, node: TreeDataNode) => void
 }
 
 const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
@@ -80,7 +81,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
             menu={{
               items,
               onClick: (e) => {
-                props.onClickActionDoc && props.onClickActionDoc(e.key, node)
+                props.onClickDocAction && props.onClickDocAction(e.key, node)
               }
             }}
             trigger={['click']}
@@ -94,6 +95,9 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
 
   const onSelect: GetProps<typeof Tree.DirectoryTree>['onSelect'] = (keys, info) => {
     console.log('Trigger Select', keys, info)
+    if (keys.length > 0) {
+      props.onClickDocSelect && props.onClickDocSelect(keys[0].toString())
+    }
   }
 
   const onExpand: GetProps<typeof Tree.DirectoryTree>['onExpand'] = (keys, info) => {
@@ -139,8 +143,8 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
             style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
             icon={<PlusOutlined />}
             onClick={() =>
-              props.onClickActionDoc &&
-              props.onClickActionDoc(ActionType.ADD, {
+              props.onClickDocAction &&
+              props.onClickDocAction(ActionType.ADD, {
                 key: props.homeDoc?.doc_id.toString() || '',
                 title: props.homeDoc?.name || ''
               })

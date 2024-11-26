@@ -5,7 +5,7 @@ import {
   NoticeListItemType,
   NoticeListResp
 } from '@/types/noticeType'
-import { NoticeService } from '@/services/Notice'
+import { SystemNoticeService } from '@/services/SystemNotice'
 import { message, Modal, TablePaginationConfig } from 'antd'
 import NoticeListUI from '../component/ListUI'
 import NoticeSearchUI from '../component/SearchUI'
@@ -41,7 +41,7 @@ const NoticeList: React.FC = () => {
    * @param noticeInfo
    */
   const onEditClick = (noticeInfo: NoticeInfoType) => {
-    NoticeService.getEditNoticeInfo(noticeInfo.notice_id)
+    SystemNoticeService.getEditNoticeInfo(noticeInfo.notice_id)
       .then((editNoticeInfo: NoticeEditResp) => {
         setEditNoticeInfo(editNoticeInfo.notice_info)
         setEditModalOpen(true)
@@ -56,7 +56,7 @@ const NoticeList: React.FC = () => {
    * @param noticeInfo
    */
   const onEditSaveSubmit = (noticeInfo: NoticeInfoType) => {
-    NoticeService.modifyNotice(noticeInfo)
+    SystemNoticeService.modifyNotice(noticeInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
           setEditModalOpen(false)
@@ -73,7 +73,7 @@ const NoticeList: React.FC = () => {
    * @param noticeInfo
    */
   const onDeleteConfirm = (noticeInfo: NoticeInfoType) => {
-    NoticeService.deleteNotice(noticeInfo.notice_id)
+    SystemNoticeService.deleteNotice(noticeInfo.notice_id)
       .then(() => {
         message.success('删除成功', 2, () => {
           getNoticeList(pagination, searchKeyWords)
@@ -108,7 +108,7 @@ const NoticeList: React.FC = () => {
     const pageSize = pagination.pageSize
     const current = pagination.current
     searchKeyWords = searchValues
-    NoticeService.getNoticeList(pageSize, current, searchValues)
+    SystemNoticeService.getNoticeList(pageSize, current, searchValues)
       .then((noticeList: NoticeListResp) => {
         setNoticeList(noticeList.list)
         setPagination({

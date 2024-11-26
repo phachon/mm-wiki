@@ -7,7 +7,7 @@ import {
   AccountListItemType,
   AccountListResp
 } from '@/types/accountType'
-import { AccountService } from '@/services/Account'
+import { SystemAccountService } from '@/services/SystemAccount'
 import { message, Modal, TablePaginationConfig } from 'antd'
 import AccountSearchUI from '../component/SearchUI'
 import AccountFormUI from '../component/FormUI'
@@ -39,7 +39,7 @@ const AccountList: React.FC = () => {
    */
   const getAccountList = (pageConfig: TablePaginationConfig, searchKeywords: {}) => {
     searchValues = searchKeywords
-    AccountService.accountList(pageConfig.pageSize, pageConfig.current, searchKeywords)
+    SystemAccountService.accountList(pageConfig.pageSize, pageConfig.current, searchKeywords)
       .then((res: AccountListResp) => {
         setAccountList(res.list)
         setPagination({
@@ -85,7 +85,7 @@ const AccountList: React.FC = () => {
    */
   const onEditClick = (accountInfo: AccountListItemType) => {
     // 获取修改账号需要的信息
-    AccountService.getEditAccountInfo(accountInfo.account_id)
+    SystemAccountService.getEditAccountInfo(accountInfo.account_id)
       .then((editAccountInfo: AccountEditResp) => {
         const roleIds: string[] = []
         editAccountInfo.account_roles.forEach((accountRole: RoleInfoType) => {
@@ -111,7 +111,7 @@ const AccountList: React.FC = () => {
    */
   const onDetailClick = (accountListItem: AccountListItemType) => {
     // 获取账号详情
-    AccountService.getAccountDetail(accountListItem.account_id)
+    SystemAccountService.getAccountDetail(accountListItem.account_id)
       .then((res: AccountDetailResp) => {
         setAccountDetail(res)
         setDetailModalOpen(true)
@@ -127,7 +127,7 @@ const AccountList: React.FC = () => {
    * @param status
    */
   const onUpdateStatusConfirm = (accountInfo: AccountListItemType, status: number) => {
-    AccountService.updateAccountStatus(accountInfo.account_id, status)
+    SystemAccountService.updateAccountStatus(accountInfo.account_id, status)
       .then(() => {
         message.success('操作成功', 2, () => {
           getAccountList(pagination, searchValues)
@@ -143,7 +143,7 @@ const AccountList: React.FC = () => {
    * @param accountInfo AccountInfoType
    */
   const onEditSaveSubmit = (accountInfo: AccountListItemType) => {
-    AccountService.modifyAccount(accountInfo)
+    SystemAccountService.modifyAccount(accountInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
           setEditModalOpen(false)

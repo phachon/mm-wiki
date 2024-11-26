@@ -8,9 +8,9 @@ import { Outlet, useParams } from 'react-router-dom'
 import SpaceSidebarUI, { ActionType } from '../component/SidebarUI'
 import { DocSaveResp, DocTreeEntity } from '@/types/docType'
 import { SpaceDocsResp, SpaceInfoType } from '@/types/spaceType'
-import { SpaceService } from '@/services/Space'
+import { SpaceSpaceService } from '@/services/SpaceSpace'
 import { AddDocUI } from '../component/AddDocUI'
-import { DocService } from '@/services/Doc'
+import { SpaceDocService } from '@/services/SpaceDoc'
 import SpaceDocViewUI from '../component/DocViewUI'
 
 const SpaceHome: React.FC = () => {
@@ -47,7 +47,7 @@ const SpaceHome: React.FC = () => {
   }
 
   const getSpaceDocs = () => {
-    SpaceService.getSpaceDocs(key)
+    SpaceSpaceService.getSpaceDocs(key)
       .then((res: SpaceDocsResp) => {
         setSpaceInfo(res.space_info)
         setHomeDoc(res.home_doc)
@@ -58,8 +58,7 @@ const SpaceHome: React.FC = () => {
       })
   }
 
-  const onClickActionDoc = (action: string, node: TreeDataNode) => {
-    console.log('action:', action, 'node:', node)
+  const onClickDocAction = (action: string, node: TreeDataNode) => {
     if (action === ActionType.ADD) {
       onClickAddDoc(node)
     }
@@ -79,7 +78,7 @@ const SpaceHome: React.FC = () => {
 
   const onAddDocSubmit = (values: any) => {
     values.space_key = key
-    DocService.saveDoc(values)
+    SpaceDocService.saveDoc(values)
       .then((res: DocSaveResp) => {
         message.success('文档保存成功！', 1).then(() => {
           setParentDoc(undefined)
@@ -90,6 +89,10 @@ const SpaceHome: React.FC = () => {
       .catch((err) => {
         console.error(err)
       })
+  }
+
+  const onClickDocSelect = (docId: string) => {
+    console.log('选中文档:', docId)
   }
 
   return (
@@ -106,7 +109,8 @@ const SpaceHome: React.FC = () => {
               spaceInfo={spaceInfo}
               dirTree={dirTree}
               homeDoc={homeDoc}
-              onClickActionDoc={onClickActionDoc}
+              onClickDocAction={onClickDocAction}
+              onClickDocSelect={onClickDocSelect}
             />
           }
         />

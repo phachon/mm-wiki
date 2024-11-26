@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Layout, Spin } from 'antd'
 import { useGlobalStore } from '@/stores/index'
 import { Outlet, useLocation } from 'react-router-dom'
-import FrameBreadcrumbUI from '../component/BreadcrumbUI'
 import FrameSidebarUI from '../component/SidebarUI'
-import FrameFooterUI from '../component/FooterUI'
 import '../component/home.css'
 import LayoutHeader from '@/components/Layout/Header'
 import { useNavigate } from 'react-router-dom'
 import { LayoutHeaderSystemKey } from '@/components/Layout/types'
-import { ProfileService } from '@/services/Profile'
+import { SystemProfileService } from '@/services/SystemProfile'
 import { ProfilePrivilegesResp } from '@/types/profileType'
 import { IMenuItem } from '@/types/frame'
 import { PrivilegeListItemType } from '@/types/privilegeType'
@@ -29,7 +27,7 @@ const SystemHome: React.FC = () => {
   }, [])
 
   const initMenus = async () => {
-    const resp: ProfilePrivilegesResp = await ProfileService.getProfilePrivileges(
+    const resp: ProfilePrivilegesResp = await SystemProfileService.getProfilePrivileges(
       LayoutHeaderSystemKey
     )
     if (resp.privileges) {

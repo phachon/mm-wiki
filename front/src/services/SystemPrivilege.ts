@@ -7,7 +7,7 @@ import {
   PrivilegeListResp
 } from '../types/privilegeType'
 
-const privilegeUrl = {
+const systemPrivilegeUrl = {
   privilegeAdd: '/system/privilege/add',
   privilegeSave: '/system/privilege/save',
   privilegeList: '/system/privilege/list',
@@ -17,9 +17,9 @@ const privilegeUrl = {
 }
 
 /**
- * Privilege 权限服务
+ * SystemPrivilege 系统 - 权限服务
  */
-class Privilege extends Base {
+class SystemPrivilege extends Base {
   public constructor() {
     super()
   }
@@ -29,7 +29,7 @@ class Privilege extends Base {
    * @returns
    */
   public getAddPrivilegeInfo(): Promise<PrivilegeAddResp> {
-    let privilegeAddUrl = this.getProxyUrl(privilegeUrl.privilegeAdd)
+    let privilegeAddUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeAdd)
     return httpRequest.get<PrivilegeAddResp>(privilegeAddUrl)
   }
 
@@ -39,7 +39,7 @@ class Privilege extends Base {
    * @returns
    */
   public savePrivilege(privilegeInfo: PrivilegeInfoType): Promise<any> {
-    let privilegeSaveUrl = this.getProxyUrl(privilegeUrl.privilegeSave)
+    let privilegeSaveUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeSave)
     return httpRequest.post<any>(privilegeSaveUrl, {}, privilegeInfo)
   }
 
@@ -48,7 +48,7 @@ class Privilege extends Base {
    * @returns
    */
   public getEditPrivilegeInfo(privilegeId: bigint): Promise<PrivilegeEditResp> {
-    let privilegeEditUrl = this.getProxyUrl(privilegeUrl.privilegeEdit)
+    let privilegeEditUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeEdit)
     return httpRequest.get<PrivilegeEditResp>(privilegeEditUrl, {
       privilege_id: privilegeId
     })
@@ -60,7 +60,7 @@ class Privilege extends Base {
    * @returns
    */
   public modifyPrivilege(privilegeInfo: PrivilegeInfoType): Promise<any> {
-    let privilegeModifyUrl = this.getProxyUrl(privilegeUrl.privilegeModify)
+    let privilegeModifyUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeModify)
     return httpRequest.post<any>(privilegeModifyUrl, {}, privilegeInfo)
   }
 
@@ -70,7 +70,7 @@ class Privilege extends Base {
    * @returns
    */
   public deletePrivilege(privilegeInfo: PrivilegeInfoType): Promise<any> {
-    let privilegeDeleteUrl = this.getProxyUrl(privilegeUrl.privilegeDelete)
+    let privilegeDeleteUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeDelete)
     return httpRequest.post<any>(privilegeDeleteUrl, {}, privilegeInfo)
   }
 
@@ -78,9 +78,9 @@ class Privilege extends Base {
    * privilegeList 权限列表
    */
   public privilegeList(): Promise<PrivilegeListResp> {
-    let privilegeListUrl = this.getProxyUrl(privilegeUrl.privilegeList)
+    let privilegeListUrl = this.getProxyUrl(systemPrivilegeUrl.privilegeList)
     return httpRequest.get<PrivilegeListResp>(privilegeListUrl, {})
   }
 }
 
-export const PrivilegeService = new Privilege()
+export const SystemPrivilegeService = new SystemPrivilege()

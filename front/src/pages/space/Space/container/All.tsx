@@ -3,7 +3,7 @@ import { Col, Divider, Row, message } from 'antd'
 import SpaceSearchUI from '../component/SearchUI'
 import SpaceCardUI from '../component/CardUI'
 import SpacePaginationUI from '../component/PaginationUI'
-import { SpaceService } from '@/services/Space'
+import { SpaceSpaceService } from '@/services/SpaceSpace'
 import type { SpaceInfoType } from '@/types/spaceType'
 import type { PageInfoType } from '@/types/baseType'
 import '../component/space.css'
@@ -31,7 +31,7 @@ const SpaceAll: React.FC = () => {
    */
   const fetchSpaces = async (page: number, keywords: string = '') => {
     try {
-      const response = await SpaceService.getSpaces(
+      const response = await SpaceSpaceService.getSpaces(
         pageInfo.page_size,
         page,
         keywords ? { space_name: keywords } : undefined
@@ -75,11 +75,11 @@ const SpaceAll: React.FC = () => {
     try {
       if (collected) {
         // 调用收藏接口
-        await SpaceService.collectSpace(spaceKey)
+        await SpaceSpaceService.collectSpace(spaceKey)
         message.success('收藏成功')
       } else {
         // 调用取消收藏接口
-        await SpaceService.uncollectSpace(spaceKey)
+        await SpaceSpaceService.uncollectSpace(spaceKey)
         message.success('已取消收藏')
       }
       // 刷新列表

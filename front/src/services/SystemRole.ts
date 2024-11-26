@@ -17,9 +17,9 @@ const roleUrl = {
 }
 
 /**
- * Role 角色服务
+ * SystemRole 系统 - 角色服务
  */
-class Role extends Base {
+class SystemRole extends Base {
   public constructor() {
     super()
   }
@@ -143,4 +143,4 @@ class Role extends Base {
   }
 }
 
-export const RoleService = new Role()
+export const SystemRoleService = new SystemRole()

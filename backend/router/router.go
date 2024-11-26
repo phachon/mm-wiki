@@ -23,6 +23,7 @@ const (
 var (
 	// routerHandleTables 路由处理表，新增一个接口配置一条
 	routerHandleTables = []routerHandle{
+		// ===================== 系统 =====================
 		// 登录
 		{group: routerGroupNameSystem, relativePath: "/auth/login", method: http.MethodPost, controllerHandle: systemController.AuthLogin},
 		// 个人中心
@@ -82,12 +83,13 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/space/admin_list", method: http.MethodGet, controllerHandle: systemController.SpaceAdminList},
 		{group: routerGroupNameSystem, relativePath: "/space/admin_remove", method: http.MethodPost, controllerHandle: systemController.SpaceAdminRemove},
 		{group: routerGroupNameSystem, relativePath: "/space/admin_add", method: http.MethodPost, controllerHandle: systemController.SpaceAdminAdd},
-		// =====================空间=====================
-		// 获取空间列表
-		{group: routerGroupNameSpace, relativePath: "/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
-		{group: routerGroupNameSpace, relativePath: "/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
-		// 文档管理
-		{group: routerGroupNameDoc, relativePath: "/save", method: http.MethodPost, controllerHandle: spaceController.DocSave},
+		// ===================== 空间 =====================
+		// 空间
+		{group: routerGroupNameSpace, relativePath: "/space/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
+		{group: routerGroupNameSpace, relativePath: "/space/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
+		// 文档
+		{group: routerGroupNameSpace, relativePath: "/doc/save", method: http.MethodPost, controllerHandle: spaceController.DocSave},
+		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},
 	}
 )
 

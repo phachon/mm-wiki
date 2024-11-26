@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
-import { RoleService } from '@/services/Role'
 import SpaceFormUI from '../component/FormUI'
-import { PrivilegeListItemType } from '@/types/privilegeType'
-import { RoleAddResp } from '@/types/roleType'
-import { useNavigate } from 'react-router-dom'
 import { AccountInfoType } from '@/types/accountType'
-import Space from '..'
-import { SpaceService } from '@/services/Space'
+import { SystemSpaceService } from '@/services/SystemSpace'
 import { SpaceAddResp } from '@/types/spaceType'
 
 const SpaceAdd: React.FC = () => {
@@ -19,7 +14,7 @@ const SpaceAdd: React.FC = () => {
   }, [])
 
   const getAddSpaceInfo = () => {
-    SpaceService.getAddSpaceInfo()
+    SystemSpaceService.getAddSpaceInfo()
       .then((addSpaceInfo: SpaceAddResp) => {
         setAccountList(addSpaceInfo.account_list)
       })
@@ -33,7 +28,7 @@ const SpaceAdd: React.FC = () => {
    * @param values
    */
   const onSaveSubmit = (values: any) => {
-    SpaceService.saveSpace(values)
+    SystemSpaceService.saveSpace(values)
       .then(() => {
         message.success('添加空间成功', 2, () => {
           window.location.href = '/system/space/list'

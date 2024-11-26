@@ -18,8 +18,8 @@ export const DocTypes = [
   }
 ]
 
-// DocTreeEntity 文档树形结构
-export type DocTreeEntity = {
+// DocEntity 文档实体
+export type DocEntity = {
   doc_id: number // 文档ID
   parent_id: number // 父级ID
   space_id: number // 空间ID
@@ -34,6 +34,10 @@ export type DocTreeEntity = {
   edit_account_name: string // 最后修改账号名
   create_time: string // 创建时间
   update_time: string // 修改时间
+}
+
+// DocTreeEntity 文档树形结构
+export type DocTreeEntity = DocEntity & {
   children: DocTreeEntity[] // 子文档
 }
 
@@ -48,4 +52,10 @@ export type DocSaveReq = {
 // DocSaveResp 文档保存响应
 export type DocSaveResp = {
   doc_id: number // 文档ID
+}
+
+// DocInfoResp 文档信息响应
+export type DocInfoResp = {
+  doc_info: DocEntity // 文档信息
+  content: string // 文档内容
 }

@@ -12,7 +12,7 @@ import {
   SpaceListItemType,
   SpaceListResp
 } from '@/types/spaceType'
-import { SpaceService } from '@/services/Space'
+import { SystemSpaceService } from '@/services/SystemSpace'
 import SpaceAdminListUI from '../component/AdminListUI'
 
 let searchKeyWords = {}
@@ -49,7 +49,7 @@ const SpaceList: React.FC = () => {
    * @param spaceInfo
    */
   const onEditClick = (spaceInfo: SpaceInfoType) => {
-    SpaceService.getEditSpaceInfo(spaceInfo.space_id)
+    SystemSpaceService.getEditSpaceInfo(spaceInfo.space_id)
       .then((editSpaceInfo: SpaceEditResp) => {
         setEditSpaceInfo(editSpaceInfo.space_info)
         setEditModalOpen(true)
@@ -73,7 +73,7 @@ const SpaceList: React.FC = () => {
    * @param spaceInfo
    */
   const onEditSaveSubmit = (spaceInfo: SpaceInfoType) => {
-    SpaceService.modifySpace(spaceInfo)
+    SystemSpaceService.modifySpace(spaceInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
           setEditModalOpen(false)
@@ -90,7 +90,7 @@ const SpaceList: React.FC = () => {
    * @param spaceInfo
    */
   const onDeleteConfirm = (spaceInfo: SpaceInfoType) => {
-    SpaceService.deleteSpace(spaceInfo.space_id)
+    SystemSpaceService.deleteSpace(spaceInfo.space_id)
       .then(() => {
         message.success('删除成功', 2, () => {
           getSpaceList(pagination, searchKeyWords)
@@ -125,7 +125,7 @@ const SpaceList: React.FC = () => {
     const pageSize = pagination.pageSize
     const current = pagination.current
     searchKeyWords = searchValues
-    SpaceService.getSpaceList(pageSize, current, searchValues)
+    SystemSpaceService.getSpaceList(pageSize, current, searchValues)
       .then((resp: SpaceListResp) => {
         setSpaceList(resp.list)
         setPagination({
@@ -145,7 +145,7 @@ const SpaceList: React.FC = () => {
    * @param spaceId
    */
   const getSpaceAdminList = (spaceId: number) => {
-    SpaceService.getAdminList(spaceId)
+    SystemSpaceService.getAdminList(spaceId)
       .then((resp: SpaceAdminListResp) => {
         setSpaceAdminList(resp.admin_list)
         setSelectedAccountList(resp.selected_list)
@@ -163,7 +163,7 @@ const SpaceList: React.FC = () => {
    * @param accountInfo 账号信息
    */
   const onAdminRemoveChange = (accountInfo: AccountInfoType) => {
-    SpaceService.removeSpaceAdmin(adminListSpaceInfo?.space_id, accountInfo.account_id)
+    SystemSpaceService.removeSpaceAdmin(adminListSpaceInfo?.space_id, accountInfo.account_id)
       .then(() => {
         message.success('移除成功', 2, () => {
           getSpaceAdminList(adminListSpaceInfo?.space_id)
@@ -177,7 +177,7 @@ const SpaceList: React.FC = () => {
   const onAdminAddChange = (values: any) => {
     console.log('onAdminAddChange values:', values)
     const accountIds = values.admin_account_ids
-    SpaceService.addSpaceAdmin(adminListSpaceInfo?.space_id, accountIds)
+    SystemSpaceService.addSpaceAdmin(adminListSpaceInfo?.space_id, accountIds)
       .then(() => {
         message.success('添加成功', 2, () => {
           getSpaceAdminList(adminListSpaceInfo?.space_id)

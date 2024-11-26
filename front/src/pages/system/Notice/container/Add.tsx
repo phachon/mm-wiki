@@ -1,6 +1,6 @@
 import React from 'react'
 import { message } from 'antd'
-import { NoticeService } from '@/services/Notice'
+import { SystemNoticeService } from '@/services/SystemNotice'
 import NoticeFormUI from '../component/FormUI'
 
 const NoticeAdd: React.FC = () => {
@@ -9,7 +9,7 @@ const NoticeAdd: React.FC = () => {
    * @param values
    */
   const onSaveSubmit = (values: any) => {
-    NoticeService.saveNotice(values).then(() => {
+    SystemNoticeService.saveNotice(values).then(() => {
       message.success('添加成功', 2, () => {
         window.location.href = '/notice/list'
       })

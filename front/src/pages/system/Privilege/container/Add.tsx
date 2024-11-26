@@ -1,6 +1,6 @@
 import { message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { PrivilegeService } from '@/services/Privilege'
+import { SystemPrivilegeService } from '@/services/SystemPrivilege'
 import { PrivilegeInfoType, PrivilegeListItemType } from '@/types/privilegeType'
 import PrivilegeFormUI from '../component/FormUI'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +18,7 @@ const PrivilegeAdd: React.FC = () => {
    * 获取添加权限需要信息
    */
   const getAddPrivilegeInfo = () => {
-    PrivilegeService.getAddPrivilegeInfo().then((resp) => {
+    SystemPrivilegeService.getAddPrivilegeInfo().then((resp) => {
       setParentPrivileges(resp.parent_privileges)
       setApiMarks(resp.api_marks)
     })
@@ -29,7 +29,7 @@ const PrivilegeAdd: React.FC = () => {
    */
   const onSaveSubmit = (values: PrivilegeInfoType) => {
     console.log('onSaveSubmit', values)
-    PrivilegeService.savePrivilege(values)
+    SystemPrivilegeService.savePrivilege(values)
       .then(() => {
         message.success('保存成功', 2, () => {
           window.location.href = '/system/privilege/list'

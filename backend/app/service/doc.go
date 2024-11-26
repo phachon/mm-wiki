@@ -11,15 +11,17 @@ import (
 
 // Doc 文档服务
 type Doc struct {
-	ctx    context.Context
-	daoDoc *dao.Doc
+	ctx        context.Context
+	daoDoc     *dao.Doc
+	daoContent *dao.Content
 }
 
 // NewDoc 创建文档服务
 func NewDoc(ctx context.Context) *Doc {
 	return &Doc{
-		ctx:    ctx,
-		daoDoc: dao.NewDoc(ctx),
+		ctx:        ctx,
+		daoDoc:     dao.NewDoc(ctx),
+		daoContent: dao.NewContent(ctx),
 	}
 }
 
@@ -59,7 +61,16 @@ func (d *Doc) CreateDoc(docEntity *entity.DocEntity) errors.BizError {
 	docEntity.CreateAccountName = global.ContextValueLoginAccountName(d.ctx)
 	docEntity.EditAccountId = global.ContextValueLoginAccountID(d.ctx)
 	docEntity.EditAccountName = global.ContextValueLoginAccountName(d.ctx)
-	return d.daoDoc.Insert(docEntity)
+	err := d.daoDoc.Insert(docEntity)
+	if err != nil {
+		return err
+	}
+	// 创建文档内容
+	contentEntity := &entity.ContentEntity{
+		DocId:   docEntity.DocId,
+		Content: "",
+	}
+	return d.daoContent.Insert(contentEntity)
 }
 
 // UpdateDoc 更新文档
@@ -85,5 +96,5 @@ func (d *Doc) CreateSpaceHomeDoc(spaceId int64, spaceKey string, title string) e
 		EditAccountId:     global.ContextValueLoginAccountID(d.ctx),
 		EditAccountName:   global.ContextValueLoginAccountName(d.ctx),
 	}
-	return d.daoDoc.Insert(docEntity)
+	return d.CreateDoc(docEntity)
 }

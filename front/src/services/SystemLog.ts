@@ -6,9 +6,9 @@ const logUrl = {
 }
 
 /**
- * Log 日志服务
+ * SystemLog 系统 - 日志服务
  */
-class Log extends Base {
+class SystemLog extends Base {
   public constructor() {
     super()
   }
@@ -35,4 +35,4 @@ class Log extends Base {
   }
 }
 
-export const LogService = new Log()
+export const SystemLogService = new SystemLog()

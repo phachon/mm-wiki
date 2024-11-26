@@ -72,3 +72,38 @@ func DocSave(ctx *gin.Context) error {
 	}
 	return controller.RespJsonSuccess(ctx, data)
 }
+
+// DocInfo 文档详情
+func DocInfo(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocInfo] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocInfo] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocInfo] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	// 获取文档内容
+	serviceContent := service.NewContent(ctx)
+	content, err := serviceContent.GetContentByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocInfo] GetContentByDocId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+
+	var data = map[string]interface{}{
+		"doc_info": doc,
+		"content":  content,
+	}
+	return controller.RespJsonSuccess(ctx, data)
+}

@@ -2,17 +2,17 @@ import httpRequest from './http'
 import { getUrlConfig } from '../config/url'
 import { LoginResp } from '../types/loginType'
 
-const authUrl = {
+const systemAuthUrl = {
   systemLogin: '/system/auth/login',
   domainLogin: '/system/auth/domain_login'
 }
 
 /**
- * Login 登录服务
+ * SystemLogin 系统 - 登录服务
  */
-class Login {
+class SystemLogin {
   getSystemLoginUrl(): string {
-    return getUrlConfig().proxyUrl + authUrl.systemLogin
+    return getUrlConfig().proxyUrl + systemAuthUrl.systemLogin
   }
 
   /**
@@ -32,4 +32,4 @@ class Login {
   domainLogin() {}
 }
 
-export const LoginService = new Login()
+export const SystemLoginService = new SystemLogin()

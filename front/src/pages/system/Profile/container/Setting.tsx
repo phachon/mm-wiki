@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { message, Tabs, TabsProps } from 'antd'
-import { ProfileService } from '@/services/Profile'
+import { SystemProfileService } from '@/services/SystemProfile'
 import { AccountInfoType } from '@/types/accountType'
 import { ProfileInfoResp } from '@/types/profileType'
 import ProfileBasicSettingUI from '../component/BasicSettingUI'
-import { LockOutlined, FormOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
+import { LockOutlined, FormOutlined } from '@ant-design/icons'
 import ProfileRepassUI from '../component/RepassUI'
 
 const ProfileSetting: React.FC = () => {
@@ -15,7 +15,7 @@ const ProfileSetting: React.FC = () => {
   }, [])
 
   const initProfileInfo = () => {
-    ProfileService.getProfileInfo()
+    SystemProfileService.getProfileInfo()
       .then((resp: ProfileInfoResp) => {
         setProfileAccountInfo(resp.account_info)
       })
@@ -35,7 +35,7 @@ const ProfileSetting: React.FC = () => {
       return
     }
     // 修改密码请求
-    ProfileService.profileRepass(values)
+    SystemProfileService.profileRepass(values)
       .then((res) => {
         message.success('保存成功', 1)
       })
@@ -50,7 +50,7 @@ const ProfileSetting: React.FC = () => {
    * @param values
    */
   const onBasicEditSubmit = (values: any) => {
-    ProfileService.profileUpdate(values)
+    SystemProfileService.profileUpdate(values)
       .then(() => {
         message.success('保存成功', 1)
       })

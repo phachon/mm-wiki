@@ -7,7 +7,7 @@ import {
   DepartmentListResp
 } from '../types/departmentType'
 
-const departmentUrl = {
+const systemDepartmentUrl = {
   departmentAdd: '/system/department/add',
   departmentSave: '/system/department/save',
   departmentList: '/system/department/list',
@@ -17,9 +17,9 @@ const departmentUrl = {
 }
 
 /**
- * Department 部门服务
+ * SystemDepartment 系统 - 部门服务
  */
-class Department extends Base {
+class SystemDepartment extends Base {
   public constructor() {
     super()
   }
@@ -29,7 +29,7 @@ class Department extends Base {
    * @returns
    */
   public getAddDepartmentInfo(): Promise<DepartmentAddResp> {
-    let departmentAddUrl = this.getProxyUrl(departmentUrl.departmentAdd)
+    let departmentAddUrl = this.getProxyUrl(systemDepartmentUrl.departmentAdd)
     return httpRequest.get<DepartmentAddResp>(departmentAddUrl)
   }
 
@@ -39,7 +39,7 @@ class Department extends Base {
    * @returns
    */
   public saveDepartment(departmentInfo: DepartmentInfoType): Promise<any> {
-    let departmentSaveUrl = this.getProxyUrl(departmentUrl.departmentSave)
+    let departmentSaveUrl = this.getProxyUrl(systemDepartmentUrl.departmentSave)
     return httpRequest.post<any>(departmentSaveUrl, {}, departmentInfo)
   }
 
@@ -48,7 +48,7 @@ class Department extends Base {
    * @returns
    */
   public getEditDepartmentInfo(departmentId: bigint): Promise<DepartmentEditResp> {
-    let departmentEditUrl = this.getProxyUrl(departmentUrl.departmentEdit)
+    let departmentEditUrl = this.getProxyUrl(systemDepartmentUrl.departmentEdit)
     return httpRequest.get<DepartmentEditResp>(departmentEditUrl, {
       department_id: departmentId
     })
@@ -60,7 +60,7 @@ class Department extends Base {
    * @returns
    */
   public modifyDepartment(departmentInfo: DepartmentInfoType): Promise<any> {
-    let departmentModifyUrl = this.getProxyUrl(departmentUrl.departmentModify)
+    let departmentModifyUrl = this.getProxyUrl(systemDepartmentUrl.departmentModify)
     return httpRequest.post<any>(departmentModifyUrl, {}, departmentInfo)
   }
 
@@ -70,7 +70,7 @@ class Department extends Base {
    * @returns
    */
   public deleteDepartment(departmentId: string): Promise<any> {
-    let departmentDeleteUrl = this.getProxyUrl(departmentUrl.departmentDelete)
+    let departmentDeleteUrl = this.getProxyUrl(systemDepartmentUrl.departmentDelete)
     return httpRequest.post<any>(departmentDeleteUrl, {}, { department_id: departmentId })
   }
 
@@ -78,9 +78,9 @@ class Department extends Base {
    * departmentList 部门列表
    */
   public departmentList(): Promise<DepartmentListResp> {
-    let departmentListUrl = this.getProxyUrl(departmentUrl.departmentList)
+    let departmentListUrl = this.getProxyUrl(systemDepartmentUrl.departmentList)
     return httpRequest.get<DepartmentListResp>(departmentListUrl, {})
   }
 }
 
-export const DepartmentService = new Department()
+export const SystemDepartmentService = new SystemDepartment()

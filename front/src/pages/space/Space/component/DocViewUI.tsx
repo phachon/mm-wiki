@@ -13,8 +13,10 @@ import {
 import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
 import Cherry from 'cherry-markdown'
+import { DocTreeEntity } from '@/types/docType'
 
 type SpaceDocViewProps = {
+  docInfo?: DocTreeEntity
   content: string
 }
 
@@ -62,7 +64,7 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
             <p className="doc-view-page-path">
               <Space>
                 <FolderOutlined />
-                <a className="text text-info">开发部门</a>/ <a>开发部门</a>
+                <a className="text text-info">项目信息</a>/ <a>合作项目</a>
               </Space>
             </p>
             <p className="doc-view-page-time">

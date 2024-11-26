@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message } from 'antd'
-import { ProfileService } from '@/services/Profile'
-import { AccountInfoType } from '@/types/accountType'
+import { SystemProfileService } from '@/services/SystemProfile'
 import { ProfileInfoResp } from '@/types/profileType'
 import ProfileInfoUI from '../component/InfoUI'
 
@@ -13,7 +11,7 @@ const ProfileInfo: React.FC = () => {
   }, [])
 
   const initProfileInfo = () => {
-    ProfileService.getProfileInfo()
+    SystemProfileService.getProfileInfo()
       .then((resp: ProfileInfoResp) => {
         setProfileInfo(resp)
       })

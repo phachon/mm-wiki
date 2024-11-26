@@ -1,6 +1,6 @@
 import { message, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { PrivilegeService } from '@/services/Privilege'
+import { SystemPrivilegeService } from '@/services/SystemPrivilege'
 import { PrivilegeInfoType, PrivilegeListItemType } from '@/types/privilegeType'
 import PrivilegeFormUI from '../component/FormUI'
 import PrivilegeListTreeUI from '../component/ListTreeUI'
@@ -20,7 +20,7 @@ const PrivilegeList: React.FC = () => {
    * 获取权限列表
    */
   const getPrivilegeList = () => {
-    PrivilegeService.privilegeList().then((privilegeList) => {
+    SystemPrivilegeService.privilegeList().then((privilegeList) => {
       setPrivilegeList(privilegeList.list)
     })
   }
@@ -30,7 +30,7 @@ const PrivilegeList: React.FC = () => {
    * @param privilegeInfo 权限信息
    */
   const onEditClick = (privilegeInfo: PrivilegeInfoType) => {
-    PrivilegeService.getEditPrivilegeInfo(privilegeInfo.privilege_id)
+    SystemPrivilegeService.getEditPrivilegeInfo(privilegeInfo.privilege_id)
       .then((resp) => {
         setParentPrivileges(resp.parent_privileges)
         setEditPrivilegeInfo(resp.privilege_info)
@@ -47,7 +47,7 @@ const PrivilegeList: React.FC = () => {
    * @param privilegeInfo 权限信息
    */
   const onDeleteConfirm = (privilegeInfo: PrivilegeInfoType) => {
-    PrivilegeService.deletePrivilege(privilegeInfo)
+    SystemPrivilegeService.deletePrivilege(privilegeInfo)
       .then(() => {
         message.success('删除成功', 2, () => {
           getPrivilegeList()
@@ -63,7 +63,7 @@ const PrivilegeList: React.FC = () => {
    * @param privilegeInfo 权限信息
    */
   const onEditSaveSubmit = (privilegeInfo: PrivilegeInfoType) => {
-    PrivilegeService.modifyPrivilege(privilegeInfo)
+    SystemPrivilegeService.modifyPrivilege(privilegeInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
           setEditModalOpen(false)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { RoleEditResp, RoleInfoType, RoleListItemType, RoleListResp } from '@/types/roleType'
-import { RoleService } from '@/services/Role'
+import { SystemRoleService } from '@/services/SystemRole'
 import { message, Modal, TablePaginationConfig } from 'antd'
 import RoleListUI from '../component/ListUI'
 import RoleSearchUI from '../component/SearchUI'
@@ -50,7 +50,7 @@ const RoleList: React.FC = () => {
    * @param roleInfo
    */
   const onEditClick = (roleInfo: RoleInfoType) => {
-    RoleService.getEditRoleInfo(roleInfo.role_id)
+    SystemRoleService.getEditRoleInfo(roleInfo.role_id)
       .then((editRoleInfo: RoleEditResp) => {
         setEditRoleInfo(editRoleInfo.role_info)
         setEditModalOpen(true)
@@ -81,7 +81,7 @@ const RoleList: React.FC = () => {
    * @param accountInfo 账号信息
    */
   const onAccountRemoveChange = (accountInfo: AccountInfoType) => {
-    RoleService.removeRoleAccount(accountListRoleInfo?.role_id, accountInfo.account_id)
+    SystemRoleService.removeRoleAccount(accountListRoleInfo?.role_id, accountInfo.account_id)
       .then(() => {
         message.success('移除成功', 2, () => {
           getRoleAccountList(accountPagination, accountListRoleInfo?.role_id)
@@ -97,7 +97,7 @@ const RoleList: React.FC = () => {
    * @param roleInfo 角色信息
    */
   const onPrivilegeListClick = (roleInfo: RoleInfoType) => {
-    RoleService.getPrivilegeEdit(roleInfo.role_id)
+    SystemRoleService.getPrivilegeEdit(roleInfo.role_id)
       .then((privilegeList) => {
         setEditRoleInfo(roleInfo)
         setAllPrivileges(privilegeList.all_privilege)
@@ -116,7 +116,7 @@ const RoleList: React.FC = () => {
    */
   const onPrivilegeSaveSubmit = (privilegeIds?: string[]) => {
     // 修改保存角色权限
-    RoleService.modifyRolePrivilege(editRoleInfo?.role_id, privilegeIds)
+    SystemRoleService.modifyRolePrivilege(editRoleInfo?.role_id, privilegeIds)
       .then(() => {
         message.success('保存成功', 2, () => {
           setPrivilegeModalOpen(false)
@@ -134,7 +134,7 @@ const RoleList: React.FC = () => {
    * @param roleInfo
    */
   const onEditSaveSubmit = (roleInfo: RoleInfoType) => {
-    RoleService.modifyRole(roleInfo)
+    SystemRoleService.modifyRole(roleInfo)
       .then(() => {
         message.success('修改成功', 2, () => {
           setEditModalOpen(false)
@@ -151,7 +151,7 @@ const RoleList: React.FC = () => {
    * @param roleInfo
    */
   const onDeleteConfirm = (roleInfo: RoleInfoType) => {
-    RoleService.deleteRole(roleInfo.role_id)
+    SystemRoleService.deleteRole(roleInfo.role_id)
       .then(() => {
         message.success('删除成功', 2, () => {
           getRoleList(pagination, searchKeyWords)
@@ -186,7 +186,7 @@ const RoleList: React.FC = () => {
     const pageSize = pagination.pageSize
     const current = pagination.current
     searchKeyWords = searchValues
-    RoleService.getRoleList(pageSize, current, searchValues)
+    SystemRoleService.getRoleList(pageSize, current, searchValues)
       .then((roleList: RoleListResp) => {
         setRoleList(roleList.list)
         setPagination({
@@ -209,7 +209,7 @@ const RoleList: React.FC = () => {
   const getRoleAccountList = (pagination: TablePaginationConfig, roleId: number) => {
     const pageSize = pagination.pageSize
     const current = pagination.current
-    RoleService.getAccountList(pageSize, current, roleId)
+    SystemRoleService.getAccountList(pageSize, current, roleId)
       .then((accountListResp: AccountListResp) => {
         setRoleAccountList(accountListResp.list)
         setAccountPagination({
