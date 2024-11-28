@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Divider, Dropdown, Input, Space, Tree } from 'antd'
 import type { GetProps, MenuProps, TreeDataNode } from 'antd'
 import {
@@ -60,16 +60,51 @@ type SpaceSidebarUIProps = {
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
+  selectDocId?: string
   onClickDocSelect?: (docId: string) => void
   onClickDocAction?: (action: string, node: TreeDataNode) => void
 }
 
 const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
-  /**
-   * 自定义树节点标题
-   * @param node 树节点
-   * @returns 自定义标题
-   */
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([])
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
+
+  useEffect(() => {
+    if (props.selectDocId) {
+      setSelectedKeys([props.selectDocId])
+      expandParentNodes(props.selectDocId, props.dirTree)
+    }
+  }, [props.selectDocId, props.dirTree])
+
+  const expandParentNodes = (docId: string, treeData?: DocTreeEntity[]) => {
+    if (!treeData) return
+
+    const findParentKeys = (
+      nodes: DocTreeEntity[],
+      targetKey: string,
+      path: string[] = []
+    ): string[] | null => {
+      for (const node of nodes) {
+        const currentPath = [...path, node.doc_id.toString()]
+        if (node.doc_id.toString() === targetKey) {
+          return currentPath
+        }
+        if (node.children) {
+          const result = findParentKeys(node.children, targetKey, currentPath)
+          if (result) {
+            return result
+          }
+        }
+      }
+      return null
+    }
+
+    const parentKeys = findParentKeys(treeData, docId)
+    if (parentKeys) {
+      setExpandedKeys((prevKeys) => Array.from(new Set([...prevKeys, ...parentKeys])))
+    }
+  }
+
   const treeCustomTitle = (node: TreeDataNode) => {
     return (
       <div className="custom-title-wrapper">
@@ -102,6 +137,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
 
   const onExpand: GetProps<typeof Tree.DirectoryTree>['onExpand'] = (keys, info) => {
     console.log('Trigger Expand', keys, info)
+    setExpandedKeys(keys.map((key) => key.toString()))
   }
 
   const onSearch = (value: string) => {
@@ -169,6 +205,8 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
         defaultExpandAll
         onSelect={onSelect}
         onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        selectedKeys={selectedKeys}
         treeData={convertTreeData(props.dirTree)}
         titleRender={treeCustomTitle}
       />

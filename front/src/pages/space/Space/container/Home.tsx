@@ -3,47 +3,49 @@ import LayoutSider from '@/components/Layout/Sider'
 import { LayoutHeaderSpaceKey } from '@/components/Layout/types'
 import { useGlobalStore } from '@/stores'
 import { Layout, message, Modal, TreeDataNode } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import SpaceSidebarUI, { ActionType } from '../component/SidebarUI'
-import { DocSaveResp, DocTreeEntity } from '@/types/docType'
+import { ContentEntity, DocEntity, DocInfoResp, DocSaveResp, DocTreeEntity } from '@/types/docType'
 import { SpaceDocsResp, SpaceInfoType } from '@/types/spaceType'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
 import { AddDocUI } from '../component/AddDocUI'
 import { SpaceDocService } from '@/services/SpaceDoc'
 import SpaceDocViewUI from '../component/DocViewUI'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const SpaceHome: React.FC = () => {
   const { getAccountInfo } = useGlobalStore()
+  const navigate = useNavigate()
+  const location = useLocation()
   const { key } = useParams<{ key: string }>()
+
   const [dirTree, setDirTree] = useState<DocTreeEntity[]>([])
   const [homeDoc, setHomeDoc] = useState<DocTreeEntity>()
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfoType>()
   const [addDocModal, setAddDocModal] = useState<boolean>(false)
-  const [parentDoc, setParentDoc] = useState<{
-    parent_id: number
-    parent_name: string
-  }>()
-  const [demoMk, setDemoMk] = useState('')
+  const [parentDoc, setParentDoc] = useState<{ parent_id: number; parent_name: string }>()
+  const [viewDocInfo, setViewDocInfo] = useState<DocEntity>()
+  const [content, setContent] = useState<ContentEntity>()
+  const [selectedDocId, setSelectedDocId] = useState<string>()
 
-  React.useEffect(() => {
-    fetchData()
+  useEffect(() => {
     if (key) {
       getSpaceDocs()
     }
   }, [key])
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const docId = params.get('doc_id')
+    if (docId) {
+      getDocInfo(docId)
+      setSelectedDocId(docId)
+    }
+  }, [location])
+
   if (!key) {
     return <div>空间 Key 不能为空</div>
-  }
-
-  const fetchData = async () => {
-    fetch('/demo.md')
-      .then((response) => response.text())
-      .then((value) => {
-        console.log('value:', value)
-        setDemoMk(value)
-      })
   }
 
   const getSpaceDocs = () => {
@@ -52,6 +54,17 @@ const SpaceHome: React.FC = () => {
         setSpaceInfo(res.space_info)
         setHomeDoc(res.home_doc)
         setDirTree(res.dir_tree)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }
+
+  const getDocInfo = (docId: string) => {
+    SpaceDocService.getDocInfo(Number(docId))
+      .then((res) => {
+        setViewDocInfo(res.doc_info)
+        setContent(res.content)
       })
       .catch((err) => {
         console.error(err)
@@ -93,6 +106,7 @@ const SpaceHome: React.FC = () => {
 
   const onClickDocSelect = (docId: string) => {
     console.log('选中文档:', docId)
+    navigate(`?doc_id=${docId}`)
   }
 
   return (
@@ -111,11 +125,12 @@ const SpaceHome: React.FC = () => {
               homeDoc={homeDoc}
               onClickDocAction={onClickDocAction}
               onClickDocSelect={onClickDocSelect}
+              selectDocId={selectedDocId} // 传递选中的文档ID
             />
           }
         />
         <Layout.Content className="space-content" style={{ padding: '20px 16px 0 24px' }}>
-          <SpaceDocViewUI content={demoMk} />
+          <SpaceDocViewUI docInfo={viewDocInfo} content={content} />
         </Layout.Content>
       </Layout>
       <Modal

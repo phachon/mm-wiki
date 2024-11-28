@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Col, Divider, Row, Space } from 'antd'
 import {
   FolderOutlined,
@@ -13,13 +13,15 @@ import {
 import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
 import Cherry from 'cherry-markdown'
-import { DocTreeEntity } from '@/types/docType'
+import { ContentEntity, DocEntity } from '@/types/docType'
 
+// SpaceDocViewProps 空间文档查看组件
 type SpaceDocViewProps = {
-  docInfo?: DocTreeEntity
-  content: string
+  docInfo?: DocEntity
+  content?: ContentEntity
 }
 
+// SpaceDocViewUI 空间文档正文
 const SpaceDocViewUI = (props: SpaceDocViewProps) => {
   const editorRef = useRef<HTMLDivElement>(null)
 
@@ -27,7 +29,7 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
     if (editorRef.current) {
       const cherry = new Cherry({
         el: editorRef.current,
-        value: props.content,
+        value: props.content?.content,
         editor: {
           defaultModel: 'previewOnly', // 仅预览模式
           keepDocumentScrollAfterInit: true
@@ -60,7 +62,7 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
       <div className="doc-view-header">
         <Row gutter={24}>
           <Col span={14}>
-            <h3 className="doc-view-page-title">测试空间的标题</h3>
+            <h3 className="doc-view-page-title">{props.docInfo?.name}</h3>
             <p className="doc-view-page-path">
               <Space>
                 <FolderOutlined />
@@ -70,10 +72,9 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
             <p className="doc-view-page-time">
               <Space>
                 <CalendarOutlined />
-                <a>xxx（root）</a>
-                创建于 2024-17-08 19:09:08，
-                <a>xxx（root）</a>
-                更新于 2024-17-08 19:09:08
+                <a>{props.docInfo?.create_account_name}</a>
+                创建于 {props.docInfo?.create_time}，<a>{props.docInfo?.edit_account_name}</a>
+                更新于 {props.docInfo?.update_time}
                 <a data-link="/document/history?document_id=x">
                   <Space>
                     <HistoryOutlined />

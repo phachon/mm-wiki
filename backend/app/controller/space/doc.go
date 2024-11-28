@@ -98,7 +98,6 @@ func DocInfo(ctx *gin.Context) error {
 	content, err := serviceContent.GetContentByDocId(docId)
 	if err != nil {
 		logger.WithContext(ctx).Errorf("[DocInfo] GetContentByDocId err=%+v", err)
-		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
 
 	var data = map[string]interface{}{

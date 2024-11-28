@@ -41,6 +41,15 @@ export type DocTreeEntity = DocEntity & {
   children: DocTreeEntity[] // 子文档
 }
 
+// ContentEntity 文档内容实体
+export type ContentEntity = {
+  doc_id: number // 文档ID
+  content: string // 文档内容
+  current_version_id: number // 当前版本ID
+  create_time: string // 创建时间
+  update_time: string // 修改时间
+}
+
 // DocSaveReq 文档保存请求
 export type DocSaveReq = {
   space_key: string // 空间Key
@@ -57,5 +66,5 @@ export type DocSaveResp = {
 // DocInfoResp 文档信息响应
 export type DocInfoResp = {
   doc_info: DocEntity // 文档信息
-  content: string // 文档内容
+  content: ContentEntity // 文档内容
 }
