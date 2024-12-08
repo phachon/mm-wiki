@@ -14,16 +14,11 @@ func DocSave(ctx *gin.Context) error {
 
 	parentId := controller.GetParamInt64Def(ctx, "parent_id", 0)
 	name := controller.GetParamString(ctx, "name")
-	spaceKey := controller.GetParamString(ctx, "space_key")
 	docType := controller.GetParamInt64Def(ctx, "doc_type", 0)
 
 	if name == "" {
 		logger.WithContext(ctx).Warnf("[DocSave] 文档名不能为空")
 		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档名不能为空")
-	}
-	if spaceKey == "" {
-		logger.WithContext(ctx).Warnf("[DocSave] 空间Key不能为空")
-		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间Key不能为空")
 	}
 	if docType != entity.DocEntityType && docType != entity.DirEntityType {
 		logger.WithContext(ctx).Warnf("[DocSave] 文档类型不合法")
@@ -40,6 +35,7 @@ func DocSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Warnf("[DocSave] 文档不存在")
 		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
 	}
+	spaceKey := doc.SpaceKey
 
 	serviceSpace := service.NewSpace(ctx)
 	space, err := serviceSpace.GetSpaceByKey(spaceKey)

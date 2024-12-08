@@ -48,8 +48,15 @@ const routers: IRouter[] = [
     auth: true
   },
   {
-    path: '/space/:key',
+    path: '/space/:space_key',
     key: 'space',
+    component: <Space.SpaceHome />,
+    permission: false,
+    auth: true
+  },
+  {
+    path: '/doc/:doc_id',
+    key: 'doc',
     component: <Space.SpaceHome />,
     permission: false,
     auth: true

@@ -18,8 +18,10 @@ const SpaceHome: React.FC = () => {
   const { getAccountInfo } = useGlobalStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const { key } = useParams<{ key: string }>()
+  const { space_key, doc_id } = useParams<{ space_key: string; doc_id: string }>()
 
+  const [docsLoading, setDocsLoading] = useState<boolean>(false)
+  const [viewDocLoading, setViewDocLoading] = useState<boolean>(false)
   const [dirTree, setDirTree] = useState<DocTreeEntity[]>([])
   const [homeDoc, setHomeDoc] = useState<DocTreeEntity>()
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfoType>()
@@ -29,46 +31,54 @@ const SpaceHome: React.FC = () => {
   const [content, setContent] = useState<ContentEntity>()
   const [selectedDocId, setSelectedDocId] = useState<string>()
 
+  // 空间主页拉取数据 /space/:space_key
   useEffect(() => {
-    if (key) {
-      getSpaceDocs()
+    setDocsLoading(true)
+    setViewDocLoading(true)
+    if (space_key) {
+      fetchDocsBySpaceKey(space_key)
     }
-  }, [key])
+  }, [space_key])
 
+  // 文档详情拉取数据 /doc/:doc_id
   useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    const docId = params.get('doc_id')
-    if (docId) {
-      getDocInfo(docId)
-      setSelectedDocId(docId)
+    setDocsLoading(true)
+    setViewDocLoading(true)
+    if (doc_id) {
+      fetchDocsByDocId(Number(doc_id))
     }
-  }, [location])
+  }, [doc_id])
 
-  if (!key) {
-    return <div>空间 Key 不能为空</div>
+  // 获取空间下文档
+  const fetchDocsBySpaceKey = async (spaceKey: string) => {
+    const spaceDocsRes = await SpaceSpaceService.getSpaceDocs(spaceKey)
+    setSpaceInfo(spaceDocsRes.space_info)
+    setDirTree(spaceDocsRes.dir_tree)
+    setHomeDoc(spaceDocsRes.home_doc)
+    setDocsLoading(false)
+    if (spaceDocsRes.home_doc.doc_id) {
+      const homeDocRes = await SpaceDocService.getDocInfo(spaceDocsRes.home_doc.doc_id)
+      setViewDocInfo(homeDocRes.doc_info)
+      setContent(homeDocRes.content)
+      setViewDocLoading(false)
+    }
   }
 
-  const getSpaceDocs = () => {
-    SpaceSpaceService.getSpaceDocs(key)
-      .then((res: SpaceDocsResp) => {
-        setSpaceInfo(res.space_info)
-        setHomeDoc(res.home_doc)
-        setDirTree(res.dir_tree)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  }
-
-  const getDocInfo = (docId: string) => {
-    SpaceDocService.getDocInfo(Number(docId))
-      .then((res) => {
-        setViewDocInfo(res.doc_info)
-        setContent(res.content)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+  // 获取文档详情
+  const fetchDocsByDocId = async (docId: number) => {
+    const docInfoRes = await SpaceDocService.getDocInfo(docId)
+    // 获取空间下的所有文档
+    if (spaceInfo?.space_id != docInfoRes.doc_info.space_id || !dirTree.length) {
+      const spaceDocsRes = await SpaceSpaceService.getSpaceDocs(docInfoRes.doc_info.space_key)
+      setHomeDoc(spaceDocsRes.home_doc)
+      setSpaceInfo(spaceDocsRes.space_info)
+      setDirTree(spaceDocsRes.dir_tree)
+    }
+    setDocsLoading(false)
+    setViewDocInfo(docInfoRes.doc_info)
+    setContent(docInfoRes.content)
+    setViewDocLoading(false)
+    setSelectedDocId(docId.toString()) // 设置选中的文档ID
   }
 
   const onClickDocAction = (action: string, node: TreeDataNode) => {
@@ -90,13 +100,14 @@ const SpaceHome: React.FC = () => {
   }
 
   const onAddDocSubmit = (values: any) => {
-    values.space_key = key
+    values.space_key = space_key
     SpaceDocService.saveDoc(values)
       .then((res: DocSaveResp) => {
         message.success('文档保存成功！', 1).then(() => {
           setParentDoc(undefined)
           setAddDocModal(false)
-          getSpaceDocs()
+          setDirTree([]) //  清空文档树
+          navigate(`/doc/${res.doc_id}`)
         })
       })
       .catch((err) => {
@@ -106,7 +117,7 @@ const SpaceHome: React.FC = () => {
 
   const onClickDocSelect = (docId: string) => {
     console.log('选中文档:', docId)
-    navigate(`?doc_id=${docId}`)
+    navigate(`/doc/${docId}`)
   }
 
   return (
@@ -120,6 +131,7 @@ const SpaceHome: React.FC = () => {
         <LayoutSider
           content={
             <SpaceSidebarUI
+              loading={docsLoading}
               spaceInfo={spaceInfo}
               dirTree={dirTree}
               homeDoc={homeDoc}
@@ -130,7 +142,7 @@ const SpaceHome: React.FC = () => {
           }
         />
         <Layout.Content className="space-content" style={{ padding: '20px 16px 0 24px' }}>
-          <SpaceDocViewUI docInfo={viewDocInfo} content={content} />
+          <SpaceDocViewUI loading={viewDocLoading} docInfo={viewDocInfo} content={content} />
         </Layout.Content>
       </Layout>
       <Modal

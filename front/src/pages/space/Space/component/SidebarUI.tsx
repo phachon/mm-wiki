@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Divider, Dropdown, Input, Space, Tree } from 'antd'
+import { Button, Divider, Dropdown, Input, Space, Spin, Tree } from 'antd'
 import type { GetProps, MenuProps, TreeDataNode } from 'antd'
 import {
   DownOutlined,
@@ -13,9 +13,10 @@ import {
   HolderOutlined,
   RetweetOutlined
 } from '@ant-design/icons'
-import './space.css'
 import { SpaceInfoType } from '@/types/spaceType'
 import { DocTreeEntity, DocType } from '@/types/docType'
+import './space.css'
+import { loadavg } from 'os'
 
 const { DirectoryTree } = Tree
 
@@ -57,6 +58,7 @@ const items: MenuProps['items'] = [
 ]
 
 type SpaceSidebarUIProps = {
+  loading?: boolean
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
@@ -164,53 +166,55 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
   }
 
   return (
-    <div className="doc-sider">
-      <div className="doc-sider-header">
-        <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
-          <a href={`/space/${props.spaceInfo?.space_key}`}>
-            <Space>
-              <FolderOpenOutlined />
-              {props.spaceInfo?.name}
-            </Space>
-          </a>
-          <Button
-            type="default"
-            size="small"
-            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
-            icon={<PlusOutlined />}
-            onClick={() =>
-              props.onClickDocAction &&
-              props.onClickDocAction(ActionType.ADD, {
-                key: props.homeDoc?.doc_id.toString() || '',
-                title: props.homeDoc?.name || ''
-              })
-            }
-          ></Button>
-        </h2>
-      </div>
-      <Divider className="doc-sider-divider" />
-      <div className="doc-sider-search">
-        <Input
-          placeholder="搜索文档"
-          allowClear
-          prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-          onChange={(e) => console.log('搜索:', e.target.value)}
+    <Spin tip="加载中" spinning={props.loading}>
+      <div className="doc-sider">
+        <div className="doc-sider-header">
+          <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
+            <a href={`/space/${props.spaceInfo?.space_key}`}>
+              <Space>
+                <FolderOpenOutlined />
+                {props.spaceInfo?.name}
+              </Space>
+            </a>
+            <Button
+              type="default"
+              size="small"
+              style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
+              icon={<PlusOutlined />}
+              onClick={() =>
+                props.onClickDocAction &&
+                props.onClickDocAction(ActionType.ADD, {
+                  key: props.homeDoc?.doc_id.toString() || '',
+                  title: props.homeDoc?.name || ''
+                })
+              }
+            ></Button>
+          </h2>
+        </div>
+        <Divider className="doc-sider-divider" />
+        <div className="doc-sider-search">
+          <Input
+            placeholder="搜索文档"
+            allowClear
+            prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
+            onChange={(e) => console.log('搜索:', e.target.value)}
+          />
+        </div>
+        <DirectoryTree
+          className="doc-tree"
+          showIcon={true}
+          icon={customIcon}
+          switcherIcon={<DownOutlined />}
+          defaultExpandAll
+          onSelect={onSelect}
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          selectedKeys={selectedKeys}
+          treeData={convertTreeData(props.dirTree)}
+          titleRender={treeCustomTitle}
         />
       </div>
-      <DirectoryTree
-        className="doc-tree"
-        showIcon={true}
-        icon={customIcon}
-        switcherIcon={<DownOutlined />}
-        defaultExpandAll
-        onSelect={onSelect}
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        selectedKeys={selectedKeys}
-        treeData={convertTreeData(props.dirTree)}
-        titleRender={treeCustomTitle}
-      />
-    </div>
+    </Spin>
   )
 }
 

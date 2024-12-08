@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button, Col, Divider, Row, Space } from 'antd'
+import { Button, Col, Divider, Row, Space, Spin } from 'antd'
 import {
   FolderOutlined,
   CalendarOutlined,
@@ -14,9 +14,11 @@ import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
 import Cherry from 'cherry-markdown'
 import { ContentEntity, DocEntity } from '@/types/docType'
+import { loadavg } from 'os'
 
 // SpaceDocViewProps 空间文档查看组件
 type SpaceDocViewProps = {
+  loading?: boolean
   docInfo?: DocEntity
   content?: ContentEntity
 }
@@ -58,64 +60,60 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
   }, [props.content])
 
   return (
-    <div className="doc-view">
-      <div className="doc-view-header">
-        <Row gutter={24}>
-          <Col span={14}>
-            <h3 className="doc-view-page-title">{props.docInfo?.name}</h3>
-            <p className="doc-view-page-path">
-              <Space>
-                <FolderOutlined />
-                <a className="text text-info">项目信息</a>/ <a>合作项目</a>
-              </Space>
-            </p>
-            <p className="doc-view-page-time">
-              <Space>
-                <CalendarOutlined />
-                <a>{props.docInfo?.create_account_name}</a>
-                创建于 {props.docInfo?.create_time}，<a>{props.docInfo?.edit_account_name}</a>
-                更新于 {props.docInfo?.update_time}
-                <a data-link="/document/history?document_id=x">
-                  <Space>
-                    <HistoryOutlined />
-                    查看修改历史
-                  </Space>
-                </a>
-                <a>
-                  <Space>
-                    <PaperClipOutlined />
-                    查看附件
-                  </Space>
-                </a>
-              </Space>
-            </p>
-          </Col>
-          <Col span={10} style={{ textAlign: 'right' }}>
-            <div className="doc-view-header-actions">
-              <ButtonGroup>
-                <Button type="default" icon={<EditOutlined />} href="/page/edit?document_id=">
-                  编辑
-                </Button>
-                <Button type="default" icon={<StarOutlined />}>
-                  收藏
-                </Button>
-                <Button type="default" icon={<StarOutlined />}>
-                  取消
-                </Button>
-                <Button type="default" icon={<ShareAltOutlined />}>
-                  分享
-                </Button>
-                <Button type="default" icon={<ExportOutlined />}>
-                  导出
-                </Button>
-              </ButtonGroup>
-            </div>
-          </Col>
-        </Row>
-        <Divider className="doc-view-divider" />
+    <Spin tip="加载中" spinning={props.loading}>
+      <div className="doc-view">
+        <div className="doc-view-header">
+          <Row gutter={24}>
+            <Col span={14}>
+              <h3 className="doc-view-page-title">{props.docInfo?.name}</h3>
+              <p className="doc-view-page-time">
+                <Space>
+                  <CalendarOutlined />
+                  <a>{props.docInfo?.create_account_name}</a>
+                  创建于 {props.docInfo?.create_time}，<a>{props.docInfo?.edit_account_name}</a>
+                  更新于 {props.docInfo?.update_time}
+                  <a data-link="/document/history?document_id=x">
+                    <Space>
+                      <HistoryOutlined />
+                      查看修改历史
+                    </Space>
+                  </a>
+                  <a>
+                    <Space>
+                      <PaperClipOutlined />
+                      查看附件
+                    </Space>
+                  </a>
+                </Space>
+              </p>
+            </Col>
+            <Col span={10} style={{ textAlign: 'right' }}>
+              <div className="doc-view-header-actions">
+                <ButtonGroup>
+                  <Button type="default" icon={<EditOutlined />} href="/page/edit?document_id=">
+                    编辑
+                  </Button>
+                  <Button type="default" icon={<StarOutlined />}>
+                    收藏
+                  </Button>
+                  <Button type="default" icon={<StarOutlined />}>
+                    取消
+                  </Button>
+                  <Button type="default" icon={<ShareAltOutlined />}>
+                    分享
+                  </Button>
+                  <Button type="default" icon={<ExportOutlined />}>
+                    导出
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </Col>
+          </Row>
+          <Divider className="doc-view-divider" />
+        </div>
+        <div className="doc-view-body" ref={editorRef}></div>
       </div>
-      <div className="doc-view-body" ref={editorRef}></div>
-    </div>
+    </Spin>
   )
 }
 
