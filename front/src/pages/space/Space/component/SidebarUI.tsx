@@ -11,7 +11,8 @@ import {
   CopyOutlined,
   DeleteOutlined,
   HolderOutlined,
-  RetweetOutlined
+  RetweetOutlined,
+  FolderOutlined
 } from '@ant-design/icons'
 import { SpaceInfoType } from '@/types/spaceType'
 import { DocTreeEntity, DocType } from '@/types/docType'
@@ -121,7 +122,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
                 props.onClickDocAction && props.onClickDocAction(e.key, node)
               }
             }}
-            trigger={['click']}
+            trigger={['hover']}
           >
             <HolderOutlined style={{ fontSize: 16 }} />
           </Dropdown>
@@ -133,7 +134,8 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
   const onSelect: GetProps<typeof Tree.DirectoryTree>['onSelect'] = (keys, info) => {
     console.log('Trigger Select', keys, info)
     if (keys.length > 0) {
-      props.onClickDocSelect && props.onClickDocSelect(keys[0].toString())
+      const docId = keys[0].toString()
+      props.onClickDocSelect && props.onClickDocSelect(docId)
     }
   }
 
@@ -172,7 +174,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
           <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
             <a href={`/space/${props.spaceInfo?.space_key}`}>
               <Space>
-                <FolderOpenOutlined />
+                <FolderOutlined />
                 {props.spaceInfo?.name}
               </Space>
             </a>

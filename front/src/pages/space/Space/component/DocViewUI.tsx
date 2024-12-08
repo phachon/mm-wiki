@@ -8,7 +8,8 @@ import {
   EditOutlined,
   StarOutlined,
   ShareAltOutlined,
-  ExportOutlined
+  ExportOutlined,
+  FolderOpenOutlined
 } from '@ant-design/icons'
 import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
@@ -21,6 +22,7 @@ type SpaceDocViewProps = {
   loading?: boolean
   docInfo?: DocEntity
   content?: ContentEntity
+  parentPath?: string[]
 }
 
 // SpaceDocViewUI 空间文档正文
@@ -66,6 +68,17 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
           <Row gutter={24}>
             <Col span={14}>
               <h3 className="doc-view-page-title">{props.docInfo?.name}</h3>
+              <p className="doc-view-page-path">
+                <Space>
+                  <FolderOpenOutlined />
+                  {props.parentPath?.map((path, index) => (
+                    <span key={index}>
+                      {path}
+                      {index < (props.parentPath?.length ?? 0) - 1 && ' / '}
+                    </span>
+                  ))}
+                </Space>
+              </p>
               <p className="doc-view-page-time">
                 <Space>
                   <CalendarOutlined />
