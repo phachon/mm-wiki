@@ -1,12 +1,13 @@
 import { create } from 'zustand'
 import { createAccount, IAccount } from './account'
 import { createFrame, IFrame } from './frame'
-import { devtools } from 'zustand/middleware'
+import { createDoc, IDoc } from './doc'
 
 /**
  * 全局 store
  */
-export const useGlobalStore = create<IAccount & IFrame>()((...a) => ({
+export const useGlobalStore = create<IAccount & IFrame & IDoc>()((...a) => ({
   ...createAccount(...a),
-  ...createFrame(...a)
+  ...createFrame(...a),
+  ...createDoc(...a)
 }))

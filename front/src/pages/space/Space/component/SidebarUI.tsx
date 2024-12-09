@@ -5,7 +5,6 @@ import {
   DownOutlined,
   SearchOutlined,
   FileTextOutlined,
-  FolderOpenOutlined,
   PlusOutlined,
   FormOutlined,
   CopyOutlined,
@@ -17,7 +16,6 @@ import {
 import { SpaceInfoType } from '@/types/spaceType'
 import { DocTreeEntity, DocType } from '@/types/docType'
 import './space.css'
-import { loadavg } from 'os'
 
 const { DirectoryTree } = Tree
 
@@ -81,7 +79,6 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
 
   const expandParentNodes = (docId: string, treeData?: DocTreeEntity[]) => {
     if (!treeData) return
-
     const findParentKeys = (
       nodes: DocTreeEntity[],
       targetKey: string,
@@ -114,7 +111,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
         <div className="custom-title">
           <span className="title-text">{node.title as string}</span>
         </div>
-        <div className="custom-icon">
+        <div className="custom-icon" onClick={(e) => e.stopPropagation()}>
           <Dropdown
             menu={{
               items,

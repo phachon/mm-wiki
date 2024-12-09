@@ -17,16 +17,16 @@ import Cherry from 'cherry-markdown'
 import { ContentEntity, DocEntity } from '@/types/docType'
 import { loadavg } from 'os'
 
-// SpaceDocViewProps 空间文档查看组件
-type SpaceDocViewProps = {
+// DocViewUIProps 文档正文组件
+type DocViewUIProps = {
   loading?: boolean
   docInfo?: DocEntity
   content?: ContentEntity
   parentPath?: string[]
 }
 
-// SpaceDocViewUI 空间文档正文
-const SpaceDocViewUI = (props: SpaceDocViewProps) => {
+// DocViewUI 文档正文UI组件
+const DocViewUI = (props: DocViewUIProps) => {
   const editorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -130,4 +130,4 @@ const SpaceDocViewUI = (props: SpaceDocViewProps) => {
   )
 }
 
-export default SpaceDocViewUI
+export default DocViewUI

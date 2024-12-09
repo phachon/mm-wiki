@@ -68,3 +68,12 @@ export type DocInfoResp = {
   doc_info: DocEntity // 文档信息
   content: ContentEntity // 文档内容
 }
+
+// ActionType 操作类型
+export const ActionType = {
+  ADD: 'add',
+  EDIT: 'edit',
+  COPY: 'copy',
+  MOVE: 'move',
+  DELETE: 'delete'
+}

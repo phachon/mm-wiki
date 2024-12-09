@@ -3,15 +3,15 @@ import { DocTypeRadioOptions } from './ToolsUI'
 import { DocType } from '@/types/docType'
 import { useEffect } from 'react'
 
-type AddDocUIProps = {
-  onSaveSubmit: (values: any) => void
+type DocAddUIProps = {
+  onSaveSubmit?: (values: any) => void
   parentDoc?: {
-    parent_id: number
-    parent_name: string
+    parent_id?: number
+    parent_name?: string
   }
 }
 
-export const AddDocUI = (props: AddDocUIProps) => {
+const DocAddUI = (props: DocAddUIProps) => {
   const [form] = Form.useForm()
   const docTypeOptions = DocTypeRadioOptions()
 
@@ -24,7 +24,19 @@ export const AddDocUI = (props: AddDocUIProps) => {
 
   return (
     <div className="panel-body">
-      <Form name="add-doc-form" form={form} onFinish={props.onSaveSubmit}>
+      <Form
+        name="add-doc-form"
+        form={form}
+        onFinish={(values) => {
+          if (props.onSaveSubmit) {
+            props.onSaveSubmit(values)
+          }
+          // 延迟清空表单
+          setTimeout(() => {
+            form.resetFields()
+          }, 2000)
+        }}
+      >
         <Form.Item name="parent_id" hidden>
           <Input />
         </Form.Item>
@@ -59,3 +71,5 @@ export const AddDocUI = (props: AddDocUIProps) => {
     </div>
   )
 }
+
+export default DocAddUI

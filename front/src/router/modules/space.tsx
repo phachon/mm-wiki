@@ -1,3 +1,4 @@
+import Doc from '@/pages/space/Doc'
 import { IRouter } from '../type'
 import Space from '@/pages/space/Space'
 import { Navigate } from 'react-router-dom'
@@ -12,13 +13,6 @@ const routers: IRouter[] = [
         path: '',
         key: 'space_redirect',
         component: <Navigate to="/spaces/all" replace />,
-        auth: false,
-        permission: false
-      },
-      {
-        path: 'home',
-        key: 'spaces_home',
-        component: <Space.SpaceHome />,
         auth: false,
         permission: false
       },
@@ -53,14 +47,14 @@ const routers: IRouter[] = [
     component: <Space.SpaceHome />,
     permission: false,
     auth: true
-  },
-  {
-    path: '/doc/:doc_id',
-    key: 'doc',
-    component: <Space.SpaceHome />,
-    permission: false,
-    auth: true
   }
+  // {
+  //   path: '/doc/:doc_id',
+  //   key: 'doc_view',
+  //   component: <Space.SpaceHome />,
+  //   permission: false,
+  //   auth: true
+  // }
 ]
 
 export default routers

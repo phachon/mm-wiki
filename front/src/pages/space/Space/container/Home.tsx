@@ -9,9 +9,9 @@ import SpaceSidebarUI, { ActionType } from '../component/SidebarUI'
 import { ContentEntity, DocEntity, DocInfoResp, DocSaveResp, DocTreeEntity } from '@/types/docType'
 import { SpaceDocsResp, SpaceInfoType } from '@/types/spaceType'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
-import { AddDocUI } from '../component/AddDocUI'
+import DocAddUI from '../../Doc/component/AddUI'
 import { SpaceDocService } from '@/services/SpaceDoc'
-import SpaceDocViewUI from '../component/DocViewUI'
+import DocViewUI from '../../Doc/component/ViewUI'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 const SpaceHome: React.FC = () => {
@@ -182,7 +182,7 @@ const SpaceHome: React.FC = () => {
           }
         />
         <Layout.Content className="space-content" style={{ padding: '20px 16px 0 24px' }}>
-          <SpaceDocViewUI
+          <DocViewUI
             loading={viewDocLoading}
             docInfo={viewDocInfo}
             content={content}
@@ -196,7 +196,7 @@ const SpaceHome: React.FC = () => {
         onCancel={() => setAddDocModal(false)}
         footer={null}
       >
-        <AddDocUI onSaveSubmit={onAddDocSubmit} parentDoc={parentDoc} />
+        <DocAddUI onSaveSubmit={onAddDocSubmit} parentDoc={parentDoc} />
       </Modal>
     </Layout>
   )

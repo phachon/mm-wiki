@@ -1,11 +1,8 @@
 import { ConfigProvider, theme } from 'antd'
 import { BrowserRouter } from 'react-router-dom'
-
 import zhCN from 'antd/es/locale/zh_CN'
 import { createRoot } from 'react-dom/client'
-
 import RouterView from '@/router'
-
 import './assets/styles/style.css'
 
 const container = document.getElementById('root')
