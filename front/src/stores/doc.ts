@@ -66,17 +66,15 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
         dirTree: spaceDocsRes.dir_tree
       })
     }
-    set({
-      viewDocLoading: false,
-      viewDocInfo: docInfoRes.doc_info,
-      content: docInfoRes.content,
-      selectDocId: docId.toString()
-    })
     const parentPath = getParentPath(docId.toString(), get().dirTree)
     if (get().spaceInfo?.name) {
       parentPath.unshift(get().spaceInfo?.name || '')
     }
     set({
+      viewDocLoading: false,
+      viewDocInfo: docInfoRes.doc_info,
+      content: docInfoRes.content,
+      selectDocId: docId.toString(),
       parentPath: parentPath
     })
   },
@@ -86,6 +84,31 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
    */
   initDocsBySpaceKey: async (spaceKey: string) => {
     console.log('初始化空间:', spaceKey)
+    const spaceDocsRes = await SpaceSpaceService.getSpaceDocs(spaceKey)
+    if (!spaceDocsRes) {
+      return
+    }
+    set({
+      siderLoading: false,
+      spaceInfo: spaceDocsRes.space_info,
+      dirTree: spaceDocsRes.dir_tree,
+      homeDoc: spaceDocsRes.home_doc,
+      parentPath: [spaceDocsRes.space_info.name]
+    })
+    // 获取空间下所有文档
+    if (spaceDocsRes.home_doc.doc_id) {
+      const homeDocRes = await SpaceDocService.getDocInfo(spaceDocsRes.home_doc.doc_id)
+      if (!homeDocRes) {
+        return
+      }
+      set({
+        viewDocInfo: homeDocRes.doc_info,
+        content: homeDocRes.content
+      })
+    }
+    set({
+      viewDocLoading: false
+    })
   },
 
   /**

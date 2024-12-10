@@ -11,6 +11,13 @@ const routers: IRouter[] = [
     auth: true,
     children: [
       {
+        path: '/doc/:doc_id/edit',
+        key: 'doc_edit',
+        component: <Doc.DocEdit />,
+        permission: false,
+        auth: true
+      },
+      {
         path: '/doc/:doc_id',
         key: 'doc_view',
         component: <Doc.DocView />,

@@ -103,7 +103,11 @@ const DocViewUI = (props: DocViewUIProps) => {
             <Col span={10} style={{ textAlign: 'right' }}>
               <div className="doc-view-header-actions">
                 <ButtonGroup>
-                  <Button type="default" icon={<EditOutlined />} href="/page/edit?document_id=">
+                  <Button
+                    type="default"
+                    icon={<EditOutlined />}
+                    href={'/doc/' + props.docInfo?.doc_id + '/edit'}
+                  >
                     编辑
                   </Button>
                   <Button type="default" icon={<StarOutlined />}>
