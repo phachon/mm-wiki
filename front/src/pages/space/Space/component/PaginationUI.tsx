@@ -1,5 +1,6 @@
 import React from 'react'
 import { Pagination } from 'antd'
+import './space.css'
 
 interface SpacePaginationProps {
   total?: number

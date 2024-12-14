@@ -42,19 +42,21 @@ const routers: IRouter[] = [
     auth: true
   },
   {
-    path: '/space/:space_key',
+    path: '/space',
     key: 'space',
-    component: <Space.SpaceHome />,
+    component: <Doc.DocIndex />,
     permission: false,
-    auth: true
+    auth: true,
+    children: [
+      {
+        path: '/space/:space_key',
+        key: 'space_home',
+        component: <Doc.DocView />,
+        permission: false,
+        auth: true
+      }
+    ]
   }
-  // {
-  //   path: '/doc/:doc_id',
-  //   key: 'doc_view',
-  //   component: <Space.SpaceHome />,
-  //   permission: false,
-  //   auth: true
-  // }
 ]
 
 export default routers

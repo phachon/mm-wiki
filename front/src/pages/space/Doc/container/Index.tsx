@@ -2,21 +2,27 @@ import LayoutHeader from '@/components/Layout/Header'
 import LayoutSider from '@/components/Layout/Sider'
 import { LayoutHeaderSpaceKey } from '@/components/Layout/types'
 import { useGlobalStore } from '@/stores'
-import { Layout, message, Modal, TreeDataNode } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Empty, Layout, Modal } from 'antd'
+import React, { useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
-import SpaceSidebarUI, { ActionType } from '../../Space/component/SidebarUI'
 import DocAddUI from '../../Doc/component/AddUI'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import DocTreeUI from '../component/TreeUI'
 
 const DocIndex: React.FC = () => {
   const store = useGlobalStore()
   const navigate = useNavigate()
-  const { doc_id } = useParams<{ doc_id: string }>()
+  const { doc_id, space_key } = useParams<{ doc_id: string; space_key: string }>()
 
   useEffect(() => {
     store.initDocsByDocId(Number(doc_id))
   }, [doc_id])
+
+  useEffect(() => {
+    if (space_key) {
+      store.initDocsBySpaceKey(space_key)
+    }
+  }, [space_key])
 
   const onClickDocSelect = (docId: string) => {
     navigate(`/doc/${docId}`)
@@ -32,18 +38,22 @@ const DocIndex: React.FC = () => {
       <Layout>
         <LayoutSider
           content={
-            <SpaceSidebarUI
-              loading={store.siderLoading}
-              spaceInfo={store.spaceInfo}
-              dirTree={store.dirTree}
-              homeDoc={store.homeDoc}
-              onClickDocAction={store.onClickDocAction}
-              onClickDocSelect={onClickDocSelect}
-              selectDocId={store.selectDocId}
-            />
+            store.siderLoading ? (
+              <Empty />
+            ) : (
+              <DocTreeUI
+                loading={store.siderLoading}
+                spaceInfo={store.spaceInfo}
+                dirTree={store.dirTree}
+                homeDoc={store.homeDoc}
+                onClickDocAction={store.onClickDocAction}
+                onClickDocSelect={onClickDocSelect}
+                selectDocId={store.selectDocId}
+              />
+            )
           }
         />
-        <Layout.Content className="space-content" style={{ padding: '20px 16px 0 24px' }}>
+        <Layout.Content className="space-content">
           <Outlet />
         </Layout.Content>
       </Layout>

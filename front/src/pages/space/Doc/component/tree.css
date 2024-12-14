@@ -1,0 +1,313 @@
+/* doc tree */
+
+.doc-tree {
+  border-radius: 0;
+}
+
+.doc-tree .ant-tree-treenode {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 !important;
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode:before {
+  bottom: 0 !important;
+}
+
+.ant-tree-treenode.ant-tree-treenode-switcher-open.ant-tree-treenode-selected {
+  background: #e6f4ff !important;
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper:before {
+  background: #e6f4ff !important;
+}
+/* 设置选中状态的文字颜色 */
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
+  color: #1677ff !important;
+  font-weight: 400;
+}
+
+/* 设置切换图标的颜色 */
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-switcher {
+  color: #1677ff !important;
+}
+
+.doc-tree .ant-tree-node-content-wrapper {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+}
+
+.doc-tree .ant-tree-switcher {
+  height: 32px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.doc-tree .ant-tree-indent-unit {
+  width: 16px;
+}
+
+.doc-tree .ant-tree-child-tree {
+  margin-left: 16px;
+}
+
+.doc-tree .ant-tree-indent {
+  margin-left: 12px;
+}
+
+.custom-title-wrapper {
+  height: 32px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.custom-title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.title-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  padding-right: 8px;
+}
+
+.custom-icon {
+  flex-shrink: 0;
+  margin-left: auto;
+  visibility: hidden;
+}
+
+.custom-icon .anticon {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 4px;
+  cursor: pointer;
+}
+
+.custom-title-wrapper .custom-icon {
+  visibility: hidden;
+}
+
+.custom-title-wrapper:hover .custom-icon {
+  visibility: visible;
+}
+
+.doc-sider {
+  padding-right: 2px;
+  background-color: #fff;
+}
+
+.doc-tree .custom-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.doc-tree .custom-title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  font-size: 15px;
+}
+
+.doc-tree .custom-icon {
+  visibility: hidden;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.doc-tree .ant-tree-node-content-wrapper:hover .custom-icon {
+  visibility: visible;
+}
+
+/* 调整树节点内容的对齐方式 */
+.doc-tree .ant-tree-node-content-wrapper {
+  display: flex !important;
+  align-items: center;
+}
+
+.doc-tree .ant-tree-iconEle {
+  width: 24px !important;
+  height: 32px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0 !important;
+  position: relative;
+  left: -24px;  /* 向左偏移，与折叠箭头对齐 */
+  font-size: 13px;
+}
+
+/* 补偿因图标左移导致的文本位置偏移 */
+.doc-tree .ant-tree-title {
+  margin-left: -24px;  /* 补偿图标的左移 */
+}
+
+/* 调整折叠箭头的位置和大小 */
+.doc-tree .ant-tree-switcher {
+  height: 32px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px !important;
+  background: none !important;  /* 移除背景 */
+  position: relative;  /* 添加相对定位 */
+  top: 1px;  /* 微调位，使其与文字完全居中对齐 */
+}
+
+.doc-tree .ant-tree-switcher:hover {
+  background: none !important;  /* 移除悬停时的背景 */
+}
+
+/* 移除点击时的背景和边框 */
+.doc-tree .ant-tree-switcher:active,
+.doc-tree .ant-tree-switcher:focus {
+  background: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 确保缩进单位的宽度正确 */
+.doc-tree .ant-tree-indent-unit {
+  width: 24px !important;
+}
+
+/* 调整图标的垂直对齐 */
+.doc-tree .anticon {
+  line-height: 32px;
+  vertical-align: middle;
+}
+
+/* 调整折叠按钮的位置和大小 */
+.doc-tree .ant-tree-switcher {
+  height: 32px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+/* 调整文件图标的位置 */
+.doc-tree .custom-title .anticon-file-text {
+  width: 24px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0;
+}
+
+/* 确保标题文本对齐 */
+.custom-title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 调整展开箭头图标大小 */
+.doc-tree .ant-tree-switcher .anticon {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* 调整文件图标大小 */
+.doc-tree .custom-title .anticon-file-text {
+  font-size: 14px;
+}
+/* 添加标题样式 */
+.doc-sider-header {
+  padding: 16px 12px;
+}
+
+.space-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.5;
+}
+
+/* 调整搜索框样式 */
+.doc-sider-search {
+  padding: 12px 8px;
+}
+
+.doc-sider-search .ant-input-affix-wrapper {
+  border-radius: 4px;
+}
+
+.doc-sider-search .ant-input {
+  font-size: 14px;
+}
+
+.doc-sider-search .ant-input-affix-wrapper:hover {
+  border-color: #d9d9d9;
+}
+
+.doc-sider-search .ant-input-affix-wrapper:focus,
+.doc-sider-search .ant-input-affix-wrapper-focused {
+  border-color: #d9d9d9;
+  box-shadow: none;
+}
+
+/* 调整标题字号 */
+.space-title {
+  margin: 0;
+  font-size: 16px;  /* 标题字号改为17px */
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.5;
+}
+
+/* 调整文件目录树字号 */
+.doc-tree .custom-title {
+  font-size: 15px;  /* 文件目录树字号改为15px */
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.doc-sider-divider {
+  margin: 0 0 6px;
+}
+
+.space-title a {
+  color: inherit;  /* 继承父元素的颜色 */
+  text-decoration: none;  /* 移除下划线 */
+}
+
+.space-title a:hover {
+  color: #1890ff;  /* antd 默认主题蓝色 */
+}
+
+.space-title a:active {
+  color: #096dd9;  /* 点击时的深蓝色 */
+}
+

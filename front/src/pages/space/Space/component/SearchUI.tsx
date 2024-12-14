@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Input, Row } from 'antd'
+import './space.css'
 
 const { Search } = Input
 

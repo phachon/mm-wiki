@@ -6,7 +6,6 @@ import SpacePaginationUI from '../component/PaginationUI'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
 import type { SpaceInfoType } from '@/types/spaceType'
 import type { PageInfoType } from '@/types/baseType'
-import '../component/space.css'
 
 /**
  * SpaceAll 空间列表组件

@@ -77,3 +77,16 @@ export const ActionType = {
   MOVE: 'move',
   DELETE: 'delete'
 }
+
+// DocActionReq 文档操作请求
+export type DocContentSaveReq = {
+  doc_id: number // 文档ID
+  content: string // 文档内容
+  name: string // 文档名称
+}
+
+// DocContentSaveResp 文档操作响应
+export type DocContentSaveResp = {
+  doc_id: number // 文档ID
+  current_version_id: number // 当前版本ID
+}

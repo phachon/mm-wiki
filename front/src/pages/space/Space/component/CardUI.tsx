@@ -10,7 +10,9 @@ import {
 // @ts-ignore
 import spaceIcon from '@/assets/images/icons-space.png'
 import { useNavigate } from 'react-router-dom'
+import './space.css'
 
+// SpaceCardProps 空间卡片组件属性
 interface SpaceCardProps {
   title: string
   description: string
@@ -22,10 +24,7 @@ interface SpaceCardProps {
   avatarSrc?: string
 }
 
-/**
- * SpaceCard 空间卡片组件
- * @param props 组件属性
- */
+// SpaceCardUI 空间卡片UI组件
 const SpaceCardUI: React.FC<SpaceCardProps> = ({
   title,
   description,
@@ -38,9 +37,7 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
 }) => {
   const navigate = useNavigate()
 
-  /**
-   * 处理收藏点击事件
-   */
+  // 处理收藏点击事件
   const handleCollectionClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (onCollectionChange) {
@@ -48,9 +45,7 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
     }
   }
 
-  /**
-   * 处理链接复制事件
-   */
+  // 处理链接复制事件
   const handleCopyLink = (e: React.MouseEvent) => {
     e.stopPropagation()
     const spaceUrl = `${window.location.origin}/space/${spaceKey}`
@@ -58,9 +53,7 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
     message.success('空间链接已复制到剪贴板')
   }
 
-  /**
-   * 处理卡片点击事件
-   */
+  // 处理卡片点击事件
   const handleCardClick = () => {
     navigate(`/space/${spaceKey}`)
   }

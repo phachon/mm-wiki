@@ -15,7 +15,7 @@ import {
 } from '@ant-design/icons'
 import { SpaceInfoType } from '@/types/spaceType'
 import { DocTreeEntity, DocType } from '@/types/docType'
-import './space.css'
+import './tree.css'
 
 const { DirectoryTree } = Tree
 
@@ -56,7 +56,8 @@ const items: MenuProps['items'] = [
   }
 ]
 
-type SpaceSidebarUIProps = {
+// DocTreeUIProps 文档目录树组件属性
+type DocTreeUIProps = {
   loading?: boolean
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
@@ -66,7 +67,8 @@ type SpaceSidebarUIProps = {
   onClickDocAction?: (action: string, node: TreeDataNode) => void
 }
 
-const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
+// DocTreeUI 文档目录树组件
+const DocTreeUI = (props: DocTreeUIProps) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
 
@@ -77,6 +79,7 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
     }
   }, [props.selectDocId, props.dirTree])
 
+  // 展开父节点
   const expandParentNodes = (docId: string, treeData?: DocTreeEntity[]) => {
     if (!treeData) return
     const findParentKeys = (
@@ -165,56 +168,54 @@ const SpaceSidebarUI = (props: SpaceSidebarUIProps) => {
   }
 
   return (
-    <Spin tip="加载中" spinning={props.loading}>
-      <div className="doc-sider">
-        <div className="doc-sider-header">
-          <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
-            <a href={`/space/${props.spaceInfo?.space_key}`}>
-              <Space>
-                <FolderOutlined />
-                {props.spaceInfo?.name}
-              </Space>
-            </a>
-            <Button
-              type="default"
-              size="small"
-              style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
-              icon={<PlusOutlined />}
-              onClick={() =>
-                props.onClickDocAction &&
-                props.onClickDocAction(ActionType.ADD, {
-                  key: props.homeDoc?.doc_id.toString() || '',
-                  title: props.homeDoc?.name || ''
-                })
-              }
-            ></Button>
-          </h2>
-        </div>
-        <Divider className="doc-sider-divider" />
-        <div className="doc-sider-search">
-          <Input
-            placeholder="搜索文档"
-            allowClear
-            prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-            onChange={(e) => console.log('搜索:', e.target.value)}
-          />
-        </div>
-        <DirectoryTree
-          className="doc-tree"
-          showIcon={true}
-          icon={customIcon}
-          switcherIcon={<DownOutlined />}
-          defaultExpandAll
-          onSelect={onSelect}
-          onExpand={onExpand}
-          expandedKeys={expandedKeys}
-          selectedKeys={selectedKeys}
-          treeData={convertTreeData(props.dirTree)}
-          titleRender={treeCustomTitle}
+    <div className="doc-sider">
+      <div className="doc-sider-header">
+        <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
+          <a href={`/space/${props.spaceInfo?.space_key}`}>
+            <Space>
+              <FolderOutlined />
+              {props.spaceInfo?.name}
+            </Space>
+          </a>
+          <Button
+            type="default"
+            size="small"
+            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
+            icon={<PlusOutlined />}
+            onClick={() =>
+              props.onClickDocAction &&
+              props.onClickDocAction(ActionType.ADD, {
+                key: props.homeDoc?.doc_id.toString() || '',
+                title: props.homeDoc?.name || ''
+              })
+            }
+          ></Button>
+        </h2>
+      </div>
+      <Divider className="doc-sider-divider" />
+      <div className="doc-sider-search">
+        <Input
+          placeholder="搜索文档"
+          allowClear
+          prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
+          onChange={(e) => console.log('搜索:', e.target.value)}
         />
       </div>
-    </Spin>
+      <DirectoryTree
+        className="doc-tree"
+        showIcon={true}
+        icon={customIcon}
+        switcherIcon={<DownOutlined />}
+        defaultExpandAll
+        onSelect={onSelect}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        selectedKeys={selectedKeys}
+        treeData={convertTreeData(props.dirTree)}
+        titleRender={treeCustomTitle}
+      />
+    </div>
   )
 }
 
-export default SpaceSidebarUI
+export default DocTreeUI
