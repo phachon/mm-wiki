@@ -25,6 +25,7 @@ const DocIndex: React.FC = () => {
   }, [space_key])
 
   const onClickDocSelect = (docId: string) => {
+    console.log('onClickDocSelect docId:', docId)
     navigate(`/doc/${docId}`)
   }
 

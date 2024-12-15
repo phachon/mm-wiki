@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Divider, Dropdown, Input, Space, Spin, Tree } from 'antd'
+import { useEffect, useState } from 'react'
+import { Button, Divider, Dropdown, Input, Space, Tree } from 'antd'
 import type { GetProps, MenuProps, TreeDataNode } from 'antd'
 import {
   DownOutlined,
@@ -14,18 +14,10 @@ import {
   FolderOutlined
 } from '@ant-design/icons'
 import { SpaceInfoType } from '@/types/spaceType'
-import { DocTreeEntity, DocType } from '@/types/docType'
+import { ActionType, DocTreeEntity, DocType } from '@/types/docType'
 import './tree.css'
 
 const { DirectoryTree } = Tree
-
-export const ActionType = {
-  ADD: 'add',
-  EDIT: 'edit',
-  COPY: 'copy',
-  MOVE: 'move',
-  DELETE: 'delete'
-}
 
 const items: MenuProps['items'] = [
   {
@@ -112,7 +104,16 @@ const DocTreeUI = (props: DocTreeUIProps) => {
     return (
       <div className="custom-title-wrapper">
         <div className="custom-title">
-          <span className="title-text">{node.title as string}</span>
+          <span
+            className="title-text"
+            onClick={(e) => {
+              console.log('点击文档 treeCustomTitle:', node)
+              e.stopPropagation()
+              props.onClickDocSelect && props.onClickDocSelect(node.key as string)
+            }}
+          >
+            {node.title as string}
+          </span>
         </div>
         <div className="custom-icon" onClick={(e) => e.stopPropagation()}>
           <Dropdown
@@ -129,14 +130,6 @@ const DocTreeUI = (props: DocTreeUIProps) => {
         </div>
       </div>
     )
-  }
-
-  const onSelect: GetProps<typeof Tree.DirectoryTree>['onSelect'] = (keys, info) => {
-    console.log('Trigger Select', keys, info)
-    if (keys.length > 0) {
-      const docId = keys[0].toString()
-      props.onClickDocSelect && props.onClickDocSelect(docId)
-    }
   }
 
   const onExpand: GetProps<typeof Tree.DirectoryTree>['onExpand'] = (keys, info) => {
@@ -207,7 +200,6 @@ const DocTreeUI = (props: DocTreeUIProps) => {
         icon={customIcon}
         switcherIcon={<DownOutlined />}
         defaultExpandAll
-        onSelect={onSelect}
         onExpand={onExpand}
         expandedKeys={expandedKeys}
         selectedKeys={selectedKeys}

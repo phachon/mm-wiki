@@ -17,7 +17,8 @@ const DocEdit: React.FC = () => {
     }
     SpaceDocService.saveDocContent(req).then(() => {
       message.success('保存成功', 2).then(() => {
-        window.location.href = `/doc/${values.doc_id}`
+        store.initDocsByDocId(values.doc_id)
+        navigate(`/doc/${values.doc_id}`)
       })
     })
   }

@@ -40,15 +40,6 @@
   align-items: center;
 }
 
-.doc-tree .ant-tree-switcher {
-  height: 32px;
-  line-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-}
-
 .doc-tree .ant-tree-indent-unit {
   width: 16px;
 }
@@ -176,6 +167,15 @@
   top: 1px;  /* 微调位，使其与文字完全居中对齐 */
 }
 
+/* 调整展开箭头图标大小 */
+.doc-tree .ant-tree-switcher .anticon {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .doc-tree .ant-tree-switcher:hover {
   background: none !important;  /* 移除悬停时的背景 */
 }
@@ -188,6 +188,13 @@
   box-shadow: none !important;
 }
 
+
+.doc-tree .ant-tree-switcher:before {
+  background: none !important;  /* 移除箭头的背景 */
+  height: 32px!important;
+  line-height: 32px;
+}
+
 /* 确保缩进单位的宽度正确 */
 .doc-tree .ant-tree-indent-unit {
   width: 24px !important;
@@ -197,16 +204,6 @@
 .doc-tree .anticon {
   line-height: 32px;
   vertical-align: middle;
-}
-
-/* 调整折叠按钮的位置和大小 */
-.doc-tree .ant-tree-switcher {
-  height: 32px;
-  line-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
 }
 
 /* 调整文件图标的位置 */
@@ -228,14 +225,6 @@
   overflow: hidden;
 }
 
-/* 调整展开箭头图标大小 */
-.doc-tree .ant-tree-switcher .anticon {
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
 
 /* 调整文件图标大小 */
 .doc-tree .custom-title .anticon-file-text {
