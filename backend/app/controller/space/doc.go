@@ -1,12 +1,15 @@
 package space
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/controller"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/app/service"
+	"github.com/phachon/mm-wiki/config"
 	"github.com/phachon/mm-wiki/gopkg/errors"
+	"github.com/phachon/mm-wiki/gopkg/upload"
 	"github.com/phachon/mm-wiki/logger"
+
+	"github.com/gin-gonic/gin"
 )
 
 // DocSave 文档保存
@@ -101,4 +104,58 @@ func DocInfo(ctx *gin.Context) error {
 		"content":  content,
 	}
 	return controller.RespJsonSuccess(ctx, data)
+}
+
+// DocContentSave 文档内容保存
+func DocContentSave(ctx *gin.Context) error {
+	return nil
+}
+
+// DocUploadFile 文档上传文件
+func DocUploadFile(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocUploadFile] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+
+	file, ferr := ctx.FormFile("file")
+	if ferr != nil {
+		logger.WithContext(ctx).Errorf("[DocUploadFile] FormFile err=%+v", ferr)
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文件不能为空")
+	}
+
+	uploadConf := config.GetAppConf().GetUploadConf("doc_file")
+	uploaderHander := upload.GetUploaderHandler(upload.UplaoderName(uploadConf.UploadType))
+	if uploaderHander == nil {
+		logger.WithContext(ctx).Warnf("[DocUploadFile] 上传配置错误")
+		return controller.RespJsonError(ctx, int32(errors.BusinessUnknownError), "上传配置错误")
+	}
+	logger.WithContext(ctx).Infof("[DocUploadFile] 上传文件：%+v", uploadConf)
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocUploadFile] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "上传文件失败：获取文档错误")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocUploadFile] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档id不合法")
+	}
+
+	// todo 生成文件唯一ID
+
+	// 上传文件
+	uploader := uploaderHander(&uploadConf.UploaderConfig)
+	uploadResult, uploadErr := uploader.UploadFile(ctx, file)
+	if uploadErr != nil {
+		logger.WithContext(ctx).Errorf("[DocUploadFile] UploadFile err=%+v", uploadErr)
+		return controller.RespJsonError(ctx, int32(errors.BusinessUnknownError), "上传文件失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{
+		"path": uploadResult.Url,
+		"url":  uploadResult.Url,
+	})
 }

@@ -13,8 +13,9 @@ import (
 
 var (
 	// 需要忽略的校验用户权限的接口
-	ignorePermissionPath = map[string]bool{
-		"/system/auth/login": true,
+	ignorePermissionPath = []string{
+		"/system/auth/login",
+		"/static/upload",
 	}
 )
 
@@ -32,11 +33,9 @@ func PermissionCheck() gin.HandlerFunc {
 func authPermissionHandle(ctx *gin.Context) (keepNext bool) {
 	// 需要忽略权限的接口
 	path := ctx.Request.URL.Path
-	_, ok := ignorePermissionPath[path]
-	if ok {
+	if isCheckIgnore(path, ignorePermissionPath) {
 		return true
 	}
-
 	res := &entity.Response{
 		Code:    int32(errors.SuccessCode),
 		Message: "",

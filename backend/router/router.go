@@ -8,8 +8,10 @@ import (
 	"github.com/phachon/mm-wiki/app/controller"
 	spaceController "github.com/phachon/mm-wiki/app/controller/space"
 	systemController "github.com/phachon/mm-wiki/app/controller/system"
+	"github.com/phachon/mm-wiki/config"
 	"github.com/phachon/mm-wiki/filter"
 	"github.com/phachon/mm-wiki/global"
+	"github.com/phachon/mm-wiki/gopkg/upload"
 )
 
 // router 路由相关
@@ -90,6 +92,8 @@ var (
 		// 文档
 		{group: routerGroupNameSpace, relativePath: "/doc/save", method: http.MethodPost, controllerHandle: spaceController.DocSave},
 		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},
+		{group: routerGroupNameSpace, relativePath: "/doc/content_save", method: http.MethodPost, controllerHandle: spaceController.DocContentSave},
+		{group: routerGroupNameSpace, relativePath: "/doc/upload_file", method: http.MethodPost, controllerHandle: spaceController.DocUploadFile},
 	}
 )
 
@@ -145,6 +149,13 @@ func initRouter() {
 				routerHandleItem.relativePath,
 				HandleWrapper(routerHandleItem.controllerHandle),
 			)
+		}
+	}
+
+	// 如果 upload 为 local 添加静态文件路由
+	for _, uploadConf := range config.GetAppConf().Upload {
+		if uploadConf.UploadType == upload.UploaderLocal {
+			global.GinEngine.Static("/static/upload", uploadConf.LocalDir)
 		}
 	}
 }

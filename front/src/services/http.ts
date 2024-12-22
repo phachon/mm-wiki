@@ -114,11 +114,19 @@ const httpRequest = {
         })
     })
   },
-  postFile<T>(url: string, params = {}): Promise<T> {
+  uploadFile<T>(url: string, file: File, data: { [key: string]: any } = {}): Promise<T> {
+    const formData = new FormData()
+    formData.append('file', file)
+    for (const key in data) {
+      formData.append(key, data[key])
+    }
     const options: AxiosRequestConfig = {
       url: url,
       method: 'POST',
-      data: qs.stringify(params),
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
       responseType: 'json'
     }
     return new Promise((resolve, reject) => {

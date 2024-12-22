@@ -9,25 +9,21 @@ import DocAddUI from '../../Doc/component/AddUI'
 import { useNavigate } from 'react-router-dom'
 import DocTreeUI from '../component/TreeUI'
 
+// 文档主页组件
 const DocIndex: React.FC = () => {
   const store = useGlobalStore()
   const navigate = useNavigate()
   const { doc_id, space_key } = useParams<{ doc_id: string; space_key: string }>()
 
   useEffect(() => {
-    store.initDocsByDocId(Number(doc_id))
+    store.initDocsByDocId(Number(doc_id), navigate)
   }, [doc_id])
 
   useEffect(() => {
     if (space_key) {
-      store.initDocsBySpaceKey(space_key)
+      store.initDocsBySpaceKey(space_key, navigate)
     }
   }, [space_key])
-
-  const onClickDocSelect = (docId: string) => {
-    console.log('onClickDocSelect docId:', docId)
-    navigate(`/doc/${docId}`)
-  }
 
   return (
     <Layout>
@@ -48,7 +44,7 @@ const DocIndex: React.FC = () => {
                 dirTree={store.dirTree}
                 homeDoc={store.homeDoc}
                 onClickDocAction={store.onClickDocAction}
-                onClickDocSelect={onClickDocSelect}
+                onClickDocSelect={store.onClickDocSelect}
                 selectDocId={store.selectDocId}
               />
             )

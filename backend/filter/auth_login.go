@@ -3,6 +3,7 @@ package filter
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/entity"
@@ -14,8 +15,9 @@ import (
 
 var (
 	// 需要忽略的校验登录的接口
-	ignoreLoginAuthPath = map[string]bool{
-		"/system/auth/login": true,
+	ignoreLoginAuthPath = []string{
+		"/system/auth/login",
+		"/static/upload",
 	}
 )
 
@@ -32,8 +34,7 @@ func AuthLoginJWT() gin.HandlerFunc {
 
 func authLoginJWTHandle(c *gin.Context) (keepNext bool) {
 	path := c.Request.URL.Path
-	_, ok := ignoreLoginAuthPath[path]
-	if ok {
+	if isCheckIgnore(path, ignoreLoginAuthPath) {
 		return true
 	}
 	// 从 ctx 获取 debug 参数
@@ -75,4 +76,17 @@ func authLoginJWTHandle(c *gin.Context) (keepNext bool) {
 		"login_account_name", claims.AccountName,
 	)
 	return true
+}
+
+func isCheckIgnore(path string, ignorePaths []string) bool {
+	for _, ignorePath := range ignorePaths {
+		if ignorePath == path {
+			return true
+		}
+		// 前缀匹配
+		if strings.HasPrefix(path, ignorePath) {
+			return true
+		}
+	}
+	return false
 }

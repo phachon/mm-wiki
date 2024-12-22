@@ -23,6 +23,13 @@ Database:
     conn_max_connection: 200
     conn_max_lifetime: 200 # 单位 s
 
+# Upload 配置
+Upload:
+  doc_file: # 文档上传配置
+    type: local # 上传方式 local | qiniu | aliyun
+    local_dir: ./static/upload
+    domain: http://localhost:8088
+
 # 日志配置
 Logger:
   default:

@@ -8,6 +8,7 @@ import (
 
 	"github.com/phachon/mm-wiki/global"
 	klog "github.com/phachon/mm-wiki/gopkg/log"
+	"github.com/phachon/mm-wiki/gopkg/upload"
 	"github.com/phachon/mm-wiki/utils"
 	"gopkg.in/yaml.v3"
 )
@@ -32,6 +33,8 @@ type AppConfig struct {
 	} `yaml:"Server"`
 	// Database 数据库配置
 	Database map[string]DatabaseConf `yaml:"Database"`
+	// Upload 上传配置
+	Upload map[string]UploadConf `yaml:"Upload"`
 	// Logger 日志配置
 	Logger map[string]klog.Config `yaml:"Logger"`
 	// Auth 登录认证配置
@@ -57,6 +60,12 @@ type AuthConf struct {
 	ExpireHours int    `yaml:"expire_hours"` // 过期时间小时
 }
 
+// UploadConf 上传配置
+type UploadConf struct {
+	UploadType            upload.UplaoderName `yaml:"type"` // 上传类型
+	upload.UploaderConfig `yaml:",inline"`
+}
+
 // getAppConfigPath 获取服务启动配置文件路径
 //
 //	-conf 传入配置文件路径
@@ -76,13 +85,13 @@ func initAppConfig() {
 	if err != nil {
 		panic("get app config path fail: " + err.Error())
 	}
-	log.Println(fmt.Sprintf("[Config] get config file: %s", path))
+	log.Printf("[Config] get config file: %s \n", path)
 	// 解析项目配置
 	cfg, err := LoadAppConfig(path)
 	if err != nil {
 		panic("parse config fail: " + err.Error())
 	}
-	//log.Println(fmt.Sprintf("[Config] config: %+v", cfg))
+	log.Println(fmt.Sprintf("[Config] config: %+v", cfg))
 	SetAppConf(cfg)
 }
 
@@ -176,4 +185,12 @@ func (ac *AppConfig) GetAuthConf() AuthConf {
 		ac.Auth.ExpireHours = 3
 	}
 	return ac.Auth
+}
+
+// GetUploadConf 获取上传配置
+func (ac *AppConfig) GetUploadConf(sceneName string) UploadConf {
+	if len(ac.Upload) == 0 {
+		return UploadConf{}
+	}
+	return ac.Upload[sceneName]
 }

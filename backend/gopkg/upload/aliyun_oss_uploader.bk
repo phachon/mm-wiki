@@ -1,0 +1,64 @@
+package upload
+
+import (
+	"fmt"
+	"mime/multipart"
+
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+)
+
+// AliyunOSSUploader 实现 Uploader 接口，用于阿里云 OSS 文件上传
+type AliyunOSSUploader struct {
+	Endpoint        string
+	AccessKeyID     string
+	AccessKeySecret string
+	BucketName      string
+}
+
+// AliyunOSSUploaderConfig 阿里云 sos 配置
+type AliyunOSSUploaderConfig struct {
+	Endpoint        string
+	AccessKeyID     string
+	AccessKeySecret string
+	BucketName      string
+}
+
+// NewAliyunOSSUploader 创建一个新的 AliyunOSSUploader
+func NewAliyunOSSUploader(endpoint, accessKeyID, accessKeySecret, bucketName string) *AliyunOSSUploader {
+	return &AliyunOSSUploader{
+		Endpoint:        endpoint,
+		AccessKeyID:     accessKeyID,
+		AccessKeySecret: accessKeySecret,
+		BucketName:      bucketName,
+	}
+}
+
+// UploadFile 实现文件上传到阿里云 OSS
+func (u *AliyunOSSUploader) UploadFile(file *multipart.FileHeader) (string, error) {
+	// 创建 OSS 客户端
+	client, err := oss.New(u.Endpoint, u.AccessKeyID, u.AccessKeySecret)
+	if err != nil {
+		return "", err
+	}
+
+	// 获取存储空间
+	bucket, err := client.Bucket(u.BucketName)
+	if err != nil {
+		return "", err
+	}
+
+	// 打开上传的文件
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	// 上传文件到 OSS
+	err = bucket.PutObject(file.Filename, src)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("https://%s.%s/%s", u.BucketName, u.Endpoint, file.Filename), nil
+}

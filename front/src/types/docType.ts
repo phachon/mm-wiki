@@ -50,16 +50,16 @@ export type ContentEntity = {
   update_time: string // 修改时间
 }
 
-// DocSaveReq 文档保存请求
-export type DocSaveReq = {
+// DocAddSaveReq 文档添加保存请求
+export type DocAddSaveReq = {
   space_key: string // 空间Key
   parent_id: number // 父级ID
   name: string // 文档名称
   doc_type: DocType // 文档类型
 }
 
-// DocSaveResp 文档保存响应
-export type DocSaveResp = {
+// DocAddSaveResp 文档添加保存响应
+export type DocAddSaveResp = {
   doc_id: number // 文档ID
 }
 

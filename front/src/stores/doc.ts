@@ -1,30 +1,32 @@
 import { SpaceDocService } from '@/services/SpaceDoc'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
-import { ActionType, ContentEntity, DocEntity, DocSaveResp, DocTreeEntity } from '@/types/docType'
+import { ActionType, ContentEntity, DocEntity, DocTreeEntity } from '@/types/docType'
 import { SpaceInfoType } from '@/types/spaceType'
 import { message, TreeDataNode } from 'antd'
 import { StateCreator } from 'zustand'
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 
 // IDoc: interface for doc store
 export interface IDoc {
-  initDocsByDocId: (docId: number) => void
-  initDocsBySpaceKey: (spaceKey: string) => void
+  initDocsByDocId: (docId: number, nvaigate?: NavigateFunction) => void
+  initDocsBySpaceKey: (spaceKey: string, nvaigate?: NavigateFunction) => void
 
   /** 文档左侧栏 **/
+  navigate?: NavigateFunction // 跳转
   siderLoading?: boolean
   spaceInfo?: SpaceInfoType
   dirTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
   selectDocId?: string
-  onClickDocAction?: (action: string, node: TreeDataNode) => void
-  onAddDocSubmit?: (values: any) => void
-  setAddDocModal: (visible: boolean) => void
   addDocInfo?: {
     modal?: boolean
     parent_id?: number
     parent_name?: string
   }
+  onClickDocSelect?: (docId: string) => void
+  onClickDocAction?: (action: string, node: TreeDataNode) => void
+  onAddDocSubmit?: (values: any) => void
+  setAddDocModal: (visible: boolean) => void
 
   /** 文档正文 **/
   viewDocLoading?: boolean
@@ -50,7 +52,12 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
   /**
    * 初始化文档
    */
-  initDocsByDocId: async (docId: number) => {
+  initDocsByDocId: async (docId: number, navigate?: NavigateFunction) => {
+    if (navigate) {
+      set({
+        navigate: navigate
+      })
+    }
     if (!docId) {
       return
     }
@@ -82,8 +89,13 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
   /**
    * 初始化空间
    */
-  initDocsBySpaceKey: async (spaceKey: string) => {
+  initDocsBySpaceKey: async (spaceKey: string, navigate?: NavigateFunction) => {
     console.log('初始化空间:', spaceKey)
+    if (navigate) {
+      set({
+        navigate: navigate
+      })
+    }
     const spaceDocsRes = await SpaceSpaceService.getSpaceDocs(spaceKey)
     if (!spaceDocsRes) {
       return
@@ -111,6 +123,13 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
     })
   },
 
+  // 点击文档
+  onClickDocSelect: (docId: string) => {
+    console.log('点击文档:', docId)
+    const navigate = get().navigate
+    navigate && navigate(`/doc/${docId}`)
+  },
+
   /**
    * 文档操作
    */
@@ -124,6 +143,10 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
           parent_name: node.title as string
         }
       })
+    }
+    if (action == ActionType.EDIT) {
+      const navigate = get().navigate
+      navigate && navigate(`/doc/edit/${node.key}`)
     }
   },
 
@@ -143,7 +166,7 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
    * 添加文档保存
    */
   onAddDocSubmit: async (values: any) => {
-    const resp = await SpaceDocService.saveDoc(values)
+    const resp = await SpaceDocService.addSaveDoc(values)
     if (resp.doc_id) {
       message.success('文档保存成功！', 1).then(() => {
         set({

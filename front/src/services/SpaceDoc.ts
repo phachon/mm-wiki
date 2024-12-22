@@ -1,17 +1,18 @@
 import httpRequest from './http'
 import Base from './Base'
 import {
-  DocContentSaveReq,
-  DocContentSaveResp,
+  DocAddSaveReq,
+  DocAddSaveResp,
   DocInfoResp,
-  DocSaveReq,
-  DocSaveResp
+  DocContentSaveReq,
+  DocContentSaveResp
 } from '@/types/docType'
 
 const spaceDocUrl = {
   docSave: '/space/doc/save',
   docInfo: '/space/doc/info',
-  docContentSave: '/space/doc/content_save'
+  docContentSave: '/space/doc/content_save',
+  docUploadFile: '/space/doc/upload_file'
 }
 
 /**
@@ -23,19 +24,11 @@ class SpaceDoc extends Base {
   }
 
   /**
-   * saveDoc 保存文档
+   * addSaveDoc 添加文档保存
    */
-  public saveDoc(docInfo: DocSaveReq): Promise<DocSaveResp> {
+  public addSaveDoc(docInfo: DocAddSaveReq): Promise<DocAddSaveResp> {
     const addSpaceUrl = this.getProxyUrl(spaceDocUrl.docSave)
-    return httpRequest.post<DocSaveResp>(addSpaceUrl, {}, docInfo)
-  }
-
-  /**
-   * 文档内容保存
-   */
-  public saveDocContent(docContent: DocContentSaveReq): Promise<DocContentSaveResp> {
-    const docContentSaveUrl = this.getProxyUrl(spaceDocUrl.docContentSave)
-    return httpRequest.post<DocContentSaveResp>(docContentSaveUrl, {}, docContent)
+    return httpRequest.post<DocAddSaveResp>(addSpaceUrl, {}, docInfo)
   }
 
   /**
@@ -46,6 +39,27 @@ class SpaceDoc extends Base {
     return httpRequest.get<DocInfoResp>(this.getProxyUrl(spaceDocUrl.docInfo), {
       doc_id: docId
     })
+  }
+
+  /**
+   * 保存文档内容
+   * @param docContent 文档内容
+   */
+  public saveDocContent(docContent: DocContentSaveReq): Promise<DocContentSaveResp> {
+    return httpRequest.post<DocContentSaveResp>(
+      this.getProxyUrl(spaceDocUrl.docContentSave),
+      {},
+      docContent
+    )
+  }
+
+  /**
+   * 上传文件
+   * @param file 文件
+   * @param params 参数
+   */
+  public uploadFile(file: File, params: { [key: string]: any } = {}): Promise<any> {
+    return httpRequest.uploadFile(this.getProxyUrl(spaceDocUrl.docUploadFile), file, params)
   }
 }
 
