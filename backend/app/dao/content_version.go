@@ -42,7 +42,7 @@ func (c *ContentVersion) GetContentVersionsByDocId(docId int64) ([]*entity.Conte
 	db := GetDB(dbNameMK).WithContext(c.ctx).
 		Table(TableNameContentVersion).
 		Where("doc_id = ?", docId).
-		Select("version_id", "doc_id", "version_number", "create_time").
+		Select("content_version_id", "doc_id", "create_time").
 		Find(&contentVersions)
 	if db.Error != nil {
 		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())

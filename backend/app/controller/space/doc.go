@@ -108,7 +108,66 @@ func DocInfo(ctx *gin.Context) error {
 
 // DocContentSave 文档内容保存
 func DocContentSave(ctx *gin.Context) error {
-	return nil
+
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	content := controller.GetParamString(ctx, "content")
+	name := controller.GetParamString(ctx, "name")
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocContentSave] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+	if name == "" {
+		logger.WithContext(ctx).Warnf("[DocContentSave] 文档名不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档名不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "文档id不合法")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocContentSave] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档id不合法")
+	}
+	var isUpdateDoc = false
+	if doc.Name != name {
+		doc.Name = name
+		isUpdateDoc = true
+	}
+
+	// 更新文档
+	serviceContent := service.NewContent(ctx)
+	contentEntity, err := serviceContent.GetContentByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] GetContentByDocId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档内容失败")
+	}
+
+	if contentEntity == nil {
+		err = serviceContent.Create(docId, content)
+	} else {
+		if contentEntity.Content != content {
+			isUpdateDoc = true
+			err = serviceContent.UpdateContent(docId, content, contentEntity.Content)
+		}
+	}
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateContent err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "保存文档内容失败")
+	}
+	if !isUpdateDoc {
+		return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+	}
+	// 更新文档
+	err = serviceDoc.UpdateDoc(doc)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateDoc err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档失败")
+	}
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
 
 // DocUploadFile 文档上传文件

@@ -7,6 +7,7 @@ import (
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/utils"
+	"gorm.io/gorm"
 )
 
 const (
@@ -59,6 +60,9 @@ func (d *Doc) GetDocByDocId(docId int64) (*entity.DocEntity, errors.BizError) {
 		Table(TableNameDoc).
 		Where("doc_id = ?", docId).
 		First(doc)
+	if db.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
 	if db.Error != nil {
 		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
 	}

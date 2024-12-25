@@ -223,7 +223,6 @@ DROP TABLE IF EXISTS `mk_content`;
 CREATE TABLE `mk_content` (
   `doc_id` int(10) NOT NULL COMMENT '文档唯一ID',
   `content` longtext NOT NULL COMMENT '文档正文内容',
-  `current_version_id` int(10) DEFAULT NULL COMMENT '当前版本ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`doc_id`)
@@ -234,14 +233,12 @@ CREATE TABLE `mk_content` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mk_content_version`;
 CREATE TABLE `mk_content_version` (
-  `version_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '版本唯一ID',
+  `content_version_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '版本唯一ID',
   `doc_id` int(10) NOT NULL COMMENT '文档唯一ID',
-  `version_number` int(10) NOT NULL COMMENT '版本号',
   `content` longtext NOT NULL COMMENT '版本内容',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`version_id`),
-  KEY `idx_doc_id` (`doc_id`),
-  KEY `idx_version_number` (`version_number`)
+  PRIMARY KEY (`content_version_id`),
+  KEY `idx_doc_id` (`doc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文档版本表';
 
 -- --------------------------------

@@ -48,8 +48,10 @@ func (c *Content) GetContentByDocId(docId int64) (*entity.ContentEntity, errors.
 }
 
 // UpdateContent 更新文档内容
-func (c *Content) UpdateContent(docId int64, content string) errors.BizError {
-
+func (c *Content) UpdateContent(docId int64, content string, oldContent string) errors.BizError {
+	if oldContent == content {
+		return nil
+	}
 	contentEntity := &entity.ContentEntity{
 		DocId:   docId,
 		Content: content,
@@ -62,17 +64,10 @@ func (c *Content) UpdateContent(docId int64, content string) errors.BizError {
 
 	// 保存文档版本
 	contentVersionEntity := &entity.ContentVersionEntity{
-		DocId:         docId,
-		VersionNumber: 1,
-		Content:       content,
+		DocId:   docId,
+		Content: oldContent,
 	}
 	err = c.daoContentVersion.Insert(contentVersionEntity)
-	if err != nil {
-		return err
-	}
-
-	// 更新文档当前版本号
-	err = c.daoContent.UpdateCurrentVersion(docId, contentVersionEntity.VersionId)
 	if err != nil {
 		return err
 	}

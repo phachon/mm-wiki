@@ -86,7 +86,4 @@ export type DocContentSaveReq = {
 }
 
 // DocContentSaveResp 文档操作响应
-export type DocContentSaveResp = {
-  doc_id: number // 文档ID
-  current_version_id: number // 当前版本ID
-}
+export type DocContentSaveResp = {}

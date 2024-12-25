@@ -1,7 +1,7 @@
 import { useGlobalStore } from '@/stores'
 import DocEditUI from '../component/EditUI'
 import { SpaceDocService } from '@/services/SpaceDoc'
-import { DocContentSaveReq, DocContentSaveResp } from '@/types/docType'
+import { DocContentSaveReq } from '@/types/docType'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
