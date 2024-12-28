@@ -14,9 +14,12 @@ import {
 import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
 import Cherry from 'cherry-markdown'
-import { ContentEntity, DocEntity } from '@/types/docType'
+import { DocEntity } from '@/types/docType'
+import { ContentEntity } from '@/types/contentType'
 import { useNavigate } from 'react-router-dom'
 import './view.css'
+import { DocUrlProcessor } from './ToolsUI'
+import { CherryOptions } from 'cherry-markdown/types/cherry'
 
 // DocViewUIProps 文档正文组件
 type DocViewUIProps = {
@@ -24,6 +27,30 @@ type DocViewUIProps = {
   docInfo?: DocEntity
   content?: ContentEntity
   parentPath?: string[]
+  onHistoryClick?: (docId?: number) => void
+}
+
+// viewCherryConfig Cherry 配置
+const viewCherryConfig: CherryOptions = {
+  editor: {
+    defaultModel: 'previewOnly', // 仅预览模式
+    keepDocumentScrollAfterInit: true
+  },
+  previewer: {
+    enablePreviewerBubble: false
+  },
+  toolbars: {
+    showToolbar: false,
+    toolbar: [],
+    hiddenToolbar: [],
+    // 配置目录
+    toc: {
+      updateLocationHash: true, // 要不要更新URL的hash
+      defaultModel: 'full', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
+      position: 'fixed', // 悬浮目录的悬浮方式。当滚动条在cherry内部时，用absolute；当滚动条在cherry外部时，用fixed
+      cssText: 'right: 12px;'
+    }
+  }
 }
 
 // DocViewUI 文档正文UI组件
@@ -32,33 +59,19 @@ const DocViewUI = (props: DocViewUIProps) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (docViewRef.current) {
-      const cherry = new Cherry({
-        el: docViewRef.current,
-        value: props.content?.content,
-        editor: {
-          defaultModel: 'previewOnly', // 仅预览模式
-          keepDocumentScrollAfterInit: true
-        },
-        previewer: {
-          enablePreviewerBubble: false
-        },
-        toolbars: {
-          showToolbar: false,
-          toolbar: [],
-          hiddenToolbar: [],
-          // 配置目录
-          toc: {
-            updateLocationHash: true, // 要不要更新URL的hash
-            defaultModel: 'full', // pure: 精简模式/缩略模式，只有一排小点； full: 完整模式，会展示所有标题
-            position: 'fixed', // 悬浮目录的悬浮方式。当滚动条在cherry内部时，用absolute；当滚动条在cherry外部时，用fixed
-            cssText: 'right: 12px;'
-          }
-        }
-      })
-      return () => {
-        cherry.destroy() // 在组件卸载时销毁 Cherry 实例
+    if (!docViewRef.current) {
+      return
+    }
+    const cherry = new Cherry({
+      ...viewCherryConfig,
+      el: docViewRef.current,
+      value: props.content?.content,
+      callback: {
+        urlProcessor: DocUrlProcessor
       }
+    })
+    return () => {
+      cherry.destroy() // 在组件卸载时销毁 Cherry 实例
     }
   }, [props.content])
 
@@ -87,7 +100,11 @@ const DocViewUI = (props: DocViewUIProps) => {
                 <a>{props.docInfo?.create_account_name}</a>
                 创建于 {props.docInfo?.create_time}，<a>{props.docInfo?.edit_account_name}</a>
                 更新于 {props.docInfo?.update_time}
-                <a data-link="/document/history?document_id=x">
+                <a
+                  onClick={() => {
+                    props.onHistoryClick && props.onHistoryClick(props.docInfo?.doc_id)
+                  }}
+                >
                   <Space>
                     <HistoryOutlined />
                     查看修改历史

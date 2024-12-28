@@ -236,7 +236,10 @@ CREATE TABLE `mk_content_version` (
   `content_version_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '版本唯一ID',
   `doc_id` int(10) NOT NULL COMMENT '文档唯一ID',
   `content` longtext NOT NULL COMMENT '版本内容',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '版本创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '文档更新时间',
+  `edit_account_id` int(10) NOT NULL DEFAULT '0' COMMENT '修改账号 id',
+  `edit_account_name` char(100) NOT NULL DEFAULT '' COMMENT '修改帐号名',
   PRIMARY KEY (`content_version_id`),
   KEY `idx_doc_id` (`doc_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文档版本表';

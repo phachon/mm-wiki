@@ -1,19 +1,21 @@
 import { SaveOutlined, RollbackOutlined } from '@ant-design/icons'
 import { Button, Col, Form, Input, message, Row, Space } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { ContentEntity, DocEntity } from '@/types/docType'
+import { DocEntity } from '@/types/docType'
+import { ContentEntity } from '@/types/contentType'
 import 'cherry-markdown/dist/cherry-markdown.css'
 import Cherry from 'cherry-markdown'
 import { CherryOptions } from 'cherry-markdown/types/cherry'
 import './edit.css'
-import Doc from '..'
-import { SpaceDocService } from '@/services/SpaceDoc'
+import { SettingConfig } from '@/config/setting'
+import { DocUrlProcessor } from './ToolsUI'
 
 // DocEditUIProps 文档编辑组件属性
 type DocEditUIProps = {
-  onSaveSubmit?: (values: any) => void
   docInfo?: DocEntity
   content?: ContentEntity
+  onSaveSubmit?: (values: any) => void
+  onFileUpload?: (file: any, callback: any, docId?: number) => void
 }
 
 const editCherryConfig: CherryOptions = {
@@ -135,9 +137,9 @@ const DocEditUI = (props: DocEditUIProps) => {
       value: props.content?.content,
       callback: {
         fileUpload: (file: any, callback: any) => {
-          fileUpload(file, callback, props.docInfo?.doc_id)
+          props.onFileUpload && props.onFileUpload(file, callback, props.docInfo?.doc_id)
         },
-        urlProcessor: urlProcessor,
+        urlProcessor: DocUrlProcessor,
         afterChange: editorChange
       },
       ...editCherryConfig
@@ -146,34 +148,6 @@ const DocEditUI = (props: DocEditUIProps) => {
       cherry.destroy() // 在组件卸载时销毁 Cherry 实例
     }
   }, [props.content])
-
-  // fileUpload 文件上传
-  const fileUpload = (file: any, callback: any, docId?: number) => {
-    if (!docId) {
-      message.error('上传参数异常')
-      return
-    }
-    SpaceDocService.uploadFile(file, {
-      doc_id: docId
-    })
-      .then((resp) => {
-        callback(resp.url) // 上传成功后回调返回文件地址 url
-      })
-      .catch((e) => {
-        console.error('上传失败', e)
-      })
-  }
-
-  const urlProcessor = (url: string, type: string) => {
-    console.log(url, type)
-    if (type === 'autolink') {
-      return url.replace(/^http:/, 'https:')
-    }
-    if (type == 'image') {
-      return 'http://localhost:8088/' + url
-    }
-    return url
-  }
 
   const handleSave = () => {
     if (!props.onSaveSubmit) {

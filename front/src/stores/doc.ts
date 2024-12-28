@@ -1,6 +1,7 @@
 import { SpaceDocService } from '@/services/SpaceDoc'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
-import { ActionType, ContentEntity, DocEntity, DocTreeEntity } from '@/types/docType'
+import { ActionType, DocEntity, DocTreeEntity } from '@/types/docType'
+import { ContentEntity } from '@/types/contentType'
 import { SpaceInfoType } from '@/types/spaceType'
 import { message, TreeDataNode } from 'antd'
 import { StateCreator } from 'zustand'

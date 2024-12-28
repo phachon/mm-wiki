@@ -23,9 +23,31 @@ const DocEdit: React.FC = () => {
     })
   }
 
+  // onFileUpload 文件上传
+  const onFileUpload = (file: any, callback: any, docId?: number) => {
+    if (!docId) {
+      message.error('上传参数异常')
+      return
+    }
+    SpaceDocService.uploadFile(file, {
+      doc_id: docId
+    })
+      .then((resp) => {
+        callback(resp.url) // 上传成功后回调返回文件地址 url
+      })
+      .catch((e) => {
+        console.error('上传失败', e)
+      })
+  }
+
   return (
     <div>
-      <DocEditUI content={store.content} docInfo={store.viewDocInfo} onSaveSubmit={onSaveSubmit} />
+      <DocEditUI
+        content={store.content}
+        docInfo={store.viewDocInfo}
+        onSaveSubmit={onSaveSubmit}
+        onFileUpload={onFileUpload}
+      />
     </div>
   )
 }

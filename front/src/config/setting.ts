@@ -36,6 +36,10 @@ export interface ISetting {
    * @name string 页角显示文案
    */
   footerShowText?: string
+  /**
+   * @name string 文件存储域名
+   */
+  fileDomain?: string
 }
 
 /**
@@ -49,5 +53,6 @@ export const SettingConfig: ISetting = {
   copyright: 'Copyright © 2023 @Kitter Incorporated. All rights reserved.',
   frameHeaderTitle: ' MM-Wiki ',
   frameHeaderIconUrl: logoImg,
-  footerShowText: 'MM-Wiki © 2023 Created by @kitter'
+  footerShowText: 'MM-Wiki © 2023 Created by @kitter',
+  fileDomain: 'http://localhost:8088'
 }

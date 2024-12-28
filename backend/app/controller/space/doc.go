@@ -12,8 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// DocSave 文档保存
-func DocSave(ctx *gin.Context) error {
+// DocCreate 文档创建
+func DocCreate(ctx *gin.Context) error {
 
 	parentId := controller.GetParamInt64Def(ctx, "parent_id", 0)
 	name := controller.GetParamString(ctx, "name")
@@ -151,7 +151,7 @@ func DocContentSave(ctx *gin.Context) error {
 	} else {
 		if contentEntity.Content != content {
 			isUpdateDoc = true
-			err = serviceContent.UpdateContent(docId, content, contentEntity.Content)
+			err = serviceContent.UpdateContent(docId, content, contentEntity.Content, doc)
 		}
 	}
 	if err != nil {
@@ -217,4 +217,50 @@ func DocUploadFile(ctx *gin.Context) error {
 		"path": uploadResult.Url,
 		"url":  uploadResult.Url,
 	})
+}
+
+// DocHistoryList 文档历史列表
+func DocHistoryList(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	pageSize := controller.GetParamIntDef(ctx, "page_size", 10)
+	pageNum := controller.GetParamIntDef(ctx, "page_num", 1)
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocHistoryList] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	docInfo, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocHistoryList] GetContentsByDocId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+	}
+	if docInfo == nil {
+		logger.WithContext(ctx).Warnf("[DocHistoryList] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	// 获取文档历史
+	docVersion := service.NewContentVersion(ctx)
+	contentVersions, err := docVersion.GetContentVersionsByDocIdLimit(
+		docId, pageSize, pageNum,
+	)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocHistoryList] GetContentVersionsByDocId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档历史失败")
+	}
+
+	// 获取分页信息
+	pageInfo, err := docVersion.GetPageInfoLimit(docId, pageSize, pageNum)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocHistoryList] GetPageInfoLimit err=%s", err.Error())
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档历史失败")
+	}
+
+	var data = map[string]interface{}{
+		"version_list": contentVersions,
+		"page_info":    pageInfo,
+	}
+	return controller.RespJsonSuccess(ctx, data)
 }

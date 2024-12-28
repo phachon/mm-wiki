@@ -1,3 +1,6 @@
+import { PageInfoType } from './baseType'
+import { ContentEntity, DocVersionEntity } from './contentType'
+
 // DocType 文档类型
 export enum DocType {
   DOC = 1,
@@ -41,15 +44,6 @@ export type DocTreeEntity = DocEntity & {
   children: DocTreeEntity[] // 子文档
 }
 
-// ContentEntity 文档内容实体
-export type ContentEntity = {
-  doc_id: number // 文档ID
-  content: string // 文档内容
-  current_version_id: number // 当前版本ID
-  create_time: string // 创建时间
-  update_time: string // 修改时间
-}
-
 // DocAddSaveReq 文档添加保存请求
 export type DocAddSaveReq = {
   space_key: string // 空间Key
@@ -84,6 +78,3 @@ export type DocContentSaveReq = {
   content: string // 文档内容
   name: string // 文档名称
 }
-
-// DocContentSaveResp 文档操作响应
-export type DocContentSaveResp = {}

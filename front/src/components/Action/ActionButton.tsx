@@ -25,10 +25,11 @@ const ActionButton = (props: ActionButtonProps) => {
         padding: '0',
         height: 'auto',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: '4px'
       }}
+      icon={props.icon}
     >
-      {props.icon}
       <span className="button-text">{props.text}</span>
     </Button>
   ) : (
@@ -39,10 +40,11 @@ const ActionButton = (props: ActionButtonProps) => {
           padding: 0,
           height: 0,
           color: '#1677ff',
-          opacity: 0.5
+          opacity: 0.5,
+          gap: '4px'
         }}
+        icon={props.icon}
       >
-        {props.icon}
         <span className="button-text">{props.text}</span>
       </Button>
     </Tooltip>

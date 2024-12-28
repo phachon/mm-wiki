@@ -1,4 +1,5 @@
 import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
+import { SettingConfig } from '@/config/setting'
 import { DocTypes } from '@/types/docType'
 import { CheckboxOptionType } from 'antd'
 
@@ -18,4 +19,15 @@ export const DocTypeRadioOptions = () => {
     })
   })
   return options
+}
+
+/**
+ * 文档 url 处理函数
+ */
+export const DocUrlProcessor = (url: string, type: string) => {
+  if (type == 'image' || type == 'video' || type == 'audio' || type == 'file') {
+    return SettingConfig.fileDomain + '/' + url
+  }
+
+  return url
 }

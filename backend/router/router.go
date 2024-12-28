@@ -90,10 +90,11 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/space/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
 		{group: routerGroupNameSpace, relativePath: "/space/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
 		// 文档
-		{group: routerGroupNameSpace, relativePath: "/doc/save", method: http.MethodPost, controllerHandle: spaceController.DocSave},
+		{group: routerGroupNameSpace, relativePath: "/doc/create", method: http.MethodPost, controllerHandle: spaceController.DocCreate},
 		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},
 		{group: routerGroupNameSpace, relativePath: "/doc/content_save", method: http.MethodPost, controllerHandle: spaceController.DocContentSave},
 		{group: routerGroupNameSpace, relativePath: "/doc/upload_file", method: http.MethodPost, controllerHandle: spaceController.DocUploadFile},
+		{group: routerGroupNameSpace, relativePath: "/doc/history", method: http.MethodGet, controllerHandle: spaceController.DocHistoryList},
 	}
 )
 

@@ -2,16 +2,20 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/utils"
+	"gorm.io/gorm"
 )
 
 const (
 	// TableNameContentVersion 文档内容版本表
 	TableNameContentVersion = "mk_content_version"
+	// ContentVersionPrimaryKey 内容版本表主键ID
+	ContentVersionPrimaryKey = "content_version_id"
 )
 
 // ContentVersion 文档内容版本表数据对象
@@ -36,13 +40,25 @@ func (c *ContentVersion) Insert(contentVersionEntity *entity.ContentVersionEntit
 	return nil
 }
 
-// GetContentVersionsByDocId 获取文档多个版本信息(不含正文)
-func (c *ContentVersion) GetContentVersionsByDocId(docId int64) ([]*entity.ContentVersionEntity, errors.BizError) {
+// GetContentVersionsByDocIdLimit 获取文档多个版本信息(不含正文)
+func (c *ContentVersion) GetContentVersionsByDocIdLimit(docId int64, limit int, offset int) (
+	[]*entity.ContentVersionEntity, errors.BizError) {
+
 	var contentVersions []*entity.ContentVersionEntity
 	db := GetDB(dbNameMK).WithContext(c.ctx).
 		Table(TableNameContentVersion).
+		Limit(limit).
+		Offset(offset).
+		Order(fmt.Sprintf("%s DESC", ContentVersionPrimaryKey)).
 		Where("doc_id = ?", docId).
-		Select("content_version_id", "doc_id", "create_time").
+		Select(
+			ContentVersionPrimaryKey,
+			"doc_id",
+			"create_time",
+			"update_time",
+			"edit_account_id",
+			"edit_account_name",
+		).
 		Find(&contentVersions)
 	if db.Error != nil {
 		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
@@ -50,26 +66,27 @@ func (c *ContentVersion) GetContentVersionsByDocId(docId int64) ([]*entity.Conte
 	return contentVersions, nil
 }
 
-// GetContentVersionByDocIdAndVersionId 获取文档版本信息
-func (c *ContentVersion) GetContentVersionByDocIdAndVersionId(docId, versionId int64) (*entity.ContentVersionEntity, errors.BizError) {
-	var contentVersion = &entity.ContentVersionEntity{}
-	db := GetDB(dbNameMK).WithContext(c.ctx).
-		Table(TableNameContentVersion).
-		Where("doc_id = ? AND version_id = ?", docId, versionId).
-		First(contentVersion)
+// CountContentVersions 获取文档版本数量
+func (c *ContentVersion) CountContentVersions(docId int64) (count int64, err errors.BizError) {
+	db := GetDB(dbNameMK).WithContext(c.ctx).Table(TableNameContentVersion).
+		Where("doc_id", docId).
+		Count(&count)
 	if db.Error != nil {
-		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+		return count, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
 	}
-	return contentVersion, nil
+	return count, nil
 }
 
-// GetContentVersionByDocIdAndVersionNumber 获取文档版本信息
-func (c *ContentVersion) GetContentVersionByDocIdAndVersionNumber(docId int64, versionNumber int) (*entity.ContentVersionEntity, errors.BizError) {
+// GetContentVersionByVersionId 获取文档版本信息
+func (c *ContentVersion) GetContentVersionByVersionId(versionId int64) (*entity.ContentVersionEntity, errors.BizError) {
 	var contentVersion = &entity.ContentVersionEntity{}
 	db := GetDB(dbNameMK).WithContext(c.ctx).
 		Table(TableNameContentVersion).
-		Where("doc_id = ? AND version_number = ?", docId, versionNumber).
+		Where("content_version_id = ?", versionId).
 		First(contentVersion)
+	if db.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
 	if db.Error != nil {
 		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
 	}
