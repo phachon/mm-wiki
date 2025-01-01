@@ -44,31 +44,35 @@ const DocHistoryUI = (props: DocHistoryUIProps) => {
             render: (text: string, record: DocVersionEntity) => (
               <strong>{record.content_version_id}</strong>
             ),
-            width: 200
+            width: 200,
+            align: 'center'
           },
           {
-            title: '修改账号',
+            title: '最后修改账号',
             dataIndex: 'account_name',
             key: 'account_name',
             render: (text: string, record: DocVersionEntity) => <a>{record.edit_account_name}</a>,
             width: 150
           },
           {
-            title: '文档修改时间',
+            title: '最后修改时间',
             dataIndex: 'update_time',
             key: 'update_time',
-            width: 200
+            width: 200,
+            align: 'center'
           },
           {
             title: '版本创建时间',
             dataIndex: 'create_time',
             key: 'create_time',
-            width: 200
+            width: 200,
+            align: 'center'
           },
           {
             title: '操作',
             key: 'action',
             width: 200,
+            align: 'center',
             render: (text: string, record: DocVersionEntity) => (
               <Space>
                 <ActionButton
