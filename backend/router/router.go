@@ -95,6 +95,8 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_save", method: http.MethodPost, controllerHandle: spaceController.DocContentSave},
 		{group: routerGroupNameSpace, relativePath: "/doc/upload_file", method: http.MethodPost, controllerHandle: spaceController.DocUploadFile},
 		{group: routerGroupNameSpace, relativePath: "/doc/history", method: http.MethodGet, controllerHandle: spaceController.DocHistoryList},
+		{group: routerGroupNameSpace, relativePath: "/doc/content_version", method: http.MethodGet, controllerHandle: spaceController.DocContentVersion},
+		{group: routerGroupNameSpace, relativePath: "/doc/recover", method: http.MethodPost, controllerHandle: spaceController.DocRecover},
 	}
 )
 

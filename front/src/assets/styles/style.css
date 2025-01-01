@@ -453,3 +453,7 @@
 .input-tooltip > span {
   color: #E57373;
 } */
+
+.ant-popconfirm-buttons {
+  text-align: center !important;
+}

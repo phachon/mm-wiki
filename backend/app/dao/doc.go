@@ -100,3 +100,24 @@ func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	}
 	return nil
 }
+
+// UpdateNameAndEditAccount 更新文档名称和编辑人
+func (d *Doc) UpdateNameAndEditAccount(docId int64, name string, accountId int64, accountName string) errors.BizError {
+	updateDoc := &entity.DocEntity{
+		Name:            name,
+		UpdateTime:      utils.NewJsonTime(time.Now()),
+		EditAccountId:   accountId,
+		EditAccountName: accountName,
+	}
+	db := GetDB(dbNameMK).WithContext(d.ctx).Table(TableNameDoc).
+		Select("UpdateTime", "Name", "EditAccountId", "EditAccountName").
+		Where(map[string]interface{}{
+			DocPrimaryKey: docId,
+			"status":      entity.DocEntityStatusNormal,
+		}).
+		Updates(updateDoc)
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlUpdateErr, db.Error.Error())
+	}
+	return nil
+}

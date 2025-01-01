@@ -132,11 +132,6 @@ func DocContentSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Warnf("[DocContentSave] 文档不存在")
 		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档id不合法")
 	}
-	var isUpdateDoc = false
-	if doc.Name != name {
-		doc.Name = name
-		isUpdateDoc = true
-	}
 
 	// 更新文档
 	serviceContent := service.NewContent(ctx)
@@ -150,7 +145,6 @@ func DocContentSave(ctx *gin.Context) error {
 		err = serviceContent.Create(docId, content)
 	} else {
 		if contentEntity.Content != content {
-			isUpdateDoc = true
 			err = serviceContent.UpdateContent(docId, content, contentEntity.Content, doc)
 		}
 	}
@@ -158,11 +152,8 @@ func DocContentSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateContent err=%+v", err)
 		return controller.RespJsonError(ctx, err.GetErrCode(), "保存文档内容失败")
 	}
-	if !isUpdateDoc {
-		return controller.RespJsonSuccess(ctx, map[string]interface{}{})
-	}
 	// 更新文档
-	err = serviceDoc.UpdateDoc(doc)
+	err = serviceDoc.UpdateNameAndEditAccount(docId, name)
 	if err != nil {
 		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateDoc err=%+v", err)
 		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档失败")
@@ -263,4 +254,108 @@ func DocHistoryList(ctx *gin.Context) error {
 		"page_info":    pageInfo,
 	}
 	return controller.RespJsonSuccess(ctx, data)
+}
+
+// DocContentVersion 文档内容版本
+func DocContentVersion(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	contentVersionId := controller.GetParamInt64(ctx, "content_version_id")
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocContentVersion] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+	if contentVersionId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocContentVersion] 版本ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "版本id不能为空")
+	}
+
+	// 获取文档内容版本
+	docVersion := service.NewContentVersion(ctx)
+	contentVersion, err := docVersion.GetContentVersionByVersionId(contentVersionId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentVersion] GetContentVersionByVersionId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档版本内容失败")
+	}
+	if contentVersion == nil {
+		logger.WithContext(ctx).Warnf("[DocContentVersion] 文档版本不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+	if contentVersion.DocId != docId {
+		logger.WithContext(ctx).Warnf("[DocContentVersion] 文档版本不匹配")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+
+	var data = map[string]interface{}{
+		"content_version": contentVersion,
+	}
+	return controller.RespJsonSuccess(ctx, data)
+}
+
+// DocRecover 文档恢复操作
+func DocRecover(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	contentVersionId := controller.GetParamInt64(ctx, "content_version_id")
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocRecover] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+	if contentVersionId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocRecover] 版本ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "版本ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocRecover] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocRecover] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	serviceContentVersion := service.NewContentVersion(ctx)
+	contentVersion, err := serviceContentVersion.GetContentVersionByVersionId(contentVersionId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocRecover] GetContentVersionByVersionId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档版本信息失败")
+	}
+	if contentVersion == nil {
+		logger.WithContext(ctx).Warnf("[DocRecover] 文档版本不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+	if contentVersion.DocId != docId {
+		logger.WithContext(ctx).Warnf("[DocRecover] 文档版本不匹配")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+
+	serviceContent := service.NewContent(ctx)
+	content, err := serviceContent.GetContentByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocRecover] GetContentByDocId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档内容失败")
+	}
+	if content == nil {
+		logger.WithContext(ctx).Warnf("[DocRecover] 文档内容不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档内容不存在")
+	}
+
+	// 更新版本正文
+	err = serviceContent.UpdateContent(docId, contentVersion.Content, content.Content, doc)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocRecover] UpdateContent err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "恢复文档版本失败")
+	}
+
+	// 更新文档信息
+	err = serviceDoc.UpdateNameAndEditAccount(docId, doc.Name)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateDoc err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }

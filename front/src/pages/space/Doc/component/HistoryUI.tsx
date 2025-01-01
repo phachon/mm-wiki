@@ -2,25 +2,35 @@ import ActionButton from '@/components/Action/ActionButton'
 import { DocVersionEntity } from '@/types/contentType'
 import {
   CloseSquareOutlined,
+  SelectOutlined,
   ForkOutlined,
   FormOutlined,
   RedoOutlined,
   SplitCellsOutlined,
-  TeamOutlined
+  TeamOutlined,
+  SwapOutlined
 } from '@ant-design/icons'
-import { Popconfirm, Space, Table, TablePaginationConfig } from 'antd'
+import { Popconfirm, Space, Table, TablePaginationConfig, TableProps } from 'antd'
 
 // DocHistoryUIProps 文档历史组件属性
 type DocHistoryUIProps = {
   historyList?: DocVersionEntity[]
   pagination: TablePaginationConfig
+  onViewClick?: (docVersion: DocVersionEntity) => void
+  onRecoverClick?: (contentVersionId: number, docId: number) => void
+  onDeleteConfirm?: (contentVersionId: number, docId: number) => void
+  onListChange?: (pageConfig: TablePaginationConfig, filters: any, sorter: any) => void
 }
 
 // DocHistoryUI 文档历史组件
 const DocHistoryUI = (props: DocHistoryUIProps) => {
   return (
     <div>
+      <div className="ant-modal-title">
+        <strong>文档历史</strong>
+      </div>
       <Table
+        style={{ marginTop: 12 }}
         pagination={{
           ...props.pagination,
           showSizeChanger: false
@@ -32,7 +42,7 @@ const DocHistoryUI = (props: DocHistoryUIProps) => {
             dataIndex: 'version',
             key: 'version',
             render: (text: string, record: DocVersionEntity) => (
-              <a>{'V' + record.doc_id + '.' + record.content_version_id}</a>
+              <strong>{record.content_version_id}</strong>
             ),
             width: 200
           },
@@ -59,19 +69,31 @@ const DocHistoryUI = (props: DocHistoryUIProps) => {
             title: '操作',
             key: 'action',
             width: 200,
-            render: (text: string, record: any) => (
+            render: (text: string, record: DocVersionEntity) => (
               <Space>
                 <ActionButton
-                  text="恢复"
-                  icon={<RedoOutlined />}
-                  // onClick={() =>
-                  //   // props.onAdminListClick ? props.onAdminListClick(spaceListItem) : null
-                  // }
+                  text="Diff"
+                  icon={<SwapOutlined />}
+                  onClick={() => props.onViewClick && props.onViewClick(record)}
                   havePermission={true}
                 />
                 <Popconfirm
+                  title="确定恢复至当前版本吗?"
+                  onConfirm={() =>
+                    props.onRecoverClick &&
+                    props.onRecoverClick(record.content_version_id, record.doc_id)
+                  }
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <ActionButton text="恢复" icon={<RedoOutlined />} havePermission={true} />
+                </Popconfirm>
+                <Popconfirm
                   title="确定删除吗?"
-                  // onConfirm={() => props.onDeleteConfirm(spaceListItem)}
+                  onConfirm={() =>
+                    props.onDeleteConfirm &&
+                    props.onDeleteConfirm(record.content_version_id, record.doc_id)
+                  }
                   okText="确定"
                   cancelText="取消"
                 >
@@ -82,6 +104,8 @@ const DocHistoryUI = (props: DocHistoryUIProps) => {
           }
         ]}
         dataSource={props.historyList}
+        onChange={props.onListChange}
+        footer={() => ''}
       />
     </div>
   )

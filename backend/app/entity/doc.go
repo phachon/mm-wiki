@@ -7,6 +7,11 @@ const (
 	DirEntityType = 2 // 目录
 )
 
+const (
+	DocEntityStatusNormal = 0  // 正常
+	DocEntityStatusDelete = -1 // 删除
+)
+
 // DocEntity 文档表结构
 type DocEntity struct {
 	DocId             int64          `json:"doc_id" gorm:"primary_key"` // 文档ID

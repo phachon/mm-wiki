@@ -53,3 +53,8 @@ func (c *ContentVersion) GetPageInfoLimit(
 	}
 	return entity.GetPageInfo(totalNum, pageSize, pageNum), nil
 }
+
+// GetContentVersionByVersionId 获取文档内容版本信息
+func (c *ContentVersion) GetContentVersionByVersionId(contentVersionId int64) (*entity.ContentVersionEntity, errors.BizError) {
+	return c.daoContentVersion.GetContentVersionByVersionId(contentVersionId)
+}

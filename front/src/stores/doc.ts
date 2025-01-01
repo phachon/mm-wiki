@@ -92,6 +92,9 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
    */
   initDocsBySpaceKey: async (spaceKey: string, navigate?: NavigateFunction) => {
     console.log('初始化空间:', spaceKey)
+    set({
+      viewDocLoading: true
+    })
     if (navigate) {
       set({
         navigate: navigate

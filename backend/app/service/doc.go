@@ -78,6 +78,16 @@ func (d *Doc) UpdateDoc(docEntity *entity.DocEntity) errors.BizError {
 	return d.daoDoc.UpdateDoc(docEntity)
 }
 
+// UpdateNameAndEditAccount 更新文档名称和编辑人
+func (d *Doc) UpdateNameAndEditAccount(docId int64, name string) errors.BizError {
+	return d.daoDoc.UpdateNameAndEditAccount(
+		docId,
+		name,
+		global.ContextValueLoginAccountID(d.ctx),
+		global.ContextValueLoginAccountName(d.ctx),
+	)
+}
+
 // DeleteDoc 删除文档
 func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	return d.daoDoc.DeleteDoc(docId)

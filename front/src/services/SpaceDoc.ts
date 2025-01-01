@@ -1,14 +1,20 @@
 import httpRequest from './http'
 import Base from './Base'
 import { DocAddSaveReq, DocAddSaveResp, DocInfoResp, DocContentSaveReq } from '@/types/docType'
-import { DocContentSaveResp, DocContentHistortyResp } from '@/types/contentType'
+import {
+  DocContentSaveResp,
+  DocContentHistortyResp,
+  DocContentVersionResp
+} from '@/types/contentType'
 
 const spaceDocUrl = {
   docCreate: '/space/doc/create',
   docInfo: '/space/doc/info',
   docContentSave: '/space/doc/content_save',
   docUploadFile: '/space/doc/upload_file',
-  docHistory: '/space/doc/history'
+  docHistory: '/space/doc/history',
+  docContentVersion: '/space/doc/content_version',
+  docRecover: '/space/doc/recover'
 }
 
 /**
@@ -62,8 +68,40 @@ class SpaceDoc extends Base {
    * 获取文档历史
    * @param docId 文档id
    */
-  public getDocHistory(docId: number): Promise<DocContentHistortyResp> {
+  public getDocHistory(
+    docId: number,
+    pageSize?: number,
+    pageNum?: number
+  ): Promise<DocContentHistortyResp> {
     return httpRequest.get(this.getProxyUrl(spaceDocUrl.docHistory), {
+      doc_id: docId,
+      page_size: pageSize,
+      page_num: pageNum
+    })
+  }
+
+  /**
+   * 获取文档版本
+   * @param contentVersionId 版本id
+   */
+  public getDocContentVersion(
+    docId: number,
+    contentVersionId: number
+  ): Promise<DocContentVersionResp> {
+    return httpRequest.get(this.getProxyUrl(spaceDocUrl.docContentVersion), {
+      doc_id: docId,
+      content_version_id: contentVersionId
+    })
+  }
+
+  /**
+   * 恢复文档
+   * @param docId 文档id
+   * @param contentVersionId 版本id
+   */
+  public recoverDoc(contentVersionId: number, docId: number): Promise<any> {
+    return httpRequest.post(this.getProxyUrl(spaceDocUrl.docRecover), {
+      content_version_id: contentVersionId,
       doc_id: docId
     })
   }

@@ -1,26 +1,77 @@
 import { useGlobalStore } from '@/stores'
 import DocViewUI from '../component/ViewUI'
 import DocHistoryUI from '../component/HistoryUI'
-import { Modal } from 'antd'
+import DiffViewUI from '../component/DiffViewUI' // 引入 DiffViewUI 组件
+import { Modal, TablePaginationConfig, message } from 'antd' // 引入 Button 组件
 import { useState } from 'react'
 import { SpaceDocService } from '@/services/SpaceDoc'
-import { DocContentHistortyResp, DocVersionEntity } from '@/types/contentType'
+import {
+  DocContentHistortyResp,
+  DocContentVersionResp,
+  DocVersionEntity
+} from '@/types/contentType'
 import { initPagination } from '@/types/adminType'
 
 const DocView: React.FC = () => {
   const store = useGlobalStore()
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
+  const [showDiff, setShowDiff] = useState(false)
   const [historyList, setHistoryList] = useState<DocVersionEntity[]>([])
   const [historyPagination, setHistoryPagination] = useState(initPagination)
+  const [historyDocVersion, setHistoryDocVersion] = useState<DocVersionEntity>()
+  const [onlineContent, setOnlineContent] = useState('')
 
   // onHistoryClick 查看修改历史
   const onHistoryClick = (docId?: number) => {
     if (!docId) {
       return
     }
-    console.log('查看修改历史', docId)
     setHistoryModalOpen(true)
-    SpaceDocService.getDocHistory(docId)
+    getDocHistory(docId, historyPagination)
+  }
+
+  // onViewClick 查看历史版本
+  const onViewClick = (docVersion: DocVersionEntity) => {
+    SpaceDocService.getDocContentVersion(docVersion.doc_id, docVersion.content_version_id)
+      .then((resp: DocContentVersionResp) => {
+        setHistoryDocVersion(resp.content_version)
+        setOnlineContent(store.content?.content || '')
+        setShowDiff(true) // 显示 diff 页面
+      })
+      .catch((e) => {
+        console.error('获取历史版本失败', e)
+      })
+  }
+
+  // onRecoverClick 恢复操作
+  const onRecoverClick = (contentVersionId?: number, docId?: number) => {
+    if (!contentVersionId || !docId) {
+      return
+    }
+    SpaceDocService.recoverDoc(contentVersionId, docId)
+      .then(() => {
+        message.success('恢复成功', 1).then(() => {
+          setHistoryModalOpen(false)
+          setShowDiff(false)
+          store.initDocsByDocId(docId)
+        })
+      })
+      .catch((e) => {
+        console.error('恢复失败', e)
+      })
+  }
+
+  // onHistoryListChange 历史记录分页
+  const onHistoryListChange = (pageConfig: TablePaginationConfig) => {
+    if (!store.viewDocInfo) {
+      return
+    }
+    getDocHistory(store.viewDocInfo.doc_id, pageConfig)
+  }
+
+  // getDocHistory 获取历史记录
+  const getDocHistory = (docId: number, pageConfig: TablePaginationConfig) => {
+    SpaceDocService.getDocHistory(docId, pageConfig.pageSize, pageConfig.current)
       .then((resp: DocContentHistortyResp) => {
         setHistoryList(resp.version_list)
         setHistoryPagination({
@@ -29,7 +80,6 @@ const DocView: React.FC = () => {
           pageSize: resp.page_info.page_size,
           total: resp.page_info.total_num
         })
-        console.log('历史记录', resp)
       })
       .catch((e) => {
         console.error('获取历史记录失败', e)
@@ -46,15 +96,34 @@ const DocView: React.FC = () => {
         onHistoryClick={onHistoryClick}
       />
       <Modal
-        title="文档历史"
-        width={950}
+        title={null}
+        width={showDiff ? 1150 : 1150}
         open={historyModalOpen}
         onCancel={() => {
           setHistoryModalOpen(false)
+          setShowDiff(false) // 关闭弹框时重置状态
         }}
         footer={null}
+        closable={showDiff ? false : true}
       >
-        <DocHistoryUI historyList={historyList} pagination={historyPagination} />
+        {showDiff ? (
+          <DiffViewUI
+            historyDocVersion={historyDocVersion}
+            onlineContent={onlineContent}
+            onRecoverClick={onRecoverClick}
+            onReturnClick={() => {
+              setShowDiff(false)
+            }}
+          />
+        ) : (
+          <DocHistoryUI
+            historyList={historyList}
+            pagination={historyPagination}
+            onViewClick={onViewClick}
+            onRecoverClick={onRecoverClick}
+            onListChange={onHistoryListChange}
+          />
+        )}
       </Modal>
     </>
   )
