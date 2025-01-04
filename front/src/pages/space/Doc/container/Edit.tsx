@@ -4,6 +4,7 @@ import { SpaceDocService } from '@/services/SpaceDoc'
 import { DocContentSaveReq } from '@/types/docType'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { navigateDocView } from '../component/ToolsUI'
 
 const DocEdit: React.FC = () => {
   const store = useGlobalStore()
@@ -18,7 +19,7 @@ const DocEdit: React.FC = () => {
     SpaceDocService.saveDocContent(req).then(() => {
       message.success('保存成功', 2).then(() => {
         store.initDocsByDocId(values.doc_id)
-        navigate(`/doc/${values.doc_id}`)
+        navigateDocView(navigate, values.doc_id)
       })
     })
   }

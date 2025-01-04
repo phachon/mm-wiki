@@ -2,6 +2,7 @@ import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
 import { SettingConfig } from '@/config/setting'
 import { DocTypes } from '@/types/docType'
 import { CheckboxOptionType } from 'antd'
+import { NavigateFunction } from 'react-router-dom'
 
 /**
  * 文档类型 Radio Options 组件
@@ -30,4 +31,12 @@ export const DocUrlProcessor = (url: string, type: string) => {
   }
 
   return url
+}
+
+// navigateDocView 导航到 doc 页面
+export const navigateDocView = (navigate: NavigateFunction, docId?: number) => {
+  if (!docId) {
+    return
+  }
+  navigate(`/doc/` + docId)
 }

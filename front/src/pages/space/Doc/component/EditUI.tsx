@@ -1,5 +1,5 @@
 import { SaveOutlined, RollbackOutlined } from '@ant-design/icons'
-import { Button, Col, Form, Input, message, Row, Space } from 'antd'
+import { Button, Col, Form, Input, message, Popconfirm, Row, Space } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { DocEntity } from '@/types/docType'
 import { ContentEntity } from '@/types/contentType'
@@ -8,7 +8,8 @@ import Cherry from 'cherry-markdown'
 import { CherryOptions } from 'cherry-markdown/types/cherry'
 import './edit.css'
 import { SettingConfig } from '@/config/setting'
-import { DocUrlProcessor } from './ToolsUI'
+import { DocUrlProcessor, navigateDocView } from './ToolsUI'
+import { useNavigate } from 'react-router-dom'
 
 // DocEditUIProps 文档编辑组件属性
 type DocEditUIProps = {
@@ -119,6 +120,7 @@ const DocEditUI = (props: DocEditUIProps) => {
   const docEditRef = useRef<HTMLDivElement>(null)
   const [name, setName] = useState(props.docInfo?.name || '')
   const [content, setContent] = useState(props.content?.content || '')
+  const navigate = useNavigate()
 
   useEffect(() => {
     setName(props.docInfo?.name || '')
@@ -149,7 +151,7 @@ const DocEditUI = (props: DocEditUIProps) => {
     }
   }, [props.content])
 
-  const handleSave = () => {
+  const onSaveClick = () => {
     if (!props.onSaveSubmit) {
       return
     }
@@ -168,6 +170,10 @@ const DocEditUI = (props: DocEditUIProps) => {
     setName(e.target.value)
   }
 
+  const onCancelConfirm = () => {
+    navigateDocView(navigate, props.docInfo?.doc_id)
+  }
+
   return (
     <div style={{ padding: '16px 14px 14px 14px' }}>
       <Row>
@@ -176,12 +182,21 @@ const DocEditUI = (props: DocEditUIProps) => {
         </Col>
         <Col span={4} style={{ textAlign: 'right' }}>
           <Space>
-            <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+            <Button type="primary" icon={<SaveOutlined />} onClick={onSaveClick}>
               保存
             </Button>
-            <Button type="default" icon={<RollbackOutlined />}>
-              取消
-            </Button>
+            <Popconfirm
+              title="确定要取消编辑吗?"
+              description="未保存的内容将会丢失"
+              onConfirm={onCancelConfirm}
+              onCancel={() => {}}
+              okText="确定取消"
+              cancelText="继续编辑"
+            >
+              <Button type="default" icon={<RollbackOutlined />}>
+                取消
+              </Button>
+            </Popconfirm>
           </Space>
         </Col>
       </Row>
