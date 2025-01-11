@@ -10,17 +10,17 @@ import (
 
 // Content 文档内容服务
 type Content struct {
-	ctx               context.Context
-	daoContent        *dao.Content
-	daoContentVersion *dao.ContentVersion
+	ctx                   context.Context
+	daoContent            *dao.Content
+	serviceContentVersion *ContentVersion
 }
 
 // NewContent 创建文档内容服务
 func NewContent(ctx context.Context) *Content {
 	return &Content{
-		ctx:               ctx,
-		daoContent:        dao.NewContent(ctx),
-		daoContentVersion: dao.NewContentVersion(ctx),
+		ctx:                   ctx,
+		daoContent:            dao.NewContent(ctx),
+		serviceContentVersion: NewContentVersion(ctx),
 	}
 }
 
@@ -76,7 +76,7 @@ func (c *Content) UpdateContent(
 		EditAccountId:   doc.EditAccountId,
 		EditAccountName: doc.EditAccountName,
 	}
-	err = c.daoContentVersion.Insert(contentVersionEntity)
+	err = c.serviceContentVersion.CreateContentVersion(contentVersionEntity)
 	if err != nil {
 		return err
 	}

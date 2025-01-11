@@ -359,3 +359,51 @@ func DocRecover(ctx *gin.Context) error {
 
 	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
+
+// DocContentVersionDel 文档内容版本删除
+func DocContentVersionDel(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	contentVersionId := controller.GetParamInt64(ctx, "content_version_id")
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocContentVersionDel] 文档ID不能为空")
+	}
+	if contentVersionId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocContentVersionDel] 版本ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "版本ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentVersionDel] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocContentVersionDel] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	serviceContentVersion := service.NewContentVersion(ctx)
+	contentVersion, err := serviceContentVersion.GetContentVersionByVersionId(contentVersionId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentVersionDel] GetContentVersionByVersionId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档版本信息失败")
+	}
+	if contentVersion == nil {
+		logger.WithContext(ctx).Warnf("[DocContentVersionDel] 文档版本不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+	if contentVersion.DocId != docId {
+		logger.WithContext(ctx).Warnf("[DocContentVersionDel] 文档版本不匹配")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档版本不存在")
+	}
+
+	err = serviceContentVersion.DeleteContentVersion(contentVersionId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocContentVersionDel] DeleteContentVersion err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "删除文档版本失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}

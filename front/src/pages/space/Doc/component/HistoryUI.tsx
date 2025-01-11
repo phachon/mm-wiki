@@ -1,15 +1,6 @@
 import ActionButton from '@/components/Action/ActionButton'
 import { DocVersionEntity } from '@/types/contentType'
-import {
-  CloseSquareOutlined,
-  SelectOutlined,
-  ForkOutlined,
-  FormOutlined,
-  RedoOutlined,
-  SplitCellsOutlined,
-  TeamOutlined,
-  SwapOutlined
-} from '@ant-design/icons'
+import { CloseSquareOutlined, RedoOutlined, SwapOutlined } from '@ant-design/icons'
 import { Popconfirm, Space, Table, TablePaginationConfig, TableProps } from 'antd'
 
 // DocHistoryUIProps 文档历史组件属性
@@ -27,7 +18,7 @@ const DocHistoryUI = (props: DocHistoryUIProps) => {
   return (
     <div>
       <div className="ant-modal-title">
-        <strong>文档历史</strong>
+        <strong>文档历史（保留最多10个版本）</strong>
       </div>
       <Table
         style={{ marginTop: 12 }}

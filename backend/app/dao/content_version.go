@@ -69,7 +69,7 @@ func (c *ContentVersion) GetContentVersionsByDocIdLimit(docId int64, limit int, 
 // CountContentVersions 获取文档版本数量
 func (c *ContentVersion) CountContentVersions(docId int64) (count int64, err errors.BizError) {
 	db := GetDB(dbNameMK).WithContext(c.ctx).Table(TableNameContentVersion).
-		Where("doc_id", docId).
+		Where("doc_id = ?", docId).
 		Count(&count)
 	if db.Error != nil {
 		return count, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
@@ -91,4 +91,40 @@ func (c *ContentVersion) GetContentVersionByVersionId(versionId int64) (*entity.
 		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
 	}
 	return contentVersion, nil
+}
+
+// DeleteContentVersion 删除文档版本
+func (c *ContentVersion) DeleteContentVersion(versionId int64) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(c.ctx).
+		Table(TableNameContentVersion).
+		Where("content_version_id = ?", versionId).
+		Delete(&entity.ContentVersionEntity{})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())
+	}
+	return nil
+}
+
+// DeleteContentVersionsByDocId 删除文档所有版本
+func (c *ContentVersion) DeleteContentVersionsByDocId(docId int64) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(c.ctx).
+		Table(TableNameContentVersion).
+		Where("doc_id = ?", docId).
+		Delete(&entity.ContentVersionEntity{})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())
+	}
+	return nil
+}
+
+// DeleteContentVersionsNotInVersionIds 删除不在版本ID列表中的版本
+func (c *ContentVersion) DeleteContentVersionsNotInVersionIds(versionIds []int64) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(c.ctx).
+		Table(TableNameContentVersion).
+		Where("content_version_id NOT IN (?)", versionIds).
+		Delete(&entity.ContentVersionEntity{})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())
+	}
+	return nil
 }

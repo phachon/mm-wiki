@@ -14,7 +14,8 @@ const spaceDocUrl = {
   docUploadFile: '/space/doc/upload_file',
   docHistory: '/space/doc/history',
   docContentVersion: '/space/doc/content_version',
-  docRecover: '/space/doc/recover'
+  docRecover: '/space/doc/recover',
+  docContentVersionDel: '/space/doc/content_version_del'
 }
 
 /**
@@ -101,6 +102,17 @@ class SpaceDoc extends Base {
    */
   public recoverDoc(contentVersionId: number, docId: number): Promise<any> {
     return httpRequest.post(this.getProxyUrl(spaceDocUrl.docRecover), {
+      content_version_id: contentVersionId,
+      doc_id: docId
+    })
+  }
+
+  /**
+   * 删除文档版本
+   * @param contentVersionId 版本id
+   */
+  public delDocContentVersion(contentVersionId: number, docId: number): Promise<any> {
+    return httpRequest.post(this.getProxyUrl(spaceDocUrl.docContentVersionDel), {
       content_version_id: contentVersionId,
       doc_id: docId
     })

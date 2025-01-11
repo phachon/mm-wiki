@@ -11,7 +11,11 @@ import {
   DeleteOutlined,
   HolderOutlined,
   RetweetOutlined,
-  FolderOutlined
+  FolderOutlined,
+  StarOutlined,
+  StarTwoTone,
+  StarFilled,
+  PlusCircleOutlined
 } from '@ant-design/icons'
 import { SpaceInfoType } from '@/types/spaceType'
 import { ActionType, DocTreeEntity, DocType } from '@/types/docType'
@@ -171,10 +175,21 @@ const DocTreeUI = (props: DocTreeUIProps) => {
             </Space>
           </a>
           <Button
-            type="default"
-            size="small"
+            type="link"
             style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
-            icon={<PlusOutlined />}
+            icon={<PlusCircleOutlined />}
+            onClick={() =>
+              props.onClickDocAction &&
+              props.onClickDocAction(ActionType.ADD, {
+                key: props.homeDoc?.doc_id.toString() || '',
+                title: props.homeDoc?.name || ''
+              })
+            }
+          ></Button>
+          <Button
+            type="link"
+            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px', color: '#d1d1d1' }}
+            icon={<StarOutlined />}
             onClick={() =>
               props.onClickDocAction &&
               props.onClickDocAction(ActionType.ADD, {

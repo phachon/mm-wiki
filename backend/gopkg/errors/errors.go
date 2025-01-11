@@ -1,4 +1,4 @@
-// Package global 全局定义包
+// Package errors 错误吗定义
 package errors
 
 // ErrorCode 自定义错误码

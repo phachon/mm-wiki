@@ -11,6 +11,7 @@ import {
   DocVersionEntity
 } from '@/types/contentType'
 import { initPagination } from '@/types/adminType'
+import { on } from 'events'
 
 const DocView: React.FC = () => {
   const store = useGlobalStore()
@@ -27,7 +28,7 @@ const DocView: React.FC = () => {
       return
     }
     setHistoryModalOpen(true)
-    getDocHistory(docId, historyPagination)
+    getDocHistory(docId, { ...initPagination })
   }
 
   // onViewClick 查看历史版本
@@ -69,6 +70,19 @@ const DocView: React.FC = () => {
     getDocHistory(store.viewDocInfo.doc_id, pageConfig)
   }
 
+  // onHistoryDelete 删除历史记录
+  const onHistoryDelete = (contentVersionId: number, docId: number) => {
+    SpaceDocService.delDocContentVersion(contentVersionId, docId)
+      .then(() => {
+        message.success('删除成功', 1).then(() => {
+          getDocHistory(docId, historyPagination)
+        })
+      })
+      .catch((e) => {
+        console.error('删除失败', e)
+      })
+  }
+
   // getDocHistory 获取历史记录
   const getDocHistory = (docId: number, pageConfig: TablePaginationConfig) => {
     SpaceDocService.getDocHistory(docId, pageConfig.pageSize, pageConfig.current)
@@ -97,7 +111,7 @@ const DocView: React.FC = () => {
       />
       <Modal
         title={null}
-        width={showDiff ? 1150 : 1150}
+        width={1150}
         open={historyModalOpen}
         onCancel={() => {
           setHistoryModalOpen(false)
@@ -122,6 +136,7 @@ const DocView: React.FC = () => {
             onViewClick={onViewClick}
             onRecoverClick={onRecoverClick}
             onListChange={onHistoryListChange}
+            onDeleteConfirm={onHistoryDelete}
           />
         )}
       </Modal>

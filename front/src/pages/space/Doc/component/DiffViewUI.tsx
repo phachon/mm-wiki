@@ -3,7 +3,6 @@ import { DiffEditor } from '@monaco-editor/react'
 import { ArrowLeftOutlined, RedoOutlined, SwapOutlined } from '@ant-design/icons'
 import { Button, Popconfirm, Space } from 'antd'
 import { DocVersionEntity } from '@/types/contentType'
-import ActionButton from '@/components/Action/ActionButton'
 
 interface DiffViewUIProps {
   historyDocVersion?: DocVersionEntity // 历史版本内容
@@ -14,6 +13,8 @@ interface DiffViewUIProps {
 
 // DiffViewUI Diff 组件
 const DiffViewUI: React.FC<DiffViewUIProps> = (props: DiffViewUIProps) => {
+  console.log('DiffViewUI:', props)
+
   return (
     <div>
       <div className="ant-modal-title">
