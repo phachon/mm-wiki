@@ -47,11 +47,11 @@ const SpaceCardUI: React.FC<SpaceCardProps> = (props: SpaceCardProps) => {
 
   const actions: React.ReactNode[] = [
     props.isCollected ? (
-      <StarFilled key="collection" onClick={handleCollectionClick} style={{ color: '#faad14' }} />
+      <StarFilled onClick={handleCollectionClick} className="star-collection" />
     ) : (
-      <StarOutlined key="collection" onClick={handleCollectionClick} />
+      <StarOutlined onClick={handleCollectionClick} />
     ),
-    <ExportOutlined key="link" onClick={handleCardClick} />
+    <ExportOutlined onClick={handleCardClick} />
   ]
 
   return (

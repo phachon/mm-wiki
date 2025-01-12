@@ -440,20 +440,10 @@
     cursor: pointer;
 }
 
-/* .input-tooltip {
-  display: flex;
-  align-items: center;
-}
-
-.input-tooltip > input {
-  flex: 1;
-  margin-right: 8px;
-}
-
-.input-tooltip > span {
-  color: #E57373;
-} */
-
 .ant-popconfirm-buttons {
   text-align: center !important;
+}
+
+.star-collection {
+  color: #faad14;
 }

@@ -9,7 +9,8 @@ import {
   StarOutlined,
   ShareAltOutlined,
   ExportOutlined,
-  FolderOpenOutlined
+  FolderOpenOutlined,
+  StarFilled
 } from '@ant-design/icons'
 import ButtonGroup from 'antd/es/button/button-group'
 import 'cherry-markdown/dist/cherry-markdown.css'
@@ -25,9 +26,11 @@ import { CherryOptions } from 'cherry-markdown/types/cherry'
 type DocViewUIProps = {
   loading?: boolean
   docInfo?: DocEntity
+  isCollected?: boolean
   content?: ContentEntity
   parentPath?: string[]
   onHistoryClick?: (docId?: number) => void
+  onCollectionChange?: (docId: number, collected: boolean) => void
 }
 
 // viewCherryConfig Cherry 配置
@@ -131,11 +134,21 @@ const DocViewUI = (props: DocViewUIProps) => {
                 >
                   编辑
                 </Button>
-                <Button type="default" icon={<StarOutlined />}>
-                  收藏
-                </Button>
-                <Button type="default" icon={<StarOutlined />}>
-                  取消
+                <Button
+                  type="default"
+                  icon={
+                    props.isCollected ? (
+                      <StarFilled className="star-collection" />
+                    ) : (
+                      <StarOutlined />
+                    )
+                  }
+                  onClick={() => {
+                    props.onCollectionChange &&
+                      props.onCollectionChange(props.docInfo?.doc_id || 0, !props.isCollected)
+                  }}
+                >
+                  {props.isCollected ? '取消' : '收藏'}
                 </Button>
                 <Button type="default" icon={<ShareAltOutlined />}>
                   分享

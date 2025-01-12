@@ -195,11 +195,7 @@ const DocTreeUI = (props: DocTreeUIProps) => {
               props.onCollectionStatusChange(props.spaceInfo?.space_id || 0, !props.isCollected)
             }
           >
-            {props.isCollected ? (
-              <StarFilled key="collection" style={{ color: '#faad14' }} />
-            ) : (
-              <StarOutlined key="collection" />
-            )}
+            {props.isCollected ? <StarFilled className="star-collection" /> : <StarOutlined />}
           </a>
         </h2>
       </div>

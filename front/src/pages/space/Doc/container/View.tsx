@@ -3,7 +3,7 @@ import DocViewUI from '../component/ViewUI'
 import DocHistoryUI from '../component/HistoryUI'
 import DiffViewUI from '../component/DiffViewUI' // 引入 DiffViewUI 组件
 import { Modal, TablePaginationConfig, message } from 'antd' // 引入 Button 组件
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SpaceDocService } from '@/services/SpaceDoc'
 import {
   DocContentHistortyResp,
@@ -12,6 +12,7 @@ import {
 } from '@/types/contentType'
 import { initPagination } from '@/types/adminType'
 import { on } from 'events'
+import { UserInteractionService } from '@/services/UserInteraction'
 
 const DocView: React.FC = () => {
   const store = useGlobalStore()
@@ -21,6 +22,50 @@ const DocView: React.FC = () => {
   const [historyPagination, setHistoryPagination] = useState(initPagination)
   const [historyDocVersion, setHistoryDocVersion] = useState<DocVersionEntity>()
   const [onlineContent, setOnlineContent] = useState('')
+  const [docIsCollected, setDocIsCollected] = useState(false)
+
+  useEffect(() => {
+    initDocCollectionStatus(store.viewDocInfo?.doc_id || 0)
+  }, [store.viewDocInfo])
+
+  // initDocCollectionStatus 初始化文档收藏状态
+  const initDocCollectionStatus = (docId: number) => {
+    if (docId <= 0) {
+      return
+    }
+    UserInteractionService.collectionDocStatus(docId)
+      .then((res) => {
+        setDocIsCollected(res.collection_status == 1)
+      })
+      .catch((e) => {
+        console.error('获取文档收藏状态失败', e)
+      })
+  }
+
+  // onDocCollectionChange 文档收藏操作
+  const onDocCollectionChange = (docId: number, collected: boolean) => {
+    if (collected) {
+      UserInteractionService.collectionDoc(docId)
+        .then(() => {
+          message.success('收藏成功', 1, () => {
+            initDocCollectionStatus(docId)
+          })
+        })
+        .catch(() => {
+          console.error('收藏失败')
+        })
+    } else {
+      UserInteractionService.collectionDocCancel(docId)
+        .then(() => {
+          message.success('收藏已取消', 1, () => {
+            initDocCollectionStatus(docId)
+          })
+        })
+        .catch(() => {
+          console.error('取消收藏失败')
+        })
+    }
+  }
 
   // onHistoryClick 查看修改历史
   const onHistoryClick = (docId?: number) => {
@@ -105,9 +150,11 @@ const DocView: React.FC = () => {
       <DocViewUI
         loading={store.viewDocLoading}
         docInfo={store.viewDocInfo}
+        isCollected={docIsCollected}
         content={store.content}
         parentPath={store.parentPath}
         onHistoryClick={onHistoryClick}
+        onCollectionChange={onDocCollectionChange}
       />
       <Modal
         title={null}
