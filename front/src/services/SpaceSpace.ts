@@ -4,9 +4,7 @@ import { SpaceDocsResp, SpaceListResp } from '@/types/spaceType'
 
 const spaceSpaceUrl = {
   allSpaces: '/space/space/all',
-  spaceDocs: '/space/space/docs',
-  collect: '/space/collect',
-  uncollect: '/space/uncollect'
+  spaceDocs: '/space/space/docs'
 }
 
 /**
@@ -41,24 +39,6 @@ class SpaceSpace extends Base {
     return httpRequest.get<SpaceDocsResp>(spaceDocsUrl, {
       space_key: spaceKey
     })
-  }
-
-  /**
-   * collectSpace 收藏空间
-   * @param spaceKey 空间标识
-   */
-  public collectSpace(spaceKey: string): Promise<any> {
-    const collectUrl = this.getProxyUrl(spaceSpaceUrl.collect)
-    return httpRequest.post<any>(collectUrl, {}, { space_key: spaceKey })
-  }
-
-  /**
-   * uncollectSpace 取消收藏空间
-   * @param spaceKey 空间标识
-   */
-  public uncollectSpace(spaceKey: string): Promise<any> {
-    const uncollectUrl = this.getProxyUrl(spaceSpaceUrl.uncollect)
-    return httpRequest.post<any>(uncollectUrl, {}, { space_key: spaceKey })
   }
 }
 

@@ -6,6 +6,7 @@ import SpacePaginationUI from '../component/PaginationUI'
 import { SpaceSpaceService } from '@/services/SpaceSpace'
 import type { SpaceInfoType } from '@/types/spaceType'
 import type { PageInfoType } from '@/types/baseType'
+import { UserInteractionService } from '@/services/UserInteraction'
 
 /**
  * SpaceAll 空间列表组件
@@ -14,6 +15,7 @@ import type { PageInfoType } from '@/types/baseType'
 const SpaceAll: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1) // 当前页码
   const [spaceList, setSpaceList] = useState<SpaceInfoType[]>([]) // 空间列表数据
+  const [collectionIDs, setCollectionIDs] = useState<number[]>([]) // 收藏的空间ID
   const [pageInfo, setPageInfo] = useState<PageInfoType>({
     total_num: 0,
     page_num: 1,
@@ -36,6 +38,7 @@ const SpaceAll: React.FC = () => {
         keywords ? { space_name: keywords } : undefined
       )
       setSpaceList(response.list)
+      setCollectionIDs(response.collection_ids)
       setPageInfo(response.page_info)
     } catch (error) {
       console.error('获取空间列表失败:', error)
@@ -70,21 +73,27 @@ const SpaceAll: React.FC = () => {
    * @param spaceKey 空间标识
    * @param collected 是否收藏
    */
-  const handleCollectionChange = async (spaceKey: string, collected: boolean) => {
-    try {
-      if (collected) {
-        // 调用收藏接口
-        await SpaceSpaceService.collectSpace(spaceKey)
-        message.success('收藏成功')
-      } else {
-        // 调用取消收藏接口
-        await SpaceSpaceService.uncollectSpace(spaceKey)
-        message.success('已取消收藏')
-      }
-      // 刷新列表
-      fetchSpaces(currentPage, searchKeywords)
-    } catch (error) {
-      message.error('操作失败，请稍后重试')
+  const handleCollectionChange = (spaceId: number, collected: boolean) => {
+    if (collected) {
+      UserInteractionService.collectionSpace(spaceId)
+        .then(() => {
+          message.success('收藏成功', 1, () => {
+            fetchSpaces(currentPage, searchKeywords)
+          })
+        })
+        .catch(() => {
+          console.log('收藏失败')
+        })
+    } else {
+      UserInteractionService.collectionSpaceCancel(spaceId)
+        .then(() => {
+          message.success('收藏已取消', 1, () => {
+            fetchSpaces(currentPage, searchKeywords)
+          })
+        })
+        .catch(() => {
+          console.log('取消收藏失败')
+        })
     }
   }
 
@@ -96,12 +105,8 @@ const SpaceAll: React.FC = () => {
         {spaceList.map((space) => (
           <Col key={space.space_id} span={6}>
             <SpaceCardUI
-              title={space.name}
-              description={space.description}
-              creator={space.creator_name}
-              createTime={space.create_time}
-              spaceKey={space.space_key}
-              isCollected={false}
+              spaceInfo={space}
+              isCollected={collectionIDs.includes(space.space_id)}
               onCollectionChange={handleCollectionChange}
             />
           </Col>

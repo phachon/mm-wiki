@@ -249,15 +249,15 @@ CREATE TABLE `mk_content_version` (
 -- --------------------------------
 DROP TABLE IF EXISTS `mk_collection`;
 CREATE TABLE `mk_collection` (
-  `collection_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '账号收藏关系 id',
+  `collection_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '收藏 id',
   `account_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '账号id',
   `collection_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '收藏类型 1 文档 2 空间',
   `resource_id` varchar(225) NOT NULL DEFAULT '' COMMENT '收藏资源 id ',
-  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '版本创建时间',
   PRIMARY KEY (`collection_id`),
   KEY (`account_id`),
   UNIQUE key (`account_id`, `resource_id`, `collection_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号收藏表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
 
 -- --------------------------------
 -- mk_follow 账号关注表

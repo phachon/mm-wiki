@@ -8,6 +8,7 @@ import (
 	"github.com/phachon/mm-wiki/app/controller"
 	spaceController "github.com/phachon/mm-wiki/app/controller/space"
 	systemController "github.com/phachon/mm-wiki/app/controller/system"
+	userController "github.com/phachon/mm-wiki/app/controller/user"
 	"github.com/phachon/mm-wiki/config"
 	"github.com/phachon/mm-wiki/filter"
 	"github.com/phachon/mm-wiki/global"
@@ -19,7 +20,7 @@ import (
 const (
 	routerGroupNameSystem = "/system"
 	routerGroupNameSpace  = "/space"
-	routerGroupNameDoc    = "/doc"
+	routerGroupNameUser   = "/user"
 )
 
 var (
@@ -98,6 +99,10 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version", method: http.MethodGet, controllerHandle: spaceController.DocContentVersion},
 		{group: routerGroupNameSpace, relativePath: "/doc/recover", method: http.MethodPost, controllerHandle: spaceController.DocRecover},
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
+		// ===================== 用户 =====================
+		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
+		{group: routerGroupNameUser, relativePath: "/interaction/collection_cancel", method: http.MethodPost, controllerHandle: userController.CollectionCancel},
+		{group: routerGroupNameUser, relativePath: "/interaction/collection_status", method: http.MethodGet, controllerHandle: userController.CollectionStatus},
 	}
 )
 

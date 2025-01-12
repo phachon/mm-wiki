@@ -97,6 +97,7 @@ export type SpaceListItemType = SpaceInfoType & {
  * SpaceListResp 空间列表结构
  */
 export type SpaceListResp = {
+  collection_ids: number[]
   list: SpaceListItemType[]
   page_info: PageInfoType
 }
@@ -124,6 +125,6 @@ export type SpaceAdminListResp = {
 // SpaceDocsResp 空间文档返回结构
 export type SpaceDocsResp = {
   home_doc: DocTreeEntity // 主页文档
-  dir_tree: DocTreeEntity[] // 目录树
+  doc_tree: DocTreeEntity[] // 目录树
   space_info: SpaceInfoType // 空间信息
 }

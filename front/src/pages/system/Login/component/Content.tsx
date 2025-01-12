@@ -13,7 +13,7 @@ interface LoginUIProps {
    * 账号登录
    * @returns
    */
-  onSystemLogin: (values: any) => Promise<boolean | void>
+  onSystemLogin: (values: any) => void
 
   /**
    * 手机号登录

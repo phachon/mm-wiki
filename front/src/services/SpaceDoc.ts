@@ -6,6 +6,7 @@ import {
   DocContentHistortyResp,
   DocContentVersionResp
 } from '@/types/contentType'
+import { CollectionType } from '@/types/collectionType'
 
 const spaceDocUrl = {
   docCreate: '/space/doc/create',
@@ -101,10 +102,14 @@ class SpaceDoc extends Base {
    * @param contentVersionId 版本id
    */
   public recoverDoc(contentVersionId: number, docId: number): Promise<any> {
-    return httpRequest.post(this.getProxyUrl(spaceDocUrl.docRecover), {
-      content_version_id: contentVersionId,
-      doc_id: docId
-    })
+    return httpRequest.post(
+      this.getProxyUrl(spaceDocUrl.docRecover),
+      {},
+      {
+        content_version_id: contentVersionId,
+        doc_id: docId
+      }
+    )
   }
 
   /**
@@ -112,11 +117,14 @@ class SpaceDoc extends Base {
    * @param contentVersionId 版本id
    */
   public delDocContentVersion(contentVersionId: number, docId: number): Promise<any> {
-    return httpRequest.post(this.getProxyUrl(spaceDocUrl.docContentVersionDel), {
-      content_version_id: contentVersionId,
-      doc_id: docId
-    })
+    return httpRequest.post(
+      this.getProxyUrl(spaceDocUrl.docContentVersionDel),
+      {},
+      {
+        content_version_id: contentVersionId,
+        doc_id: docId
+      }
+    )
   }
 }
-
 export const SpaceDocService = new SpaceDoc()

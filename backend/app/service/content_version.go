@@ -94,5 +94,5 @@ func (c *ContentVersion) DeleteContentVersionsByDocIdKeepN(docId int64, keepNum 
 	for _, contentVersion := range contentVersions {
 		contentVersionIds = append(contentVersionIds, contentVersion.ContentVersionId)
 	}
-	return c.daoContentVersion.DeleteContentVersionsNotInVersionIds(contentVersionIds)
+	return c.daoContentVersion.DeleteContentVersionsNotInVersionIds(docId, contentVersionIds)
 }

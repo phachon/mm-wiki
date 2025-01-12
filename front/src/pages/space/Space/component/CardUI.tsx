@@ -11,55 +11,42 @@ import {
 import spaceIcon from '@/assets/images/icons-space.png'
 import { useNavigate } from 'react-router-dom'
 import './space.css'
+import { SpaceInfoType } from '@/types/spaceType'
 
 // SpaceCardProps 空间卡片组件属性
 interface SpaceCardProps {
-  title: string
-  description: string
-  creator: string
-  createTime: string
-  spaceKey: string
+  spaceInfo: SpaceInfoType
   isCollected?: boolean
-  onCollectionChange?: (spaceKey: string, collected: boolean) => void
-  avatarSrc?: string
+  onCollectionChange?: (spaceId: number, collected: boolean) => void
 }
 
 // SpaceCardUI 空间卡片UI组件
-const SpaceCardUI: React.FC<SpaceCardProps> = ({
-  title,
-  description,
-  creator,
-  createTime,
-  spaceKey,
-  isCollected = false,
-  onCollectionChange,
-  avatarSrc = spaceIcon
-}) => {
+const SpaceCardUI: React.FC<SpaceCardProps> = (props: SpaceCardProps) => {
   const navigate = useNavigate()
 
   // 处理收藏点击事件
   const handleCollectionClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    if (onCollectionChange) {
-      onCollectionChange(spaceKey, !isCollected)
+    if (props.onCollectionChange) {
+      props.onCollectionChange(props.spaceInfo.space_id, !props.isCollected)
     }
   }
 
   // 处理链接复制事件
   const handleCopyLink = (e: React.MouseEvent) => {
     e.stopPropagation()
-    const spaceUrl = `${window.location.origin}/space/${spaceKey}`
+    const spaceUrl = `${window.location.origin}/space/${props.spaceInfo.space_key}`
     // copyToClipboard(spaceUrl)
     message.success('空间链接已复制到剪贴板')
   }
 
   // 处理卡片点击事件
   const handleCardClick = () => {
-    navigate(`/space/${spaceKey}`)
+    navigate(`/space/${props.spaceInfo.space_key}`)
   }
 
   const actions: React.ReactNode[] = [
-    isCollected ? (
+    props.isCollected ? (
       <StarFilled key="collection" onClick={handleCollectionClick} style={{ color: '#faad14' }} />
     ) : (
       <StarOutlined key="collection" onClick={handleCollectionClick} />
@@ -75,11 +62,11 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
       onClick={handleCardClick}
     >
       <Card.Meta
-        avatar={<Avatar src={avatarSrc} />}
-        title={title}
+        avatar={<Avatar src={spaceIcon} />}
+        title={props.spaceInfo.name}
         description={
           <div>
-            <p>{description}</p>
+            <p>{props.spaceInfo.description}</p>
             <div
               style={{
                 fontSize: '12px',
@@ -97,7 +84,7 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
                 }}
               >
                 <UserOutlined style={{ fontSize: '14px' }} />
-                {creator}
+                {props.spaceInfo.creator_name}
               </span>
               <span
                 style={{
@@ -107,7 +94,7 @@ const SpaceCardUI: React.FC<SpaceCardProps> = ({
                 }}
               >
                 <ClockCircleOutlined style={{ fontSize: '14px' }} />
-                {createTime}
+                {props.spaceInfo.create_time}
               </span>
             </div>
           </div>

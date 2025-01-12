@@ -6,6 +6,7 @@ import { SpaceInfoType } from '@/types/spaceType'
 import { message, TreeDataNode } from 'antd'
 import { StateCreator } from 'zustand'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { UserInteractionService } from '@/services/UserInteraction'
 
 // IDoc: interface for doc store
 export interface IDoc {
@@ -16,7 +17,7 @@ export interface IDoc {
   navigate?: NavigateFunction // 跳转
   siderLoading?: boolean
   spaceInfo?: SpaceInfoType
-  dirTree?: DocTreeEntity[]
+  docTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
   selectDocId?: string
   addDocInfo?: {
@@ -40,7 +41,8 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
   // 左侧栏
   siderLoading: true,
   spaceInfo: undefined,
-  dirTree: [],
+  spaceIsCollected: false,
+  docTree: [],
   homeDoc: undefined,
   selectDocId: '',
 
@@ -65,16 +67,16 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
     console.log('初始化文档:', docId)
     const docInfoRes = await SpaceDocService.getDocInfo(docId)
     // 获取空间下所有文档
-    if (!get().dirTree?.length) {
+    if (!get().docTree?.length) {
       const spaceDocsRes = await SpaceSpaceService.getSpaceDocs(docInfoRes.doc_info.space_key)
       set({
         siderLoading: false,
         homeDoc: spaceDocsRes.home_doc,
         spaceInfo: spaceDocsRes.space_info,
-        dirTree: spaceDocsRes.dir_tree
+        docTree: spaceDocsRes.doc_tree
       })
     }
-    const parentPath = getParentPath(docId.toString(), get().dirTree)
+    const parentPath = getParentPath(docId.toString(), get().docTree)
     if (get().spaceInfo?.name) {
       parentPath.unshift(get().spaceInfo?.name || '')
     }
@@ -107,7 +109,7 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
     set({
       siderLoading: false,
       spaceInfo: spaceDocsRes.space_info,
-      dirTree: spaceDocsRes.dir_tree,
+      docTree: spaceDocsRes.doc_tree,
       homeDoc: spaceDocsRes.home_doc,
       parentPath: [spaceDocsRes.space_info.name]
     })
@@ -179,7 +181,7 @@ export const createDoc: StateCreator<IDoc> = (set, get) => ({
             parent_id: 0,
             parent_name: ''
           },
-          dirTree: [] //  清空文档树
+          docTree: [] //  清空文档树
         })
         get().initDocsByDocId(resp.doc_id)
       })

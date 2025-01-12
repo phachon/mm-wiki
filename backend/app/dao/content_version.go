@@ -118,9 +118,10 @@ func (c *ContentVersion) DeleteContentVersionsByDocId(docId int64) errors.BizErr
 }
 
 // DeleteContentVersionsNotInVersionIds 删除不在版本ID列表中的版本
-func (c *ContentVersion) DeleteContentVersionsNotInVersionIds(versionIds []int64) errors.BizError {
+func (c *ContentVersion) DeleteContentVersionsNotInVersionIds(docId int64, versionIds []int64) errors.BizError {
 	db := GetDB(dbNameMK).WithContext(c.ctx).
 		Table(TableNameContentVersion).
+		Where("doc_id = ?", docId).
 		Where("content_version_id NOT IN (?)", versionIds).
 		Delete(&entity.ContentVersionEntity{})
 	if db.Error != nil {

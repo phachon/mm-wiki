@@ -56,11 +56,13 @@ const items: MenuProps['items'] = [
 type DocTreeUIProps = {
   loading?: boolean
   spaceInfo?: SpaceInfoType
-  dirTree?: DocTreeEntity[]
+  docTree?: DocTreeEntity[]
   homeDoc?: DocTreeEntity
   selectDocId?: string
+  isCollected?: boolean
   onClickDocSelect?: (docId: string) => void
   onClickDocAction?: (action: string, node: TreeDataNode) => void
+  onCollectionStatusChange?: (spaceId: number, collected: boolean) => void
 }
 
 // DocTreeUI 文档目录树组件
@@ -71,9 +73,9 @@ const DocTreeUI = (props: DocTreeUIProps) => {
   useEffect(() => {
     if (props.selectDocId) {
       setSelectedKeys([props.selectDocId])
-      expandParentNodes(props.selectDocId, props.dirTree)
+      expandParentNodes(props.selectDocId, props.docTree)
     }
-  }, [props.selectDocId, props.dirTree])
+  }, [props.selectDocId, props.docTree])
 
   // 展开父节点
   const expandParentNodes = (docId: string, treeData?: DocTreeEntity[]) => {
@@ -174,10 +176,8 @@ const DocTreeUI = (props: DocTreeUIProps) => {
               {props.spaceInfo?.name}
             </Space>
           </a>
-          <Button
-            type="link"
-            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px' }}
-            icon={<PlusCircleOutlined />}
+          <a
+            style={{ marginLeft: 10 }}
             onClick={() =>
               props.onClickDocAction &&
               props.onClickDocAction(ActionType.ADD, {
@@ -185,19 +185,22 @@ const DocTreeUI = (props: DocTreeUIProps) => {
                 title: props.homeDoc?.name || ''
               })
             }
-          ></Button>
-          <Button
-            type="link"
-            style={{ marginLeft: 10, width: 18, height: 18, lineHeight: '24px', color: '#d1d1d1' }}
-            icon={<StarOutlined />}
+          >
+            <PlusCircleOutlined />
+          </a>
+          <a
+            style={{ marginLeft: 10 }}
             onClick={() =>
-              props.onClickDocAction &&
-              props.onClickDocAction(ActionType.ADD, {
-                key: props.homeDoc?.doc_id.toString() || '',
-                title: props.homeDoc?.name || ''
-              })
+              props.onCollectionStatusChange &&
+              props.onCollectionStatusChange(props.spaceInfo?.space_id || 0, !props.isCollected)
             }
-          ></Button>
+          >
+            {props.isCollected ? (
+              <StarFilled key="collection" style={{ color: '#faad14' }} />
+            ) : (
+              <StarOutlined key="collection" />
+            )}
+          </a>
         </h2>
       </div>
       <Divider className="doc-sider-divider" />
@@ -218,7 +221,7 @@ const DocTreeUI = (props: DocTreeUIProps) => {
         onExpand={onExpand}
         expandedKeys={expandedKeys}
         selectedKeys={selectedKeys}
-        treeData={convertTreeData(props.dirTree)}
+        treeData={convertTreeData(props.docTree)}
         titleRender={treeCustomTitle}
       />
     </div>

@@ -8,8 +8,10 @@ import (
 	"github.com/phachon/mm-wiki/app/controller"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/app/service"
+	"github.com/phachon/mm-wiki/global"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/logger"
+	"github.com/phachon/mm-wiki/utils"
 )
 
 // AllSpaces 所有的空间列表
@@ -40,9 +42,29 @@ func AllSpaces(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[SpaceList] GetPublicSpacesPageInfo err=%s", err.Error())
 		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
 	}
+
+	// 获取账号收藏的所有空间ID
+	accountId := global.ContextValueLoginAccountID(ctx)
+	serviceCollection := service.NewCollection(ctx)
+	collections, err := serviceCollection.GetAccountCollectionAllSpace(accountId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpaceList] GetAccountCollectionAllSpace err=%s", err.Error())
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取收藏空间失败")
+	}
+	// 获取空间ID
+	spaceIds := make([]int64, 0)
+	for _, collection := range collections {
+		if collection == nil || collection.ResourceId == "" {
+			continue
+		}
+		spaceId := utils.Convert.StringToInt64(collection.ResourceId)
+		spaceIds = append(spaceIds, spaceId)
+	}
+
 	data := map[string]interface{}{
-		"list":      spaces,
-		"page_info": pageInfo,
+		"collection_ids": spaceIds,
+		"list":           spaces,
+		"page_info":      pageInfo,
 	}
 	return controller.RespJsonSuccess(ctx, data)
 }
@@ -89,7 +111,7 @@ func SpaceDocs(ctx *gin.Context) error {
 	docTree := serviceDoc.DocsToTree(dirDocs, homeDoc.DocId)
 	data := map[string]interface{}{
 		"home_doc":   homeDoc,
-		"dir_tree":   docTree,
+		"doc_tree":   docTree,
 		"space_info": space,
 	}
 

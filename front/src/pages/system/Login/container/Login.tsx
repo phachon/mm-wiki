@@ -17,26 +17,22 @@ const Login: React.FC = () => {
    * 账号登录操作
    * @param values
    */
-  const onSystemLogin = (values: {
-    account_name: string
-    password: string
-  }): Promise<boolean | void> => {
-    SystemLoginService.systemLogin({
+  const onSystemLogin = async (values: { account_name: string; password: string }) => {
+    const loginInfo = await SystemLoginService.systemLogin({
       account_name: values.account_name,
       password: values.password,
       verify_code: 'mock'
     })
-      .then((loginInfo: LoginResp) => {
-        message.success('登录成功！', 2, () => {
-          setToken(loginInfo.login_token)
-          setAccountInfo(loginInfo.account_info)
-          navigate(HOME_ROOT_PATH)
-        })
+    if (loginInfo) {
+      setToken(loginInfo.login_token)
+      setAccountInfo(loginInfo.account_info)
+      message.success('登录成功！', 2, () => {
+        navigate(HOME_ROOT_PATH)
       })
-      .catch((e) => {
-        console.log('登录失败err:', e)
-      })
-    return Promise.resolve()
+    } else {
+      message.error('登录失败')
+    }
+    return
   }
 
   /**
