@@ -111,7 +111,7 @@ const DocIndex: React.FC = () => {
         </Layout.Content>
       </Layout>
       <Modal
-        title="添加文档"
+        title="创建文档"
         open={store.addDocInfo?.modal}
         onCancel={() => store.setAddDocModal(false)}
         footer={null}
