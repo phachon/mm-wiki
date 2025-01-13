@@ -7,10 +7,15 @@ import {
   TeamOutlined,
   FolderOutlined,
   ForwardOutlined,
-  VerticalLeftOutlined
+  VerticalLeftOutlined,
+  FolderOpenOutlined,
+  FileOutlined,
+  FileTextOutlined
 } from '@ant-design/icons'
 import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
 import React from 'react'
+import { SpaceInfoType } from '@/types/spaceType'
+import { DocEntity, DocType } from '@/types/docType'
 
 // 带分割线的文字
 export const TextDeliver = (props: { name: string; icon?: React.ReactNode }) => {
@@ -42,14 +47,29 @@ export const TextDeliver = (props: { name: string; icon?: React.ReactNode }) => 
   )
 }
 
-export const SpaceList = (props: { items: any[] }) => {
+export const SpaceList = (props: { items: SpaceInfoType[] }) => {
   return (
     <div>
       {props.items.map((item) => (
         <div className="sidebar-space-item">
           <Space>
-            <DynamicIcon name={item.icon} />
-            <a href={item.link}>{item.name}</a>
+            <DynamicIcon name={'FolderOpenOutlined'} />
+            <a href={'/space/' + item.space_key}>{item.name}</a>
+          </Space>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export const DocList = (props: { items: DocEntity[] }) => {
+  return (
+    <div>
+      {props.items.map((item) => (
+        <div className="sidebar-space-item">
+          <Space>
+            {item.type == DocType.DOC ? <FileTextOutlined /> : <FileTextOutlined />}
+            <a href={'/doc/' + item.doc_id}>{item.name}</a>
           </Space>
         </div>
       ))}

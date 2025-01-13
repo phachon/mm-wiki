@@ -88,6 +88,18 @@ func (c *Collection) GetAccountCollectionAllSpace(accountId int64) ([]*entity.Co
 	return collections, nil
 }
 
+// GetAccountCollectionAllDocs 获取用户收藏的所有文档
+func (c *Collection) GetAccountCollectionAllDocs(accountId int64) ([]*entity.CollectionEntity, errors.BizError) {
+	if accountId <= 0 {
+		return nil, nil
+	}
+	collections, err := c.daoCollection.GetCollectionsByAccountIdAndType(accountId, entity.CollectionTypeDocument)
+	if err != nil {
+		return nil, err
+	}
+	return collections, nil
+}
+
 // DeleteByAccountIdResourceAndType 删除账号下的资源ID
 func (c *Collection) DeleteByAccountIdResourceAndType(accountId int64, collectionType int, resourceId string) errors.BizError {
 	if accountId <= 0 || resourceId == "" {

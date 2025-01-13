@@ -16,8 +16,10 @@ import {
 } from '@ant-design/icons'
 import 'react-resizable/css/styles.css'
 import SubMenu from 'antd/es/menu/SubMenu'
-import { SpaceList, TextDeliver } from './ToolsUI'
+import { DocList, SpaceList, TextDeliver } from './ToolsUI'
 import DynamicIcon from '@/components/DynamicIcon/DynamicIcon'
+import { SpaceInfoType } from '@/types/spaceType'
+import { DocEntity } from '@/types/docType'
 
 const mySpaces: any[] = [
   {
@@ -100,46 +102,54 @@ const myDocs: any[] = [
   }
 ]
 
-const items: CollapseProps['items'] = [
-  {
-    key: 'mySpace',
-    label: (
-      <Space>
-        <AppstoreAddOutlined />
-        <span>我的空间</span>
-      </Space>
-    ),
-    children: (
-      <div>
-        <SpaceList items={mySpaces} />
-      </div>
-    )
-  },
-  {
-    key: 'collectSpace',
-    label: (
-      <Space>
-        <StarOutlined />
-        <span>收藏空间</span>
-      </Space>
-    ),
-    children: <SpaceList items={mySpaces} />
-  },
-  {
-    key: 'collectDoc',
-    label: (
-      <Space>
-        <BookOutlined />
-        <span>收藏文档</span>
-      </Space>
-    ),
-    children: <SpaceList items={myDocs} />
-  }
-]
+// HomeSidebarUIProps 主页侧边栏UI属性
+type HomeSidebarUIProps = {
+  mySpaces: SpaceInfoType[]
+  collectionSpaces: SpaceInfoType[]
+  collectionDocs: DocEntity[]
+}
 
-const HomeSidebarUI = () => {
+// HomeSidebarUI 主页侧边栏UI
+const HomeSidebarUI = (props: HomeSidebarUIProps) => {
   const [collapsed, setCollapsed] = useState(false)
   const [width, setWidth] = useState(208)
+
+  const items: CollapseProps['items'] = [
+    {
+      key: 'my_spaces',
+      label: (
+        <Space>
+          <AppstoreAddOutlined />
+          <span>我的空间</span>
+        </Space>
+      ),
+      children: (
+        <div>
+          <SpaceList items={props.mySpaces} />
+        </div>
+      )
+    },
+    {
+      key: 'collect_spaces',
+      label: (
+        <Space>
+          <StarOutlined />
+          <span>收藏空间</span>
+        </Space>
+      ),
+      children: <SpaceList items={props.collectionSpaces} />
+    },
+    {
+      key: 'collect_docs',
+      label: (
+        <Space>
+          <BookOutlined />
+          <span>收藏文档</span>
+        </Space>
+      ),
+      children: <DocList items={props.collectionDocs} />
+    }
+  ]
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
@@ -170,7 +180,7 @@ const HomeSidebarUI = () => {
           }}
         />
       </div>
-      <Collapse defaultActiveKey={['mySpace', 'collectSpace', 'collectDoc']} ghost items={items} />
+      <Collapse defaultActiveKey={[]} ghost items={items} />
     </div>
   )
 }

@@ -129,3 +129,20 @@ func (a *SpacePermission) GetAdminsBySpaceId(spaceId int64) ([]*entity.AccountEn
 func (a *SpacePermission) DeleteBySpaceIdAccountId(spaceId int64, accountId int64) errors.BizError {
 	return a.daoSpacePermission.DeleteBySpaceIdAccountId(spaceId, accountId)
 }
+
+// GetSpacesByAdminId 根据账号ID获取空间列表
+func (a *SpacePermission) GetSpacesByAdminId(accountId int64) ([]*entity.SpaceEntity, errors.BizError) {
+	permissions, err := a.daoSpacePermission.GetPermissionsByAccountId(accountId)
+	if err != nil {
+		return nil, err
+	}
+	spaceIds := make([]int64, 0)
+	for _, permission := range permissions {
+		spaceIds = append(spaceIds, permission.SpaceId)
+	}
+	spaces, err := dao.NewSpace(a.ctx).GetSpacesBySpaceIds(spaceIds)
+	if err != nil {
+		return nil, err
+	}
+	return spaces, nil
+}

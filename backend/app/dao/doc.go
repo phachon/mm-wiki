@@ -69,6 +69,19 @@ func (d *Doc) GetDocByDocId(docId int64) (*entity.DocEntity, errors.BizError) {
 	return doc, nil
 }
 
+// GetDocByDocIds 获取多个文档信息
+func (d *Doc) GetDocByDocIds(docIds []int64) ([]*entity.DocEntity, errors.BizError) {
+	var docs []*entity.DocEntity
+	db := GetDB(dbNameMK).WithContext(d.ctx).
+		Table(TableNameDoc).
+		Where("doc_id in (?)", docIds).
+		Find(&docs)
+	if db.Error != nil {
+		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return docs, nil
+}
+
 // GetDocsBySpaceKey 获取空间下所有文档
 func (d *Doc) GetDocsBySpaceKey(spaceKey string) ([]*entity.DocEntity, errors.BizError) {
 	var docs []*entity.DocEntity

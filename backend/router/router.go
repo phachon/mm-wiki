@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/controller"
+	homeController "github.com/phachon/mm-wiki/app/controller/home"
 	spaceController "github.com/phachon/mm-wiki/app/controller/space"
 	systemController "github.com/phachon/mm-wiki/app/controller/system"
 	userController "github.com/phachon/mm-wiki/app/controller/user"
@@ -18,9 +19,10 @@ import (
 // router 路由相关
 
 const (
-	routerGroupNameSystem = "/system"
+	routerGroupNameHome   = "/home"
 	routerGroupNameSpace  = "/space"
 	routerGroupNameUser   = "/user"
+	routerGroupNameSystem = "/system"
 )
 
 var (
@@ -100,9 +102,16 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/recover", method: http.MethodPost, controllerHandle: spaceController.DocRecover},
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
 		// ===================== 用户 =====================
+		// 互动
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
 		{group: routerGroupNameUser, relativePath: "/interaction/collection_cancel", method: http.MethodPost, controllerHandle: userController.CollectionCancel},
 		{group: routerGroupNameUser, relativePath: "/interaction/collection_status", method: http.MethodGet, controllerHandle: userController.CollectionStatus},
+
+		// ===================== 首页 =====================
+		// 首页
+		{group: routerGroupNameHome, relativePath: "/my_spaces", method: http.MethodGet, controllerHandle: homeController.GetMySpaces},
+		{group: routerGroupNameHome, relativePath: "/collection_spaces", method: http.MethodGet, controllerHandle: homeController.GetCollectionSpaces},
+		{group: routerGroupNameHome, relativePath: "/collection_docs", method: http.MethodGet, controllerHandle: homeController.GetCollectionDocs},
 	}
 )
 

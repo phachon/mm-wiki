@@ -52,6 +52,11 @@ func (d *Doc) GetDocByDocId(docId int64) (*entity.DocEntity, errors.BizError) {
 	return d.daoDoc.GetDocByDocId(docId)
 }
 
+// GetDocByDocIds 获取多个文档信息
+func (d *Doc) GetDocByDocIds(docIds []int64) ([]*entity.DocEntity, errors.BizError) {
+	return d.daoDoc.GetDocByDocIds(docIds)
+}
+
 // CreateDoc 创建文档
 func (d *Doc) CreateDoc(docEntity *entity.DocEntity) errors.BizError {
 	if docEntity == nil {
