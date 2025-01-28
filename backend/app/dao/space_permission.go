@@ -173,9 +173,27 @@ func (ar *SpacePermission) GetPermissionByDepartmentIdAndSpaceId(departmentId in
 func (ar *SpacePermission) UpdatePermission(spacePermissionEntity *entity.SpacePermissionEntity) errors.BizError {
 	spacePermissionEntity.UpdateTime = utils.NewJsonTime(time.Now())
 	db := ar.db.Table(TableNameSpacePermission).
-		Select("IsView", "IsAdd", "IsEdit", "IsDelete", "IsAdmin").
-		Where(SpacePermissionPrimaryKey, spacePermissionEntity.SpacePermissionId).
-		Updates(spacePermissionEntity)
+		Where(SpacePermissionPrimaryKey, spacePermissionEntity.SpacePermissionId)
+
+	updateFields := map[string]interface{}{
+		"update_time": spacePermissionEntity.UpdateTime,
+	}
+	if spacePermissionEntity.IsView != nil {
+		updateFields["is_view"] = spacePermissionEntity.IsView
+	}
+	if spacePermissionEntity.IsAdd != nil {
+		updateFields["is_add"] = spacePermissionEntity.IsAdd
+	}
+	if spacePermissionEntity.IsEdit != nil {
+		updateFields["is_edit"] = spacePermissionEntity.IsEdit
+	}
+	if spacePermissionEntity.IsDelete != nil {
+		updateFields["is_delete"] = spacePermissionEntity.IsDelete
+	}
+	if spacePermissionEntity.IsExport != nil {
+		updateFields["is_export"] = spacePermissionEntity.IsExport
+	}
+	db = db.Updates(updateFields)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlUpdateErr, db.Error.Error())
 	}

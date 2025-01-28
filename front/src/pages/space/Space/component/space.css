@@ -30,3 +30,7 @@
 .space-avatar {
   font-size: large;
 }
+
+.space-permission-setting .ant-table-wrapper .ant-table-footer {
+  padding: 8px !important;
+}

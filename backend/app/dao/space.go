@@ -168,12 +168,29 @@ func (r *Space) HasSameName(spaceId int64, name string) (has bool, err errors.Bi
 func (r *Space) Update(space entity.SpaceEntity) errors.BizError {
 	space.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameSpace).
-		Select("Name", "Description", "VisitLevel", "IsShare", "IsExport").
 		Where(map[string]interface{}{
 			SpacePrimaryKey: space.SpaceId,
 			"status":        entity.SpaceStatusDefault,
-		}).
-		Updates(space)
+		})
+	updateFields := map[string]interface{}{
+		"update_time": space.UpdateTime,
+	}
+	if space.Name != "" {
+		updateFields["name"] = space.Name
+	}
+	if space.Description != nil {
+		updateFields["description"] = space.Description
+	}
+	if space.VisitLevel != nil {
+		updateFields["visit_level"] = *space.VisitLevel
+	}
+	if space.IsShare != nil {
+		updateFields["is_share"] = *space.IsShare
+	}
+	if space.IsExport != nil {
+		updateFields["is_export"] = *space.IsExport
+	}
+	db = db.Updates(updateFields)
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlUpdateErr, db.Error.Error())
 	}

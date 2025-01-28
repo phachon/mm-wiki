@@ -36,7 +36,7 @@ func (a *SpacePermission) Create(permission *entity.SpacePermissionEntity) error
 	}
 
 	// 如果是账号关联，账号ID必须大于0
-	if permission.RelationType == entity.SpacePermissionRelationTypeAccount {
+	if permission.PermissionType == entity.SpacePermissionRelationTypeAccount {
 		if permission.AccountId <= 0 {
 			return errors.Errorf(errors.BusinessRecordNotExistError, "账号不存在")
 		}
@@ -48,7 +48,7 @@ func (a *SpacePermission) Create(permission *entity.SpacePermissionEntity) error
 	}
 
 	// 如果是部门关联，部门ID必须大于0
-	if permission.RelationType == entity.SpacePermissionRelationTypeDepartment {
+	if permission.PermissionType == entity.SpacePermissionRelationTypeDepartment {
 		if permission.DepartmentId <= 0 {
 			return errors.Errorf(errors.BusinessRecordNotExistError, "部门不存在")
 		}
@@ -74,13 +74,25 @@ func (a *SpacePermission) CreateBatchAdminPerssions(spaceId int64, accountIds []
 	if len(accountIds) == 0 {
 		return errors.Errorf(errors.BusinessRecordNotExistError, "账号不存在")
 	}
+	// 管理员默认都有权限
+	var (
+		isView   = int(entity.SpacePermissionIsView)
+		isAdd    = int(entity.SpacePermissionIsAdd)
+		isEdit   = int(entity.SpacePermissionIsEdit)
+		isDelete = int(entity.SpacePermissionIsDelete)
+		isExport = int(entity.SpacePermissionIsExport)
+	)
 	// 循环插入
 	for _, accountId := range accountIds {
 		permission := &entity.SpacePermissionEntity{
-			SpaceId:      spaceId,
-			RelationType: entity.SpacePermissionRelationTypeAccount,
-			AccountId:    accountId,
-			IsAdmin:      entity.SpacePermissionIsAdmin,
+			SpaceId:        spaceId,
+			PermissionType: entity.SpacePermissionRelationTypeAdmin,
+			AccountId:      accountId,
+			IsView:         &isView,
+			IsAdd:          &isAdd,
+			IsEdit:         &isEdit,
+			IsDelete:       &isDelete,
+			IsExport:       &isExport,
 		}
 		err := a.Create(permission)
 		if err != nil {
@@ -95,11 +107,11 @@ func (a *SpacePermission) UpdateAccountPermission(spacePermissionId int64, permi
 
 	spacePermission := &entity.SpacePermissionEntity{
 		SpacePermissionId: spacePermissionId,
-		IsView:            permission.IsView,
-		IsAdd:             permission.IsAdd,
-		IsEdit:            permission.IsEdit,
-		IsDelete:          permission.IsDelete,
-		IsAdmin:           permission.IsAdmin,
+		IsView:            &permission.IsView,
+		IsAdd:             &permission.IsAdd,
+		IsEdit:            &permission.IsEdit,
+		IsDelete:          &permission.IsDelete,
+		IsExport:          &permission.IsExport,
 	}
 	// 更新记录
 	err := a.daoSpacePermission.UpdatePermission(spacePermission)
@@ -114,7 +126,7 @@ func (a *SpacePermission) GetAdminsBySpaceId(spaceId int64) ([]*entity.AccountEn
 	}
 	accountIds := make([]int64, 0)
 	for _, permission := range permissions {
-		if permission.IsAdmin == entity.SpacePermissionIsAdmin {
+		if permission.PermissionType == entity.SpacePermissionRelationTypeAdmin {
 			accountIds = append(accountIds, permission.AccountId)
 		}
 	}
@@ -145,4 +157,9 @@ func (a *SpacePermission) GetSpacesByAdminId(accountId int64) ([]*entity.SpaceEn
 		return nil, err
 	}
 	return spaces, nil
+}
+
+// GetPermissionsBySpaceId 获取空间权限列表
+func (a *SpacePermission) GetPermissionsBySpaceId(spaceId int64) ([]*entity.SpacePermissionEntity, errors.BizError) {
+	return a.daoSpacePermission.GetPermissionsBySpaceId(spaceId)
 }

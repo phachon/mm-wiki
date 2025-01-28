@@ -73,11 +73,11 @@ func SpaceSave(ctx *gin.Context) error {
 	spaceEntity := &entity.SpaceEntity{
 		SpaceKey:         spaceKey,
 		Name:             name,
-		Description:      description,
+		Description:      &description,
 		SpaceType:        spaceType,
-		VisitLevel:       visitLevel,
-		IsShare:          isShare,
-		IsExport:         isExport,
+		VisitLevel:       &visitLevel,
+		IsShare:          &isShare,
+		IsExport:         &isExport,
 		CreatorAccountId: global.ContextValueLoginAccountID(ctx),
 		CreatorName:      global.ContextValueLoginAccountName(ctx),
 	}
@@ -171,10 +171,10 @@ func SpaceModify(ctx *gin.Context) error {
 	spaceEntity := entity.SpaceEntity{
 		SpaceId:     spaceId,
 		Name:        name,
-		Description: description,
-		VisitLevel:  visitLevel,
-		IsShare:     isShare,
-		IsExport:    isExport,
+		Description: &description,
+		VisitLevel:  &visitLevel,
+		IsShare:     &isShare,
+		IsExport:    &isExport,
 	}
 	err := service.NewSpace(ctx).Update(spaceEntity)
 	if err != nil {

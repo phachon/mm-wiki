@@ -54,6 +54,13 @@ const routers: IRouter[] = [
         component: <Doc.DocView />,
         permission: false,
         auth: true
+      },
+      {
+        path: '/space/setting/:space_key',
+        key: 'space_setting',
+        component: <Space.SpaceSetting />,
+        permission: false,
+        auth: true
       }
     ]
   }

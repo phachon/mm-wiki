@@ -19,6 +19,13 @@
   border: 1px #efefef solid;
 }
 
+.panel-container {
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px #efefef solid;
+  height: 100%;
+}
+
 .search-form {
   margin-bottom: 0px;
 }

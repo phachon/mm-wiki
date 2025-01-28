@@ -92,6 +92,9 @@ var (
 		// 空间
 		{group: routerGroupNameSpace, relativePath: "/space/all", method: http.MethodGet, controllerHandle: spaceController.AllSpaces},
 		{group: routerGroupNameSpace, relativePath: "/space/docs", method: http.MethodGet, controllerHandle: spaceController.SpaceDocs},
+		// 设置
+		{group: routerGroupNameSpace, relativePath: "/setting/basic_modify", method: http.MethodPost, controllerHandle: spaceController.SpaceBasicSettingModify},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_list", method: http.MethodGet, controllerHandle: spaceController.SpacePermissionList},
 		// 文档
 		{group: routerGroupNameSpace, relativePath: "/doc/create", method: http.MethodPost, controllerHandle: spaceController.DocCreate},
 		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},
@@ -106,6 +109,9 @@ var (
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
 		{group: routerGroupNameUser, relativePath: "/interaction/collection_cancel", method: http.MethodPost, controllerHandle: userController.CollectionCancel},
 		{group: routerGroupNameUser, relativePath: "/interaction/collection_status", method: http.MethodGet, controllerHandle: userController.CollectionStatus},
+		// 账号
+		{group: routerGroupNameUser, relativePath: "/account/list", method: http.MethodGet, controllerHandle: userController.AccountList},
+		{group: routerGroupNameUser, relativePath: "/department/list", method: http.MethodGet, controllerHandle: userController.DepartmentList},
 
 		// ===================== 首页 =====================
 		// 首页

@@ -27,11 +27,11 @@ type SpaceEntity struct {
 	SpaceId          int64          `json:"space_id" gorm:"primary_key"` // 空间ID
 	SpaceKey         string         `json:"space_key"`                   // 空间key
 	Name             string         `json:"name"`                        // 空间名
-	Description      string         `json:"description"`                 // 空间描述
+	Description      *string        `json:"description"`                 // 空间描述
 	SpaceType        int            `json:"space_type"`                  // 空间类型 0 团队 1 个人
-	VisitLevel       int            `json:"visit_level"`                 // 访问级别
-	IsShare          int            `json:"is_share"`                    // 文档是否允许分享 0 否 1 是
-	IsExport         int            `json:"is_export"`                   // 文档是否允许导出 0 否 1 是
+	VisitLevel       *int           `json:"visit_level"`                 // 访问级别
+	IsShare          *int           `json:"is_share"`                    // 文档是否允许分享 0 否 1 是
+	IsExport         *int           `json:"is_export"`                   // 文档是否允许导出 0 否 1 是
 	CreatorAccountId int64          `json:"creator_account_id"`          // 创建者账户ID
 	CreatorName      string         `json:"creator_name"`                // 创建者名称
 	Status           int            `json:"status"`                      // 空间状态

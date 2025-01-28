@@ -15,11 +15,13 @@ import {
   StarOutlined,
   StarTwoTone,
   StarFilled,
-  PlusCircleOutlined
+  PlusCircleOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 import { SpaceInfoType } from '@/types/spaceType'
 import { ActionType, DocTreeEntity, DocType } from '@/types/docType'
 import './tree.css'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 const { DirectoryTree } = Tree
 
@@ -69,6 +71,7 @@ type DocTreeUIProps = {
 const DocTreeUI = (props: DocTreeUIProps) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (props.selectDocId) {
@@ -169,7 +172,7 @@ const DocTreeUI = (props: DocTreeUIProps) => {
   return (
     <div className="doc-sider">
       <div className="doc-sider-header">
-        <h2 className="space-title" style={{ display: 'flex', alignItems: 'center' }}>
+        <h2 className="space-title">
           <a href={`/space/${props.spaceInfo?.space_key}`}>
             <Space>
               <FolderOutlined />
@@ -196,6 +199,14 @@ const DocTreeUI = (props: DocTreeUIProps) => {
             }
           >
             {props.isCollected ? <StarFilled className="star-collection" /> : <StarOutlined />}
+          </a>
+          <a
+            style={{ marginLeft: 10 }}
+            onClick={() => {
+              navigate(`/space/setting/${props.spaceInfo?.space_key}`)
+            }}
+          >
+            <SettingOutlined />
           </a>
         </h2>
       </div>

@@ -3,8 +3,9 @@ package entity
 import "github.com/phachon/mm-wiki/utils"
 
 const (
-	SpacePermissionRelationTypeAccount    = 0 // 关联类型 账号
-	SpacePermissionRelationTypeDepartment = 1 // 关联类型 部门
+	SpacePermissionRelationTypeAccount    = 0 // 关联类型 普通账号
+	SpacePermissionRelationTypeAdmin      = 1 // 关联类型 管理员
+	SpacePermissionRelationTypeDepartment = 2 // 关联类型 用户组（部门）
 )
 
 const (
@@ -22,20 +23,23 @@ const (
 
 	SpacePermissionIsNotAdmin = 0 // 是否是管理员
 	SpacePermissionIsAdmin    = 1 // 是否是管理员
+
+	SpacePermissionIsNotExport = 0 // 是否允许导出
+	SpacePermissionIsExport    = 1 // 是否允许导出
 )
 
 // SpacePermissionEntity 空间权限表结构
 type SpacePermissionEntity struct {
 	SpacePermissionId int64          `json:"space_permission_id" gorm:"primary_key"` // 空间权限ID
 	SpaceId           int64          `json:"space_id"`                               // 空间ID
-	RelationType      int            `json:"relation_type"`                          // 关联类型 0 个人 1 部门
+	PermissionType    int            `json:"permission_type"`                        // 权限类型 0 个人 1 管理员 2 账号
 	AccountId         int64          `json:"account_id"`                             // 账号ID
 	DepartmentId      int64          `json:"department_id"`                          // 部门ID
-	IsView            int            `json:"is_view"`                                // 是否允许查看
-	IsAdd             int            `json:"is_add"`                                 // 是否允许添加
-	IsEdit            int            `json:"is_edit"`                                // 是否允许编辑
-	IsDelete          int            `json:"is_delete"`                              // 是否允许删除
-	IsAdmin           int            `json:"is_admin"`                               // 是否是管理员
+	IsView            *int           `json:"is_view"`                                // 是否允许查看
+	IsAdd             *int           `json:"is_add"`                                 // 是否允许添加
+	IsEdit            *int           `json:"is_edit"`                                // 是否允许编辑
+	IsDelete          *int           `json:"is_delete"`                              // 是否允许删除
+	IsExport          *int           `json:"is_export"`                              // 是否允许导出
 	CreateTime        utils.JsonTime `json:"create_time"`                            // 创建时间
 	UpdateTime        utils.JsonTime `json:"update_time"`                            // 更新时间
 }
@@ -46,5 +50,5 @@ type SpacePermission struct {
 	IsAdd    int // 是否允许添加
 	IsEdit   int // 是否允许编辑
 	IsDelete int // 是否允许删除
-	IsAdmin  int // 是否是管理员
+	IsExport int // 是否是管理员
 }

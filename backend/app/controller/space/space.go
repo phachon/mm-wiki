@@ -117,3 +117,86 @@ func SpaceDocs(ctx *gin.Context) error {
 
 	return controller.RespJsonSuccess(ctx, data)
 }
+
+// SpaceBasicSettingModify 空间基本设置修改
+func SpaceBasicSettingModify(ctx *gin.Context) error {
+	spaceId := controller.GetParamInt64(ctx, "space_id")
+	name := controller.GetParamString(ctx, "name")
+	description := controller.GetParamString(ctx, "description")
+	visitLevel := controller.GetParamIntDef(ctx, "visit_level", 0)
+
+	// 判断参数合法性
+	if spaceId == 0 {
+		logger.WithContext(ctx).Warnf("[SpaceBasicSettingModify] space_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间id不存在")
+	}
+	if name == "" {
+		logger.WithContext(ctx).Warnf("[SpaceBasicSettingModify] name empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间名不能为空")
+	}
+	if description == "" {
+		logger.WithContext(ctx).Warnf("[SpaceBasicSettingModify] description empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间描述不能为空")
+	}
+	if visitLevel != entity.SpaceVisitLevelDefaultPublic && visitLevel != entity.SpaceVisitLevelDefaultPrivate {
+		logger.WithContext(ctx).Warnf("[SpaceBasicSettingModify] visit_level error")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "访问级别错误")
+	}
+	// space 空间实体
+	spaceEntity := entity.SpaceEntity{
+		SpaceId:     spaceId,
+		Name:        name,
+		Description: &description,
+		VisitLevel:  &visitLevel,
+	}
+	err := service.NewSpace(ctx).Update(spaceEntity)
+	if err != nil {
+		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+	return controller.RespJsonSuccess(ctx, nil)
+}
+
+// SpacePermissionList 空间权限列表
+func SpacePermissionList(ctx *gin.Context) error {
+	spaceId := controller.GetParamInt64(ctx, "space_id")
+	if spaceId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpacePermissionList] space_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间 id 不能为空")
+	}
+	// 获取空间信息
+	serviceSpace := service.NewSpace(ctx)
+	space, err := serviceSpace.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionList] GetSpaceBySpaceId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取空间信息失败")
+	}
+	// 获取空间权限列表
+	permissions, err := service.NewSpacePermission(ctx).GetPermissionsBySpaceId(space.SpaceId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionList] GetPermissionsBySpaceId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取空间权限列表失败")
+	}
+
+	var (
+		departmentList []*entity.SpacePermissionEntity
+		accountList    []*entity.SpacePermissionEntity
+		adminList      []*entity.SpacePermissionEntity
+	)
+	for _, permission := range permissions {
+		if permission.PermissionType == entity.SpacePermissionRelationTypeDepartment {
+			departmentList = append(departmentList, permission)
+		}
+		if permission.PermissionType == entity.SpacePermissionRelationTypeAccount {
+			accountList = append(accountList, permission)
+		}
+		if permission.PermissionType == entity.SpacePermissionRelationTypeAdmin {
+			adminList = append(adminList, permission)
+		}
+	}
+	data := map[string]interface{}{
+		"admin_list":      adminList,
+		"department_list": departmentList,
+		"account_list":    accountList,
+	}
+	return controller.RespJsonSuccess(ctx, data)
+}

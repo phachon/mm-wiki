@@ -52,10 +52,12 @@ export const SpaceList = (props: { items: SpaceInfoType[] }) => {
     <div>
       {props.items.map((item) => (
         <div className="sidebar-space-item">
-          <Space>
-            <DynamicIcon name={'FolderOpenOutlined'} />
-            <a href={'/space/' + item.space_key}>{item.name}</a>
-          </Space>
+          <a href={'/space/' + item.space_key}>
+            <Space>
+              <FolderOpenOutlined />
+              {item.name}
+            </Space>
+          </a>
         </div>
       ))}
     </div>
@@ -67,10 +69,12 @@ export const DocList = (props: { items: DocEntity[] }) => {
     <div>
       {props.items.map((item) => (
         <div className="sidebar-space-item">
-          <Space>
-            {item.type == DocType.DOC ? <FileTextOutlined /> : <FileTextOutlined />}
-            <a href={'/doc/' + item.doc_id}>{item.name}</a>
-          </Space>
+          <a href={'/doc/' + item.doc_id}>
+            <Space>
+              <FileTextOutlined />
+              {item.name}
+            </Space>
+          </a>
         </div>
       ))}
     </div>

@@ -173,19 +173,20 @@ DROP TABLE IF EXISTS `mk_space_permission`;
 CREATE TABLE `mk_space_permission` (
   `space_permission_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '空间权限 id',
   `space_id` int(10) NOT NULL DEFAULT '0' COMMENT '空间 id',
-  `relation_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '关系类型 0 个人 1 部门',
+  `permission_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '权限类型 0 普通账号 1 管理员 2 部门',
   `account_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '账号 id',
   `department_id` int(10) NOT NULL DEFAULT '0' COMMENT '部门 id',
   `is_view` tinyint(1) NOT NULL DEFAULT '0' COMMENT '允许查看 0 否 1 是',
   `is_add` tinyint(1) NOT NULL DEFAULT '0' COMMENT '允许添加 0 否 1 是',
   `is_edit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '允许编辑 0 否 1 是',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '允许删除 0 否 1 是',
-  `is_admin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否是管理员 0 否 1 是',
+  `is_export` tinyint(1) NOT NULL DEFAULT '0' COMMENT '允许导出 0 否 1 是',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`space_permission_id`),
   KEY `space_id_account_id` (`space_id`, `account_id`),
   KEY `space_id_department_id` (`space_id`, `department_id`),
+  KEY `space_id_permission_type` (`space_id`, `permission_type`),
   KEY `account_id` (`account_id`),
   KEY `department_id` (`department_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='空间权限表';

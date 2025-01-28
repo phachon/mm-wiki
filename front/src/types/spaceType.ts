@@ -14,6 +14,15 @@ export const SpaceIsShareYes = 1 // 可分享
 export const SpaceIsExportNo = 0 // 不可导出
 export const SpaceIsExportYes = 1 // 可导出
 
+// 空间权限类型定义
+export const enum SpacePermissionType {
+  View = 1, // 查看
+  Add = 2, // 添加
+  Edit = 3, // 编辑
+  Delete = 4, // 删除
+  Export = 5 // 导出
+}
+
 // 空间访问级别定义
 export const SpaceVisitLevelTypes = [
   {
@@ -63,6 +72,35 @@ export const SpaceTypeTypes = [
     type: SpaceTypePersonal,
     name: '个人空间',
     color: 'green'
+  }
+]
+
+// 空间权限定义
+export const SpacePermissionTypes = [
+  {
+    type: SpacePermissionType.View,
+    name: '查看',
+    color: ''
+  },
+  {
+    type: SpacePermissionType.Add,
+    name: '添加',
+    color: ''
+  },
+  {
+    type: SpacePermissionType.Edit,
+    name: '编辑',
+    color: ''
+  },
+  {
+    type: SpacePermissionType.Delete,
+    name: '删除',
+    color: ''
+  },
+  {
+    type: SpacePermissionType.Export,
+    name: '导出',
+    color: ''
   }
 ]
 
@@ -127,4 +165,27 @@ export type SpaceDocsResp = {
   home_doc: DocTreeEntity // 主页文档
   doc_tree: DocTreeEntity[] // 目录树
   space_info: SpaceInfoType // 空间信息
+}
+
+// SpacePermissionInfoType 空间权限信息结构
+export type SpacePermissionInfoType = {
+  space_permission_id: number // 空间权限ID
+  space_id: number // 空间ID
+  permission_type: number // 权限类型
+  account_id: bigint // 账号ID
+  department_id: number // 部门ID
+  is_view: number // 是否查看
+  is_add: number // 是否添加
+  is_edit: number // 是否编辑
+  is_delete: number // 是否删除
+  is_export: number // 是否导出
+  create_time: string // 创建时间
+  update_time: string // 修改时间
+}
+
+// SpacePermissionListResp 空间权限列表返回结构
+export type SpacePermissionListResp = {
+  admin_list: SpacePermissionInfoType[] // 主页文档
+  department_list: SpacePermissionInfoType[] // 目录树
+  account_list: SpacePermissionInfoType[] // 空间信息
 }
