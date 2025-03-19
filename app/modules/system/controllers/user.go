@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/validation"
 	"github.com/phachon/mm-wiki/app/models"
 	"github.com/phachon/mm-wiki/app/utils"
@@ -111,6 +114,17 @@ func (this *UserController) Save() {
 		this.ErrorLog("添加用户失败：" + err.Error())
 		this.jsonError("添加用户失败")
 	}
+
+	logInfo := this.GetLogInfoByCtx()
+	go func(sender string, receiver string, email string, password string) {
+		err := sendEmail(sender, receiver, email, password)
+		if err != nil {
+			logInfo["message"] = "添加用户时发送邮件通知失败：" + err.Error()
+			logInfo["level"] = models.Log_Level_Error
+			models.LogModel.Insert(logInfo)
+			logs.Error("添加用户时发送邮件通知失败：" + err.Error())
+		}
+	}(this.User["username"], username, email, password)
 	this.InfoLog("添加用户 " + utils.Convert.IntToString(userId, 10) + " 成功")
 	this.jsonSuccess("添加用户成功", nil, "/system/user/list")
 }
@@ -392,4 +406,39 @@ func (this *UserController) Info() {
 	this.Data["user"] = user
 	this.Data["role"] = role
 	this.viewLayout("user/info", "user")
+}
+
+func sendEmail(sender string, receiver string, email string, password string) error {
+
+	// get send email open config
+	sendEmailConfig := models.ConfigModel.GetConfigValueByKey(models.ConfigKeySendEmail, "0")
+	if sendEmailConfig == "0" {
+		return nil
+	}
+
+	// get email config
+	emailConfig, err := models.EmailModel.GetUsedEmail()
+	if err != nil {
+		return errors.New("发送邮件通知查找邮件服务器配置失败：" + err.Error())
+	}
+	if len(emailConfig) == 0 {
+		return nil
+	}
+
+	// populate email template
+	documentValue := map[string]string{
+		"name":         "MM-Wiki欢迎邮件",
+		"username":     sender,
+		"comment":      "",
+		"content":      fmt.Sprintf("欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>！<br/>您的信息如下：<br/>用户名：%s<br/>密码：%s", receiver, password),
+	}
+
+	// generate email
+	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template_test.html"
+	body, err := utils.Email.MakeDocumentHtmlBody(documentValue, emailTemplate)
+	if err != nil {
+		return errors.New("发送邮件生成模板失败：" + err.Error())
+	}
+	// start send email
+	return utils.Email.Send(emailConfig, []string{email}, "新用户通知", body)
 }
