@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/phachon/mm-wiki/app/services"
 	"regexp"
 	"strings"
@@ -213,8 +214,9 @@ func (this *DocumentController) Save() {
 		this.ErrorLog("创建文档失败：" + err.Error())
 		this.jsonError("创建文档失败")
 	}
-	this.InfoLog("创建文档 " + utils.Convert.IntToString(documentId, 10) + " 成功")
-	this.jsonSuccess("创建文档成功", nil, "/document/index?document_id="+utils.Convert.IntToString(documentId, 10))
+	this.InfoLog("创建文档 " + documentId + " 成功")
+	logs.Info("创建文档 " + documentId + " 成功")
+	this.jsonSuccess("创建文档成功", nil, "/document/index?document_id="+documentId)
 }
 
 // document history
