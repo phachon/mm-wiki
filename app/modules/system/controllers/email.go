@@ -314,6 +314,25 @@ func (this *EmailController) Test() {
 		"is_ssl":              isSsl,
 	}
 
+	configs, err := models.ConfigModel.GetConfigs()
+	if err != nil {
+		this.ErrorLog("获取配置信息失败: " + err.Error())
+		this.jsonError("获取配置出错！")
+	}
+	var system_name string
+	var system_url string
+	for _, config := range configs {
+		if len(config) == 0 {
+			continue
+		}
+		if config["key"] == models.ConfigKeySystemName {
+			system_name = config["value"]
+		}
+		if config["key"] == models.ConfigKeySystemUrl {
+			system_url = config["value"]
+		}
+	}
+
 	to := strings.Split(emails, ";")
 	documentValue := map[string]string{
 		"name":         "MM-Wiki测试邮件",
@@ -321,7 +340,7 @@ func (this *EmailController) Test() {
 		"update_time":  fmt.Sprintf("%d", time.Now().Unix()),
 		"comment":      "",
 		"document_url": "",
-		"content":      "欢迎使用 <a href='https://github.com/phachon/mm-wiki'>MM-Wiki</a>，这是一封测试邮件，请勿回复!",
+		"content":      fmt.Sprintf("欢迎使用 <a href='%s'>%s MM-Wiki</a>，这是一封测试邮件，请勿回复!", system_url, system_name),
 	}
 
 	emailTemplate := beego.BConfig.WebConfig.ViewsPath + "/system/email/template_test.html"

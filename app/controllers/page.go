@@ -255,10 +255,26 @@ func (this *PageController) Modify() {
 		this.jsonError("修改文档失败！")
 	}
 
+	// get system url
+	configs, err := models.ConfigModel.GetConfigs()
+	if err != nil {
+		this.ErrorLog("获取配置信息失败: " + err.Error())
+		this.jsonError("获取配置出错！")
+	}
+	var system_url string
+	for _, config := range configs {
+		if len(config) == 0 {
+			continue
+		}
+		if config["key"] == models.ConfigKeySystemUrl {
+			system_url = config["value"]
+		}
+	}
+
 	// send email to follow user
 	if isNoticeUser == "1" {
 		logInfo := this.GetLogInfoByCtx()
-		url := fmt.Sprintf("%s:%d/document/index?document_id=%s", this.Ctx.Input.Site(), this.Ctx.Input.Port(), documentId)
+		url := fmt.Sprintf("%s/document/index?document_id=%s", system_url, documentId)
 		go func(documentId string, username string, comment string, url string) {
 			err := sendEmail(documentId, username, comment, url)
 			if err != nil {
