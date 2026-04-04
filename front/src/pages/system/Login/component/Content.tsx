@@ -1,7 +1,7 @@
 import { SettingConfig } from '@/config/setting'
-import { MobileOutlined, UserOutlined, LockOutlined } from '@ant-design/icons'
+import { MobileOutlined, UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import { LoginForm, ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-components'
-import { Divider, message, Tabs } from 'antd'
+import { Button, Divider, message, Tabs } from 'antd'
 import { useState } from 'react'
 import BannerImage from './BannerImage'
 import './login.css'
@@ -20,6 +20,16 @@ interface LoginUIProps {
    * @returns
    */
   onPhoneLogin: (values: any) => Promise<boolean | void>
+
+  /**
+   * 验证码
+   */
+  captchaCode?: string
+
+  /**
+   * 刷新验证码
+   */
+  onRefreshCaptcha?: () => void
 }
 
 const LoginContentUI = (props: LoginUIProps) => {
@@ -91,6 +101,37 @@ const LoginContentUI = (props: LoginUIProps) => {
                   }
                 ]}
               />
+              <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                  <ProFormText
+                    name="verify_code"
+                    fieldProps={{
+                      size: 'large',
+                      prefix: <SafetyCertificateOutlined className={'prefixIcon'} />
+                    }}
+                    placeholder={'请输入验证码'}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请输入验证码！'
+                      }
+                    ]}
+                  />
+                </div>
+                <Button
+                  size="large"
+                  style={{
+                    minWidth: 100,
+                    height: 40,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    letterSpacing: 4
+                  }}
+                  onClick={props.onRefreshCaptcha}
+                >
+                  {props.captchaCode || '----'}
+                </Button>
+              </div>
             </>
           )}
           {loginType === 'phone_login' && (

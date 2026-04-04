@@ -114,6 +114,54 @@ func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	return nil
 }
 
+// UpdateDocSequence 更新文档排序
+func (d *Doc) UpdateDocSequence(docId int64, sequence int) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(d.ctx).Table(TableNameDoc).
+		Where(map[string]interface{}{
+			DocPrimaryKey: docId,
+		}).
+		Updates(map[string]interface{}{
+			"sequence":    sequence,
+			"update_time": utils.NewJsonTime(time.Now()),
+		})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlUpdateErr, db.Error.Error())
+	}
+	return nil
+}
+
+// SearchDocs 搜索文档（按文档名模糊匹配）
+func (d *Doc) SearchDocs(keyword string, spaceKey string, limit int, offset int) ([]*entity.DocEntity, errors.BizError) {
+	var docs []*entity.DocEntity
+	query := GetDB(dbNameMK).WithContext(d.ctx).
+		Table(TableNameDoc).
+		Where("name LIKE ? AND status = ?", "%"+keyword+"%", entity.DocEntityStatusNormal)
+	if spaceKey != "" {
+		query = query.Where("space_key = ?", spaceKey)
+	}
+	db := query.Order("update_time DESC").Limit(limit).Offset(offset).Find(&docs)
+	if db.Error != nil {
+		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return docs, nil
+}
+
+// CountSearchDocs 统计搜索文档数量
+func (d *Doc) CountSearchDocs(keyword string, spaceKey string) (int64, errors.BizError) {
+	var count int64
+	query := GetDB(dbNameMK).WithContext(d.ctx).
+		Table(TableNameDoc).
+		Where("name LIKE ? AND status = ?", "%"+keyword+"%", entity.DocEntityStatusNormal)
+	if spaceKey != "" {
+		query = query.Where("space_key = ?", spaceKey)
+	}
+	db := query.Count(&count)
+	if db.Error != nil {
+		return 0, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return count, nil
+}
+
 // UpdateNameAndEditAccount 更新文档名称和编辑人
 func (d *Doc) UpdateNameAndEditAccount(docId int64, name string, accountId int64, accountName string) errors.BizError {
 	updateDoc := &entity.DocEntity{

@@ -30,6 +30,7 @@ var (
 	routerHandleTables = []routerHandle{
 		// ===================== 系统 =====================
 		// 登录
+		{group: routerGroupNameSystem, relativePath: "/auth/captcha", method: http.MethodGet, controllerHandle: systemController.AuthCaptcha},
 		{group: routerGroupNameSystem, relativePath: "/auth/login", method: http.MethodPost, controllerHandle: systemController.AuthLogin},
 		// 个人中心
 		{group: routerGroupNameSystem, relativePath: "/profile/privileges", method: http.MethodGet, controllerHandle: systemController.ProfilePrivileges},
@@ -104,6 +105,10 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version", method: http.MethodGet, controllerHandle: spaceController.DocContentVersion},
 		{group: routerGroupNameSpace, relativePath: "/doc/recover", method: http.MethodPost, controllerHandle: spaceController.DocRecover},
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
+		// 文档排序
+		{group: routerGroupNameSpace, relativePath: "/doc/sort", method: http.MethodPost, controllerHandle: spaceController.DocSort},
+		// 搜索
+		{group: routerGroupNameSpace, relativePath: "/doc/search", method: http.MethodGet, controllerHandle: spaceController.DocSearch},
 		// ===================== 用户 =====================
 		// 互动
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
@@ -112,6 +117,10 @@ var (
 		// 账号
 		{group: routerGroupNameUser, relativePath: "/account/list", method: http.MethodGet, controllerHandle: userController.AccountList},
 		{group: routerGroupNameUser, relativePath: "/department/list", method: http.MethodGet, controllerHandle: userController.DepartmentList},
+		// 关注
+		{group: routerGroupNameUser, relativePath: "/interaction/follow", method: http.MethodPost, controllerHandle: userController.FollowAdd},
+		{group: routerGroupNameUser, relativePath: "/interaction/follow_cancel", method: http.MethodPost, controllerHandle: userController.FollowCancel},
+		{group: routerGroupNameUser, relativePath: "/interaction/follow_status", method: http.MethodGet, controllerHandle: userController.FollowStatus},
 
 		// ===================== 首页 =====================
 		// 首页

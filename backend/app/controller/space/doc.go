@@ -407,3 +407,66 @@ func DocContentVersionDel(ctx *gin.Context) error {
 
 	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
+
+// DocSort 文档排序
+func DocSort(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	sequence := controller.GetParamIntDef(ctx, "sequence", 0)
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocSort] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocSort] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocSort] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	err = serviceDoc.UpdateDocSequence(docId, sequence)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocSort] UpdateDocSequence err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档排序失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// DocSearch 文档搜索
+func DocSearch(ctx *gin.Context) error {
+	keyword := controller.GetParamString(ctx, "keyword")
+	spaceKey := controller.GetParamString(ctx, "space_key")
+	pageSize := controller.GetParamIntDef(ctx, "page_size", 20)
+	pageNum := controller.GetParamIntDef(ctx, "page_num", 1)
+
+	if keyword == "" {
+		logger.WithContext(ctx).Warnf("[DocSearch] 搜索关键词不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "搜索关键词不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	docs, err := serviceDoc.SearchDocs(keyword, spaceKey, pageSize, pageNum)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocSearch] SearchDocs err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "搜索文档失败")
+	}
+
+	total, err := serviceDoc.CountSearchDocs(keyword, spaceKey)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocSearch] CountSearchDocs err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "搜索文档失败")
+	}
+
+	pageInfo := entity.GetPageInfo(total, pageSize, pageNum)
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{
+		"list":      docs,
+		"page_info": pageInfo,
+	})
+}

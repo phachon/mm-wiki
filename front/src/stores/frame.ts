@@ -4,6 +4,7 @@ import { PrivilegeListItemType, PrivilegeTypeNav } from '@/types/privilegeType'
 import { INavItem, IMenuItem, IFrameBreadcrumbItem } from '@/types/frame'
 import { LoginTokenStore, removeLocalAccountInfo } from './local'
 import { SystemNoticeService } from '@/services/SystemNotice'
+import { SystemProfileService } from '@/services/SystemProfile'
 import { NoticeInfoType } from '@/types/noticeType'
 import { MenuProps, message } from 'antd'
 
@@ -69,19 +70,13 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
    */
   initProfileInfo: async (pathName?: string) => {
     console.log('initProfileInfo start', pathName)
-    // 获取个人信息+个人权限信息
-    // let profileInfo: ProfileInfoType = await SystemSystemProfileService.getProfileInfo()
-    // get().setAccountInfo(profileInfo.account_info)
-    // 转换后端的权限数据
-    // let iPrivilegeData = getIPrivilegeData(profileInfo.privilege_list)
-    // set({
-    //   isLoading: false,
-    //   iPrivilegeData: iPrivilegeData
-    // })
-    // // 直接获取
-    // if (pathName == '' || pathName == '/') {
-    //   get().onMenuItemsClick(pathName ? pathName : '')
-    // }
+    // 获取个人信息
+    try {
+      const profileInfo = await SystemProfileService.getProfileInfo()
+      get().setAccountInfo(profileInfo.account_info)
+    } catch (e) {
+      console.log('initProfileInfo getProfileInfo error', e)
+    }
     set({
       isLoading: false
     })
@@ -193,7 +188,7 @@ export const createFrame: StateCreator<IAccount & IFrame, [], [], IFrame> = (set
   },
 
   onNoticeChange: (page: number) => {
-    return
+    get().onNoticeListClick(4, page)
   }
 })
 
