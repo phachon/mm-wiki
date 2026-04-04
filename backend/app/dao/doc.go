@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/phachon/mm-wiki/app/entity"
@@ -133,9 +134,10 @@ func (d *Doc) UpdateDocSequence(docId int64, sequence int) errors.BizError {
 // SearchDocs 搜索文档（按文档名模糊匹配）
 func (d *Doc) SearchDocs(keyword string, spaceKey string, limit int, offset int) ([]*entity.DocEntity, errors.BizError) {
 	var docs []*entity.DocEntity
+	escapedKeyword := escapeLikePattern(keyword)
 	query := GetDB(dbNameMK).WithContext(d.ctx).
 		Table(TableNameDoc).
-		Where("name LIKE ? AND status = ?", "%"+keyword+"%", entity.DocEntityStatusNormal)
+		Where("name LIKE ? AND status = ?", "%"+escapedKeyword+"%", entity.DocEntityStatusNormal)
 	if spaceKey != "" {
 		query = query.Where("space_key = ?", spaceKey)
 	}
@@ -149,9 +151,10 @@ func (d *Doc) SearchDocs(keyword string, spaceKey string, limit int, offset int)
 // CountSearchDocs 统计搜索文档数量
 func (d *Doc) CountSearchDocs(keyword string, spaceKey string) (int64, errors.BizError) {
 	var count int64
+	escapedKeyword := escapeLikePattern(keyword)
 	query := GetDB(dbNameMK).WithContext(d.ctx).
 		Table(TableNameDoc).
-		Where("name LIKE ? AND status = ?", "%"+keyword+"%", entity.DocEntityStatusNormal)
+		Where("name LIKE ? AND status = ?", "%"+escapedKeyword+"%", entity.DocEntityStatusNormal)
 	if spaceKey != "" {
 		query = query.Where("space_key = ?", spaceKey)
 	}
@@ -160,6 +163,16 @@ func (d *Doc) CountSearchDocs(keyword string, spaceKey string) (int64, errors.Bi
 		return 0, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
 	}
 	return count, nil
+}
+
+// escapeLikePattern 转义 LIKE 模式中的特殊字符
+func escapeLikePattern(s string) string {
+	replacer := strings.NewReplacer(
+		`%`, `\%`,
+		`_`, `\_`,
+		`\`, `\\`,
+	)
+	return replacer.Replace(s)
 }
 
 // UpdateNameAndEditAccount 更新文档名称和编辑人
