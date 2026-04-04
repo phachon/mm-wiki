@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ var (
 	routerHandleTables = []routerHandle{
 		// ===================== 系统 =====================
 		// 登录
+		{group: routerGroupNameSystem, relativePath: "/auth/captcha", method: http.MethodGet, controllerHandle: systemController.AuthCaptcha},
 		{group: routerGroupNameSystem, relativePath: "/auth/login", method: http.MethodPost, controllerHandle: systemController.AuthLogin},
 		// 个人中心
 		{group: routerGroupNameSystem, relativePath: "/profile/privileges", method: http.MethodGet, controllerHandle: systemController.ProfilePrivileges},
@@ -104,6 +106,10 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version", method: http.MethodGet, controllerHandle: spaceController.DocContentVersion},
 		{group: routerGroupNameSpace, relativePath: "/doc/recover", method: http.MethodPost, controllerHandle: spaceController.DocRecover},
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
+		// 文档排序
+		{group: routerGroupNameSpace, relativePath: "/doc/sort", method: http.MethodPost, controllerHandle: spaceController.DocSort},
+		// 搜索
+		{group: routerGroupNameSpace, relativePath: "/doc/search", method: http.MethodGet, controllerHandle: spaceController.DocSearch},
 		// ===================== 用户 =====================
 		// 互动
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
@@ -112,6 +118,10 @@ var (
 		// 账号
 		{group: routerGroupNameUser, relativePath: "/account/list", method: http.MethodGet, controllerHandle: userController.AccountList},
 		{group: routerGroupNameUser, relativePath: "/department/list", method: http.MethodGet, controllerHandle: userController.DepartmentList},
+		// 关注
+		{group: routerGroupNameUser, relativePath: "/interaction/follow", method: http.MethodPost, controllerHandle: userController.FollowAdd},
+		{group: routerGroupNameUser, relativePath: "/interaction/follow_cancel", method: http.MethodPost, controllerHandle: userController.FollowCancel},
+		{group: routerGroupNameUser, relativePath: "/interaction/follow_status", method: http.MethodGet, controllerHandle: userController.FollowStatus},
 
 		// ===================== 首页 =====================
 		// 首页
@@ -131,9 +141,33 @@ type routerHandle struct {
 
 // Init 初始化路由
 func Init() {
-	global.GinEngine.Use(cors.Default())
+	// CORS 配置
+	corsConf := config.GetAppConf().GetCORSConf()
+	if len(corsConf.AllowOrigins) > 0 {
+		corsConfig := cors.Config{
+			AllowOrigins:     corsConf.AllowOrigins,
+			AllowMethods:     corsConf.AllowMethods,
+			AllowHeaders:     corsConf.AllowHeaders,
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+		}
+		if len(corsConfig.AllowMethods) == 0 {
+			corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+		}
+		if len(corsConfig.AllowHeaders) == 0 {
+			corsConfig.AllowHeaders = []string{
+				"Origin", "Content-Type", "Accept",
+				global.HeaderKTRequestID, global.HeaderKTTimestamp,
+				global.HeaderKTLoginToken, global.HeaderKTDebug,
+			}
+		}
+		global.GinEngine.Use(cors.New(corsConfig))
+	} else {
+		global.GinEngine.Use(cors.Default())
+	}
 	global.GinEngine.Use(gin.Logger())
 	global.GinEngine.Use(gin.Recovery())
+	global.GinEngine.Use(filter.RateLimit())
 	global.GinEngine.Use(filter.RequestParse())
 	global.GinEngine.Use(filter.AuthLoginJWT())
 	global.GinEngine.Use(filter.PermissionCheck())

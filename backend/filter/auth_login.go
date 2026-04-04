@@ -17,6 +17,7 @@ var (
 	// 需要忽略的校验登录的接口
 	ignoreLoginAuthPath = []string{
 		"/system/auth/login",
+		"/system/auth/captcha",
 		"/static/upload",
 	}
 )

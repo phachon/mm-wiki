@@ -9,12 +9,28 @@ import (
 	"github.com/phachon/mm-wiki/logger"
 )
 
+// AuthCaptcha 获取验证码
+func AuthCaptcha(ctx *gin.Context) error {
+	captchaId := global.ContextValueRequestID(ctx)
+	if captchaId == "" {
+		captchaId = ctx.ClientIP()
+	}
+	captchaStore := service.GetCaptchaStore()
+	code := captchaStore.Generate(captchaId)
+
+	return RespJsonSuccess(ctx, map[string]interface{}{
+		"captcha_id":   captchaId,
+		"captcha_code": code,
+	})
+}
+
 // AuthLogin 系统登录
 func AuthLogin(ctx *gin.Context) error {
 
 	accountName := ctx.PostForm("account_name")
 	password := ctx.PostForm("password")
 	verifyCode := ctx.PostForm("verify_code")
+	captchaId := ctx.PostForm("captcha_id")
 
 	// 删除密码
 	ctx.Request.PostForm.Del("password")
@@ -32,7 +48,18 @@ func AuthLogin(ctx *gin.Context) error {
 		logger.WithContext(ctx).Warnf("[AuthLogin] verify_code empty")
 		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "验证码不能为空")
 	}
-	// todo 判断验证码是否正确
+	// 校验验证码
+	if captchaId == "" {
+		captchaId = global.ContextValueRequestID(ctx)
+		if captchaId == "" {
+			captchaId = ctx.ClientIP()
+		}
+	}
+	captchaStore := service.GetCaptchaStore()
+	if !captchaStore.Verify(captchaId, verifyCode) {
+		logger.WithContext(ctx).Warnf("[AuthLogin] verify_code invalid, captchaId=%s", captchaId)
+		return RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "验证码错误或已过期")
+	}
 
 	authService := service.NewAuth(ctx)
 	// 判断账号和密码是否正确

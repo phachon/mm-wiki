@@ -123,3 +123,80 @@ func CollectionCancel(ctx *gin.Context) error {
 
 	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
+
+// FollowAdd 添加关注
+func FollowAdd(ctx *gin.Context) error {
+	objectId := controller.GetParamStringDef(ctx, "object_id", "")
+	followType := controller.GetParamIntDef(ctx, "follow_type", 0)
+
+	if objectId == "" {
+		logger.WithContext(ctx).Warnf("[FollowAdd] 关注对象ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "关注对象ID不能为空")
+	}
+	if followType != entity.FollowTypeDocument && followType != entity.FollowTypeUser {
+		logger.WithContext(ctx).Warnf("[FollowAdd] 关注类型不合法")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "关注类型不合法")
+	}
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	followService := service.NewFollow(ctx)
+	err := followService.Create(accountId, followType, objectId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[FollowAdd] Create err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "关注失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// FollowCancel 取消关注
+func FollowCancel(ctx *gin.Context) error {
+	objectId := controller.GetParamStringDef(ctx, "object_id", "")
+	followType := controller.GetParamIntDef(ctx, "follow_type", 0)
+
+	if objectId == "" {
+		logger.WithContext(ctx).Warnf("[FollowCancel] 关注对象ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "关注对象ID不能为空")
+	}
+	if followType != entity.FollowTypeDocument && followType != entity.FollowTypeUser {
+		logger.WithContext(ctx).Warnf("[FollowCancel] 关注类型不合法")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "关注类型不合法")
+	}
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	followService := service.NewFollow(ctx)
+	err := followService.Cancel(accountId, followType, objectId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[FollowCancel] Cancel err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "取消关注失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// FollowStatus 获取关注状态
+func FollowStatus(ctx *gin.Context) error {
+	objectId := controller.GetParamStringDef(ctx, "object_id", "")
+	followType := controller.GetParamIntDef(ctx, "follow_type", 0)
+
+	if objectId == "" {
+		logger.WithContext(ctx).Warnf("[FollowStatus] 关注对象ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "关注对象ID不能为空")
+	}
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	followService := service.NewFollow(ctx)
+	isFollowed, err := followService.GetFollowStatus(accountId, followType, objectId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[FollowStatus] GetFollowStatus err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取关注状态失败")
+	}
+
+	status := 0
+	if isFollowed {
+		status = 1
+	}
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{
+		"follow_status": status,
+	})
+}

@@ -107,7 +107,7 @@ func (a *Account) UpdatePassword(accountId int64, password string, newPassword s
 		return errors.Errorf(errors.BusinessForbiddenError, "账号id %d 被禁用", accountId)
 	}
 	// 判断密码是否相同
-	if PasswordEncode(password) != updateAccount.Password {
+	if !PasswordVerify(password, updateAccount.Password) {
 		return errors.Errorf(errors.BusinessPasswordError, "旧密码错误")
 	}
 	newPasswordEncode := PasswordEncode(newPassword)

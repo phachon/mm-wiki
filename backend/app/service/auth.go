@@ -43,8 +43,8 @@ func (a *Auth) Login(accountName string, password string) (loginToken string, ac
 	if accountInfo.Status == entity.AccountStatusForbid {
 		return loginToken, accountInfo, errors.Errorf(errors.BusinessForbiddenError, "账号被禁用")
 	}
-	// 判断密码是否相等 md5 加密
-	if PasswordEncode(password) != accountInfo.Password {
+	// 判断密码是否相等
+	if !PasswordVerify(password, accountInfo.Password) {
 		return loginToken, accountInfo, errors.Errorf(errors.BusinessPasswordError, "密码错误")
 	}
 	// 登录成功，生成 token

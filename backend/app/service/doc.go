@@ -98,6 +98,22 @@ func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	return d.daoDoc.DeleteDoc(docId)
 }
 
+// UpdateDocSequence 更新文档排序
+func (d *Doc) UpdateDocSequence(docId int64, sequence int) errors.BizError {
+	return d.daoDoc.UpdateDocSequence(docId, sequence)
+}
+
+// SearchDocs 搜索文档
+func (d *Doc) SearchDocs(keyword string, spaceKey string, pageSize int, pageNum int) ([]*entity.DocEntity, errors.BizError) {
+	offset := (pageNum - 1) * pageSize
+	return d.daoDoc.SearchDocs(keyword, spaceKey, pageSize, offset)
+}
+
+// CountSearchDocs 统计搜索文档数量
+func (d *Doc) CountSearchDocs(keyword string, spaceKey string) (int64, errors.BizError) {
+	return d.daoDoc.CountSearchDocs(keyword, spaceKey)
+}
+
 // CreateSpaceHomeDoc 创建空间主页文档
 func (d *Doc) CreateSpaceHomeDoc(spaceId int64, spaceKey string, title string) errors.BizError {
 	docEntity := &entity.DocEntity{

@@ -15,6 +15,7 @@ var (
 	// 需要忽略的校验用户权限的接口
 	ignorePermissionPath = []string{
 		"/system/auth/login",
+		"/system/auth/captcha",
 		"/static/upload",
 	}
 )

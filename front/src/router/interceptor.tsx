@@ -7,6 +7,36 @@ import { NO_ACCESS_PATH, NO_EXIST_PATH, AUTH_LOGIN_PATH, HOME_ROOT_PATH } from '
 import { message } from 'antd'
 
 /**
+ * 检查路由路径是否合法
+ * 支持嵌套路由和动态参数（:param 格式）
+ */
+const isValidPath = (pathname: string): boolean => {
+  return routerPaths.some((path) => {
+    if (path === '*') return false
+    // 精确匹配
+    if (path === pathname) return true
+    // 支持动态参数匹配: /doc/:doc_id 匹配 /doc/123
+    const pathParts = path.split('/').filter(Boolean)
+    const locationParts = pathname.split('/').filter(Boolean)
+    if (pathParts.length === locationParts.length) {
+      return pathParts.every((part, index) => {
+        if (part.startsWith(':')) return true
+        return part === locationParts[index]
+      })
+    }
+    // 允许当前路径是已知路由的子路径（嵌套路由）
+    // 仅当已知路由以 / 结尾或路径段完全匹配时才允许
+    if (locationParts.length > pathParts.length && pathParts.length > 0) {
+      return pathParts.every((part, index) => {
+        if (part.startsWith(':')) return true
+        return part === locationParts[index]
+      })
+    }
+    return false
+  })
+}
+
+/**
  * 路由拦截器
  */
 export const RouterInterceptor = ({ children, router }: any) => {
@@ -26,16 +56,11 @@ export const RouterInterceptor = ({ children, router }: any) => {
       return
     }
 
-    // 移除路由合法性校验，因为嵌套路由和重定向会导致误判
-    // 或者使用更智能的路由匹配逻辑
-    // const isExist = routerPaths.some(path => {
-    //   if (path === '*') return false
-    //   return location.pathname.startsWith(path)
-    // })
-    // if (!isExist) {
-    //   navigate(NO_EXIST_PATH)
-    //   return
-    // }
+    // 路由合法性校验
+    if (!isValidPath(location.pathname)) {
+      navigate(NO_EXIST_PATH)
+      return
+    }
   }, [location])
 
   return children
