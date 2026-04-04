@@ -18,6 +18,9 @@ const (
 	PrivilegeIndentifyNoticeEdit   = "system:notice:edit"   // 公告修改
 	PrivilegeIndentifyNoticeDelete = "system:notice:delete" // 公告删除
 
+	PrivilegeIndentifyContactEdit   = "system:contact:edit"   // 联系人修改
+	PrivilegeIndentifyContactDelete = "system:contact:delete" // 联系人删除
+
 	PrivilegeIndentifyLinkEdit   = "system:link:edit"   // 链接修改
 	PrivilegeIndentifyLinkDelete = "system:link:delete" // 链接删除
 
