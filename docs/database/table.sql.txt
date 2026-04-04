@@ -1,0 +1,71 @@
+-- --------------------------------
+-- MM-Wiki v2 新增表结构
+-- --------------------------------
+
+-- --------------------------------
+-- 邮件服务器表
+-- --------------------------------
+DROP TABLE IF EXISTS `mk_email`;
+CREATE TABLE `mk_email` (
+  `email_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '邮箱 id',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱服务器名称',
+  `sender_address` varchar(100) NOT NULL DEFAULT '' COMMENT '发件人邮件地址',
+  `sender_name` varchar(100) NOT NULL DEFAULT '' COMMENT '发件人显示名',
+  `sender_title_prefix` varchar(100) NOT NULL DEFAULT '' COMMENT '发送邮件标题前缀',
+  `host` char(100) NOT NULL DEFAULT '' COMMENT '服务器主机名',
+  `port` int(5) NOT NULL DEFAULT '25' COMMENT '服务器端口',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` varchar(50) NOT NULL DEFAULT '' COMMENT '密码',
+  `is_ssl` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否使用ssl， 0 默认不使用 1 使用',
+  `is_used` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否被使用， 0 默认不使用 1 使用',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态 0 正常 -1 删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件服务器表';
+
+-- --------------------------------
+-- 快捷链接表
+-- --------------------------------
+DROP TABLE IF EXISTS `mk_link`;
+CREATE TABLE `mk_link` (
+  `link_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '链接 id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '链接名称',
+  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '链接地址',
+  `sequence` int(10) NOT NULL DEFAULT '0' COMMENT '排序号(越小越靠前)',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态 0 正常 -1 删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`link_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='快捷链接表';
+
+-- --------------------------------
+-- 系统联系人表
+-- --------------------------------
+DROP TABLE IF EXISTS `mk_contact`;
+CREATE TABLE `mk_contact` (
+  `contact_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '联系人 id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '联系人名称',
+  `mobile` char(13) NOT NULL DEFAULT '' COMMENT '联系电话',
+  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `position` varchar(100) NOT NULL DEFAULT '' COMMENT '联系人职位',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态 0 正常 -1 删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`contact_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联系人表';
+
+-- --------------------------------
+-- 全局配置表
+-- --------------------------------
+DROP TABLE IF EXISTS `mk_config`;
+CREATE TABLE `mk_config` (
+  `config_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '配置表主键Id',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '配置名称',
+  `key` char(50) NOT NULL DEFAULT '' COMMENT '配置键',
+  `value` text NOT NULL COMMENT '配置值',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`config_id`),
+  UNIQUE KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置表';
