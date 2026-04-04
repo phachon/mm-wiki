@@ -18,6 +18,9 @@ const (
 	PrivilegeIndentifyNoticeEdit   = "system:notice:edit"   // 公告修改
 	PrivilegeIndentifyNoticeDelete = "system:notice:delete" // 公告删除
 
+	PrivilegeIndentifyEmailEdit   = "system:email:edit"   // 邮箱修改
+	PrivilegeIndentifyEmailDelete = "system:email:delete" // 邮箱删除
+
 	PrivilegeIndentifyDepartmentAdd    = "system:department:add"    // 部门添加
 	PrivilegeIndentifyDepartmentEdit   = "system:department:edit"   // 部门修改
 	PrivilegeIndentifyDepartmentDelete = "system:department:delete" // 部门删除
