@@ -33,4 +33,7 @@ const (
 
 	PrivilegeIndentifySpaceEdit   = "space:edit"   // 空间修改
 	PrivilegeIndentifySpaceDelete = "space:delete" // 空间删除
+
+	PrivilegeIndentifyLoginAuthEdit   = "system:login_auth:edit"   // 登录认证修改
+	PrivilegeIndentifyLoginAuthDelete = "system:login_auth:delete" // 登录认证删除
 )

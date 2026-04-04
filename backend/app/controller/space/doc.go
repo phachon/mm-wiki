@@ -1,10 +1,13 @@
 package space
 
 import (
+	"fmt"
+
 	"github.com/phachon/mm-wiki/app/controller"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/app/service"
 	"github.com/phachon/mm-wiki/config"
+	"github.com/phachon/mm-wiki/global"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/gopkg/upload"
 	"github.com/phachon/mm-wiki/logger"
@@ -158,6 +161,20 @@ func DocContentSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateDoc err=%+v", err)
 		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档失败")
 	}
+
+	// 记录文档修改日志
+	logDocEntity := &entity.LogDocEntity{
+		DocId:     fmt.Sprintf("%d", docId),
+		SpaceId:   doc.SpaceId,
+		AccountId: global.ContextValueLoginAccountID(ctx),
+		Action:    entity.LogDocActionModify,
+		Comment:   "修改文档: " + name,
+	}
+	logDocErr := service.NewLogDoc(ctx).Create(logDocEntity)
+	if logDocErr != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] create doc log err=%+v", logDocErr)
+	}
+
 	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
 

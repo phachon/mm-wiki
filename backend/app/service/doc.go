@@ -19,6 +19,7 @@ type Doc struct {
 	daoContentVersion *dao.ContentVersion
 	daoCollection     *dao.Collection
 	daoFollow         *dao.Follow
+	daoLogDoc         *dao.LogDoc
 }
 
 // NewDoc 创建文档服务
@@ -30,6 +31,7 @@ func NewDoc(ctx context.Context) *Doc {
 		daoContentVersion: dao.NewContentVersion(ctx),
 		daoCollection:     dao.NewCollection(ctx),
 		daoFollow:         dao.NewFollow(ctx),
+		daoLogDoc:         dao.NewLogDoc(ctx),
 	}
 }
 
@@ -83,7 +85,15 @@ func (d *Doc) CreateDoc(docEntity *entity.DocEntity) errors.BizError {
 		DocId:   docEntity.DocId,
 		Content: "",
 	}
-	return d.daoContent.Insert(contentEntity)
+	err = d.daoContent.Insert(contentEntity)
+	if err != nil {
+		return err
+	}
+
+	// 记录文档创建日志
+	d.logDocAction(docEntity.DocId, docEntity.SpaceId, entity.LogDocActionCreate, "创建文档: "+docEntity.Name)
+
+	return nil
 }
 
 // UpdateDoc 更新文档
@@ -109,6 +119,18 @@ func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 // DeleteDocWithRelated 删除文档及其关联数据（正文、版本、收藏、关注）
 func (d *Doc) DeleteDocWithRelated(docId int64) errors.BizError {
 	docIdStr := fmt.Sprintf("%d", docId)
+
+	// 获取文档信息用于日志
+	doc, getErr := d.daoDoc.GetDocByDocId(docId)
+	if getErr != nil {
+		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] GetDocByDocId docId=%d err=%+v", docId, getErr)
+	}
+	var spaceId int64
+	var docName string
+	if doc != nil {
+		spaceId = doc.SpaceId
+		docName = doc.Name
+	}
 
 	// 删除文档记录
 	err := d.daoDoc.DeleteDoc(docId)
@@ -139,6 +161,9 @@ func (d *Doc) DeleteDocWithRelated(docId int64) errors.BizError {
 	if err != nil {
 		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] DeleteByObjectIdAndType docId=%d err=%+v", docId, err)
 	}
+
+	// 记录文档删除日志
+	d.logDocAction(docId, spaceId, entity.LogDocActionDelete, "删除文档: "+docName)
 
 	return nil
 }
@@ -216,4 +241,19 @@ func (d *Doc) CreateSpaceHomeDoc(spaceId int64, spaceKey string, title string) e
 		EditAccountName:   global.ContextValueLoginAccountName(d.ctx),
 	}
 	return d.CreateDoc(docEntity)
+}
+
+// logDocAction 记录文档操作日志
+func (d *Doc) logDocAction(docId int64, spaceId int64, action int, comment string) {
+	logDocEntity := &entity.LogDocEntity{
+		DocId:     fmt.Sprintf("%d", docId),
+		SpaceId:   spaceId,
+		AccountId: global.ContextValueLoginAccountID(d.ctx),
+		Action:    action,
+		Comment:   comment,
+	}
+	err := d.daoLogDoc.Insert(logDocEntity)
+	if err != nil {
+		logger.WithContext(d.ctx).Errorf("[logDocAction] Insert doc log err=%+v", err)
+	}
 }

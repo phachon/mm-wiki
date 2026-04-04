@@ -106,6 +106,13 @@ var (
 		// 系统配置
 		{group: routerGroupNameSystem, relativePath: "/config/list", method: http.MethodGet, controllerHandle: systemController.ConfigList},
 		{group: routerGroupNameSystem, relativePath: "/config/modify", method: http.MethodPost, controllerHandle: systemController.ConfigModify},
+		// 登录认证管理
+		{group: routerGroupNameSystem, relativePath: "/login_auth/save", method: http.MethodPost, controllerHandle: systemController.LoginAuthSave},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/edit", method: http.MethodGet, controllerHandle: systemController.LoginAuthEdit},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/modify", method: http.MethodPost, controllerHandle: systemController.LoginAuthModify},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/list", method: http.MethodGet, controllerHandle: systemController.LoginAuthList},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/delete", method: http.MethodPost, controllerHandle: systemController.LoginAuthDelete},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/used", method: http.MethodPost, controllerHandle: systemController.LoginAuthUsed},
 		// 空间管理
 		{group: routerGroupNameSystem, relativePath: "/space/add", method: http.MethodGet, controllerHandle: systemController.SpaceAdd},
 		{group: routerGroupNameSystem, relativePath: "/space/save", method: http.MethodPost, controllerHandle: systemController.SpaceSave},
@@ -143,6 +150,12 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/move", method: http.MethodPost, controllerHandle: spaceController.DocMove},
 		// 搜索
 		{group: routerGroupNameSpace, relativePath: "/doc/search", method: http.MethodGet, controllerHandle: spaceController.DocSearch},
+		// 文档日志
+		{group: routerGroupNameSpace, relativePath: "/doc/log_list", method: http.MethodGet, controllerHandle: spaceController.DocLogList},
+		// 附件管理
+		{group: routerGroupNameSpace, relativePath: "/attachment/list", method: http.MethodGet, controllerHandle: spaceController.AttachmentList},
+		{group: routerGroupNameSpace, relativePath: "/attachment/upload", method: http.MethodPost, controllerHandle: spaceController.AttachmentUpload},
+		{group: routerGroupNameSpace, relativePath: "/attachment/delete", method: http.MethodPost, controllerHandle: spaceController.AttachmentDelete},
 		// ===================== 用户 =====================
 		// 互动
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
