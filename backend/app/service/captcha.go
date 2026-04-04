@@ -1,8 +1,8 @@
 package service
 
 import (
-	"math/rand"
-	"strconv"
+	"crypto/rand"
+	"math/big"
 	"sync"
 	"time"
 )
@@ -68,13 +68,19 @@ func (cs *CaptchaStore) Verify(captchaId string, code string) bool {
 	return entry.code == code
 }
 
-// generateCode 生成随机数字验证码
+// generateCode 生成加密安全的随机数字验证码
 func (cs *CaptchaStore) generateCode() string {
-	code := ""
+	code := make([]byte, cs.codeLen)
 	for i := 0; i < cs.codeLen; i++ {
-		code += strconv.Itoa(rand.Intn(10))
+		n, err := rand.Int(rand.Reader, big.NewInt(10))
+		if err != nil {
+			// 极不可能发生，但提供回退
+			code[i] = '0'
+			continue
+		}
+		code[i] = byte('0' + n.Int64())
 	}
-	return code
+	return string(code)
 }
 
 // cleanup 定期清理过期验证码

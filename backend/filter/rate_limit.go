@@ -43,7 +43,7 @@ func RateLimit() gin.HandlerFunc {
 		clientIP := c.ClientIP()
 		if !defaultRateLimiter.allow(clientIP) {
 			res := &entity.Response{
-				Code:    int32(errors.ClientUnknownError),
+				Code:    int32(errors.ClientRateLimitExceeded),
 				Message: "请求过于频繁，请稍后重试",
 				Data:    nil,
 			}

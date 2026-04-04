@@ -14,6 +14,7 @@ var (
 	ClientReqParamEmpty     ErrorCode = 1001 // 客户端请求参数为空
 	ClientReqParamWrongful  ErrorCode = 1002 // 客户端请求参数不合法
 	ClientReqCommonParamErr ErrorCode = 1003 // 客户端请求公共参数不合法
+	ClientRateLimitExceeded ErrorCode = 1004 // 客户端请求频率超限
 
 	/*  业务逻辑相关错误 2xx  */
 	BusinessUnknownError        ErrorCode = 2000 // 业务未知错误

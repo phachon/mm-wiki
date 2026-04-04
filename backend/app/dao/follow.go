@@ -41,11 +41,7 @@ func (f *Follow) Insert(followEntity *entity.FollowEntity) errors.BizError {
 func (f *Follow) GetFollowByAccountIdAndTypeAndObjectId(accountId int64, followType int, objectId string) (*entity.FollowEntity, errors.BizError) {
 	follow := new(entity.FollowEntity)
 	db := GetDB(dbNameMK).WithContext(f.ctx).Table(TableNameFollow).
-		Where(map[string]interface{}{
-			"account_id":  accountId,
-			"follow_type": followType,
-			"object_id":   objectId,
-		}).
+		Where("account_id = ? AND follow_type = ? AND object_id = ?", accountId, followType, objectId).
 		First(follow)
 	if db.Error == gorm.ErrRecordNotFound {
 		return nil, nil
@@ -59,11 +55,7 @@ func (f *Follow) GetFollowByAccountIdAndTypeAndObjectId(accountId int64, followT
 // DeleteByAccountIdTypeAndObjectId 根据账号ID、类型和对象ID删除关注
 func (f *Follow) DeleteByAccountIdTypeAndObjectId(accountId int64, followType int, objectId string) errors.BizError {
 	db := GetDB(dbNameMK).WithContext(f.ctx).Table(TableNameFollow).
-		Where(map[string]interface{}{
-			"account_id":  accountId,
-			"follow_type": followType,
-			"object_id":   objectId,
-		}).
+		Where("account_id = ? AND follow_type = ? AND object_id = ?", accountId, followType, objectId).
 		Delete(&entity.FollowEntity{})
 	if db.Error != nil {
 		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())

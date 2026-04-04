@@ -13,17 +13,26 @@ import { message } from 'antd'
 const isValidPath = (pathname: string): boolean => {
   return routerPaths.some((path) => {
     if (path === '*') return false
+    // 精确匹配
+    if (path === pathname) return true
     // 支持动态参数匹配: /doc/:doc_id 匹配 /doc/123
-    const pathParts = path.split('/')
-    const locationParts = pathname.split('/')
-    if (pathParts.length !== locationParts.length) {
-      // 也允许前缀匹配（嵌套路由）
-      return pathname.startsWith(path) || path.startsWith(pathname)
+    const pathParts = path.split('/').filter(Boolean)
+    const locationParts = pathname.split('/').filter(Boolean)
+    if (pathParts.length === locationParts.length) {
+      return pathParts.every((part, index) => {
+        if (part.startsWith(':')) return true
+        return part === locationParts[index]
+      })
     }
-    return pathParts.every((part, index) => {
-      if (part.startsWith(':')) return true
-      return part === locationParts[index]
-    })
+    // 允许当前路径是已知路由的子路径（嵌套路由）
+    // 仅当已知路由以 / 结尾或路径段完全匹配时才允许
+    if (locationParts.length > pathParts.length && pathParts.length > 0) {
+      return pathParts.every((part, index) => {
+        if (part.startsWith(':')) return true
+        return part === locationParts[index]
+      })
+    }
+    return false
   })
 }
 
