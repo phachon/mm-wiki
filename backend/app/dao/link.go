@@ -147,7 +147,7 @@ func (r *Link) CountLinksByKeywords(keywords *entity.LinkKeywords) (count int64,
 func (r *Link) Update(link entity.LinkEntity) errors.BizError {
 	link.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameLink).
-		Select("Name", "URL", "Sequence").
+		Select("Name", "URL", "Sequence", "UpdateTime").
 		Where(map[string]interface{}{
 			LinkPrimaryKey: link.LinkId,
 		}).
