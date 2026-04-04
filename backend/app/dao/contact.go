@@ -127,7 +127,7 @@ func (r *Contact) CountContactsByKeywords(keywords *entity.ContactKeywords) (cou
 func (r *Contact) Update(contact entity.ContactEntity) errors.BizError {
 	contact.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameContact).
-		Select("Name", "Mobile", "Email", "Position").
+		Select("Name", "Mobile", "Email", "Position", "UpdateTime").
 		Where(map[string]interface{}{
 			ContactPrimaryKey: contact.ContactId,
 		}).
