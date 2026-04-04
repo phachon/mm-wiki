@@ -39,6 +39,8 @@ type AppConfig struct {
 	Logger map[string]klog.Config `yaml:"Logger"`
 	// Auth 登录认证配置
 	Auth AuthConf `yaml:"Auth"`
+	// CORS 跨域配置
+	CORS CORSConf `yaml:"CORS"`
 }
 
 // DatabaseConf 数据库配置
@@ -58,6 +60,13 @@ type DatabaseConf struct {
 type AuthConf struct {
 	JwtSecret   string `yaml:"jwt_secret"`   // jwt 密匙
 	ExpireHours int    `yaml:"expire_hours"` // 过期时间小时
+}
+
+// CORSConf 跨域配置
+type CORSConf struct {
+	AllowOrigins []string `yaml:"allow_origins"` // 允许的来源列表，为空则允许所有
+	AllowMethods []string `yaml:"allow_methods"` // 允许的HTTP方法
+	AllowHeaders []string `yaml:"allow_headers"` // 允许的请求头
 }
 
 // UploadConf 上传配置
@@ -193,4 +202,9 @@ func (ac *AppConfig) GetUploadConf(sceneName string) UploadConf {
 		return UploadConf{}
 	}
 	return ac.Upload[sceneName]
+}
+
+// GetCORSConf 获取跨域配置
+func (ac *AppConfig) GetCORSConf() CORSConf {
+	return ac.CORS
 }

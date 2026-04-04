@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -140,9 +141,33 @@ type routerHandle struct {
 
 // Init 初始化路由
 func Init() {
-	global.GinEngine.Use(cors.Default())
+	// CORS 配置
+	corsConf := config.GetAppConf().GetCORSConf()
+	if len(corsConf.AllowOrigins) > 0 {
+		corsConfig := cors.Config{
+			AllowOrigins:     corsConf.AllowOrigins,
+			AllowMethods:     corsConf.AllowMethods,
+			AllowHeaders:     corsConf.AllowHeaders,
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+		}
+		if len(corsConfig.AllowMethods) == 0 {
+			corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+		}
+		if len(corsConfig.AllowHeaders) == 0 {
+			corsConfig.AllowHeaders = []string{
+				"Origin", "Content-Type", "Accept",
+				global.HeaderKTRequestID, global.HeaderKTTimestamp,
+				global.HeaderKTLoginToken, global.HeaderKTDebug,
+			}
+		}
+		global.GinEngine.Use(cors.New(corsConfig))
+	} else {
+		global.GinEngine.Use(cors.Default())
+	}
 	global.GinEngine.Use(gin.Logger())
 	global.GinEngine.Use(gin.Recovery())
+	global.GinEngine.Use(filter.RateLimit())
 	global.GinEngine.Use(filter.RequestParse())
 	global.GinEngine.Use(filter.AuthLoginJWT())
 	global.GinEngine.Use(filter.PermissionCheck())
