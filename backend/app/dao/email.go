@@ -147,7 +147,7 @@ func (r *Email) CountEmailsByKeywords(keywords *entity.EmailKeywords) (count int
 func (r *Email) Update(email entity.EmailEntity) errors.BizError {
 	email.UpdateTime = utils.NewJsonTime(time.Now())
 	db := GetDB(dbNameMK).WithContext(r.ctx).Table(TableNameEmail).
-		Select("Name", "SenderAddress", "SenderName", "SenderTitlePrefix", "Host", "Port", "Username", "Password", "IsSSL", "IsUsed").
+		Select("Name", "SenderAddress", "SenderName", "SenderTitlePrefix", "Host", "Port", "Username", "Password", "IsSSL", "IsUsed", "UpdateTime").
 		Where(map[string]interface{}{
 			EmailPrimaryKey: email.EmailId,
 		}).

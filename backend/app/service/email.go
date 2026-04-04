@@ -85,11 +85,11 @@ func (e *Email) GetEmailByEmailId(emailId int64) (email *entity.EmailEntity, err
 // DeleteEmail 删除邮箱
 func (e *Email) DeleteEmail(emailId int64) errors.BizError {
 	// 查找邮箱是否存在
-	updateEmail, err := e.daoEmail.GetEmailByEmailId(emailId)
+	existingEmail, err := e.daoEmail.GetEmailByEmailId(emailId)
 	if err != nil {
 		return err
 	}
-	if updateEmail == nil {
+	if existingEmail == nil {
 		return errors.Errorf(errors.BusinessRecordNotExistError, "邮箱id %d 不存在", emailId)
 	}
 	// 删除邮箱
