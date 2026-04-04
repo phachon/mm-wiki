@@ -130,6 +130,10 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
 		// 文档排序
 		{group: routerGroupNameSpace, relativePath: "/doc/sort", method: http.MethodPost, controllerHandle: spaceController.DocSort},
+		// 文档删除
+		{group: routerGroupNameSpace, relativePath: "/doc/delete", method: http.MethodPost, controllerHandle: spaceController.DocDelete},
+		// 文档移动
+		{group: routerGroupNameSpace, relativePath: "/doc/move", method: http.MethodPost, controllerHandle: spaceController.DocMove},
 		// 搜索
 		{group: routerGroupNameSpace, relativePath: "/doc/search", method: http.MethodGet, controllerHandle: spaceController.DocSearch},
 		// ===================== 用户 =====================

@@ -117,6 +117,20 @@ func (kc *Collection) DeleteCollectionByAccountIdAndCollectionId(accountId int64
 	return nil
 }
 
+// DeleteByResourceIdAndType 根据资源ID和类型删除所有收藏
+func (kc *Collection) DeleteByResourceIdAndType(collectionType int, resourceId string) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(kc.ctx).Table(TableNameCollection).
+		Where(map[string]interface{}{
+			"collection_type": collectionType,
+			"resource_id":     resourceId,
+		}).
+		Delete(&entity.CollectionEntity{})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())
+	}
+	return nil
+}
+
 // DeleteByAccountIdResourceAndType 根据账号ID删除收藏资源
 func (kc *Collection) DeleteByAccountIdResourceAndType(accountId int64, collectionType int, resourceId string) errors.BizError {
 	db := GetDB(dbNameMK).WithContext(kc.ctx).Table(TableNameCollection).

@@ -69,6 +69,17 @@ func (c *Content) UpdateContent(content *entity.ContentEntity) errors.BizError {
 	return nil
 }
 
+// DeleteContentByDocId 根据文档ID删除正文
+func (c *Content) DeleteContentByDocId(docId int64) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(c.ctx).Table(TableNameContent).
+		Where("doc_id = ?", docId).
+		Delete(&entity.ContentEntity{})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlDeleteErr, db.Error.Error())
+	}
+	return nil
+}
+
 // UpdateCurrentVersion 更新文档当前版本
 func (c *Content) UpdateCurrentVersion(docId, versionId int64) errors.BizError {
 	db := GetDB(dbNameMK).WithContext(c.ctx).Table(TableNameContent).

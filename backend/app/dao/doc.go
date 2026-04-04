@@ -165,6 +165,39 @@ func (d *Doc) CountSearchDocs(keyword string, spaceKey string) (int64, errors.Bi
 	return count, nil
 }
 
+// GetDocsByParentId 获取父文档下的子文档
+func (d *Doc) GetDocsByParentId(parentId int64) ([]*entity.DocEntity, errors.BizError) {
+	var docs []*entity.DocEntity
+	db := GetDB(dbNameMK).WithContext(d.ctx).
+		Table(TableNameDoc).
+		Where("parent_id = ? AND status = ?", parentId, entity.DocEntityStatusNormal).
+		Find(&docs)
+	if db.Error != nil {
+		return nil, errors.Errorf(errors.DalMysqlSelectErr, db.Error.Error())
+	}
+	return docs, nil
+}
+
+// MoveDoc 移动文档到目标目录
+func (d *Doc) MoveDoc(docId int64, parentId int64, path string, editAccountId int64, editAccountName string) errors.BizError {
+	db := GetDB(dbNameMK).WithContext(d.ctx).Table(TableNameDoc).
+		Where(map[string]interface{}{
+			DocPrimaryKey: docId,
+			"status":      entity.DocEntityStatusNormal,
+		}).
+		Updates(map[string]interface{}{
+			"parent_id":         parentId,
+			"path":              path,
+			"edit_account_id":   editAccountId,
+			"edit_account_name": editAccountName,
+			"update_time":       utils.NewJsonTime(time.Now()),
+		})
+	if db.Error != nil {
+		return errors.Errorf(errors.DalMysqlUpdateErr, db.Error.Error())
+	}
+	return nil
+}
+
 // escapeLikePattern 转义 LIKE 模式中的特殊字符
 func escapeLikePattern(s string) string {
 	replacer := strings.NewReplacer(

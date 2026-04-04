@@ -2,26 +2,34 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/phachon/mm-wiki/app/dao"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/global"
 	"github.com/phachon/mm-wiki/gopkg/errors"
+	"github.com/phachon/mm-wiki/logger"
 )
 
 // Doc 文档服务
 type Doc struct {
-	ctx        context.Context
-	daoDoc     *dao.Doc
-	daoContent *dao.Content
+	ctx               context.Context
+	daoDoc            *dao.Doc
+	daoContent        *dao.Content
+	daoContentVersion *dao.ContentVersion
+	daoCollection     *dao.Collection
+	daoFollow         *dao.Follow
 }
 
 // NewDoc 创建文档服务
 func NewDoc(ctx context.Context) *Doc {
 	return &Doc{
-		ctx:        ctx,
-		daoDoc:     dao.NewDoc(ctx),
-		daoContent: dao.NewContent(ctx),
+		ctx:               ctx,
+		daoDoc:            dao.NewDoc(ctx),
+		daoContent:        dao.NewContent(ctx),
+		daoContentVersion: dao.NewContentVersion(ctx),
+		daoCollection:     dao.NewCollection(ctx),
+		daoFollow:         dao.NewFollow(ctx),
 	}
 }
 
@@ -96,6 +104,86 @@ func (d *Doc) UpdateNameAndEditAccount(docId int64, name string) errors.BizError
 // DeleteDoc 删除文档
 func (d *Doc) DeleteDoc(docId int64) errors.BizError {
 	return d.daoDoc.DeleteDoc(docId)
+}
+
+// DeleteDocWithRelated 删除文档及其关联数据（正文、版本、收藏、关注）
+func (d *Doc) DeleteDocWithRelated(docId int64) errors.BizError {
+	docIdStr := fmt.Sprintf("%d", docId)
+
+	// 删除文档记录
+	err := d.daoDoc.DeleteDoc(docId)
+	if err != nil {
+		return err
+	}
+
+	// 删除文档正文
+	err = d.daoContent.DeleteContentByDocId(docId)
+	if err != nil {
+		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] DeleteContentByDocId docId=%d err=%+v", docId, err)
+	}
+
+	// 删除文档版本
+	err = d.daoContentVersion.DeleteContentVersionsByDocId(docId)
+	if err != nil {
+		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] DeleteContentVersionsByDocId docId=%d err=%+v", docId, err)
+	}
+
+	// 删除文档收藏
+	err = d.daoCollection.DeleteByResourceIdAndType(entity.CollectionTypeDocument, docIdStr)
+	if err != nil {
+		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] DeleteByResourceIdAndType docId=%d err=%+v", docId, err)
+	}
+
+	// 删除文档关注
+	err = d.daoFollow.DeleteByObjectIdAndType(entity.FollowTypeDocument, docIdStr)
+	if err != nil {
+		logger.WithContext(d.ctx).Errorf("[DeleteDocWithRelated] DeleteByObjectIdAndType docId=%d err=%+v", docId, err)
+	}
+
+	return nil
+}
+
+// GetDocsByParentId 获取父文档下的子文档
+func (d *Doc) GetDocsByParentId(parentId int64) ([]*entity.DocEntity, errors.BizError) {
+	return d.daoDoc.GetDocsByParentId(parentId)
+}
+
+// MoveDoc 移动文档到目标目录
+func (d *Doc) MoveDoc(docId int64, targetId int64) errors.BizError {
+	doc, err := d.daoDoc.GetDocByDocId(docId)
+	if err != nil {
+		return err
+	}
+	if doc == nil {
+		return errors.Errorf(errors.BusinessRecordNotExistError, "文档不存在")
+	}
+
+	target, err := d.daoDoc.GetDocByDocId(targetId)
+	if err != nil {
+		return err
+	}
+	if target == nil {
+		return errors.Errorf(errors.BusinessRecordNotExistError, "目标文档不存在")
+	}
+	if target.Type != entity.DirEntityType {
+		return errors.Errorf(errors.ClientReqParamWrongful, "目标文档必须是目录")
+	}
+	if doc.SpaceId != target.SpaceId {
+		return errors.Errorf(errors.ClientReqParamWrongful, "文档和目标文档不在同一空间")
+	}
+
+	// 构建新路径
+	newPath := target.Path
+	if newPath == "" {
+		newPath = fmt.Sprintf("%d", targetId)
+	} else {
+		newPath = fmt.Sprintf("%s,%d", target.Path, targetId)
+	}
+
+	accountId := global.ContextValueLoginAccountID(d.ctx)
+	accountName := global.ContextValueLoginAccountName(d.ctx)
+
+	return d.daoDoc.MoveDoc(docId, targetId, newPath, accountId, accountName)
 }
 
 // UpdateDocSequence 更新文档排序
