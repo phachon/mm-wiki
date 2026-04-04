@@ -8,6 +8,10 @@ import SystemHome from '@/pages/system/System'
 import Notice from '@/pages/system/Notice'
 import Config from '@/pages/system/Config'
 import Department from '@/pages/system/Department'
+import Email from '@/pages/system/Email'
+import Link from '@/pages/system/Link'
+import Contact from '@/pages/system/Contact'
+import LoginAuth from '@/pages/system/LoginAuth'
 import { IRouter, SYSTEM_ROOT_PATH } from '../type'
 import Space from '@/pages/system/Space'
 
@@ -112,6 +116,62 @@ const routers: IRouter[] = [
         path: '/system/department/list',
         key: 'department_list',
         component: <Department.DepartmentList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/email/add',
+        key: 'email_add',
+        component: <Email.EmailAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/email/list',
+        key: 'email_list',
+        component: <Email.EmailList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/link/add',
+        key: 'link_add',
+        component: <Link.LinkAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/link/list',
+        key: 'link_list',
+        component: <Link.LinkList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/contact/add',
+        key: 'contact_add',
+        component: <Contact.ContactAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/contact/list',
+        key: 'contact_list',
+        component: <Contact.ContactList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/login_auth/add',
+        key: 'login_auth_add',
+        component: <LoginAuth.LoginAuthAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/login_auth/list',
+        key: 'login_auth_list',
+        component: <LoginAuth.LoginAuthList />,
         auth: true,
         permission: true
       },
