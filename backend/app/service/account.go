@@ -93,6 +93,14 @@ func (a *Account) GetAccountByAccountId(accountID int64) (account *entity.Accoun
 	return account, nil
 }
 
+// GetAccountsByAccountIds 根据多个账号ID批量获取账号
+func (a *Account) GetAccountsByAccountIds(accountIds []int64) ([]*entity.AccountEntity, errors.BizError) {
+	if len(accountIds) == 0 {
+		return nil, nil
+	}
+	return a.daoAccount.GetAccountsByAccountIds(accountIds)
+}
+
 // UpdatePassword 修改账号密码
 func (a *Account) UpdatePassword(accountId int64, password string, newPassword string) errors.BizError {
 	// 查找账号是否存在

@@ -38,6 +38,9 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/profile/info", method: http.MethodGet, controllerHandle: systemController.ProfileInfo},
 		{group: routerGroupNameSystem, relativePath: "/profile/repass", method: http.MethodPost, controllerHandle: systemController.ProfileRePass},
 		{group: routerGroupNameSystem, relativePath: "/profile/update", method: http.MethodPost, controllerHandle: systemController.ProfileUpdate},
+		{group: routerGroupNameSystem, relativePath: "/profile/follow_docs", method: http.MethodGet, controllerHandle: systemController.ProfileFollowDocs},
+		{group: routerGroupNameSystem, relativePath: "/profile/follow_users", method: http.MethodGet, controllerHandle: systemController.ProfileFollowUsers},
+		{group: routerGroupNameSystem, relativePath: "/profile/activity", method: http.MethodGet, controllerHandle: systemController.ProfileActivity},
 		// 账号管理
 		{group: routerGroupNameSystem, relativePath: "/account/add", method: http.MethodGet, controllerHandle: systemController.AccountAdd},
 		{group: routerGroupNameSystem, relativePath: "/account/save", method: http.MethodPost, controllerHandle: systemController.AccountSave},
@@ -66,6 +69,7 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/privilege/delete", method: http.MethodPost, controllerHandle: systemController.PrivilegeDelete},
 		// 日志管理
 		{group: routerGroupNameSystem, relativePath: "/log/list", method: http.MethodGet, controllerHandle: systemController.LogList},
+		{group: routerGroupNameSystem, relativePath: "/log/info", method: http.MethodGet, controllerHandle: systemController.LogInfo},
 		// 公告管理
 		{group: routerGroupNameSystem, relativePath: "/notice/save", method: http.MethodPost, controllerHandle: systemController.NoticeSave},
 		{group: routerGroupNameSystem, relativePath: "/notice/edit", method: http.MethodGet, controllerHandle: systemController.NoticeEdit},
@@ -119,6 +123,9 @@ var (
 		// 设置
 		{group: routerGroupNameSpace, relativePath: "/setting/basic_modify", method: http.MethodPost, controllerHandle: spaceController.SpaceBasicSettingModify},
 		{group: routerGroupNameSpace, relativePath: "/setting/permission_list", method: http.MethodGet, controllerHandle: spaceController.SpacePermissionList},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_add", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionAdd},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_remove", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionRemove},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_modify", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionModify},
 		// 文档
 		{group: routerGroupNameSpace, relativePath: "/doc/create", method: http.MethodPost, controllerHandle: spaceController.DocCreate},
 		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},

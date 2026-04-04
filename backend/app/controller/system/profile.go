@@ -1,6 +1,8 @@
 package system
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/controller"
 	"github.com/phachon/mm-wiki/app/entity"
@@ -176,4 +178,156 @@ func ProfileUpdate(ctx *gin.Context) error {
 	sysLogInfof(ctx, "[ProfileUpdate] 更新个人信息成功")
 
 	return RespJsonSuccess(ctx, nil)
+}
+
+// ProfileFollowDocs 获取用户关注的文档列表
+func ProfileFollowDocs(ctx *gin.Context) error {
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	pageSize := controller.GetParamIntDef(ctx, "page_size", 10)
+	pageNum := controller.GetParamIntDef(ctx, "page_num", 1)
+
+	if accountId == 0 {
+		logger.WithContext(ctx).Warnf("[ProfileFollowDocs] 账号id不存在")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号id不存在")
+	}
+
+	followService := service.NewFollow(ctx)
+
+	// 获取关注的文档列表
+	follows, err := followService.GetFollowsByAccountIdAndType(accountId, entity.FollowTypeDocument, pageSize, pageNum)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileFollowDocs] GetFollowsByAccountIdAndType err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取关注文档列表失败")
+	}
+
+	// 获取文档详情
+	docIds := make([]int64, 0, len(follows))
+	for _, follow := range follows {
+		docId, _ := strconv.ParseInt(follow.ObjectId, 10, 64)
+		if docId > 0 {
+			docIds = append(docIds, docId)
+		}
+	}
+
+	var docs []*entity.DocEntity
+	if len(docIds) > 0 {
+		docService := service.NewDoc(ctx)
+		docs, err = docService.GetDocByDocIds(docIds)
+		if err != nil {
+			logger.WithContext(ctx).Errorf("[ProfileFollowDocs] GetDocByDocIds err=%+v", err)
+			return RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+		}
+	}
+
+	// 获取总数
+	total, err := followService.CountFollowsByAccountIdAndType(accountId, entity.FollowTypeDocument)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileFollowDocs] CountFollowsByAccountIdAndType err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取关注文档总数失败")
+	}
+	pageInfo := entity.GetPageInfo(total, pageSize, pageNum)
+
+	data := map[string]interface{}{
+		"list":      docs,
+		"page_info": pageInfo,
+	}
+	return RespJsonSuccess(ctx, data)
+}
+
+// ProfileFollowUsers 获取用户关注的用户列表
+func ProfileFollowUsers(ctx *gin.Context) error {
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	pageSize := controller.GetParamIntDef(ctx, "page_size", 10)
+	pageNum := controller.GetParamIntDef(ctx, "page_num", 1)
+
+	if accountId == 0 {
+		logger.WithContext(ctx).Warnf("[ProfileFollowUsers] 账号id不存在")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号id不存在")
+	}
+
+	followService := service.NewFollow(ctx)
+
+	// 获取关注的用户列表
+	follows, err := followService.GetFollowsByAccountIdAndType(accountId, entity.FollowTypeUser, pageSize, pageNum)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileFollowUsers] GetFollowsByAccountIdAndType err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取关注用户列表失败")
+	}
+
+	// 获取用户详情
+	userIds := make([]int64, 0, len(follows))
+	for _, follow := range follows {
+		userId, _ := strconv.ParseInt(follow.ObjectId, 10, 64)
+		if userId > 0 {
+			userIds = append(userIds, userId)
+		}
+	}
+
+	var accounts []*entity.AccountEntity
+	if len(userIds) > 0 {
+		accountService := service.NewAccount(ctx)
+		accounts, err = accountService.GetAccountsByAccountIds(userIds)
+		if err != nil {
+			logger.WithContext(ctx).Errorf("[ProfileFollowUsers] GetAccountsByAccountIds err=%+v", err)
+			return RespJsonError(ctx, err.GetErrCode(), "获取用户信息失败")
+		}
+		// 清空密码
+		for _, account := range accounts {
+			account.Password = ""
+		}
+	}
+
+	// 获取总数
+	total, err := followService.CountFollowsByAccountIdAndType(accountId, entity.FollowTypeUser)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileFollowUsers] CountFollowsByAccountIdAndType err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取关注用户总数失败")
+	}
+	pageInfo := entity.GetPageInfo(total, pageSize, pageNum)
+
+	data := map[string]interface{}{
+		"list":      accounts,
+		"page_info": pageInfo,
+	}
+	return RespJsonSuccess(ctx, data)
+}
+
+// ProfileActivity 获取用户活动日志
+func ProfileActivity(ctx *gin.Context) error {
+
+	accountId := global.ContextValueLoginAccountID(ctx)
+	pageSize := controller.GetParamIntDef(ctx, "page_size", 20)
+	pageNum := controller.GetParamIntDef(ctx, "page_num", 1)
+
+	if accountId == 0 {
+		logger.WithContext(ctx).Warnf("[ProfileActivity] 账号id不存在")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号id不存在")
+	}
+
+	logService := service.NewLog(ctx)
+
+	// 获取用户操作日志
+	keywords := &entity.LogSearchKeywords{
+		AccountId: accountId,
+	}
+	logs, err := logService.GetLogsByKeywordsAndLimit(pageSize, pageNum, keywords)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileActivity] GetLogsByKeywordsAndLimit err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取活动日志失败")
+	}
+
+	// 获取分页信息
+	pageInfo, err := logService.GetPageInfoLimit(pageSize, pageNum, keywords)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[ProfileActivity] GetPageInfoLimit err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取活动日志分页失败")
+	}
+
+	data := map[string]interface{}{
+		"list":      logs,
+		"page_info": pageInfo,
+	}
+	return RespJsonSuccess(ctx, data)
 }

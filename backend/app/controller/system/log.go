@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/app/service"
+	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/logger"
 )
 
@@ -41,6 +42,32 @@ func LogList(ctx *gin.Context) error {
 	data := map[string]interface{}{
 		"list":      logs,
 		"page_info": pageInfo,
+	}
+	return RespJsonSuccess(ctx, data)
+}
+
+// LogInfo 日志详情
+func LogInfo(ctx *gin.Context) error {
+
+	logId := GetParamInt64(ctx, "log_id")
+	if logId <= 0 {
+		logger.WithContext(ctx).Warnf("[LogInfo] 日志ID不能为空")
+		return RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "日志ID不能为空")
+	}
+
+	serviceLog := service.NewLog(ctx)
+	logInfo, err := serviceLog.GetLogByLogId(logId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[LogInfo] GetLogByLogId err=%+v", err)
+		return RespJsonError(ctx, err.GetErrCode(), "获取日志详情失败")
+	}
+	if logInfo == nil {
+		logger.WithContext(ctx).Warnf("[LogInfo] 日志不存在")
+		return RespJsonError(ctx, int32(errors.BusinessRecordNotExistError), "日志不存在")
+	}
+
+	data := map[string]interface{}{
+		"log_info": logInfo,
 	}
 	return RespJsonSuccess(ctx, data)
 }

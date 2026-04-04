@@ -200,3 +200,114 @@ func SpacePermissionList(ctx *gin.Context) error {
 	}
 	return controller.RespJsonSuccess(ctx, data)
 }
+
+// SpacePermissionAdd 添加空间权限
+func SpacePermissionAdd(ctx *gin.Context) error {
+	spaceId := controller.GetParamInt64(ctx, "space_id")
+	permissionType := controller.GetParamIntDef(ctx, "permission_type", -1)
+	accountId := controller.GetParamInt64Def(ctx, "account_id", 0)
+	departmentId := controller.GetParamInt64Def(ctx, "department_id", 0)
+	isView := controller.GetParamIntDef(ctx, "is_view", 1)
+	isAdd := controller.GetParamIntDef(ctx, "is_add", 0)
+	isEdit := controller.GetParamIntDef(ctx, "is_edit", 0)
+	isDelete := controller.GetParamIntDef(ctx, "is_delete", 0)
+	isExport := controller.GetParamIntDef(ctx, "is_export", 0)
+
+	if spaceId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpacePermissionAdd] space_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间 id 不能为空")
+	}
+	if permissionType != entity.SpacePermissionRelationTypeAccount && permissionType != entity.SpacePermissionRelationTypeDepartment {
+		logger.WithContext(ctx).Warnf("[SpacePermissionAdd] permission_type invalid")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "权限类型不合法")
+	}
+
+	// 验证空间存在
+	serviceSpace := service.NewSpace(ctx)
+	space, err := serviceSpace.GetSpaceBySpaceId(spaceId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionAdd] GetSpaceBySpaceId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取空间信息失败")
+	}
+	if space == nil {
+		logger.WithContext(ctx).Warnf("[SpacePermissionAdd] 空间不存在")
+		return controller.RespJsonError(ctx, int32(errors.BusinessRecordNotExistError), "空间不存在")
+	}
+
+	permission := &entity.SpacePermissionEntity{
+		SpaceId:        spaceId,
+		PermissionType: permissionType,
+		AccountId:      accountId,
+		DepartmentId:   departmentId,
+		IsView:         &isView,
+		IsAdd:          &isAdd,
+		IsEdit:         &isEdit,
+		IsDelete:       &isDelete,
+		IsExport:       &isExport,
+	}
+
+	servicePermission := service.NewSpacePermission(ctx)
+	err = servicePermission.Create(permission)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionAdd] Create err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// SpacePermissionRemove 删除空间权限
+func SpacePermissionRemove(ctx *gin.Context) error {
+	spaceId := controller.GetParamInt64(ctx, "space_id")
+	accountId := controller.GetParamInt64(ctx, "account_id")
+
+	if spaceId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpacePermissionRemove] space_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "空间 id 不能为空")
+	}
+	if accountId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpacePermissionRemove] account_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "账号 id 不能为空")
+	}
+
+	servicePermission := service.NewSpacePermission(ctx)
+	err := servicePermission.DeleteBySpaceIdAccountId(spaceId, accountId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionRemove] DeleteBySpaceIdAccountId err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "删除空间权限失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// SpacePermissionModify 修改空间权限
+func SpacePermissionModify(ctx *gin.Context) error {
+	spacePermissionId := controller.GetParamInt64(ctx, "space_permission_id")
+	isView := controller.GetParamIntDef(ctx, "is_view", 0)
+	isAdd := controller.GetParamIntDef(ctx, "is_add", 0)
+	isEdit := controller.GetParamIntDef(ctx, "is_edit", 0)
+	isDelete := controller.GetParamIntDef(ctx, "is_delete", 0)
+	isExport := controller.GetParamIntDef(ctx, "is_export", 0)
+
+	if spacePermissionId <= 0 {
+		logger.WithContext(ctx).Warnf("[SpacePermissionModify] space_permission_id empty")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "权限 id 不能为空")
+	}
+
+	permission := &entity.SpacePermission{
+		IsView:   isView,
+		IsAdd:    isAdd,
+		IsEdit:   isEdit,
+		IsDelete: isDelete,
+		IsExport: isExport,
+	}
+
+	servicePermission := service.NewSpacePermission(ctx)
+	err := servicePermission.UpdateAccountPermission(spacePermissionId, permission)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[SpacePermissionModify] UpdateAccountPermission err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "修改空间权限失败")
+	}
+
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
