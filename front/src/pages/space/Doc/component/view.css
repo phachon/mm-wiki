@@ -15,7 +15,7 @@
 }
 
 .doc-view-page-path a:hover {
-  color: #1890ff;
+  color: #1677ff;
 }
 
 .doc-view-page-time {
@@ -27,12 +27,12 @@
 }
 
 .doc-view-page-time a:hover {
-  color: #1890ff;
+  color: #1677ff;
 }
 
 .doc-view-divider {
   margin: 8px 0 16px 0;
-  border-top: 1px solid #d1d1d1;
+  border-top: 1px solid #f0f0f0;
 }
 
 .doc-view-body .cherry {

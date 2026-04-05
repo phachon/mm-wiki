@@ -126,55 +126,55 @@ const MainIndexUI = (props: MainIndexUIProps) => {
             >
               <Timeline style={{ marginTop: 16 }}>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功
                 </Timeline.Item>
                 <Timeline.Item style={{ paddingBottom: 0 }}>
-                  <Text strong style={{ color: '#1890ff' }}>
+                  <Text strong style={{ color: '#1677ff' }}>
                     2015-09-01：
                   </Text>
                   ：创建用户 ID 成功xxx

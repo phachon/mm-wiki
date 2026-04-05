@@ -3,78 +3,20 @@
  * created by phachon
  */
 
-/* .login {
-    background-color: #eff2f5;
-    height: 100vh;
-    padding-top: 150px;
-}
-
-.login-header {
-    text-align: center;
-}
-
-.login-header p {
-    font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    color: rgba(0,0,0,.45);
-}
-
-.login-title {
-    text-align: center;
-    position: relative;
-}
-
-.login-title span {
-    font-weight: 600;
-    font-size: 26px;
-    margin-left: 10px;
-    vertical-align: middle
-}
-
-.login-title img {
-    height: 36px;
-    vertical-align: middle;
-}
-
-.login-content {
-    text-align: center;
-    margin-top: 10px;
-}
-
-
-.login-footer .login-footer-recommed {
-    color: rgba(0,0,0,.45);
-    font-size: 13px;
-}
-
-.login-footer .login-footer-copyright {
-    color: rgba(0, 0, 0, 0.50);
-    font-size: 14px;
-}
-
-.login-footer a {
-    color: rgba(0, 0, 0, 0.50);
-} */
-
-/* ====== */
-
 .login-body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-
 .login-header {
   display: flex;
-  /* box-shadow: 0 4px 5px rgba(0, 0, 0, 0.12); */
   padding: 0;
   width: 100%;
   height: 48px;
   line-height: 48px;
   background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .login-header-logo {
@@ -94,7 +36,7 @@
 
 .login-header-text {
   margin: 0 0 0 12px;
-  color: black;
+  color: #1d2129;
   font-weight: 600;
   font-size: 18px;
   vertical-align: middle;
@@ -118,36 +60,23 @@
   transition: all .3s;
 }
 
-/* .ant-menu-dark.ant-menu-horizontal >.ant-menu-submenu-selected {
-  background: #192336;
-} */
-
 .login-header-action {
   cursor: pointer;
   padding: 0 12px;
-  /* margin-right: 6px; */
   transition: all .3s;
 }
 
 .login-header-action a {
-  color: #fff;
+  color: #1d2129;
 }
 
 .login-header-action:hover {
-  background: #f0f0f0;
-}
-
-.login-header-left .ant-menu.ant-menu-dark .ant-menu-item-selected {
-  /* background-color: #192336; */
-}
-
-.login-header-left .ant-menu.ant-menu-dark .ant-menu-item-active {
-  /* background-color: #192336; */
+  background: #f5f5f5;
 }
 
 .login-container {
   flex: 1;
-  background-color: #f8f8f8;
+  background-color: #f7f8fa;
   padding-top: 100px;
   padding-bottom: 100px;
   padding-left: 50px;
@@ -164,8 +93,8 @@
   width: 430px;
   padding-top: 20px;
   padding-bottom: 20px;
-  border-radius: 5px;
-  box-shadow: 0 8px 23px 0 rgba(12, 17, 55, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.06);
   background-color: #fff;
   height: 100%;
 }
@@ -179,8 +108,7 @@
   bottom: 0;
   text-align: center;
   background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #f0f0f0;
 }
 
 .login-footer .login-footer-bar {

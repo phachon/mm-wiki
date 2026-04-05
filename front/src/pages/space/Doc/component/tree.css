@@ -293,10 +293,10 @@
 }
 
 .space-title a:hover {
-  color: #1890ff;  /* antd 默认主题蓝色 */
+  color: #1677ff;  /* antd 默认主题蓝色 */
 }
 
 .space-title a:active {
-  color: #096dd9;  /* 点击时的深蓝色 */
+  color: #0958d9;  /* 点击时的深蓝色 */
 }
 

@@ -1,8 +1,8 @@
 /* 自定义侧边栏样式 */
 .home-sidebar {
-  background-color: #ffffff; /* 设置侧边栏背景颜色为白色 */
-  border-right: 1px solid #d9d9d9; /* 添加边框 */
-  overflow: hidden; /* 确保内容溢出时隐藏 */
+  background-color: #ffffff;
+  border-right: 1px solid #f0f0f0;
+  overflow: hidden;
   height: 100%;
 }
 
@@ -35,8 +35,7 @@
   right: 0;
   top: 0;
   cursor: ew-resize;
-  /* background-color: transparent; */
-  background-color: #d9d9d9;
+  background-color: #f0f0f0;
   transition: background-color 0.3s;
 }
 
@@ -52,32 +51,28 @@
   cursor: pointer;
   position: absolute;
   top: 50%;
-  right: -12px; /* 调整位置使其在分割线上 */
+  right: -12px;
   transform: translateY(-50%);
   z-index: 1;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s;
 }
 
 .home-sidebar-trigger.collapsed {
-  background: #1677ff; /* 收起时变为蓝色 */
+  background: #1677ff;
 }
 
 .home-sidebar-trigger .anticon {
   font-size: 12px;
-  color: #b3b3b3;
+  color: #8c8c8c;
 }
 
 .home-sidebar-trigger:hover {
-  box-shadow: 0 0 4px 2px rgba(85, 85, 85, 0.3); /* 添加高亮效果 */
-}
-
-.home-sidebar {
-  background-color: #fff;
-  transition: width 0.5s, min-width 0.5s; /* 添加 min-width 的过渡效果 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .home-sidebar .ant-menu-item {
@@ -86,21 +81,21 @@
 
 .home-sidebar .ant-collapse-header {
   padding: 8px 0 8px 12px !important;
-  white-space: nowrap; /* 防止文字折行 */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  text-overflow: ellipsis;
 }
 
 .home-sidebar .ant-collapse-content-box {
   padding: 0 0 0 36px !important;
   line-height: 2.3;
-  white-space: nowrap; /* 防止文字折行 */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  text-overflow: ellipsis;
 }
 
 .home-sidebar .ant-collapse-content-box .sidebar-space-item a {
-  color: #3d3d3d;
+  color: #595959;
 }
 
 .home-sidebar .ant-collapse-content-box .sidebar-space-item a:hover{

@@ -21,9 +21,10 @@ html,body,#root{
 }
 
 .admin-sidebar {
-    box-shadow: 0 0 2px rgba(0,21,41,.35);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease 0s;
     overflow-x: visible;
+    border-right: 1px solid #f0f0f0;
 }
 
 .admin-sidebar-menu {
@@ -44,19 +45,24 @@ html,body,#root{
   cursor: pointer;
   position: absolute;
   top: 50%;
-  right: -12px; /* 调整位置使其在分割线上 */
+  right: -12px;
   transform: translateY(-50%);
   z-index: 1;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s;
+}
+
+.admin-sidebar .admin-sidebar-trigger:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .admin-sidebar-trigger .anticon {
   font-size: 12px;
-  color: #b3b3b3;
+  color: #8c8c8c;
 }
 
 .ant-menu-inline-collapsed {
@@ -66,16 +72,11 @@ html,body,#root{
 .ant-layout-sider-trigger {
     border-top-style: solid;
     border-top-width: 1px;
-    border-top-color: #ddd;
+    border-top-color: #f0f0f0;
 }
 
 
 .admin-main {
-  /* display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  background-color: #fff;
-  border: none; */
 }
 
 .admin-content {
@@ -83,20 +84,18 @@ html,body,#root{
     padding-left: 0px;
     width: auto;
     background: #fff;
-    /* box-shadow: 0 1px 1px rgba(0,0,0,.05); */
     overflow: auto;
-    flex-flow: 1;
+    flex: 1;
     border: none;
 }
 
 .admin-breadcrumb {
-    margin: 8px 8px 8px 8px;
+    margin: 8px;
     padding-left: 8px;
     padding-right: 0px;
     background-color: #fff;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    box-shadow: 0 2px 13px 0 rgba(228, 228, 228, 0.6);
+    border-radius: 6px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
 }
 
 .admin-breadcrumb-nav {

@@ -2,7 +2,6 @@
  * common css style
  * create by phachon
  */
-/* @import '~antd/dist/antd.css'; */
 
 .panel {
     padding-top: 8px;
@@ -14,15 +13,15 @@
 
 .search-container {
   background: #fafafa;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 16px;
-  border: 1px #efefef solid;
+  border: 1px solid #f0f0f0;
 }
 
 .panel-container {
   padding: 16px;
-  border-radius: 6px;
-  border: 1px #efefef solid;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
   height: 100%;
 }
 
@@ -42,18 +41,23 @@
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
-    background-color: #fff;
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: transparent;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #ccc;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 .text-center {

@@ -2,7 +2,7 @@
   background: #fff;
   height: 100%;
   overflow: auto;
-  flex-flow: 1;
+  flex: 1;
   border: none;
 }
 
