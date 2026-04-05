@@ -62,3 +62,20 @@ func (f *Follow) GetFollowStatus(accountId int64, followType int, objectId strin
 	}
 	return follow != nil, nil
 }
+
+// GetFollowsByAccountIdAndType 根据账号ID和类型分页获取关注列表
+func (f *Follow) GetFollowsByAccountIdAndType(accountId int64, followType int, pageSize int, pageNum int) ([]*entity.FollowEntity, errors.BizError) {
+	if accountId <= 0 {
+		return nil, nil
+	}
+	offset := (pageNum - 1) * pageSize
+	return f.daoFollow.GetFollowsByAccountIdAndType(accountId, followType, pageSize, offset)
+}
+
+// CountFollowsByAccountIdAndType 根据账号ID和类型获取关注总数
+func (f *Follow) CountFollowsByAccountIdAndType(accountId int64, followType int) (int64, errors.BizError) {
+	if accountId <= 0 {
+		return 0, nil
+	}
+	return f.daoFollow.CountFollowsByAccountIdAndType(accountId, followType)
+}

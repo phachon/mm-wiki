@@ -390,3 +390,22 @@ CREATE TABLE `mk_attachment` (
   PRIMARY KEY (`attachment_id`),
   KEY (`doc_id`, `source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='附件信息表';
+
+-- --------------------------------------------------------
+-- Table structure for table `mk_plugin`
+-- --------------------------------------------------------
+DROP TABLE IF EXISTS `mk_plugin`;
+CREATE TABLE `mk_plugin` (
+  `plugin_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '插件 id',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '插件名称',
+  `key` varchar(100) NOT NULL DEFAULT '' COMMENT '插件标识',
+  `description` varchar(500) NOT NULL DEFAULT '' COMMENT '插件描述',
+  `version` varchar(20) NOT NULL DEFAULT '' COMMENT '插件版本',
+  `author` varchar(50) NOT NULL DEFAULT '' COMMENT '插件作者',
+  `config_json` text COMMENT '插件配置 JSON',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态 0 禁用 1 启用 -1 删除',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`plugin_id`),
+  UNIQUE KEY `uk_key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='插件信息表';

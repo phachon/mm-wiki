@@ -1,10 +1,13 @@
 package space
 
 import (
+	"fmt"
+
 	"github.com/phachon/mm-wiki/app/controller"
 	"github.com/phachon/mm-wiki/app/entity"
 	"github.com/phachon/mm-wiki/app/service"
 	"github.com/phachon/mm-wiki/config"
+	"github.com/phachon/mm-wiki/global"
 	"github.com/phachon/mm-wiki/gopkg/errors"
 	"github.com/phachon/mm-wiki/gopkg/upload"
 	"github.com/phachon/mm-wiki/logger"
@@ -158,6 +161,20 @@ func DocContentSave(ctx *gin.Context) error {
 		logger.WithContext(ctx).Errorf("[DocContentSave] UpdateDoc err=%+v", err)
 		return controller.RespJsonError(ctx, err.GetErrCode(), "更新文档失败")
 	}
+
+	// 记录文档修改日志
+	logDocEntity := &entity.LogDocEntity{
+		DocId:     fmt.Sprintf("%d", docId),
+		SpaceId:   doc.SpaceId,
+		AccountId: global.ContextValueLoginAccountID(ctx),
+		Action:    entity.LogDocActionModify,
+		Comment:   "修改文档: " + name,
+	}
+	logDocErr := service.NewLogDoc(ctx).Create(logDocEntity)
+	if logDocErr != nil {
+		logger.WithContext(ctx).Errorf("[DocContentSave] create doc log err=%+v", logDocErr)
+	}
+
 	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }
 
@@ -469,4 +486,76 @@ func DocSearch(ctx *gin.Context) error {
 		"list":      docs,
 		"page_info": pageInfo,
 	})
+}
+
+// DocDelete 文档删除
+func DocDelete(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocDelete] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	doc, err := serviceDoc.GetDocByDocId(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocDelete] GetDocById err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "获取文档信息失败")
+	}
+	if doc == nil {
+		logger.WithContext(ctx).Warnf("[DocDelete] 文档不存在")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档不存在")
+	}
+
+	// 如果是目录，检查是否有子文档
+	if doc.Type == entity.DirEntityType {
+		children, err := serviceDoc.GetDocsByParentId(docId)
+		if err != nil {
+			logger.WithContext(ctx).Errorf("[DocDelete] GetDocsByParentId err=%+v", err)
+			return controller.RespJsonError(ctx, err.GetErrCode(), "删除文档失败")
+		}
+		if len(children) > 0 {
+			logger.WithContext(ctx).Warnf("[DocDelete] 请先删除或移动目录下所有文档")
+			return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "请先删除或移动目录下所有文档")
+		}
+	}
+
+	// 删除文档及关联数据
+	err = serviceDoc.DeleteDocWithRelated(docId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocDelete] DeleteDocWithRelated err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), "删除文档失败")
+	}
+
+	logger.WithContext(ctx).Infof("[DocDelete] 删除文档 %d 成功", docId)
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
+}
+
+// DocMove 文档移动
+func DocMove(ctx *gin.Context) error {
+	docId := controller.GetParamInt64(ctx, "doc_id")
+	targetId := controller.GetParamInt64(ctx, "target_id")
+
+	if docId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocMove] 文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "文档ID不能为空")
+	}
+	if targetId <= 0 {
+		logger.WithContext(ctx).Warnf("[DocMove] 目标文档ID不能为空")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamEmpty), "目标文档ID不能为空")
+	}
+	if docId == targetId {
+		logger.WithContext(ctx).Warnf("[DocMove] 文档不能移动到自身")
+		return controller.RespJsonError(ctx, int32(errors.ClientReqParamWrongful), "文档不能移动到自身")
+	}
+
+	serviceDoc := service.NewDoc(ctx)
+	err := serviceDoc.MoveDoc(docId, targetId)
+	if err != nil {
+		logger.WithContext(ctx).Errorf("[DocMove] MoveDoc err=%+v", err)
+		return controller.RespJsonError(ctx, err.GetErrCode(), err.GetErrMsg())
+	}
+
+	logger.WithContext(ctx).Infof("[DocMove] 移动文档 %d 到目标 %d 成功", docId, targetId)
+	return controller.RespJsonSuccess(ctx, map[string]interface{}{})
 }

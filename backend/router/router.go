@@ -38,6 +38,9 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/profile/info", method: http.MethodGet, controllerHandle: systemController.ProfileInfo},
 		{group: routerGroupNameSystem, relativePath: "/profile/repass", method: http.MethodPost, controllerHandle: systemController.ProfileRePass},
 		{group: routerGroupNameSystem, relativePath: "/profile/update", method: http.MethodPost, controllerHandle: systemController.ProfileUpdate},
+		{group: routerGroupNameSystem, relativePath: "/profile/follow_docs", method: http.MethodGet, controllerHandle: systemController.ProfileFollowDocs},
+		{group: routerGroupNameSystem, relativePath: "/profile/follow_users", method: http.MethodGet, controllerHandle: systemController.ProfileFollowUsers},
+		{group: routerGroupNameSystem, relativePath: "/profile/activity", method: http.MethodGet, controllerHandle: systemController.ProfileActivity},
 		// 账号管理
 		{group: routerGroupNameSystem, relativePath: "/account/add", method: http.MethodGet, controllerHandle: systemController.AccountAdd},
 		{group: routerGroupNameSystem, relativePath: "/account/save", method: http.MethodPost, controllerHandle: systemController.AccountSave},
@@ -66,6 +69,7 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/privilege/delete", method: http.MethodPost, controllerHandle: systemController.PrivilegeDelete},
 		// 日志管理
 		{group: routerGroupNameSystem, relativePath: "/log/list", method: http.MethodGet, controllerHandle: systemController.LogList},
+		{group: routerGroupNameSystem, relativePath: "/log/info", method: http.MethodGet, controllerHandle: systemController.LogInfo},
 		// 公告管理
 		{group: routerGroupNameSystem, relativePath: "/notice/save", method: http.MethodPost, controllerHandle: systemController.NoticeSave},
 		{group: routerGroupNameSystem, relativePath: "/notice/edit", method: http.MethodGet, controllerHandle: systemController.NoticeEdit},
@@ -80,6 +84,49 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/department/modify", method: http.MethodPost, controllerHandle: systemController.DepartmentModify},
 		{group: routerGroupNameSystem, relativePath: "/department/list", method: http.MethodGet, controllerHandle: systemController.DepartmentList},
 		{group: routerGroupNameSystem, relativePath: "/department/delete", method: http.MethodPost, controllerHandle: systemController.DepartmentDelete},
+		// 邮箱管理
+		{group: routerGroupNameSystem, relativePath: "/email/save", method: http.MethodPost, controllerHandle: systemController.EmailSave},
+		{group: routerGroupNameSystem, relativePath: "/email/edit", method: http.MethodGet, controllerHandle: systemController.EmailEdit},
+		{group: routerGroupNameSystem, relativePath: "/email/modify", method: http.MethodPost, controllerHandle: systemController.EmailModify},
+		{group: routerGroupNameSystem, relativePath: "/email/list", method: http.MethodGet, controllerHandle: systemController.EmailList},
+		{group: routerGroupNameSystem, relativePath: "/email/delete", method: http.MethodPost, controllerHandle: systemController.EmailDelete},
+		{group: routerGroupNameSystem, relativePath: "/email/used", method: http.MethodPost, controllerHandle: systemController.EmailUsed},
+		{group: routerGroupNameSystem, relativePath: "/email/send_test", method: http.MethodPost, controllerHandle: systemController.EmailSendTest},
+		// 插件管理
+		{group: routerGroupNameSystem, relativePath: "/plugin/save", method: http.MethodPost, controllerHandle: systemController.PluginSave},
+		{group: routerGroupNameSystem, relativePath: "/plugin/edit", method: http.MethodGet, controllerHandle: systemController.PluginEdit},
+		{group: routerGroupNameSystem, relativePath: "/plugin/modify", method: http.MethodPost, controllerHandle: systemController.PluginModify},
+		{group: routerGroupNameSystem, relativePath: "/plugin/list", method: http.MethodGet, controllerHandle: systemController.PluginList},
+		{group: routerGroupNameSystem, relativePath: "/plugin/delete", method: http.MethodPost, controllerHandle: systemController.PluginDelete},
+		{group: routerGroupNameSystem, relativePath: "/plugin/update_status", method: http.MethodPost, controllerHandle: systemController.PluginUpdateStatus},
+		// 安装向导
+		{group: routerGroupNameSystem, relativePath: "/install/status", method: http.MethodGet, controllerHandle: systemController.InstallStatus},
+		{group: routerGroupNameSystem, relativePath: "/install/check_db", method: http.MethodGet, controllerHandle: systemController.InstallCheckDB},
+		{group: routerGroupNameSystem, relativePath: "/install/init_data", method: http.MethodPost, controllerHandle: systemController.InstallInitData},
+		{group: routerGroupNameSystem, relativePath: "/install/create_admin", method: http.MethodPost, controllerHandle: systemController.InstallCreateAdmin},
+		{group: routerGroupNameSystem, relativePath: "/install/complete", method: http.MethodPost, controllerHandle: systemController.InstallComplete},
+		// 链接管理
+		{group: routerGroupNameSystem, relativePath: "/link/save", method: http.MethodPost, controllerHandle: systemController.LinkSave},
+		{group: routerGroupNameSystem, relativePath: "/link/edit", method: http.MethodGet, controllerHandle: systemController.LinkEdit},
+		{group: routerGroupNameSystem, relativePath: "/link/modify", method: http.MethodPost, controllerHandle: systemController.LinkModify},
+		{group: routerGroupNameSystem, relativePath: "/link/list", method: http.MethodGet, controllerHandle: systemController.LinkList},
+		{group: routerGroupNameSystem, relativePath: "/link/delete", method: http.MethodPost, controllerHandle: systemController.LinkDelete},
+		// 联系人管理
+		{group: routerGroupNameSystem, relativePath: "/contact/save", method: http.MethodPost, controllerHandle: systemController.ContactSave},
+		{group: routerGroupNameSystem, relativePath: "/contact/edit", method: http.MethodGet, controllerHandle: systemController.ContactEdit},
+		{group: routerGroupNameSystem, relativePath: "/contact/modify", method: http.MethodPost, controllerHandle: systemController.ContactModify},
+		{group: routerGroupNameSystem, relativePath: "/contact/list", method: http.MethodGet, controllerHandle: systemController.ContactList},
+		{group: routerGroupNameSystem, relativePath: "/contact/delete", method: http.MethodPost, controllerHandle: systemController.ContactDelete},
+		// 系统配置
+		{group: routerGroupNameSystem, relativePath: "/config/list", method: http.MethodGet, controllerHandle: systemController.ConfigList},
+		{group: routerGroupNameSystem, relativePath: "/config/modify", method: http.MethodPost, controllerHandle: systemController.ConfigModify},
+		// 登录认证管理
+		{group: routerGroupNameSystem, relativePath: "/login_auth/save", method: http.MethodPost, controllerHandle: systemController.LoginAuthSave},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/edit", method: http.MethodGet, controllerHandle: systemController.LoginAuthEdit},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/modify", method: http.MethodPost, controllerHandle: systemController.LoginAuthModify},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/list", method: http.MethodGet, controllerHandle: systemController.LoginAuthList},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/delete", method: http.MethodPost, controllerHandle: systemController.LoginAuthDelete},
+		{group: routerGroupNameSystem, relativePath: "/login_auth/used", method: http.MethodPost, controllerHandle: systemController.LoginAuthUsed},
 		// 空间管理
 		{group: routerGroupNameSystem, relativePath: "/space/add", method: http.MethodGet, controllerHandle: systemController.SpaceAdd},
 		{group: routerGroupNameSystem, relativePath: "/space/save", method: http.MethodPost, controllerHandle: systemController.SpaceSave},
@@ -97,6 +144,9 @@ var (
 		// 设置
 		{group: routerGroupNameSpace, relativePath: "/setting/basic_modify", method: http.MethodPost, controllerHandle: spaceController.SpaceBasicSettingModify},
 		{group: routerGroupNameSpace, relativePath: "/setting/permission_list", method: http.MethodGet, controllerHandle: spaceController.SpacePermissionList},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_add", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionAdd},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_remove", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionRemove},
+		{group: routerGroupNameSpace, relativePath: "/setting/permission_modify", method: http.MethodPost, controllerHandle: spaceController.SpacePermissionModify},
 		// 文档
 		{group: routerGroupNameSpace, relativePath: "/doc/create", method: http.MethodPost, controllerHandle: spaceController.DocCreate},
 		{group: routerGroupNameSpace, relativePath: "/doc/info", method: http.MethodGet, controllerHandle: spaceController.DocInfo},
@@ -108,8 +158,18 @@ var (
 		{group: routerGroupNameSpace, relativePath: "/doc/content_version_del", method: http.MethodPost, controllerHandle: spaceController.DocContentVersionDel},
 		// 文档排序
 		{group: routerGroupNameSpace, relativePath: "/doc/sort", method: http.MethodPost, controllerHandle: spaceController.DocSort},
+		// 文档删除
+		{group: routerGroupNameSpace, relativePath: "/doc/delete", method: http.MethodPost, controllerHandle: spaceController.DocDelete},
+		// 文档移动
+		{group: routerGroupNameSpace, relativePath: "/doc/move", method: http.MethodPost, controllerHandle: spaceController.DocMove},
 		// 搜索
 		{group: routerGroupNameSpace, relativePath: "/doc/search", method: http.MethodGet, controllerHandle: spaceController.DocSearch},
+		// 文档日志
+		{group: routerGroupNameSpace, relativePath: "/doc/log_list", method: http.MethodGet, controllerHandle: spaceController.DocLogList},
+		// 附件管理
+		{group: routerGroupNameSpace, relativePath: "/attachment/list", method: http.MethodGet, controllerHandle: spaceController.AttachmentList},
+		{group: routerGroupNameSpace, relativePath: "/attachment/upload", method: http.MethodPost, controllerHandle: spaceController.AttachmentUpload},
+		{group: routerGroupNameSpace, relativePath: "/attachment/delete", method: http.MethodPost, controllerHandle: spaceController.AttachmentDelete},
 		// ===================== 用户 =====================
 		// 互动
 		{group: routerGroupNameUser, relativePath: "/interaction/collection", method: http.MethodPost, controllerHandle: userController.CollectionAdd},
