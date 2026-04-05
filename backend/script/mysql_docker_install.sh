@@ -34,9 +34,9 @@ docker run -d \
     -e MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD" \
     -e MYSQL_DATABASE="$MYSQL_DATABASE" \
     -e MYSQL_CHARSET=utf8mb4 \
+    mysql:8.0 \
     --character-set-server=utf8mb4 \
-    --collation-server=utf8mb4_general_ci \
-    mysql:8.0
+    --collation-server=utf8mb4_general_ci
 
 echo "Waiting for MySQL to initialize..."
 sleep 15
