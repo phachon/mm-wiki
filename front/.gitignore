@@ -22,7 +22,6 @@ yarn-error.log*
 .idea
 
 .vscode
-src/setupProxy.js
 
 .DS_Store
 */.DS_Store

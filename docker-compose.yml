@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mm-wiki-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: mm_wiki2
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_general_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/docs/database/mm_wiki2.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./docs/database/data.sql.txt:/docker-entrypoint-initdb.d/02-data.sql:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+
+volumes:
+  mysql_data:
