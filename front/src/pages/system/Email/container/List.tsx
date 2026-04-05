@@ -6,7 +6,8 @@ import {
   EmailListResp
 } from '@/types/emailType'
 import { SystemEmailService } from '@/services/SystemEmail'
-import { message, Modal, TablePaginationConfig } from 'antd'
+import { SystemConfigService } from '@/services/SystemConfig'
+import { message, Modal, Form, Input, TablePaginationConfig } from 'antd'
 import EmailListUI from '../component/ListUI'
 import EmailSearchUI from '../component/SearchUI'
 import EmailFormUI from '../component/FormUI'
@@ -19,6 +20,9 @@ const EmailList: React.FC = () => {
   const [pagination, setPagination] = useState(initPagination)
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const [editEmailInfo, setEditEmailInfo] = useState<EmailInfoType>()
+  const [testModalOpen, setTestModalOpen] = useState<boolean>(false)
+  const [testEmailId, setTestEmailId] = useState<number>(0)
+  const [testForm] = Form.useForm()
 
   useEffect(() => {
     getEmailList(initPagination, {})
@@ -76,6 +80,25 @@ const EmailList: React.FC = () => {
       })
   }
 
+  const onTestClick = (emailInfo: EmailInfoType) => {
+    setTestEmailId(emailInfo.email_id)
+    testForm.resetFields()
+    setTestModalOpen(true)
+  }
+
+  const onTestSubmit = () => {
+    testForm.validateFields().then((values) => {
+      SystemConfigService.sendTestEmail(testEmailId, values.to_address)
+        .then(() => {
+          message.success('测试邮件发送成功', 2)
+          setTestModalOpen(false)
+        })
+        .catch((e) => {
+          message.error('发送失败: ' + (e?.message || '未知错误'), 3)
+        })
+    })
+  }
+
   const onSearchChange = (values: any) => {
     getEmailList(initPagination, values)
   }
@@ -114,6 +137,7 @@ const EmailList: React.FC = () => {
         onEditClick={onEditClick}
         onDeleteConfirm={onDeleteConfirm}
         onUsedClick={onUsedClick}
+        onTestClick={onTestClick}
       />
       <Modal
         title="邮箱修改"
@@ -123,6 +147,27 @@ const EmailList: React.FC = () => {
         footer={null}
       >
         <EmailFormUI emailInfo={editEmailInfo} onSaveSubmit={onEditSaveSubmit} />
+      </Modal>
+      <Modal
+        title="发送测试邮件"
+        open={testModalOpen}
+        onCancel={() => setTestModalOpen(false)}
+        onOk={onTestSubmit}
+        okText="发送"
+        cancelText="取消"
+      >
+        <Form form={testForm} layout="vertical">
+          <Form.Item
+            label="收件人邮箱"
+            name="to_address"
+            rules={[
+              { required: true, message: '请输入收件人邮箱' },
+              { type: 'email', message: '请输入有效的邮箱地址' }
+            ]}
+          >
+            <Input placeholder="请输入收件人邮箱地址" />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )

@@ -12,6 +12,7 @@ import Email from '@/pages/system/Email'
 import Link from '@/pages/system/Link'
 import Contact from '@/pages/system/Contact'
 import LoginAuth from '@/pages/system/LoginAuth'
+import Plugin from '@/pages/system/Plugin'
 import { IRouter, SYSTEM_ROOT_PATH } from '../type'
 import Space from '@/pages/system/Space'
 
@@ -172,6 +173,20 @@ const routers: IRouter[] = [
         path: '/system/login_auth/list',
         key: 'login_auth_list',
         component: <LoginAuth.LoginAuthList />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/plugin/add',
+        key: 'plugin_add',
+        component: <Plugin.PluginAdd />,
+        auth: true,
+        permission: true
+      },
+      {
+        path: '/system/plugin/list',
+        key: 'plugin_list',
+        component: <Plugin.PluginList />,
         auth: true,
         permission: true
       },

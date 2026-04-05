@@ -1,5 +1,5 @@
 import { Popconfirm, Space, Table, TablePaginationConfig, Tag } from 'antd'
-import { CloseSquareOutlined, FormOutlined, CheckCircleOutlined } from '@ant-design/icons'
+import { CloseSquareOutlined, FormOutlined, CheckCircleOutlined, SendOutlined } from '@ant-design/icons'
 import ActionButton from '@/components/Action/ActionButton'
 import { EmailInfoType, EmailListItemType } from '@/types/emailType'
 
@@ -11,6 +11,7 @@ interface EmailListUIProps {
   onEditClick: (emailInfo: EmailInfoType) => void
   onDeleteConfirm: (emailInfo: EmailInfoType) => void
   onUsedClick: (emailInfo: EmailInfoType) => void
+  onTestClick: (emailInfo: EmailInfoType) => void
 }
 
 const EmailUsedTag = (isUsed: number) => {
@@ -64,11 +65,17 @@ const EmailListUI = (props: EmailListUIProps) => {
         />
         <Table.Column
           title={'操作'}
-          width={200}
+          width={260}
           key={'action'}
           align={'center'}
           render={(emailListItem: EmailListItemType) => (
             <Space>
+              <ActionButton
+                text="测试"
+                icon={<SendOutlined />}
+                onClick={() => props.onTestClick(emailListItem)}
+                havePermission={emailListItem.action?.is_edit == 1}
+              />
               <ActionButton
                 text="使用"
                 icon={<CheckCircleOutlined />}
