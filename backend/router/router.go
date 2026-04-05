@@ -91,6 +91,20 @@ var (
 		{group: routerGroupNameSystem, relativePath: "/email/list", method: http.MethodGet, controllerHandle: systemController.EmailList},
 		{group: routerGroupNameSystem, relativePath: "/email/delete", method: http.MethodPost, controllerHandle: systemController.EmailDelete},
 		{group: routerGroupNameSystem, relativePath: "/email/used", method: http.MethodPost, controllerHandle: systemController.EmailUsed},
+		{group: routerGroupNameSystem, relativePath: "/email/send_test", method: http.MethodPost, controllerHandle: systemController.EmailSendTest},
+		// 插件管理
+		{group: routerGroupNameSystem, relativePath: "/plugin/save", method: http.MethodPost, controllerHandle: systemController.PluginSave},
+		{group: routerGroupNameSystem, relativePath: "/plugin/edit", method: http.MethodGet, controllerHandle: systemController.PluginEdit},
+		{group: routerGroupNameSystem, relativePath: "/plugin/modify", method: http.MethodPost, controllerHandle: systemController.PluginModify},
+		{group: routerGroupNameSystem, relativePath: "/plugin/list", method: http.MethodGet, controllerHandle: systemController.PluginList},
+		{group: routerGroupNameSystem, relativePath: "/plugin/delete", method: http.MethodPost, controllerHandle: systemController.PluginDelete},
+		{group: routerGroupNameSystem, relativePath: "/plugin/update_status", method: http.MethodPost, controllerHandle: systemController.PluginUpdateStatus},
+		// 安装向导
+		{group: routerGroupNameSystem, relativePath: "/install/status", method: http.MethodGet, controllerHandle: systemController.InstallStatus},
+		{group: routerGroupNameSystem, relativePath: "/install/check_db", method: http.MethodGet, controllerHandle: systemController.InstallCheckDB},
+		{group: routerGroupNameSystem, relativePath: "/install/init_data", method: http.MethodPost, controllerHandle: systemController.InstallInitData},
+		{group: routerGroupNameSystem, relativePath: "/install/create_admin", method: http.MethodPost, controllerHandle: systemController.InstallCreateAdmin},
+		{group: routerGroupNameSystem, relativePath: "/install/complete", method: http.MethodPost, controllerHandle: systemController.InstallComplete},
 		// 链接管理
 		{group: routerGroupNameSystem, relativePath: "/link/save", method: http.MethodPost, controllerHandle: systemController.LinkSave},
 		{group: routerGroupNameSystem, relativePath: "/link/edit", method: http.MethodGet, controllerHandle: systemController.LinkEdit},

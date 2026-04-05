@@ -18,6 +18,7 @@ var (
 	ignoreLoginAuthPath = []string{
 		"/system/auth/login",
 		"/system/auth/captcha",
+		"/system/install/status",
 		"/static/upload",
 	}
 )
